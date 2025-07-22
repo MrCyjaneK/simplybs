@@ -1,9 +1,9 @@
-package main
+package builder
 
-var hostBuilder = Builder{
+var HostBuilder = Builder{
 	GlobalEnv: []string{
-		"all:HOST=aarch64-apple-darwin",
-		"all:TARGET=aarch64-apple-darwin",
+		"all:HOST=x86_64-linux-gnu",
+		"all:TARGET=x86_64-linux-gnu",
 		"all:CC=clang",
 		"all:CXX=clang++",
 		"all:AR=ar",
@@ -11,6 +11,7 @@ var hostBuilder = Builder{
 		"all:STRIP=strip",
 		"all:NM=nm",
 		"all:OTOOL=otool",
+		"all:AUTOMAKE=automake",
 		"all:INSTALL_NAME_TOOL=install_name_tool",
 	},
 }

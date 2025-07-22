@@ -1,4 +1,4 @@
-package main
+package utils
 
 import (
 	"log"
@@ -6,6 +6,7 @@ import (
 
 	"github.com/go-git/go-git/v5"
 	"github.com/go-git/go-git/v5/plumbing"
+	"github.com/mrcyjanek/simplybs/crash"
 )
 
 func optimizeGitRepo(repoPath string) {
@@ -85,22 +86,22 @@ func DownloadGit(path, url, expectedSha256 string) {
 		URL:      url,
 		Progress: os.Stdout,
 	})
-	crashErr(err)
+	crash.Handle(err)
 
 	worktree, err := repo.Worktree()
-	crashErr(err)
+	crash.Handle(err)
 
 	log.Printf("Checking out reference %s", expectedSha256)
 	targetHash, err := resolveRef(repo, expectedSha256)
 	if err != nil {
 		log.Printf("Failed to resolve reference %s: %v", expectedSha256, err)
-		crashErr(err)
+		crash.Handle(err)
 	}
 
 	err = worktree.Checkout(&git.CheckoutOptions{
 		Hash: targetHash,
 	})
-	crashErr(err)
+	crash.Handle(err)
 
 	log.Printf("Cleaning up and optimizing repository...")
 

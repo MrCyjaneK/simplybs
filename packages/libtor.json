@@ -4,8 +4,8 @@
     "type": "host",
     "download": {
         "kind": "git",
-        "url": "https://gitlab.torproject.org/tpo/core/tor.git",
-        "sha256": "e41649c9a34f39f1d543e064fd2b97de26d3e097"
+        "sha256": "e41649c9a34f39f1d543e064fd2b97de26d3e097",
+        "url": "https://gitlab.torproject.org/tpo/core/tor.git"
     },
     "dependencies": [
         "*-android*:native_android_ndk",
@@ -44,7 +44,6 @@
             "all:config_opts=$config_opts tor_cv_library_libevent_dir=$PREFIX"
         ],
         "steps": [
-            "none:git apply $PATCH_DIR/mmap-cache.patch",
             "all:./autogen.sh",
             "all:./configure $config_opts",
             "all:make -j$NUM_CORES libtor.a",

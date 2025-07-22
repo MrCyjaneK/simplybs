@@ -1,33 +1,33 @@
 {
-  "package": "unwind",
-  "version": "1.5.0",
-  "type": "host",
-  "download": {
-    "kind": "tar.gz",
-    "url": "https://download.savannah.nongnu.org/releases/libunwind/libunwind-1.5.0.tar.gz",
-    "sha256": "90337653d92d4a13de590781371c604f9031cdb50520366aa1e3a91e1efb1017"
-  },
-  "patches": [
-    "fix_obj_order.patch"
-  ],
-  "dependencies": [
-    "*-android*:native_android_ndk",
-    "all:native_config",
-    "all:native_gettext"
-  ],
-  "build": {
-    "env": [
-      "*-linux-gnu:config_opts=--host=$HOST --prefix=$PREFIX",
-      "*-linux-gnu:config_opts=$config_opts --disable-shared --enable-static --disable-tests --disable-documentation",
-      "*-linux-gnu:AR_FLAGS=$ARFLAGS"
+    "package": "unwind",
+    "version": "1.5.0",
+    "type": "host",
+    "download": {
+        "kind": "tar.gz",
+        "sha256": "90337653d92d4a13de590781371c604f9031cdb50520366aa1e3a91e1efb1017",
+        "url": "https://download.savannah.nongnu.org/releases/libunwind/libunwind-1.5.0.tar.gz"
+    },
+    "dependencies": [
+        "*-android*:native_android_ndk",
+        "all:native_config",
+        "all:native_gettext"
     ],
-    "steps": [
-      "all:cp -f $PREFIX/native/usr/share/config/config.guess config/config.guess",
-      "all:cp -f $PREFIX/native/usr/share/config/config.sub config/config.sub",
-      "*-linux-gnu:patch -p0 < $PATCH_DIR/fix_obj_order.patch",
-      "*-linux-gnu:./configure $config_opts",
-      "*-linux-gnu:make -j$NUM_CORES",
-      "*-linux-gnu:make -j$NUM_CORES DESTDIR=$STAGING_DIR install"
-    ]
-  }
+    "patches": [
+        "fix_obj_order.patch"
+    ],
+    "build": {
+        "env": [
+            "*-linux-gnu:config_opts=--host=$HOST --prefix=$PREFIX",
+            "*-linux-gnu:config_opts=$config_opts --disable-shared --enable-static --disable-tests --disable-documentation",
+            "*-linux-gnu:AR_FLAGS=$ARFLAGS"
+        ],
+        "steps": [
+            "all:cp -f $PREFIX/native/usr/share/config/config.guess config/config.guess",
+            "all:cp -f $PREFIX/native/usr/share/config/config.sub config/config.sub",
+            "*-linux-gnu:patch -p0 < $PATCH_DIR/fix_obj_order.patch",
+            "*-linux-gnu:./configure $config_opts",
+            "*-linux-gnu:make -j$NUM_CORES",
+            "*-linux-gnu:make -j$NUM_CORES DESTDIR=$STAGING_DIR install"
+        ]
+    }
 }

@@ -1,4 +1,4 @@
-package main
+package host
 
 import (
 	"os"
@@ -6,6 +6,8 @@ import (
 	"path/filepath"
 	"runtime"
 	"strings"
+
+	"github.com/mrcyjanek/simplybs/crash"
 )
 
 type Host struct {
@@ -13,17 +15,17 @@ type Host struct {
 	Env     []string
 }
 
-func dataDir() string {
+func DataDir() string {
 	buildDir, err := os.Getwd()
-	crashErr(err)
+	crash.Handle(err)
 	return filepath.Join(buildDir, ".buildlib", runtime.GOOS+"_"+runtime.GOARCH)
 }
 
 func (h *Host) GetEnvPath() string {
-	return filepath.Join(dataDir(), "env", h.Triplet)
+	return filepath.Join(DataDir(), "env", h.Triplet)
 }
 
-var supportedHosts = map[string]*Host{
+var SupportedHosts = map[string]*Host{
 	"aarch64-apple-darwin": {
 		Triplet: "aarch64-apple-darwin",
 		Env: []string{

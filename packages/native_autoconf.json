@@ -4,8 +4,8 @@
     "type": "native",
     "download": {
         "kind": "tar.gz",
-        "url": "https://ftp.gnu.org/gnu/autoconf/autoconf-2.72.tar.gz",
-        "sha256": "afb181a76e1ee72832f6581c0eddf8df032b83e2e0239ef79ebedc4467d92d6e"
+        "sha256": "afb181a76e1ee72832f6581c0eddf8df032b83e2e0239ef79ebedc4467d92d6e",
+        "url": "https://ftp.gnu.org/gnu/autoconf/autoconf-2.72.tar.gz"
     },
     "dependencies": [
         "all:native_make",

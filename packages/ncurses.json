@@ -1,64 +1,64 @@
 {
-  "package": "ncurses",
-  "version": "6.5",
-  "type": "host",
-  "download": {
-    "kind": "tar.gz",
-    "url": "https://ftp.gnu.org/gnu/ncurses/ncurses-6.5.tar.gz",
-    "sha256": "136d91bc269a9a5785e5f9e980bc76ab57428f604ce3e5a5a90cebc767971cc6"
-  },
-  "patches": [
-    "fallback.c"
-  ],
-  "dependencies": [
-    "*-android*:native_android_ndk"
-  ],
-  "build": {
-    "env": [
-      "all:config_opts=--host=$HOST --prefix=$PREFIX",
-      "*-linux-gnu:cf_cv_ar_flags=",
-      "all:config_opts=$config_opts --disable-shared",
-      "all:config_opts=$config_opts --with-build-cc=gcc",
-      "all:config_opts=$config_opts --without-debug",
-      "all:config_opts=$config_opts --without-ada",
-      "all:config_opts=$config_opts --without-cxx-binding",
-      "all:config_opts=$config_opts --without-cxx",
-      "all:config_opts=$config_opts --without-ticlib",
-      "all:config_opts=$config_opts --without-tic",
-      "all:config_opts=$config_opts --without-progs",
-      "all:config_opts=$config_opts --without-tests",
-      "all:config_opts=$config_opts --without-tack",
-      "all:config_opts=$config_opts --without-manpages",
-      "all:config_opts=$config_opts --with-termlib",
-      "all:config_opts=$config_opts --disable-tic-depends",
-      "all:config_opts=$config_opts --disable-big-strings",
-      "all:config_opts=$config_opts --disable-ext-colors",
-      "all:config_opts=$config_opts --enable-pc-files",
-      "all:config_opts=$config_opts --without-shared",
-      "all:config_opts=$config_opts --without-pthread",
-      "all:config_opts=$config_opts --disable-rpath",
-      "all:config_opts=$config_opts --disable-colorfgbg",
-      "all:config_opts=$config_opts --disable-ext-mouse",
-      "all:config_opts=$config_opts --disable-symlinks",
-      "all:config_opts=$config_opts --enable-warnings",
-      "all:config_opts=$config_opts --enable-assertions",
-      "all:config_opts=$config_opts --with-default-terminfo-dir=/etc/_terminfo_",
-      "all:config_opts=$config_opts --with-terminfo-dirs=/etc/_terminfo_",
-      "all:config_opts=$config_opts --enable-database",
-      "all:config_opts=$config_opts --enable-sp-funcs",
-      "all:config_opts=$config_opts --disable-term-driver",
-      "all:config_opts=$config_opts --enable-interop",
-      "all:config_opts=$config_opts --enable-widec",
-      "all:SHOULD_BUILD=echo",
-      "*-linux-*:SHOULD_BUILD=",
-      "*-w64-mingw32:SHOULD_BUILD=",
-      "*-apple-darwin:SHOULD_BUILD="
+    "package": "ncurses",
+    "version": "6.5",
+    "type": "host",
+    "download": {
+        "kind": "tar.gz",
+        "sha256": "136d91bc269a9a5785e5f9e980bc76ab57428f604ce3e5a5a90cebc767971cc6",
+        "url": "https://ftp.gnu.org/gnu/ncurses/ncurses-6.5.tar.gz"
+    },
+    "dependencies": [
+        "*-android*:native_android_ndk"
     ],
-    "steps": [
-      "all:$SHOULD_BUILD cp $PATCH_DIR/fallback.c ncurses",
-      "all:$SHOULD_BUILD ./configure $config_opts",
-      "all:$SHOULD_BUILD make -j$NUM_CORES $build_opts",
-      "all:$SHOULD_BUILD make install.libs DESTDIR=$STAGING_DIR"
-    ]
-  }
+    "patches": [
+        "fallback.c"
+    ],
+    "build": {
+        "env": [
+            "all:config_opts=--host=$HOST --prefix=$PREFIX",
+            "*-linux-gnu:cf_cv_ar_flags=",
+            "all:config_opts=$config_opts --disable-shared",
+            "all:config_opts=$config_opts --with-build-cc=gcc",
+            "all:config_opts=$config_opts --without-debug",
+            "all:config_opts=$config_opts --without-ada",
+            "all:config_opts=$config_opts --without-cxx-binding",
+            "all:config_opts=$config_opts --without-cxx",
+            "all:config_opts=$config_opts --without-ticlib",
+            "all:config_opts=$config_opts --without-tic",
+            "all:config_opts=$config_opts --without-progs",
+            "all:config_opts=$config_opts --without-tests",
+            "all:config_opts=$config_opts --without-tack",
+            "all:config_opts=$config_opts --without-manpages",
+            "all:config_opts=$config_opts --with-termlib",
+            "all:config_opts=$config_opts --disable-tic-depends",
+            "all:config_opts=$config_opts --disable-big-strings",
+            "all:config_opts=$config_opts --disable-ext-colors",
+            "all:config_opts=$config_opts --enable-pc-files",
+            "all:config_opts=$config_opts --without-shared",
+            "all:config_opts=$config_opts --without-pthread",
+            "all:config_opts=$config_opts --disable-rpath",
+            "all:config_opts=$config_opts --disable-colorfgbg",
+            "all:config_opts=$config_opts --disable-ext-mouse",
+            "all:config_opts=$config_opts --disable-symlinks",
+            "all:config_opts=$config_opts --enable-warnings",
+            "all:config_opts=$config_opts --enable-assertions",
+            "all:config_opts=$config_opts --with-default-terminfo-dir=/etc/_terminfo_",
+            "all:config_opts=$config_opts --with-terminfo-dirs=/etc/_terminfo_",
+            "all:config_opts=$config_opts --enable-database",
+            "all:config_opts=$config_opts --enable-sp-funcs",
+            "all:config_opts=$config_opts --disable-term-driver",
+            "all:config_opts=$config_opts --enable-interop",
+            "all:config_opts=$config_opts --enable-widec",
+            "all:SHOULD_BUILD=echo",
+            "*-linux-*:SHOULD_BUILD=",
+            "*-w64-mingw32:SHOULD_BUILD=",
+            "*-apple-darwin:SHOULD_BUILD="
+        ],
+        "steps": [
+            "all:$SHOULD_BUILD cp $PATCH_DIR/fallback.c ncurses",
+            "all:$SHOULD_BUILD ./configure $config_opts",
+            "all:$SHOULD_BUILD make -j$NUM_CORES $build_opts",
+            "all:$SHOULD_BUILD make install.libs DESTDIR=$STAGING_DIR"
+        ]
+    }
 }

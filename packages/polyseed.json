@@ -1,10 +1,11 @@
 {
     "package": "polyseed",
     "version": "2.1.0-patch",
+    "type": "host",
     "download": {
         "kind": "tar.gz",
-        "url": "https://github.com/MrCyjaneK/polyseed/archive/refs/tags/v2.0.0-patch.tar.gz",
-        "sha256": "28a86b0bc178076ac65dc7d8cc28a79eb546708473efc0e8dce688f1e237ccc2"
+        "sha256": "28a86b0bc178076ac65dc7d8cc28a79eb546708473efc0e8dce688f1e237ccc2",
+        "url": "https://github.com/MrCyjaneK/polyseed/archive/refs/tags/v2.0.0-patch.tar.gz"
     },
     "dependencies": [
         "*-android*:native_android_ndk"
@@ -12,8 +13,8 @@
     "build": {
         "env": [],
         "steps": [
-           "all:cmake -DCMAKE_INSTALL_PREFIX=$PREFIX -DSTATIC=ON .",
-           "all:make -j$NUM_CORES DESTDIR=$STAGING_DIR install"
+            "all:cmake -DCMAKE_INSTALL_PREFIX=$PREFIX -DSTATIC=ON .",
+            "all:make -j$NUM_CORES DESTDIR=$STAGING_DIR install"
         ]
     }
 }

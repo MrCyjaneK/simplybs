@@ -1,37 +1,37 @@
 {
-  "package": "sodium",
-  "version": "1.0.18",
-  "type": "host",
-  "download": {
-    "kind": "tar.gz",
-    "url": "https://download.libsodium.org/libsodium/releases/libsodium-1.0.18.tar.gz",
-    "sha256": "6f504490b342a4f8a4c4a02fc9b866cbef8622d5df4e5452b46be121e46636c1"
-  },
-  "patches": [
-    "disable-glibc-getrandom-getentropy.patch",
-    "fix-whitespace.patch"
-  ],
-  "dependencies": [
-    "*-android*:native_android_ndk",
-    "all:native_config"
-  ],
-  "build": {
-    "env": [
-      "*-android*:ANDROID_NDK_ROOT=$PREFIX/native",
-      "*-android*:CC=clang",
-      "*-android*:AR=ar",
-      "*-android*:RANLIB=ranlib",
-      "all:config_opts=--host=$HOST --prefix=$PREFIX",
-      "all:config_opts=$config_opts --enable-static --disable-shared --with-pic"
+    "package": "sodium",
+    "version": "1.0.18",
+    "type": "host",
+    "download": {
+        "kind": "tar.gz",
+        "sha256": "6f504490b342a4f8a4c4a02fc9b866cbef8622d5df4e5452b46be121e46636c1",
+        "url": "https://download.libsodium.org/libsodium/releases/libsodium-1.0.18.tar.gz"
+    },
+    "dependencies": [
+        "*-android*:native_android_ndk",
+        "all:native_config"
     ],
-    "steps": [
-      "all:cp -f $PREFIX/native/usr/share/config/config.guess build-aux/",
-      "all:cp -f $PREFIX/native/usr/share/config/config.sub build-aux/",
-      "all:patch -p1 < $PATCH_DIR/disable-glibc-getrandom-getentropy.patch",
-      "all:patch -p1 < $PATCH_DIR/fix-whitespace.patch",
-      "all:./configure $config_opts",
-      "all:make -j$NUM_CORES",
-      "all:make -j1 DESTDIR=$STAGING_DIR install"
-    ]
-  }
+    "patches": [
+        "disable-glibc-getrandom-getentropy.patch",
+        "fix-whitespace.patch"
+    ],
+    "build": {
+        "env": [
+            "*-android*:ANDROID_NDK_ROOT=$PREFIX/native",
+            "*-android*:CC=clang",
+            "*-android*:AR=ar",
+            "*-android*:RANLIB=ranlib",
+            "all:config_opts=--host=$HOST --prefix=$PREFIX",
+            "all:config_opts=$config_opts --enable-static --disable-shared --with-pic"
+        ],
+        "steps": [
+            "all:cp -f $PREFIX/native/usr/share/config/config.guess build-aux/",
+            "all:cp -f $PREFIX/native/usr/share/config/config.sub build-aux/",
+            "all:patch -p1 < $PATCH_DIR/disable-glibc-getrandom-getentropy.patch",
+            "all:patch -p1 < $PATCH_DIR/fix-whitespace.patch",
+            "all:./configure $config_opts",
+            "all:make -j$NUM_CORES",
+            "all:make -j1 DESTDIR=$STAGING_DIR install"
+        ]
+    }
 }

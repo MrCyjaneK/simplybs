@@ -1,38 +1,38 @@
 {
-	"package": "libevent",
-	"version": "2.1.12",
-	"type": "host",
-	"download": {
-		"kind": "tar.gz",
-		"url": "https://github.com/libevent/libevent/releases/download/release-2.1.12-stable/libevent-2.1.12-stable.tar.gz",
-		"sha256": "92e6de1be9ec176428fd2367677e61ceffc2ee1cb119035037a27d346b0403bb"
-	},
-	"dependencies": [
-		"*-android*:native_android_ndk",
+    "package": "libevent",
+    "version": "2.1.12",
+    "type": "host",
+    "download": {
+        "kind": "tar.gz",
+        "sha256": "92e6de1be9ec176428fd2367677e61ceffc2ee1cb119035037a27d346b0403bb",
+        "url": "https://github.com/libevent/libevent/releases/download/release-2.1.12-stable/libevent-2.1.12-stable.tar.gz"
+    },
+    "dependencies": [
+        "*-android*:native_android_ndk",
         "all:native_make",
         "all:native_automake",
         "all:native_autoconf",
         "all:native_perl",
         "all:native_m4",
         "all:native_libtool"
-	],
-	"build": {
-		"env": [
-			"all:config_opts=--host=$HOST --prefix=$PREFIX ",
-			"all:config_opts=$config_opts --disable-shared",
-			"all:config_opts=$config_opts --disable-openssl",
-			"all:config_opts=$config_opts --disable-libevent-regress",
-			"all:config_opts=$config_opts --disable-doxygen-html",
-			"all:config_opts=$config_opts --enable-static",
-			"all:config_opts=$config_opts --enable-gcc-hardening",
-			"all:config_opts=$config_opts --disable-debug-mode"
-		],
-		"steps": [
-			"all:./autogen.sh",
-			"all:./configure $config_opts",
-			"all:make -j$NUM_CORES",
-			"all:make DESTDIR=$STAGING_DIR install",
-			"all:rm $STAGING_DIR$PREFIX/lib/*.la"
-		]
-	}
+    ],
+    "build": {
+        "env": [
+            "all:config_opts=--host=$HOST --prefix=$PREFIX ",
+            "all:config_opts=$config_opts --disable-shared",
+            "all:config_opts=$config_opts --disable-openssl",
+            "all:config_opts=$config_opts --disable-libevent-regress",
+            "all:config_opts=$config_opts --disable-doxygen-html",
+            "all:config_opts=$config_opts --enable-static",
+            "all:config_opts=$config_opts --enable-gcc-hardening",
+            "all:config_opts=$config_opts --disable-debug-mode"
+        ],
+        "steps": [
+            "all:./autogen.sh",
+            "all:./configure $config_opts",
+            "all:make -j$NUM_CORES",
+            "all:make DESTDIR=$STAGING_DIR install",
+            "all:rm $STAGING_DIR$PREFIX/lib/*.la"
+        ]
+    }
 }

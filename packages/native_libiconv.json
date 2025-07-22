@@ -3,27 +3,27 @@
     "version": "1.17",
     "type": "native",
     "download": {
-      "url": "https://ftp.gnu.org/gnu/libiconv/libiconv-1.17.tar.gz",
-      "kind": "tar.gz",
-      "sha256": "8f74213b56238c85a50a5329f77e06198771e70dd9a739779f4c02f65d971313"
+        "kind": "tar.gz",
+        "sha256": "8f74213b56238c85a50a5329f77e06198771e70dd9a739779f4c02f65d971313",
+        "url": "https://ftp.gnu.org/gnu/libiconv/libiconv-1.17.tar.gz"
     },
     "dependencies": [
-      "all:native_config",
-      "all:native_make"
+        "all:native_config",
+        "all:native_make"
     ],
     "build": {
-      "env": [
-        "all:CFLAGS=$CFLAGS -fPIC",
-        "all:config_opts=--prefix=$PREFIX/native --disable-nls --enable-static --disable-shared",
-        "all:config_opts=$config_opts",
-        "*linux:config_opts=$config_opts --with-pic"
-      ],
-      "steps": [
-        "all:cp -f $PREFIX/native/usr/share/config/config.guess build-aux/",
-        "all:cp -f $PREFIX/native/usr/share/config/config.sub build-aux/",
-        "all:./configure $config_opts",
-        "all:make -j$NUM_CORES",
-        "all:make DESTDIR=$STAGING_DIR install"
-      ]
+        "env": [
+            "all:CFLAGS=$CFLAGS -fPIC",
+            "all:config_opts=--prefix=$PREFIX/native --disable-nls --enable-static --disable-shared",
+            "all:config_opts=$config_opts",
+            "*linux:config_opts=$config_opts --with-pic"
+        ],
+        "steps": [
+            "all:cp -f $PREFIX/native/usr/share/config/config.guess build-aux/",
+            "all:cp -f $PREFIX/native/usr/share/config/config.sub build-aux/",
+            "all:./configure $config_opts",
+            "all:make -j$NUM_CORES",
+            "all:make DESTDIR=$STAGING_DIR install"
+        ]
     }
-  }
+}

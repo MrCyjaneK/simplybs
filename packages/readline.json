@@ -1,28 +1,28 @@
 {
-  "package": "readline",
-  "version": "8.0",
-  "type": "host",
-  "download": {
-    "kind": "tar.gz",
-    "url": "https://ftp.gnu.org/gnu/readline/readline-8.0.tar.gz",
-    "sha256": "e339f51971478d369f8a053a330a190781acb9864cf4c541060f12078948e461"
-  },
-  "dependencies": [
-    "all:ncurses",
-    "*-android*:native_android_ndk"
-  ],
-  "build": {
-    "env": [
-      "all:config_opts=--host=$HOST --prefix=$PREFIX --exec-prefix=$PREFIX",
-      "all:config_opts=$config_opts --disable-shared --with-curses --disable-debug-mode",
-      "all:SHOULD_BUILD=echo",
-      "*-linux-*:SHOULD_BUILD=",
-      "*-apple-darwin:SHOULD_BUILD="
+    "package": "readline",
+    "version": "8.0",
+    "type": "host",
+    "download": {
+        "kind": "tar.gz",
+        "sha256": "e339f51971478d369f8a053a330a190781acb9864cf4c541060f12078948e461",
+        "url": "https://ftp.gnu.org/gnu/readline/readline-8.0.tar.gz"
+    },
+    "dependencies": [
+        "all:ncurses",
+        "*-android*:native_android_ndk"
     ],
-    "steps": [
-      "all:$SHOULD_BUILD ./configure $config_opts",
-      "all:$SHOULD_BUILD make -j$NUM_CORES $build_opts",
-      "all:$SHOULD_BUILD make -j$NUM_CORES install DESTDIR=$STAGING_DIR prefix=$PREFIX exec-prefix=$PREFIX"
-    ]
-  }
+    "build": {
+        "env": [
+            "all:config_opts=--host=$HOST --prefix=$PREFIX --exec-prefix=$PREFIX",
+            "all:config_opts=$config_opts --disable-shared --with-curses --disable-debug-mode",
+            "all:SHOULD_BUILD=echo",
+            "*-linux-*:SHOULD_BUILD=",
+            "*-apple-darwin:SHOULD_BUILD="
+        ],
+        "steps": [
+            "all:$SHOULD_BUILD ./configure $config_opts",
+            "all:$SHOULD_BUILD make -j$NUM_CORES $build_opts",
+            "all:$SHOULD_BUILD make -j$NUM_CORES install DESTDIR=$STAGING_DIR prefix=$PREFIX exec-prefix=$PREFIX"
+        ]
+    }
 }

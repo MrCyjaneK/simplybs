@@ -1,32 +1,32 @@
 {
-  "package": "zeromq",
-  "version": "4.3.5",
-  "type": "host",
-  "download": {
-    "kind": "tar.gz",
-    "url": "https://github.com/zeromq/libzmq/releases/download/v4.3.5/zeromq-4.3.5.tar.gz",
-    "sha256": "6653ef5910f17954861fe72332e68b03ca6e4d9c7160eb3a8de5a5a913bfab43"
-  },
-  "patches": [
-    "fix_declaration.patch"
-  ],
-  "dependencies": [
-    "*-android*:native_android_ndk"
-  ],
-  "build": {
-    "env": [
-      "aarch64-apple-ios*:HOST=aarch64-apple-darwin",
-      "all:config_opts=--prefix=$PREFIX --host=$HOST --without-documentation --disable-shared --without-libsodium --disable-curve",
-      "*-linux-gnu:config_opts=$config_opts --with-pic",
-      "all:cxxflags=-std=c++11"
+    "package": "zeromq",
+    "version": "4.3.5",
+    "type": "host",
+    "download": {
+        "kind": "tar.gz",
+        "sha256": "6653ef5910f17954861fe72332e68b03ca6e4d9c7160eb3a8de5a5a913bfab43",
+        "url": "https://github.com/zeromq/libzmq/releases/download/v4.3.5/zeromq-4.3.5.tar.gz"
+    },
+    "dependencies": [
+        "*-android*:native_android_ndk"
     ],
-    "steps": [
-      "all:patch -p1 < $PATCH_DIR/fix_declaration.patch",
-      "all:./configure $config_opts",
-      "all:make -j$NUM_CORES src/libzmq.la",
-      "all:make -j$NUM_CORES DESTDIR=$STAGING_DIR install-pkgconfigDATA VERBOSE=1",
-      "all:make -j$NUM_CORES DESTDIR=$STAGING_DIR install-libLTLIBRARIES VERBOSE=1",
-      "all:make -j$NUM_CORES DESTDIR=$STAGING_DIR install-includeHEADERS VERBOSE=1"
-    ]
-  }
+    "patches": [
+        "fix_declaration.patch"
+    ],
+    "build": {
+        "env": [
+            "aarch64-apple-ios*:HOST=aarch64-apple-darwin",
+            "all:config_opts=--prefix=$PREFIX --host=$HOST --without-documentation --disable-shared --without-libsodium --disable-curve",
+            "*-linux-gnu:config_opts=$config_opts --with-pic",
+            "all:cxxflags=-std=c++11"
+        ],
+        "steps": [
+            "all:patch -p1 < $PATCH_DIR/fix_declaration.patch",
+            "all:./configure $config_opts",
+            "all:make -j$NUM_CORES src/libzmq.la",
+            "all:make -j$NUM_CORES DESTDIR=$STAGING_DIR install-pkgconfigDATA VERBOSE=1",
+            "all:make -j$NUM_CORES DESTDIR=$STAGING_DIR install-libLTLIBRARIES VERBOSE=1",
+            "all:make -j$NUM_CORES DESTDIR=$STAGING_DIR install-includeHEADERS VERBOSE=1"
+        ]
+    }
 }

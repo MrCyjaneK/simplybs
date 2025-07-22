@@ -4,8 +4,8 @@
     "type": "native",
     "download": {
         "kind": "tar.gz",
-        "url": "https://github.com/rust-lang/cargo/archive/refs/tags/0.64.0.tar.gz",
-        "sha256": "79045afc3df858f2c8398cc231f67f9c4eda8ffbea91078fd7447d71864332b5"
+        "sha256": "79045afc3df858f2c8398cc231f67f9c4eda8ffbea91078fd7447d71864332b5",
+        "url": "https://github.com/rust-lang/cargo/archive/refs/tags/0.64.0.tar.gz"
     },
     "dependencies": [
         "all:native_python3",

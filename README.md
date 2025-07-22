@@ -78,5 +78,5 @@ All package definitions live inside of this repo (this is going to change soon *
 In order to build, let's say, `libtor` for armv7a-linux-androideabi you would run the following command (on either a Mac or Linux x64 device).
 
 ```
-$ go run . -host armv7a-linux-androideabi -package libtor
+$ go run . -host armv7a-linux-androideabi -package libtor -build
 ```

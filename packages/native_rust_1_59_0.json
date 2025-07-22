@@ -4,8 +4,8 @@
     "type": "native",
     "download": {
         "kind": "tar.gz",
-        "url": "https://static.rust-lang.org/dist/rustc-1.59.0-src.tar.gz",
-        "sha256": "a7c8eeaee85bfcef84c96b02b3171d1e6540d15179ff83dddd9eafba185f85f9"
+        "sha256": "a7c8eeaee85bfcef84c96b02b3171d1e6540d15179ff83dddd9eafba185f85f9",
+        "url": "https://static.rust-lang.org/dist/rustc-1.59.0-src.tar.gz"
     },
     "dependencies": [
         "all:native_python3",

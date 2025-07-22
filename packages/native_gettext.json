@@ -4,8 +4,8 @@
     "type": "native",
     "download": {
         "kind": "tar.gz",
-        "url": "https://ftp.gnu.org/pub/gnu/gettext/gettext-0.26.tar.gz",
-        "sha256": "39acf4b0371e9b110b60005562aace5b3631fed9b1bb9ecccfc7f56e58bb1d7f"
+        "sha256": "39acf4b0371e9b110b60005562aace5b3631fed9b1bb9ecccfc7f56e58bb1d7f",
+        "url": "https://ftp.gnu.org/pub/gnu/gettext/gettext-0.26.tar.gz"
     },
     "dependencies": [
         "all:native_make",
@@ -26,4 +26,3 @@
         ]
     }
 }
-

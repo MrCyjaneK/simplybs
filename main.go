@@ -4,108 +4,78 @@ import (
 	"flag"
 	"fmt"
 	"log"
-	"path/filepath"
-	"slices"
-	"strings"
+
+	cmd "github.com/mrcyjanek/simplybs/cmd/buildweb"
+	"github.com/mrcyjanek/simplybs/cmd/lint"
+	"github.com/mrcyjanek/simplybs/crash"
+	"github.com/mrcyjanek/simplybs/host"
+	"github.com/mrcyjanek/simplybs/pack"
 )
 
 func main() {
 	log.SetFlags(log.LstdFlags | log.Lshortfile)
 	argList := flag.Bool("list", false, "List all supported hosts")
-	argHost := flag.String("host", "aarch64-apple-darwin", "The host to build for")
+	argHost := flag.String("host", "", "The host to build for")
 	argPkg := flag.String("package", "", "The package(s) to build (comma-separated)")
 	argWorld := flag.Bool("world", false, "Build all packages")
 	argExtract := flag.Bool("extract", false, "Extract packages")
 	argDownload := flag.Bool("download", false, "Download package sources")
+	argBuild := flag.Bool("build", false, "Build packages")
+	argBuildWeb := flag.Bool("buildweb", false, "Generate static website with package information")
+	argLint := flag.Bool("lint", false, "Lint packages")
 	flag.Parse()
-
-	host := supportedHosts[*argHost]
+	if *argBuildWeb {
+		cmd.BuildWeb()
+		return
+	}
+	if *argLint {
+		lint.Lint()
+		return
+	}
+	host := host.SupportedHosts[*argHost]
 	if host == nil {
-		crashErr(fmt.Errorf("host %s not supported", *argHost))
+		crash.Handle(fmt.Errorf("host %s not supported", *argHost))
 	}
 
-	packageNames := strings.Split(*argPkg, ",")
-
-	for i, name := range packageNames {
-		packageNames[i] = strings.TrimSpace(name)
+	packageNames := []*pack.Package{}
+	if *argWorld {
+		packageNames = pack.GetAllPackages()
+	} else {
+		packageNames = pack.GetPackagesByList(*argPkg)
 	}
 
-	var validPackages []string
-	for _, name := range packageNames {
-		if name != "" {
-			validPackages = append(validPackages, name)
-		}
+	if len(packageNames) == 0 {
+		crash.Handle(fmt.Errorf("no valid -package names or -world provided"))
 	}
 
 	if *argList {
-		files, err := filepath.Glob("packages/*.json")
-		if err != nil {
-			crashErr(fmt.Errorf("failed to list packages: %v", err))
-		}
-
-		if !*argWorld && len(validPackages) == 0 {
-			log.Fatalln("No -package or -world provided")
-		}
-
-		for _, file := range files {
-			if !*argWorld && !slices.Contains(validPackages, filepath.Base(file)[:len(filepath.Base(file))-len(filepath.Ext(filepath.Base(file)))]) {
-				continue
-			}
-			file = filepath.Base(file)
-			pkgName := file[:len(file)-len(filepath.Ext(file))]
-			printPackage(pkgName, *argHost, 0)
+		for _, pkg := range packageNames {
+			pack.PrintPackage(pkg.Package, *argHost, 0)
 		}
 		return
 	}
 
-	if *argWorld {
-		files, err := filepath.Glob("packages/*.json")
-		if err != nil {
-			crashErr(fmt.Errorf("failed to list packages: %v", err))
-		}
-		for _, file := range files {
-			file = filepath.Base(file)
-			pkgName := file[:len(file)-len(filepath.Ext(file))]
-			pkg := FindPackage(pkgName)
-			if *argDownload {
-				pkg.DownloadSource(host)
-			} else {
-				pkg.EnsureBuilt(host, true)
-			}
-		}
-		if !*argExtract {
-			return
-		}
-		for _, file := range files {
-			file = filepath.Base(file)
-			pkgName := file[:len(file)-len(filepath.Ext(file))]
-			pkg := FindPackage(pkgName)
+	if *argExtract {
+		for _, pkg := range packageNames {
 			pkg.ExtractEnv(host, host.GetEnvPath())
 		}
-		return
 	}
 
-	log.Printf("Building for host: %s", *argHost)
-
-	if len(validPackages) == 0 {
-		crashErr(fmt.Errorf("no valid package names provided"))
+	if *argDownload {
+		for _, pkg := range packageNames {
+			pkg.DownloadSource(host)
+		}
 	}
 
-	log.Printf("Building packages: %s", strings.Join(validPackages, ", "))
-
-	for _, packageName := range validPackages {
-		log.Printf("Processing package: %s", packageName)
-
-		pkg := FindPackage(packageName)
-		pkg.EnsureBuilt(host, true)
+	if *argBuild {
+		for _, pkg := range packageNames {
+			pkg.EnsureBuilt(host, true)
+		}
 	}
-	if !*argExtract {
-		return
-	}
-	for _, packageName := range validPackages {
-		log.Printf("Extracting env for package: %s", packageName)
-
-		pkg := FindPackage(packageName)
-		pkg.ExtractEnv(host, host.GetEnvPath())
+	if *argExtract {
+		for _, pkg := range packageNames {
+			log.Printf("Extracting env for package: %s", pkg.Package)
+			pkg.ExtractEnv(host, host.GetEnvPath())
+		}
 	}
 }
