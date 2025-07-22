@@ -1,0 +1,30 @@
+{
+  "package": "icu4c",
+  "version": "55.2",
+  "type": "host",
+  "download": {
+    "kind": "tar.gz",
+    "url": "https://github.com/unicode-org/icu/releases/download/release-55-2/icu4c-55_2-src.tgz",
+    "sha256": "eda2aa9f9c787748a2e2d310590720ca8bcc6252adf6b4cfb03b65bef9d66759"
+  },
+  "patches": [
+    "icu-001-dont-build-static-dynamic-twice.patch"
+  ],
+  "dependencies": [],
+  "build": {
+    "env": [
+      "*-w64-mingw32:CFLAGS=$CFLAGS -DU_USING_ICU_NAMESPACE=0 -DU_STATIC_IMPLEMENTATION -DU_COMBINED_IMPLEMENTATION -fPIC -DENABLE_STATIC=YES -DPGKDATA_MODE=static",
+      "*-w64-mingw32:TARGET="
+    ],
+    "steps": [
+      "*-w64-mingw32:patch -p1 < $PATCH_DIR/icu-001-dont-build-static-dynamic-twice.patch",
+      "*-w64-mingw32:mkdir builda",
+      "*-w64-mingw32:mkdir buildb",
+      "*-w64-mingw32:cd builda && sh ../source/runConfigureICU Linux",
+      "*-w64-mingw32:cd builda && make -j$NUM_CORES",
+      "*-w64-mingw32:cd buildb && ../source/runConfigureICU MinGW --enable-static=yes --disable-shared --disable-layout --disable-layoutex --disable-tests --disable-samples --prefix=$PREFIX --with-cross-build=$(pwd)/../builda",
+      "*-w64-mingw32:cd buildb && make -j$NUM_CORES $build_opts",
+      "*-w64-mingw32:cd buildb && -j$NUM_CORES $build_opts DESTDIR=$STAGING_DIR install lib/*"
+    ]
+  }
+}

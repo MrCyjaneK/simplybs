@@ -1,0 +1,22 @@
+{
+    "package": "native_libtool",
+    "version": "2.5.4",
+    "type": "native",
+    "download": {
+        "kind": "tar.gz",
+        "url": "https://ftp.gnu.org/gnu/libtool/libtool-2.5.4.tar.gz",
+        "sha256": "da8ebb2ce4dcf46b90098daf962cffa68f4b4f62ea60f798d0ef12929ede6adf"
+    },
+    "dependencies": [
+        "all:native_make",
+        "all:native_m4"
+    ],
+    "build": {
+        "env": [],
+        "steps": [
+            "all:./configure --prefix=$PREFIX/native",
+            "all:make -j$NUM_CORES",
+            "all:make DESTDIR=$STAGING_DIR install"
+        ]
+    }
+}

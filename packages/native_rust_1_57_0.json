@@ -1,0 +1,39 @@
+{
+    "package": "native_rust_1_57_0",
+    "version": "1.57.0",
+    "type": "native",
+    "download": {
+        "kind": "tar.gz",
+        "url": "https://static.rust-lang.org/dist/rustc-1.57.0-src.tar.gz",
+        "sha256": "3546f9c3b91b1f8b8efd26c94d6b50312c08210397b4072ed2748e2bd4445c1a"
+    },
+    "dependencies": [
+        "all:native_python3",
+        "all:native_rust_1_56_1",
+        "all:native_cargo_0_58_0"
+    ],
+    "patches": [
+        "assembly.h.patch"
+    ],
+    "build": {
+        "env": [
+            "all:PATH=$PREFIX/native/python3.11.13/bin:$PATH"
+        ],
+        "steps": [
+            "all:patch -p1 < $PATCH_DIR/assembly.h.patch",
+            "all:echo '[build]' > config.toml",
+            "all:echo 'full-bootstrap = true' >> config.toml",
+            "all:echo 'vendor = true' >> config.toml",
+            "all:echo 'extended = false' >> config.toml",
+            "all:echo rustc = \\\"$PREFIX/native/rust_1_56_1/bin/rustc\\\" >> config.toml",
+            "all:echo cargo = \\\"$PREFIX/native/cargo_0_58_0/bin/cargo\\\" >> config.toml",
+            "all:echo '[llvm]' >> config.toml",
+            "all:echo 'ninja = false' >> config.toml",
+            "all:echo 'download-ci-llvm = false' >> config.toml",
+            "all:python3 ./x.py build --stage 1 --verbose -j $NUM_CORES",
+            "all:mkdir -p $STAGING_DIR$PREFIX/rust_1_57_0/bin",
+            "all:cp -a build/*/stage1/lib $STAGING_DIR$PREFIX/rust_1_57_0/",
+            "all:cp -a build/*/stage1/bin/rustc $STAGING_DIR$PREFIX/rust_1_57_0/bin"
+        ]
+    }
+}

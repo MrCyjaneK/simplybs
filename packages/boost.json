@@ -1,0 +1,50 @@
+{
+  "package": "boost",
+  "version": "1_85_0",
+  "download": {
+    "url": "https://downloads.sourceforge.net/project/boost/boost/1.85.0/boost_1_85_0.tar.bz2",
+    "kind": "tar.bz2",
+    "sha256": "7009fe1faa1697476bdc7027703a2badb84e849b7b0baad5086b087b971f8617"
+  },
+  "patches": [
+    "fix_io_control_hpp.patch"
+  ],
+  "dependencies": [
+    "all:libiconv",
+    "*-android*:native_android_ndk"
+  ],
+  "build": {
+    "env": [
+      "all:config_opts=variant=release",
+      "all:config_opts=$config_opts --layout=system --user-config=user-config.jam",
+      "all:config_opts=$config_opts threading=multi link=static -sNO_BZIP2=1 -sNO_ZLIB=1",
+      "*-linux-gnu:config_opts=$config_opts threadapi=pthread runtime-link=static",
+      "*-linux-android*:config_opts=$config_opts threadapi=pthread runtime-link=static target-os=android",
+      "*-apple-darwin:config_opts=$config_opts --toolset=darwin runtime-link=static",
+      "*-apple-ios*:config_opts=$config_opts --toolset=darwin-$IOS_COMPILER_VERSION~iphone runtime-link=static",
+      "-*mingw32:config_opts=$config_opts binary-format=pe target-os=windows threadapi=win32 runtime-link=static",
+      "x86_64-*-mingw32:config_opts=$config_opts address-model=64",
+      "i686-*-mingw32:config_opts=$config_opts address-model=32",
+      "i686-linux-gnu:config_opts=address-model=32 architecture=x86",
+      "none:// $(package)_toolset_$(host_os)=gcc",
+      "none:// $(package)_archiver_$(host_os)=$($(package)_ar)",
+      "none:// $(package)_archiver_darwin=$($(package)_libtool)",
+      "none:// $(package)_archiver_ios=$($(package)_libtool)",
+      "none:// $(package)_archiver_iossimulator=$($(package)_libtool)",
+      "all:toolset=gcc",
+      "*-apple-ios*:toolset=darwin-$IOS_COMPILER_VERSION~iphone",
+      "*-apple-*:AR=$LIBTOOL",
+      "*-apple-*:toolset=darwin",
+      "all:config_libraries=system,filesystem,thread,timer,date_time,chrono,regex,serialization,atomic,program_options,locale,log",
+      "*-linux-*:CXXFLAGS=$CXXFLAGS -fPIC",
+      "*-apple-darwin:CXXFLAGS=$CXXFLAGS -fPIC -std=c++11",
+      "*-apple-*:LDFLAGS=$LDFLAGS -L$PREFIX/lib -L$SDK_PATH/usr/lib"
+    ],
+    "steps": [
+      "all:echo \"using $toolset : $toolset2 : $CXX $CXXFLAGS : <cxxflags>\"$CXXFLAGS\" <linkflags>\"$LDFLAGS\" <archiver>\"$AR\" <arflags>\"$ARFLAGS\" <striper>\"$STRIP\" <ranlib>\"$RANLIB\" <rc>\"$WINDRES\" <target-os>iphone : ;\" > user-config.jam",
+      "all:./bootstrap.sh --with-libraries=$config_libraries",
+      "all:./b2 -d2 -j$NUM_CORES --prefix=$STAGING_DIR$PREFIX $config_opts stage",
+      "all:./b2 -d0 -j$NUM_CORES --prefix=$STAGING_DIR$PREFIX $config_opts install"
+    ]
+  }
+}

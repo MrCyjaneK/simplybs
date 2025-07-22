@@ -1,0 +1,37 @@
+{
+  "package": "native_protobuf",
+  "version": "3.6.1",
+  "type": "native",
+  "download": {
+    "kind": "tar.gz",
+    "url": "https://github.com/protocolbuffers/protobuf/releases/download/v3.6.1/protobuf-cpp-3.6.1.tar.gz",
+    "sha256": "b3732e471a9bb7950f090fd0457ebd2536a9ba0891b7f3785919c654fe2a2529"
+  },
+  "dependencies": [
+    "all:native_config"
+  ],
+  "build": {
+    "env": [
+      "all:config_opts=--host=$HOST --prefix=$PREFIX/native",
+      "all:config_opts=$config_opts --disable-shared",
+      "*-linux-gnu:config_opts=$config_opts --with-pic",
+      "*-linux-gnu:SHOULD_BUILD=",
+      "*-w64-mingw32:SHOULD_BUILD=",
+      "*-apple-darwin:SHOULD_BUILD="
+    ],
+    "steps": [
+      "all:cp -f $PREFIX/native/usr/share/config/config.guess config.guess",
+      "all:cp -f $PREFIX/native/usr/share/config/config.sub config.sub",
+      "all:cp -f $PREFIX/native/usr/share/config/config.guess third_party/googletest/googletest/build-aux/config.guess",
+      "all:cp -f $PREFIX/native/usr/share/config/config.sub third_party/googletest/googletest/build-aux/config.sub",
+      "all:cp -f $PREFIX/native/usr/share/config/config.guess third_party/googletest/googlemock/build-aux/config.guess",
+      "all:cp -f $PREFIX/native/usr/share/config/config.sub third_party/googletest/googlemock/build-aux/config.sub",
+      "all:$SHOULD_BUILD aclocal",
+      "all:$SHOULD_BUILD automake --add-missing",
+      "all:$SHOULD_BUILD ./configure $config_opts",
+      "all:$SHOULD_BUILD make -j$NUM_CORES",
+      "all:$SHOULD_BUILD make -j$NUM_CORES DESTDIR=$STAGING_DIR install",
+      "all:$SHOULD_BUILD rm $STAGING_DIR$PREFIX/native/lib/libprotoc.a || true"
+    ]
+  }
+}

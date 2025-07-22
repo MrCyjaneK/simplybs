@@ -1,0 +1,24 @@
+{
+    "package": "native_p7zip",
+    "version": "1_36_1",
+    "type": "native",
+    "download": {
+        "kind": "tar.bz2",
+        "url": "https://downloads.sourceforge.net/project/p7zip/p7zip/16.02/p7zip_16.02_src_all.tar.bz2",
+        "sha256": "5eb20ac0e2944f6cb9c2d51dd6c4518941c185347d4089ea89087ffdd6e2341f"
+    },
+    "dependencies": [
+        "all:native_make"
+    ],
+    "build": {
+        "env": [],
+        "steps": [
+            "all:if [ $(uname) = 'Darwin' ]; then cp makefile.macosx_llvm_64bits makefile.machine; else true; fi",
+            "all:if [ $(uname) = 'Linux' ]; then cp makefile.linux_any_cpu makefile.machine; else true; fi",
+            "all:sed -i.bak 's/switch(errorCode)/switch(static_cast<HRESULT>(errorCode))/' ./CPP/Windows/ErrorMsg.cpp",
+            "all:make -j$NUM_CORES 7za",
+            "all:mkdir -p $STAGING_DIR$PREFIX/native/bin",
+            "all:cp bin/7za $STAGING_DIR$PREFIX/native/bin/7z"
+        ]
+    }
+}

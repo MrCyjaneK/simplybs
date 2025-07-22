@@ -1,0 +1,25 @@
+{
+  "package": "eudev",
+  "version": "v3.2.6",
+  "type": "host",
+  "download": {
+    "kind": "tar.gz",
+    "url": "https://github.com/eudev-project/eudev/archive/refs/tags/v3.2.6.tar.gz",
+    "sha256": "a96ecb8637667897b8bd4dee4c22c7c5f08b327be45186e912ce6bc768385852"
+  },
+  "build": {
+    "env": [
+      "all:config_opts=--host=$HOST --prefix=$PREFIX",
+      "all:config_opts=$config_opts --disable-gudev --disable-introspection --disable-hwdb --disable-manpages --disable-shared",
+      "all:config_opts=$config_opts AR_FLAGS=$ARFLAGS",
+      "all:SHOULD_BUILD=echo",
+      "*-linux-gnu:SHOULD_BUILD="
+    ],
+    "steps": [
+      "all:$SHOULD_BUILD autoreconf -f -i",
+      "all:$SHOULD_BUILD ./configure $config_opts",
+      "all:$SHOULD_BUILD make -j$NUM_CORES",
+      "all:$SHOULD_BUILD make -j$NUM_CORES DESTDIR=$STAGING_DIR install"
+    ]
+  }
+}

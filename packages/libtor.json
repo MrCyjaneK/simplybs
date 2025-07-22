@@ -1,0 +1,55 @@
+{
+    "package": "libtor",
+    "version": "tor-0.4.8.17",
+    "type": "host",
+    "download": {
+        "kind": "git",
+        "url": "https://gitlab.torproject.org/tpo/core/tor.git",
+        "sha256": "e41649c9a34f39f1d543e064fd2b97de26d3e097"
+    },
+    "dependencies": [
+        "*-android*:native_android_ndk",
+        "all:native_autoconf",
+        "all:native_automake",
+        "all:native_perl",
+        "all:native_m4",
+        "all:native_make",
+        "all:xz",
+        "all:libevent",
+        "all:openssl",
+        "all:zlib"
+    ],
+    "build": {
+        "env": [
+            "all:config_opts=--host=$HOST --prefix=$PREFIX",
+            "all:config_opts=$config_opts --enable-silent-rules",
+            "all:config_opts=$config_opts --enable-pic",
+            "all:config_opts=$config_opts --disable-module-relay",
+            "all:config_opts=$config_opts --disable-module-dirauth",
+            "all:config_opts=$config_opts --disable-tool-name-check",
+            "all:config_opts=$config_opts --disable-unittests",
+            "all:config_opts=$config_opts --enable-static-openssl",
+            "all:config_opts=$config_opts --enable-static-libevent",
+            "all:config_opts=$config_opts --disable-asciidoc",
+            "all:config_opts=$config_opts --disable-system-torrc",
+            "all:config_opts=$config_opts --disable-linker-hardening",
+            "all:config_opts=$config_opts --disable-dependency-tracking",
+            "all:config_opts=$config_opts --disable-manpage",
+            "all:config_opts=$config_opts --disable-html-manual",
+            "all:config_opts=$config_opts --disable-gcc-warnings-advisory",
+            "all:config_opts=$config_opts --enable-lzma",
+            "all:config_opts=$config_opts --disable-zstd",
+            "all:config_opts=$config_opts --with-openssl-dir=$PREFIX/lib",
+            "all:config_opts=$config_opts --with-libevent-dir=$PREFIX/lib",
+            "all:config_opts=$config_opts tor_cv_library_libevent_dir=$PREFIX"
+        ],
+        "steps": [
+            "none:git apply $PATCH_DIR/mmap-cache.patch",
+            "all:./autogen.sh",
+            "all:./configure $config_opts",
+            "all:make -j$NUM_CORES libtor.a",
+            "all:mkdir -p $STAGING_DIR$PREFIX/lib/libtor.a",
+            "all:cp libtor.a $STAGING_DIR$PREFIX/lib/libtor.a"
+        ]
+    }
+}

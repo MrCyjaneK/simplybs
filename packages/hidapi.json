@@ -1,0 +1,37 @@
+{
+  "package": "hidapi",
+  "version": "0.13.1",
+  "type": "host",
+  "download": {
+    "kind": "tar.gz",
+    "url": "https://github.com/libusb/hidapi/archive/refs/tags/hidapi-0.13.1.tar.gz",
+    "sha256": "476a2c9a4dc7d1fc97dd223b84338dbea3809a84caea2dcd887d9778725490e3"
+  },
+  "dependencies": [
+    "all:libusb",
+    "all:eudev",
+    "*-android*:native_android_ndk"
+  ],
+  "patches": [
+    "missing_win_include.patch"
+  ],
+  "build": {
+    "env": [
+      "all:config_opts=--prefix=$PREFIX --host=$HOST AR_FLAGS=$ARFLAGS --enable-static --disable-shared",
+      "*-linux-gnu:config_opts=$config_opts libudev_CFLAGS=-I$PREFIX/include",
+      "*-linux-gnu:config_opts=$config_opts libusb_CFLAGS=-I$PREFIX/include/libusb-1.0",
+      "*-linux-gnu:config_opts=$config_opts --with-pic",
+      "all:SHOULD_BUILD=echo",
+      "*-linux-gnu:SHOULD_BUILD=",
+      "*-w64-mingw32:SHOULD_BUILD=",
+      "*-apple-darwin:SHOULD_BUILD="
+    ],
+    "steps": [
+      "all:$SHOULD_BUILD patch -p1 < $PATCH_DIR/missing_win_include.patch",
+      "all:$SHOULD_BUILD ./bootstrap",
+      "all:$SHOULD_BUILD ./configure $config_opts libudev_LIBS=\"-L$PREFIX/lib -ludev\" libusb_LIBS=\"-L$PREFIX/lib -lusb-1.0\"",
+      "all:$SHOULD_BUILD make -j$NUM_CORES",
+      "all:$SHOULD_BUILD make -j$NUM_CORES DESTDIR=$STAGING_DIR install"
+    ]
+  }
+}

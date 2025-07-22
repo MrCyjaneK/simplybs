@@ -1,0 +1,46 @@
+{
+    "package": "xz",
+    "version": "5.8.1",
+    "type": "host",
+    "download": {
+        "kind": "tar.gz",
+        "url": "https://github.com/tukaani-project/xz/releases/download/v5.8.1/xz-5.8.1.tar.gz",
+        "sha256": "507825b599356c10dca1cd720c9d0d0c9d5400b9de300af00e4d1ea150795543"
+    },
+    "patches": [
+        "fix_declaration.patch"
+    ],
+    "dependencies": [
+        "*-android*:native_android_ndk",
+        "all:native_make",
+        "all:native_gettext",
+        "all:native_perl",
+        "all:native_autoconf",
+        "all:native_m4",
+        "all:native_libtool",
+        "all:native_automake"
+    ],
+    "build": {
+        "env": [
+            "all:config_opts=--prefix=$PREFIX --host=$HOST",
+            "all:config_opts=$config_opts --disable-shared",
+            "all:config_opts=$config_opts --enable-static",
+            "all:config_opts=$config_opts --disable-doc",
+            "all:config_opts=$config_opts --disable-scripts",
+            "all:config_opts=$config_opts --disable-xz",
+            "all:config_opts=$config_opts --disable-xzdec",
+            "all:config_opts=$config_opts --disable-lzmadec",
+            "all:config_opts=$config_opts --disable-lzmainfo",
+            "all:config_opts=$config_opts --disable-lzma-links"
+        ],
+        "steps": [
+            "all:pwd",
+            "all:./autogen.sh --no-po4a",
+            "all:./configure $config_opts",
+            "all:make -j$NUM_CORES",
+            "all:make DESTDIR=$STAGING_DIR install",
+			"all:rm $STAGING_DIR$PREFIX/lib/*.la"
+        ]
+    }
+}
+

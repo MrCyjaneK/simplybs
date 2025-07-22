@@ -1,0 +1,28 @@
+{
+    "package": "native_cargo_0_64_0",
+    "version": "0.64.0",
+    "type": "native",
+    "download": {
+        "kind": "tar.gz",
+        "url": "https://github.com/rust-lang/cargo/archive/refs/tags/0.64.0.tar.gz",
+        "sha256": "79045afc3df858f2c8398cc231f67f9c4eda8ffbea91078fd7447d71864332b5"
+    },
+    "dependencies": [
+        "all:native_python3",
+        "all:native_cargo_0_58_0",
+        "all:native_rust_1_62_1"
+    ],
+    "build": {
+        "env": [
+            "all:PATH=$PREFIX/native/cargo_0_58_0/bin:$PATH",
+            "all:PATH=$PREFIX/native/rust_1_62_1/bin:$PATH",
+            "all:CARGO=$PREFIX/native/cargo_0_58_0/bin/cargo",
+            "all:RUSTC=$PREFIX/native/rust_1_62_1/bin/rustc"
+        ],
+        "steps": [
+            "all:cargo build --release",
+            "all:mkdir -p $STAGING_DIR$PREFIX/cargo_0_64_0/bin",
+            "all:cp -a target/release/cargo $STAGING_DIR$PREFIX/cargo_0_64_0/bin"
+        ]
+    }
+}
