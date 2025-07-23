@@ -1,12 +1,16 @@
 {
     "package": "eudev",
-    "version": "v3.2.6",
+    "version": "v3.2.14",
     "type": "host",
     "download": {
         "kind": "tar.gz",
-        "sha256": "a96ecb8637667897b8bd4dee4c22c7c5f08b327be45186e912ce6bc768385852",
-        "url": "https://github.com/eudev-project/eudev/archive/refs/tags/v3.2.6.tar.gz"
+        "sha256": "8da4319102f24abbf7fff5ce9c416af848df163b29590e666d334cc1927f006f",
+        "url": "https://github.com/eudev-project/eudev/releases/download/v3.2.14/eudev-3.2.14.tar.gz"
     },
+    "dependencies": [
+        "*-linux-gnu:native_make",
+        "*-linux-gnu:native_gperf"
+    ],
     "build": {
         "env": [
             "all:config_opts=--host=$HOST --prefix=$PREFIX",
@@ -16,7 +20,6 @@
             "*-linux-gnu:SHOULD_BUILD="
         ],
         "steps": [
-            "all:$SHOULD_BUILD autoreconf -f -i",
             "all:$SHOULD_BUILD ./configure $config_opts",
             "all:$SHOULD_BUILD make -j$NUM_CORES",
             "all:$SHOULD_BUILD make -j$NUM_CORES DESTDIR=$STAGING_DIR install"

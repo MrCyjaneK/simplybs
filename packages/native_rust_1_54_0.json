@@ -7,6 +7,12 @@
         "sha256": "d3d3b84a100e71628afecf1125dbaa9bfc54ef9578c4fd81d75dca34c96f2565",
         "url": "https://github.com/thepowersgang/mrustc/archive/06b87d1af49d2db3bd850fdee8888055dd540dd1.tar.gz"
     },
+    "dependencies": [
+        "all:native_patch",
+        "all:native_make",
+        "all:native_zlib",
+        "all:native_cmake"
+    ],
     "patches": [
         "codegen_c.cpp.patch"
     ],
@@ -22,7 +28,7 @@
             "all:if [ $(uname) = 'Darwin' ]; then sed -i.bak 's/^[[:space:]]*RUSTC_TARGET ?= x86_64-apple-darwin/RUSTC_TARGET ?= aarch64-apple-darwin/' run_rustc/Makefile; else true; fi",
             "all:echo >> build-1.54.0.sh",
             "all:echo make -C run_rustc >> build-1.54.0.sh",
-            "all:env -i PATH=$PATH PARLEVEL=$NUM_CORES ./build-1.54.0.sh -j$NUM_CORES",
+            "all:env -i CXXFLAGS_EXTRA=$CFLAGS LINKFLAGS_EXTRA=$LDFLAGS PATH=$PATH PARLEVEL=$NUM_CORES ./build-1.54.0.sh -j$NUM_CORES",
             "none:# FIXME bad dylib paths embedded in the rustc binary, forcing install_name_tool dark magic",
             "all:mkdir -p $STAGING_DIR$PREFIX/native/rust_1_54_0/bin",
             "all:mkdir -p $STAGING_DIR$PREFIX/native/rust_1_54_0/lib",

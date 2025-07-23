@@ -9,7 +9,8 @@
     },
     "dependencies": [
         "*-android*:native_android_ndk",
-        "all:native_config"
+        "all:native_config",
+        "all:native_make"
     ],
     "build": {
         "env": [
@@ -26,7 +27,6 @@
         "steps": [
             "all:cp -f $PREFIX/native/usr/share/config/config.guess config.guess",
             "all:cp -f $PREFIX/native/usr/share/config/config.sub config.sub",
-            "all:$SHOULD_BUILD autoreconf -i",
             "all:$SHOULD_BUILD ./configure $config_opts",
             "all:$SHOULD_BUILD make -j$NUM_CORES",
             "all:$SHOULD_BUILD make -j$NUM_CORES DESTDIR=$STAGING_DIR install",

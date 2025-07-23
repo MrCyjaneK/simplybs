@@ -9,6 +9,9 @@
     },
     "dependencies": [
         "all:libiconv",
+        "all:native_make",
+        "all:native_autoconf",
+        "all:native_perl",
         "*-android*:native_android_ndk"
     ],
     "build": {

@@ -79,6 +79,12 @@ func (p *Package) GetEnv(h *host.Host) map[string]string {
 	}
 
 	env = utils.AppendEnv(env, builder.HostBuilder.GlobalEnv, h)
+	if p.Type == "native" {
+		env = utils.AppendEnv(env, []string{
+			"all:CFLAGS=-I" + h.GetEnvPath() + "/native/include",
+			"all:LDFLAGS=-L" + h.GetEnvPath() + "/native/lib",
+		}, h)
+	}
 	if p.Type != "native" {
 		env = utils.AppendEnv(env, h.Env, h)
 	}

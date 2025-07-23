@@ -8,6 +8,7 @@
         "url": "https://static.rust-lang.org/dist/rustc-1.59.0-src.tar.gz"
     },
     "dependencies": [
+        "all:native_patch",
         "all:native_python3",
         "all:native_rust_1_58_1",
         "all:native_cargo_0_58_0"
@@ -31,9 +32,9 @@
             "all:echo 'ninja = false' >> config.toml",
             "all:echo 'download-ci-llvm = false' >> config.toml",
             "all:python3 ./x.py build --stage 1 --verbose -j $NUM_CORES",
-            "all:mkdir -p $STAGING_DIR$PREFIX/rust_1_59_0/bin",
-            "all:cp -a build/*/stage1/lib $STAGING_DIR$PREFIX/rust_1_59_0/",
-            "all:cp -a build/*/stage1/bin/rustc $STAGING_DIR$PREFIX/rust_1_59_0/bin"
+            "all:mkdir -p $STAGING_DIR$PREFIX/native/rust_1_59_0/bin",
+            "all:cp -a build/*/stage1/lib $STAGING_DIR$PREFIX/native/rust_1_59_0/",
+            "all:cp -a build/*/stage1/bin/rustc $STAGING_DIR$PREFIX/native/rust_1_59_0/bin"
         ]
     }
 }
