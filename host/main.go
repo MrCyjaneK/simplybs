@@ -15,13 +15,28 @@ type Host struct {
 	Env     []string
 }
 
+func GetPackagesDir() string {
+	if os.Getenv("SIMPLYBS_PACKAGES_DIR") != "" {
+		return os.Getenv("SIMPLYBS_PACKAGES_DIR")
+	}
+	if os.Getenv("SIMPLYBS_DATA_DIR") != "" {
+		guessPath := filepath.Join(os.Getenv("SIMPLYBS_DATA_DIR"), "..", "packages")
+		if _, err := os.Stat(guessPath); err == nil {
+			return guessPath
+		}
+	}
+	wd, err := os.Getwd()
+	crash.Handle(err)
+	return filepath.Join(wd, "packages")
+}
+
 func DataDirRoot() string {
 	if os.Getenv("SIMPLYBS_DATA_DIR") != "" {
 		return os.Getenv("SIMPLYBS_DATA_DIR")
 	}
 	buildDir, err := os.Getwd()
 	crash.Handle(err)
-	return filepath.Join(buildDir, ".buildlib", "data")
+	return filepath.Join(buildDir, ".buildlib")
 }
 
 func DataDir() string {
@@ -88,6 +103,25 @@ var SupportedHosts = map[string]*Host{
 			"all:AR=" + shellOutput("xcrun -f ar"),
 			"all:LIBTOOL=" + shellOutput("xcrun -f libtool"),
 			"all:SDK_PATH=" + shellOutput("xcrun --sdk iphoneos --show-sdk-path"),
+		},
+	},
+	"aarch64-apple-ios-simulator": {
+		Triplet: "aarch64-apple-ios-simulator",
+		Env: []string{
+			"all:HOST=aarch64-apple-ios-simulator",
+			"all:TARGET=aarch64-apple-ios-simulator",
+			"all:IOS_MIN_VERSION=12",
+			"all:LD64_VERSION=609",
+			"all:CC_target=aarch64-apple-ios-simulator",
+			"all:CC=" + shellOutput("xcrun -f clang") + " -target $CC_target -mios-version-min=$IOS_MIN_VERSION --sysroot " + shellOutput("xcrun --sdk iphonesimulator --show-sdk-path") + " -I" + shellOutput("xcrun --sdk iphonesimulator --show-sdk-path") + "/usr/include -I$PREFIX/include",
+			"all:CXX=" + shellOutput("xcrun -f clang++") + " -target $CC_target -mios-version-min=$IOS_MIN_VERSION --sysroot " + shellOutput("xcrun --sdk iphonesimulator --show-sdk-path") + " -I" + shellOutput("xcrun --sdk iphonesimulator --show-sdk-path") + "/usr/include -I$PREFIX/include",
+			"all:CFLAGS=",
+			"all:CXXFLAGS=$CFLAGS -stdlib=libc++",
+			"all:ARFLAGS=cr",
+			"all:RANLIB=" + shellOutput("xcrun -f ranlib"),
+			"all:AR=" + shellOutput("xcrun -f ar"),
+			"all:LIBTOOL=" + shellOutput("xcrun -f libtool"),
+			"all:SDK_PATH=" + shellOutput("xcrun --sdk iphonesimulator --show-sdk-path"),
 		},
 	},
 	"x86_64-linux-gnu": {

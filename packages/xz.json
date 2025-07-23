@@ -22,7 +22,9 @@
     ],
     "build": {
         "env": [
-            "all:config_opts=--prefix=$PREFIX --host=$HOST",
+            "all:HOSTOVERRIDE=$HOST",
+            "aarch64-apple-ios-simulator:HOSTOVERRIDE=aarch64-apple-ios",
+            "all:config_opts=--prefix=$PREFIX --host=$HOSTOVERRIDE",
             "all:config_opts=$config_opts --disable-shared",
             "all:config_opts=$config_opts --enable-static",
             "all:config_opts=$config_opts --disable-doc",

@@ -8,6 +8,7 @@ import (
 	"log"
 	"net/http"
 	"os"
+	"path/filepath"
 	"strconv"
 	"strings"
 	"time"
@@ -72,17 +73,28 @@ func formatBytes(bytes int64) string {
 	return fmt.Sprintf("%.1f %cB", float64(bytes)/float64(div), "KMGTPE"[exp%len("KMGTPE")])
 }
 
-func DownloadFile(path, url, expectedSha256 string) {
+func DownloadFile(path, url, expectedSha256 string, isMirror bool) error {
 	log.Printf("Downloading %s to %s", url, path)
+
+	if !isMirror {
+		baseName := filepath.Base(path)
+		err := DownloadFile(path, "https://static.mrcyjanek.net/lfs/simplybs/sources/"+baseName, expectedSha256, true)
+		if err != nil {
+			log.Printf("Failed to download file from mirror: %v, trying original URL", err)
+		} else {
+			log.Printf("Downloaded file from mirror: %s", path)
+			return nil
+		}
+	}
 
 	resp, err := http.Get(url)
 	if err != nil {
-		log.Fatalf("Failed to download file from %s: %v", url, err)
+		return fmt.Errorf("Failed to download file from %s: %v", url, err)
 	}
 	defer resp.Body.Close()
 
 	if resp.StatusCode != http.StatusOK {
-		log.Fatalf("Failed to download file: HTTP %d %s", resp.StatusCode, resp.Status)
+		return fmt.Errorf("Failed to download file: HTTP %d %s", resp.StatusCode, resp.Status)
 	}
 
 	var totalSize int64
@@ -94,7 +106,7 @@ func DownloadFile(path, url, expectedSha256 string) {
 
 	out, err := os.Create(path)
 	if err != nil {
-		log.Fatalf("Failed to create file %s: %v", path, err)
+		return fmt.Errorf("Failed to create file %s: %v", path, err)
 	}
 	defer out.Close()
 
@@ -110,7 +122,7 @@ func DownloadFile(path, url, expectedSha256 string) {
 
 	_, err = io.Copy(multiWriter, resp.Body)
 	if err != nil {
-		log.Fatalf("Failed to write file %s: %v", path, err)
+		return fmt.Errorf("Failed to write file %s: %v", path, err)
 	}
 
 	progressWriter.finish()
@@ -118,8 +130,9 @@ func DownloadFile(path, url, expectedSha256 string) {
 	actualHash := hex.EncodeToString(hasher.Sum(nil))
 	if actualHash != expectedSha256 {
 		os.Remove(path)
-		log.Fatalf("SHA256 hash mismatch for %s: expected %s, got %s", path, expectedSha256, actualHash)
+		return fmt.Errorf("SHA256 hash mismatch for %s: expected %s, got %s", path, expectedSha256, actualHash)
 	}
 
 	log.Printf("Successfully downloaded and verified %s", path)
+	return nil
 }

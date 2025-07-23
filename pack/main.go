@@ -8,6 +8,7 @@ import (
 	"strings"
 
 	"github.com/mrcyjanek/simplybs/crash"
+	"github.com/mrcyjanek/simplybs/host"
 	"github.com/ryanuber/go-glob"
 )
 
@@ -28,11 +29,8 @@ type Package struct {
 }
 
 func FindPackage(name string) (*Package, error) {
-	buildDir, err := os.Getwd()
-	crash.Handle(err)
-	buildDir = filepath.Join(buildDir, "packages")
-	buildDir = filepath.Join(buildDir, name+".json")
-	info, err := os.ReadFile(buildDir)
+	pkgPath := filepath.Join(host.GetPackagesDir(), name+".json")
+	info, err := os.ReadFile(pkgPath)
 	if err != nil {
 		return nil, err
 	}

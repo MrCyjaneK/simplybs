@@ -21,7 +21,9 @@
     ],
     "build": {
         "env": [
-            "all:config_opts=--host=$HOST --prefix=$PREFIX",
+            "all:HOSTOVERRIDE=$HOST",
+            "aarch64-apple-ios-simulator:HOSTOVERRIDE=aarch64-apple-ios",
+            "all:config_opts=--host=$HOSTOVERRIDE --prefix=$PREFIX",
             "all:config_opts=$config_opts --enable-silent-rules",
             "all:config_opts=$config_opts --enable-pic",
             "all:config_opts=$config_opts --disable-module-relay",

@@ -6,7 +6,6 @@ import (
 
 	"github.com/go-git/go-git/v5"
 	"github.com/go-git/go-git/v5/plumbing"
-	"github.com/mrcyjanek/simplybs/crash"
 )
 
 func optimizeGitRepo(repoPath string) {
@@ -79,33 +78,39 @@ func resolveRef(repo *git.Repository, refStr string) (plumbing.Hash, error) {
 	return plumbing.ZeroHash, err
 }
 
-func DownloadGit(path, url, expectedSha256 string) {
+func DownloadGit(path, url, expectedSha256 string) error {
 	log.Printf("Downloading %s to %s", url, path)
 
 	repo, err := git.PlainClone(path, false, &git.CloneOptions{
 		URL:      url,
 		Progress: os.Stdout,
 	})
-	crash.Handle(err)
+	if err != nil {
+		return err
+	}
 
 	worktree, err := repo.Worktree()
-	crash.Handle(err)
+	if err != nil {
+		return err
+	}
 
 	log.Printf("Checking out reference %s", expectedSha256)
 	targetHash, err := resolveRef(repo, expectedSha256)
 	if err != nil {
-		log.Printf("Failed to resolve reference %s: %v", expectedSha256, err)
-		crash.Handle(err)
+		return err
 	}
 
 	err = worktree.Checkout(&git.CheckoutOptions{
 		Hash: targetHash,
 	})
-	crash.Handle(err)
+	if err != nil {
+		return err
+	}
 
 	log.Printf("Cleaning up and optimizing repository...")
 
 	optimizeGitRepo(path)
 
 	log.Printf("Successfully downloaded and optimized %s", path)
+	return nil
 }

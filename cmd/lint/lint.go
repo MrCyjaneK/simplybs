@@ -101,7 +101,7 @@ func ensureSaneDependencies() {
 }
 
 func ensureValidName(pkg *pack.Package) {
-	content, err := os.ReadFile(filepath.Join("packages", pkg.Package+".json"))
+	content, err := os.ReadFile(filepath.Join(host.GetPackagesDir(), pkg.Package+".json"))
 	if err != nil {
 		log.Println(pkg.Package, "not found")
 		return

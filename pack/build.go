@@ -36,24 +36,28 @@ func (p *Package) ExtractEnv(host *host.Host, envPath string) {
 	}
 }
 
-func (p *Package) DownloadSource(host *host.Host) {
-	sourcePath := p.GenerateBuildPath(host, "source") + "." + p.Download.Kind
+func (p *Package) DownloadSource() {
+	sourcePath := p.GenerateBuildPath(&host.Host{}, "source") + "." + p.Download.Kind
 	os.MkdirAll(filepath.Dir(sourcePath), 0755)
 	if p.Download.Kind == "none" {
 		return
 	}
 	if _, err := os.Stat(sourcePath); os.IsNotExist(err) {
+		var err error
 		if p.Download.Kind == "git" {
-			utils.DownloadGit(sourcePath, p.Download.URL, p.Download.Sha256)
+			err = utils.DownloadGit(sourcePath, p.Download.URL, p.Download.Sha256)
 		} else {
-			utils.DownloadFile(sourcePath, p.Download.URL, p.Download.Sha256)
+			err = utils.DownloadFile(sourcePath, p.Download.URL, p.Download.Sha256, false)
+		}
+		if err != nil {
+			log.Fatalf("Failed to download source: %v", err)
 		}
 	}
 }
 
 func (p *Package) ExtractSource(host *host.Host, buildPath string) {
 	sourcePath := p.GenerateBuildPath(host, "source") + "." + p.Download.Kind
-	p.DownloadSource(host)
+	p.DownloadSource()
 	var err error
 	switch p.Download.Kind {
 	case "tar.bz2":

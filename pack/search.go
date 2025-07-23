@@ -6,6 +6,7 @@ import (
 	"strings"
 
 	"github.com/mrcyjanek/simplybs/crash"
+	"github.com/mrcyjanek/simplybs/host"
 )
 
 func GetPackagesByList(list string) []*Package {
@@ -17,7 +18,7 @@ func GetPackagesByList(list string) []*Package {
 	for _, name := range packageNames {
 		pkg, err := FindPackage(name)
 		if err != nil {
-			log.Printf("Package %s not found", name)
+			log.Printf("Package %s not found in %s", name, host.GetPackagesDir())
 			continue
 		}
 		packages = append(packages, pkg)
