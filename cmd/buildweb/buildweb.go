@@ -10,6 +10,7 @@ import (
 	_ "embed"
 
 	"github.com/mrcyjanek/simplybs/crash"
+	"github.com/mrcyjanek/simplybs/host"
 	"github.com/mrcyjanek/simplybs/pack"
 )
 
@@ -39,7 +40,7 @@ func dependencyExists(dep string, packages []*pack.Package) bool {
 }
 
 func BuildWeb() {
-	webDir := "./.buildlib/web"
+	webDir := filepath.Join(host.DataDirRoot(), "web")
 
 	if _, err := os.Stat(webDir); !os.IsNotExist(err) {
 		err := os.RemoveAll(webDir)

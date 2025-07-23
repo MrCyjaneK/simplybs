@@ -11,7 +11,8 @@
         "all:native_patch",
         "all:native_make",
         "all:native_zlib",
-        "all:native_cmake"
+        "all:native_cmake",
+        "all:native_perl"
     ],
     "patches": [
         "codegen_c.cpp.patch"

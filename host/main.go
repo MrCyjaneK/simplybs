@@ -15,10 +15,17 @@ type Host struct {
 	Env     []string
 }
 
-func DataDir() string {
+func DataDirRoot() string {
+	if os.Getenv("SIMPLYBS_DATA_DIR") != "" {
+		return os.Getenv("SIMPLYBS_DATA_DIR")
+	}
 	buildDir, err := os.Getwd()
 	crash.Handle(err)
-	return filepath.Join(buildDir, ".buildlib", runtime.GOOS+"_"+runtime.GOARCH)
+	return filepath.Join(buildDir, ".buildlib", "data")
+}
+
+func DataDir() string {
+	return filepath.Join(DataDirRoot(), runtime.GOOS+"_"+runtime.GOARCH)
 }
 
 func (h *Host) GetEnvPath() string {
