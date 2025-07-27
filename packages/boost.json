@@ -8,8 +8,8 @@
         "url": "https://downloads.sourceforge.net/project/boost/boost/1.85.0/boost_1_85_0.tar.bz2"
     },
     "dependencies": [
-        "all:libiconv",
-        "*-android*:native_android_ndk"
+        "*-android*:native_android_ndk",
+        "all:libiconv"
     ],
     "patches": [
         "fix_io_control_hpp.patch"

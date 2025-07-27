@@ -8,11 +8,11 @@
         "url": "https://ftp.gnu.org/pub/gnu/gettext/gettext-0.26.tar.gz"
     },
     "dependencies": [
-        "all:native_make",
-        "all:native_texinfo",
-        "all:native_sed",
+        "all:native_bison",
         "all:native_libiconv",
-        "all:native_bison"
+        "all:native_make",
+        "all:native_sed",
+        "all:native_texinfo"
     ],
     "build": {
         "env": [

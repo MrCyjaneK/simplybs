@@ -8,11 +8,11 @@
         "url": "https://github.com/libexpat/libexpat/releases/download/R_2_6_0/expat-2.6.0.tar.gz"
     },
     "dependencies": [
-        "all:libiconv",
-        "all:native_make",
+        "*-android*:native_android_ndk",
         "all:native_autoconf",
+        "all:native_make",
         "all:native_perl",
-        "*-android*:native_android_ndk"
+        "all:libiconv"
     ],
     "build": {
         "env": [

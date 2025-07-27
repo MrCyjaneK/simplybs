@@ -11,12 +11,12 @@
         "*-android*:native_android_ndk",
         "all:native_autoconf",
         "all:native_automake",
-        "all:native_perl",
         "all:native_m4",
         "all:native_make",
-        "all:xz",
+        "all:native_perl",
         "all:libevent",
         "all:openssl",
+        "all:xz",
         "all:zlib"
     ],
     "build": {

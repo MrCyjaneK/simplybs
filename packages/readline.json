@@ -8,8 +8,8 @@
         "url": "https://ftp.gnu.org/gnu/readline/readline-8.0.tar.gz"
     },
     "dependencies": [
-        "all:ncurses",
-        "*-android*:native_android_ndk"
+        "*-android*:native_android_ndk",
+        "all:ncurses"
     ],
     "build": {
         "env": [

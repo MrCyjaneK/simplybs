@@ -64,6 +64,8 @@ func (p *Package) ExtractSource(host *host.Host, buildPath string) {
 		err = utils.ExtractTarBz2(sourcePath, buildPath)
 	case "tar.gz":
 		err = utils.ExtractTarGz(sourcePath, buildPath)
+	case "tar.xz":
+		err = utils.ExtractTarXz(sourcePath, buildPath)
 	case "git":
 		os.MkdirAll(buildPath, 0755)
 		err = os.CopyFS(buildPath, os.DirFS(sourcePath))
@@ -134,14 +136,14 @@ func (p *Package) BuildPackage(h *host.Host, buildDependencies bool) {
 
 		cmd := exec.Command("sh", "-c", step)
 		cmd.Dir = buildPath
-		cmd.Env = os.Environ()
+		pathEnv := utils.GetHostPath()
 		env := p.GetEnv(h)
 
 		cmd.Env = append(cmd.Env, []string{
 			"STAGING_DIR=" + stagingPath,
 			"HOST=" + h.Triplet,
 			"PREFIX=" + h.GetEnvPath(),
-			"PATH=" + h.GetEnvPath() + "/native/bin:" + env["PATH"],
+			"PATH=" + h.GetEnvPath() + "/native/bin:" + env["PATH"] + ":" + pathEnv,
 		}...)
 		for k, v := range env {
 			cmd.Env = append(cmd.Env, k+"="+v)

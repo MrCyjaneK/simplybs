@@ -1,0 +1,42 @@
+{
+    "package": "native_rust_1_73_0",
+    "version": "1.73.0",
+    "type": "native",
+    "download": {
+        "kind": "tar.gz",
+        "sha256": "96d62e6d1f2d21df7ac8acb3b9882411f9e7c7036173f7f2ede9e1f1f6b1bb3a",
+        "url": "https://static.rust-lang.org/dist/rustc-1.73.0-src.tar.gz"
+    },
+    "dependencies": [
+        "all:native_cmake",
+        "all:native_openssl",
+        "all:native_patch",
+        "all:native_pkgconf",
+        "all:native_python3",
+        "all:native_rust_1_72_1"
+    ],
+    "patches": [
+        "assembly.h.patch"
+    ],
+    "build": {
+        "env": [],
+        "steps": [
+            "all:patch -p1 < $PATCH_DIR/assembly.h.patch",
+            "all:echo '[build]' > config.toml",
+            "all:echo 'full-bootstrap = true' >> config.toml",
+            "all:echo 'vendor = true' >> config.toml",
+            "all:echo 'extended = true' >> config.toml",
+            "all:echo 'tools = [\"cargo\"]' >> config.toml",
+            "all:echo rustc = \\\"$PREFIX/native/bin/rustc\\\" >> config.toml",
+            "all:echo cargo = \\\"$PREFIX/native/bin/cargo\\\" >> config.toml",
+            "all:echo '[llvm]' >> config.toml",
+            "all:echo 'ninja = false' >> config.toml",
+            "all:echo 'download-ci-llvm = false' >> config.toml",
+            "all:python3 ./x.py build --stage 1 --verbose -j $NUM_CORES",
+            "all:mkdir -p $STAGING_DIR$PREFIX/native/bin",
+            "all:cp -a build/*/stage1/lib $STAGING_DIR$PREFIX/native/",
+            "all:cp -a build/*/stage1/bin/rustc $STAGING_DIR$PREFIX/native/bin",
+            "all:cp -a build/*/stage1-tools-bin/cargo $STAGING_DIR$PREFIX/native/bin"
+        ]
+    }
+}

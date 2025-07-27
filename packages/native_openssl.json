@@ -8,8 +8,8 @@
         "url": "https://www.openssl.org/source/openssl-3.5.1.tar.gz"
     },
     "dependencies": [
-        "all:native_perl",
-        "all:native_make"
+        "all:native_make",
+        "all:native_perl"
     ],
     "build": {
         "env": [

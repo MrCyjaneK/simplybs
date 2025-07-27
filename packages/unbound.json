@@ -8,9 +8,9 @@
         "url": "https://www.nlnetlabs.nl/downloads/unbound/unbound-1.23.0.tar.gz"
     },
     "dependencies": [
+        "*-android*:native_android_ndk",
         "all:expat",
-        "all:openssl",
-        "*-android*:native_android_ndk"
+        "all:openssl"
     ],
     "patches": [
         "disable-glibc-reallocarray.patch"

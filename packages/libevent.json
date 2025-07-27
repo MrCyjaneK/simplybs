@@ -9,12 +9,12 @@
     },
     "dependencies": [
         "*-android*:native_android_ndk",
-        "all:native_make",
-        "all:native_automake",
         "all:native_autoconf",
-        "all:native_perl",
+        "all:native_automake",
+        "all:native_libtool",
         "all:native_m4",
-        "all:native_libtool"
+        "all:native_make",
+        "all:native_perl"
     ],
     "build": {
         "env": [

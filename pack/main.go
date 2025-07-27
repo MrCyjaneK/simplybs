@@ -42,18 +42,84 @@ func FindPackage(name string) (*Package, error) {
 	return &pkg, nil
 }
 
-func PrintPackage(pkgName string, host string, depth int) {
-	pkg, err := FindPackage(pkgName)
+func PrintPackage(pkgName string, host string) {
+	depsByLevel := collectDependenciesByLevel(pkgName, host)
+
+	userPkg, err := FindPackage(pkgName)
 	crash.Handle(err)
-	fmt.Printf("%s%s: %s\n", strings.Repeat("  ", depth+1), pkg.Package, pkg.Version)
-	for _, dep := range pkg.Dependencies {
-		if strings.Contains(dep, ":") {
-			prefix := strings.Split(dep, ":")[0]
-			if !glob.Glob(prefix, host) && prefix != "all" {
+	fmt.Printf("0: %s (version: %s)\n", pkgName, userPkg.Version)
+
+	for level := 1; level < len(depsByLevel); level++ {
+		deps := depsByLevel[level]
+		if len(deps) == 0 {
+			continue
+		}
+
+		for i := 0; i < len(deps); i++ {
+			for j := i + 1; j < len(deps); j++ {
+				if deps[i] > deps[j] {
+					deps[i], deps[j] = deps[j], deps[i]
+				}
+			}
+		}
+
+		fmt.Printf("  Level %d dependencies (%d packages):\n", level, len(deps))
+
+		for _, dep := range deps {
+			pkg, err := FindPackage(dep)
+			if err != nil {
+				fmt.Printf("%d: %s (ERROR: %v)\n", level, dep, err)
+			} else {
+				fmt.Printf("%d: %s (version: %s)\n", level, dep, pkg.Version)
+			}
+		}
+	}
+}
+
+func collectDependenciesByLevel(pkgName string, host string) [][]string {
+	levels := [][]string{}
+	visited := make(map[string]bool)
+
+	// Start with the root package
+	currentLevel := []string{pkgName}
+	visited[pkgName] = true
+	levels = append(levels, []string{}) // Level 0 is handled separately in PrintPackage
+
+	for len(currentLevel) > 0 {
+		nextLevel := []string{}
+
+		for _, currentPkg := range currentLevel {
+			pkg, err := FindPackage(currentPkg)
+			if err != nil {
 				continue
 			}
-			dep = dep[strings.Index(dep, ":")+1:]
+
+			for _, dep := range pkg.Dependencies {
+				var actualDep string
+				if strings.Contains(dep, ":") {
+					prefix := strings.Split(dep, ":")[0]
+					if !glob.Glob(prefix, host) && prefix != "all" {
+						continue
+					}
+					actualDep = dep[strings.Index(dep, ":")+1:]
+				} else {
+					actualDep = dep
+				}
+
+				if !visited[actualDep] {
+					visited[actualDep] = true
+					nextLevel = append(nextLevel, actualDep)
+				}
+			}
 		}
-		PrintPackage(dep, host, depth+1)
+
+		if len(nextLevel) > 0 {
+			levels = append(levels, nextLevel)
+			currentLevel = nextLevel
+		} else {
+			break
+		}
 	}
+
+	return levels
 }

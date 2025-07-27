@@ -9,8 +9,8 @@
     },
     "dependencies": [
         "*-android*:native_android_ndk",
-        "all:native_perl",
-        "all:native_make"
+        "all:native_make",
+        "all:native_perl"
     ],
     "build": {
         "env": [

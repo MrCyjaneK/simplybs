@@ -8,8 +8,8 @@
         "url": "https://github.com/eudev-project/eudev/releases/download/v3.2.14/eudev-3.2.14.tar.gz"
     },
     "dependencies": [
-        "*-linux-gnu:native_make",
-        "*-linux-gnu:native_gperf"
+        "*-linux-gnu:native_gperf",
+        "*-linux-gnu:native_make"
     ],
     "build": {
         "env": [

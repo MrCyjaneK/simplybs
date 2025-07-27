@@ -8,16 +8,16 @@
         "url": "https://github.com/libusb/hidapi/archive/refs/tags/hidapi-0.13.1.tar.gz"
     },
     "dependencies": [
-        "all:native_make",
-        "all:native_patch",
+        "*-android*:native_android_ndk",
         "all:native_autoconf",
         "all:native_automake",
-        "all:native_m4",
-        "all:native_perl",
         "all:native_libtool",
-        "all:libusb",
+        "all:native_m4",
+        "all:native_make",
+        "all:native_patch",
+        "all:native_perl",
         "all:eudev",
-        "*-android*:native_android_ndk"
+        "all:libusb"
     ],
     "patches": [
         "missing_win_include.patch"

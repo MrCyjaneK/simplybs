@@ -70,9 +70,10 @@ func (p *Package) GetEnv(h *host.Host) map[string]string {
 	getwd, err := os.Getwd()
 	crash.Handle(err)
 	env := map[string]string{
-		"PATH":        h.GetEnvPath() + "/native/bin:" + os.Getenv("PATH"),
+		"PATH":        h.GetEnvPath() + "/native/bin:" + utils.GetHostPath(),
 		"HOST":        h.Triplet,
 		"PREFIX":      h.GetEnvPath(),
+		"HOME":        h.GetEnvPath() + "/home/user",
 		"HOST_PREFIX": h.GetEnvPath(),
 		"NUM_CORES":   strconv.Itoa(runtime.NumCPU()),
 		"PATCH_DIR":   filepath.Join(getwd, "patches", p.Package),
@@ -83,6 +84,17 @@ func (p *Package) GetEnv(h *host.Host) map[string]string {
 		env = utils.AppendEnv(env, []string{
 			"all:CFLAGS=-I" + h.GetEnvPath() + "/native/include",
 			"all:LDFLAGS=-L" + h.GetEnvPath() + "/native/lib",
+			"all:LD_LIBRARY_PATH=" + h.GetEnvPath() + "/native/lib",
+			"all:PKG_CONFIG_PATH=" + h.GetEnvPath() + "/native/lib/pkgconfig",
+			"all:LIBRARY_PATH=" + h.GetEnvPath() + "/native/lib",
+		}, h)
+	} else {
+		env = utils.AppendEnv(env, []string{
+			"all:CFLAGS=-I" + h.GetEnvPath() + "/include",
+			"all:LDFLAGS=-L" + h.GetEnvPath() + "/lib",
+			"all:LD_LIBRARY_PATH=" + h.GetEnvPath() + "/lib",
+			"all:PKG_CONFIG_PATH=" + h.GetEnvPath() + "/lib/pkgconfig",
+			"all:LIBRARY_PATH=" + h.GetEnvPath() + "/lib",
 		}, h)
 	}
 	if p.Type != "native" {

@@ -8,9 +8,9 @@
         "url": "https://github.com/protocolbuffers/protobuf/releases/download/v3.6.1/protobuf-cpp-3.6.1.tar.gz"
     },
     "dependencies": [
-        "all:native_protobuf",
         "*-android*:native_android_ndk",
-        "all:native_config"
+        "all:native_config",
+        "all:native_protobuf"
     ],
     "patches": [
         "visibility.patch"

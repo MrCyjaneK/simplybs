@@ -1,0 +1,22 @@
+{
+    "package": "native_mpfr",
+    "version": "4.2.2",
+    "type": "native",
+    "download": {
+        "kind": "tar.xz",
+        "sha256": "b67ba0383ef7e8a8563734e2e889ef5ec3c3b898a01d00fa0a6869ad81c6ce01",
+        "url": "https://www.mpfr.org/mpfr-current/mpfr-4.2.2.tar.xz"
+    },
+    "dependencies": [
+        "all:native_gmp",
+        "all:native_make"
+    ],
+    "build": {
+        "env": [],
+        "steps": [
+            "all:./configure --prefix=$PREFIX/native",
+            "all:make -j$NUM_CORES",
+            "all:make DESTDIR=$STAGING_DIR install"
+        ]
+    }
+}

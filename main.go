@@ -14,7 +14,7 @@ import (
 
 func main() {
 	log.SetFlags(log.LstdFlags | log.Lshortfile)
-	argList := flag.Bool("list", false, "List all supported hosts")
+	argList := flag.Bool("list", false, "List all supported hosts (value is depth)")
 	argHost := flag.String("host", "", "The host to build for")
 	argPkg := flag.String("package", "", "The package(s) to build (comma-separated)")
 	argWorld := flag.Bool("world", false, "Build all packages")
@@ -62,7 +62,7 @@ func main() {
 
 	if *argList {
 		for _, pkg := range packageNames {
-			pack.PrintPackage(pkg.Package, *argHost, 0)
+			pack.PrintPackage(pkg.Package, *argHost)
 		}
 		return
 	}
