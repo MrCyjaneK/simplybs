@@ -14,24 +14,10 @@
     "build": {
         "env": [
             "all:config_opts=--prefix=$PREFIX/native --openssldir=$PREFIX/native/etc/openssl --libdir=$PREFIX/native/lib",
-            "all:config_opts=$config_opts no-capieng",
-            "all:config_opts=$config_opts no-dso",
-            "all:config_opts=$config_opts no-dtls1",
             "all:config_opts=$config_opts no-ec_nistp_64_gcc_128",
-            "all:config_opts=$config_opts no-gost",
-            "all:config_opts=$config_opts no-md2",
-            "all:config_opts=$config_opts no-rc5",
-            "all:config_opts=$config_opts no-rdrand",
-            "all:config_opts=$config_opts no-rfc3779",
-            "all:config_opts=$config_opts no-sctp",
             "all:config_opts=$config_opts no-shared",
-            "all:config_opts=$config_opts no-ssl-trace",
-            "all:config_opts=$config_opts no-ssl3",
             "all:config_opts=$config_opts no-tests",
-            "all:config_opts=$config_opts no-unit-test",
-            "all:config_opts=$config_opts no-weak-ssl-ciphers",
-            "all:config_opts=$config_opts no-zlib",
-            "all:config_opts=$config_opts no-zlib-dynamic"
+            "all:config_opts=$config_opts no-unit-test"
         ],
         "steps": [
             "all:sed -i.old 's|crypto ssl apps util tools fuzz providers doc|crypto ssl util tools providers|' build.info",

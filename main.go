@@ -4,6 +4,7 @@ import (
 	"flag"
 	"fmt"
 	"log"
+	"strings"
 
 	cmd "github.com/mrcyjanek/simplybs/cmd/buildweb"
 	"github.com/mrcyjanek/simplybs/cmd/lint"
@@ -55,30 +56,37 @@ func main() {
 		log.Println("Downloaded all sources")
 		return
 	}
-	host := host.SupportedHosts[*argHost]
-	if host == nil {
-		crash.Handle(fmt.Errorf("host %s not supported", *argHost))
-	}
 
-	if *argList {
+	hosts := strings.Split(*argHost, ",")
+	for _, h := range hosts {
+		host := host.SupportedHosts[h]
+		if host == nil {
+			crash.Handle(fmt.Errorf("host %s not supported", h))
+		}
+		buildForHost(host, packageNames, *argList, *argExtract, *argBuild)
+	}
+}
+
+func buildForHost(host *host.Host, packageNames []*pack.Package, list bool, extract bool, build bool) {
+	if list {
 		for _, pkg := range packageNames {
-			pack.PrintPackage(pkg.Package, *argHost)
+			pack.PrintPackage(pkg.Package, host.Triplet)
 		}
 		return
 	}
 
-	if *argExtract {
+	if extract {
 		for _, pkg := range packageNames {
 			pkg.ExtractEnv(host, host.GetEnvPath())
 		}
 	}
 
-	if *argBuild {
+	if build {
 		for _, pkg := range packageNames {
 			pkg.EnsureBuilt(host, true)
 		}
 	}
-	if *argExtract {
+	if extract {
 		for _, pkg := range packageNames {
 			log.Printf("Extracting env for package: %s", pkg.Package)
 			pkg.ExtractEnv(host, host.GetEnvPath())
