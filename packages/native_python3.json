@@ -11,9 +11,13 @@
         "all:native_make",
         "all:native_zlib"
     ],
+    "patches": [
+        "deterministic_build.patch"
+    ],
     "build": {
         "env": [],
         "steps": [
+            "all:patch -p1 < $PATCH_DIR/deterministic_build.patch",
             "all:sed -i.bak 's/^#\\(zlib[[:space:]]\\+zlibmodule\\.c[[:space:]]\\+-lz\\)/\\1/' Modules/Setup",
             "all:./configure --disable-test-modules --prefix=$PREFIX/native",
             "all:make -j$NUM_CORES",
