@@ -25,6 +25,7 @@ func main() {
 	argBuildWeb := flag.Bool("buildweb", false, "Generate static website with package information")
 	argLint := flag.Bool("lint", false, "Lint packages")
 	argVersion := flag.Bool("v", false, "Show version")
+	argShell := flag.Bool("shell", false, "Extract source and start shell with build environment")
 	flag.Parse()
 	if *argVersion {
 		fmt.Println("simplybs version 0.0.0")
@@ -63,11 +64,11 @@ func main() {
 		if host == nil {
 			crash.Handle(fmt.Errorf("host %s not supported", h))
 		}
-		buildForHost(host, packageNames, *argList, *argExtract, *argBuild)
+		buildForHost(host, packageNames, *argList, *argExtract, *argBuild, *argShell)
 	}
 }
 
-func buildForHost(host *host.Host, packageNames []*pack.Package, list bool, extract bool, build bool) {
+func buildForHost(host *host.Host, packageNames []*pack.Package, list bool, extract bool, build bool, shell bool) {
 	if list {
 		for _, pkg := range packageNames {
 			pack.PrintPackage(pkg.Package, host.Triplet)
@@ -91,5 +92,12 @@ func buildForHost(host *host.Host, packageNames []*pack.Package, list bool, extr
 			log.Printf("Extracting env for package: %s", pkg.Package)
 			pkg.ExtractEnv(host, host.GetEnvPath())
 		}
+	}
+
+	if shell {
+		if len(packageNames) != 1 {
+			crash.Handle(fmt.Errorf("shell option requires exactly one package, got %d", len(packageNames)))
+		}
+		packageNames[0].StartShell(host)
 	}
 }

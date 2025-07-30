@@ -173,3 +173,77 @@ func (p *Package) BuildPackage(h *host.Host, buildDependencies bool) {
 
 	log.Printf("Package built successfully: %s", builtArchivePath)
 }
+
+func (p *Package) StartShell(h *host.Host) {
+	log.Printf("Starting shell for package: %s", p.Package)
+
+	buildPath := p.GenerateBuildPath(h, "work")
+	os.RemoveAll(buildPath)
+	os.MkdirAll(buildPath, 0755)
+
+	log.Printf("Extracting source for package: %s", p.Package)
+	for _, depName := range p.Dependencies {
+		if strings.Contains(depName, ":") {
+			prefix := strings.Split(depName, ":")[0]
+			if !glob.Glob(prefix, h.Triplet) && prefix != "all" {
+				continue
+			}
+			depName = depName[strings.Index(depName, ":")+1:]
+		} else {
+			log.Fatalf("Invalid dependency: %s", depName)
+		}
+		dep, err := FindPackage(depName)
+		if err != nil {
+			log.Fatalf("Package %s not found in build", depName)
+		}
+		dep.ExtractEnv(h, h.GetEnvPath())
+	}
+	p.ExtractSource(h, buildPath)
+
+	env := p.GetEnv(h)
+	pathEnv := utils.GetHostPath()
+
+	userShell := os.Getenv("SHELL")
+	if userShell == "" {
+		userShell = "/bin/sh"
+	}
+
+	for _, step := range p.Build.Steps {
+		if strings.Contains(step, ":") {
+			prefix := strings.Split(step, ":")[0]
+			if !glob.Glob(prefix, h.Triplet) && prefix != "all" {
+				log.Printf("[no match] %s", step)
+				continue
+			}
+			log.Printf("   [match] %s", step)
+		} else {
+			log.Fatalf("Invalid step: %s", step)
+		}
+	}
+	log.Printf("Starting %s in %s with build environment for %s", userShell, buildPath, h.Triplet)
+	log.Printf("Type 'exit' to leave the shell")
+
+	cmd := exec.Command(userShell)
+	cmd.Dir = buildPath
+	cmd.Stdin = os.Stdin
+	cmd.Stdout = os.Stdout
+	cmd.Stderr = os.Stderr
+
+	cmd.Env = append(cmd.Env, []string{
+		"HOST=" + h.Triplet,
+		"PREFIX=" + h.GetEnvPath(),
+		"PATH=" + h.GetEnvPath() + "/native/bin:" + env["PATH"] + ":" + pathEnv,
+		"TERM=" + os.Getenv("TERM"),
+	}...)
+
+	for k, v := range env {
+		cmd.Env = append(cmd.Env, k+"="+v)
+	}
+
+	err := cmd.Run()
+	if err != nil {
+		log.Printf("Shell exited with error: %v", err)
+	} else {
+		log.Printf("Shell session ended successfully")
+	}
+}
