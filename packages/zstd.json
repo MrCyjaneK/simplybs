@@ -1,0 +1,28 @@
+{
+    "package": "zstd",
+    "version": "1.5.7",
+    "type": "host",
+    "download": {
+        "kind": "tar.gz",
+        "sha256": "eb33e51f49a15e023950cd7825ca74a4a2b43db8354825ac24fc1b7ee09e6fa3",
+        "url": "https://github.com/facebook/zstd/releases/download/v1.5.7/zstd-1.5.7.tar.gz"
+    },
+    "dependencies": [
+        "*-android*:native_android_ndk",
+        "all:native_cmake",
+        "all:native_make"
+    ],
+    "build": {
+        "env": [
+            "all:CFLAGS=$CFLAGS -fPIC",
+            "all:config_opts=--prefix=$PREFIX --static",
+            "all:LIBTOOL=$PREFIX/native/bin/libtool",
+            "all:CROSS_PREFIX=$HOST-"
+        ],
+        "steps": [
+            "all:cmake -S build/cmake -DCMAKE_INSTALL_PREFIX=$PREFIX",
+            "all:make -j$NUM_CORES",
+            "all:make DESTDIR=$STAGING_DIR install"
+        ]
+    }
+}

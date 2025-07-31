@@ -9,6 +9,7 @@
     },
     "dependencies": [
         "all:native_make",
+        "all:native_patch",
         "all:native_zlib"
     ],
     "patches": [
