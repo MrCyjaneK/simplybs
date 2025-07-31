@@ -63,8 +63,6 @@ func PrintPackage(pkgName string, host string) {
 			}
 		}
 
-		fmt.Printf("  Level %d dependencies (%d packages):\n", level, len(deps))
-
 		for _, dep := range deps {
 			pkg, err := FindPackage(dep)
 			if err != nil {
