@@ -8,8 +8,8 @@
         "url": "https://download.libsodium.org/libsodium/releases/libsodium-1.0.18.tar.gz"
     },
     "dependencies": [
-        "*-android*:native_android_ndk",
-        "all:native_config"
+        "*-android*:native/android_ndk",
+        "all:native/config"
     ],
     "patches": [
         "disable-glibc-getrandom-getentropy.patch",
@@ -27,8 +27,8 @@
         "steps": [
             "all:cp -f $PREFIX/native/usr/share/config/config.guess build-aux/",
             "all:cp -f $PREFIX/native/usr/share/config/config.sub build-aux/",
-            "all:patch -p1 < $PATCH_DIR/disable-glibc-getrandom-getentropy.patch",
-            "all:patch -p1 < $PATCH_DIR/fix-whitespace.patch",
+            "all:patch -p1 < $PATCH_DIR/sodium/disable-glibc-getrandom-getentropy.patch",
+            "all:patch -p1 < $PATCH_DIR/sodium/fix-whitespace.patch",
             "all:./configure $config_opts",
             "all:make -j$NUM_CORES",
             "all:make -j1 DESTDIR=$STAGING_DIR install"

@@ -1,0 +1,18 @@
+{
+    "package": "native/config",
+    "version": "2025-07-10",
+    "type": "native",
+    "download": {
+        "kind": "git",
+        "sha256": "a2287c3041a3f2a204eb942e09c015eab00dc7dd",
+        "url": "https://https.git.savannah.gnu.org/git/config.git"
+    },
+    "build": {
+        "env": [],
+        "steps": [
+            "all:mkdir -p $STAGING_DIR$PREFIX/native/usr/share/config",
+            "all:cp config.guess $STAGING_DIR$PREFIX/native/usr/share/config/config.guess",
+            "all:cp config.sub $STAGING_DIR$PREFIX/native/usr/share/config/config.sub"
+        ]
+    }
+}

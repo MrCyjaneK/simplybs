@@ -2,6 +2,7 @@ package pack
 
 import (
 	"log"
+	"os"
 	"path/filepath"
 	"strings"
 
@@ -27,17 +28,49 @@ func GetPackagesByList(list string) []*Package {
 }
 func GetAllPackages() []*Package {
 	packages := []*Package{}
-	files, err := filepath.Glob("packages/*.json")
-	crash.Handle(err)
-	for _, file := range files {
-		file = filepath.Base(file)
-		pkgName := file[:len(file)-len(filepath.Ext(file))]
+	packagesDir := host.GetPackagesDir()
+
+	err := filepath.WalkDir(packagesDir, func(path string, d os.DirEntry, err error) error {
+		if err != nil {
+			return err
+		}
+
+		if d.IsDir() || filepath.Ext(path) != ".json" {
+			return nil
+		}
+
+		relPath, err := filepath.Rel(packagesDir, path)
+		if err != nil {
+			log.Printf("Failed to get relative path for %s: %v", path, err)
+			return nil
+		}
+
+		pkgName := relPath[:len(relPath)-len(filepath.Ext(relPath))]
+
 		pkg, err := FindPackage(pkgName)
 		if err != nil {
 			log.Printf("Package %s not found", pkgName)
-			continue
+			return nil
 		}
 		packages = append(packages, pkg)
-	}
+		return nil
+	})
+	crash.Handle(err)
+
 	return packages
+}
+
+func GetAllPackagesWithBuilds() []*PackageWithBuilds {
+	packages := GetAllPackages()
+	packagesWithBuilds := make([]*PackageWithBuilds, len(packages))
+
+	for i, pkg := range packages {
+		builtFiles := ScanBuiltFiles(pkg.Package, pkg.Version)
+		packagesWithBuilds[i] = &PackageWithBuilds{
+			Package:    pkg,
+			BuiltFiles: builtFiles,
+		}
+	}
+
+	return packagesWithBuilds
 }

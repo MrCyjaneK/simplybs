@@ -26,6 +26,7 @@ func main() {
 	argLint := flag.Bool("lint", false, "Lint packages")
 	argVersion := flag.Bool("v", false, "Show version")
 	argShell := flag.Bool("shell", false, "Extract source and start shell with build environment")
+	argCleanup := flag.Bool("cleanup", false, "Remove everything except current built archives")
 	flag.Parse()
 	if *argVersion {
 		fmt.Println("simplybs version 0.0.0")
@@ -33,6 +34,10 @@ func main() {
 	}
 	if *argBuildWeb {
 		cmd.BuildWeb()
+		return
+	}
+	if *argCleanup {
+		pack.Cleanup()
 		return
 	}
 	if *argLint {

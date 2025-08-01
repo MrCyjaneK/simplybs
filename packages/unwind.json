@@ -8,9 +8,9 @@
         "url": "https://download.savannah.nongnu.org/releases/libunwind/libunwind-1.5.0.tar.gz"
     },
     "dependencies": [
-        "*-android*:native_android_ndk",
-        "all:native_config",
-        "all:native_gettext"
+        "*-android*:native/android_ndk",
+        "all:native/config",
+        "all:native/gettext"
     ],
     "patches": [
         "fix_obj_order.patch"
@@ -24,7 +24,7 @@
         "steps": [
             "all:cp -f $PREFIX/native/usr/share/config/config.guess config/config.guess",
             "all:cp -f $PREFIX/native/usr/share/config/config.sub config/config.sub",
-            "*-linux-gnu:patch -p0 < $PATCH_DIR/fix_obj_order.patch",
+            "*-linux-gnu:patch -p0 < $PATCH_DIR/unwind/fix_obj_order.patch",
             "*-linux-gnu:./configure $config_opts",
             "*-linux-gnu:make -j$NUM_CORES",
             "*-linux-gnu:make -j$NUM_CORES DESTDIR=$STAGING_DIR install"

@@ -1,0 +1,26 @@
+{
+    "package": "native/bison",
+    "version": "3.8",
+    "type": "native",
+    "download": {
+        "kind": "tar.gz",
+        "sha256": "d5d184d421aee15603939973a6b0f372f908edfb24c5bc740697497021ad9458",
+        "url": "https://ftp.gnu.org/gnu/bison/bison-3.8.tar.gz"
+    },
+    "dependencies": [
+        "all:native/m4",
+        "all:native/make",
+        "all:native/texinfo"
+    ],
+    "build": {
+        "env": [
+            "all:AUTOMAKE=true",
+            "all:ACLOCAL=true"
+        ],
+        "steps": [
+            "all:./configure --prefix=$PREFIX/native",
+            "all:make -j$NUM_CORES",
+            "all:make DESTDIR=$STAGING_DIR install"
+        ]
+    }
+}

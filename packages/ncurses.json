@@ -8,7 +8,7 @@
         "url": "https://ftp.gnu.org/gnu/ncurses/ncurses-6.5.tar.gz"
     },
     "dependencies": [
-        "*-android*:native_android_ndk"
+        "*-android*:native/android_ndk"
     ],
     "patches": [
         "fallback.c"

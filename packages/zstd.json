@@ -8,9 +8,9 @@
         "url": "https://github.com/facebook/zstd/releases/download/v1.5.7/zstd-1.5.7.tar.gz"
     },
     "dependencies": [
-        "*-android*:native_android_ndk",
-        "all:native_cmake",
-        "all:native_make"
+        "*-android*:native/android_ndk",
+        "all:native/cmake",
+        "all:native/make"
     ],
     "build": {
         "env": [

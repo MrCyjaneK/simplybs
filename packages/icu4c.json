@@ -16,7 +16,7 @@
             "*-w64-mingw32:TARGET="
         ],
         "steps": [
-            "*-w64-mingw32:patch -p1 < $PATCH_DIR/icu-001-dont-build-static-dynamic-twice.patch",
+            "*-w64-mingw32:patch -p1 < $PATCH_DIR/icu4c/icu-001-dont-build-static-dynamic-twice.patch",
             "*-w64-mingw32:mkdir builda",
             "*-w64-mingw32:mkdir buildb",
             "*-w64-mingw32:cd builda && sh ../source/runConfigureICU Linux",

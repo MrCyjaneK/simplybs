@@ -1,0 +1,22 @@
+{
+    "package": "native/perl",
+    "version": "5.42.0",
+    "type": "native",
+    "download": {
+        "kind": "tar.gz",
+        "sha256": "e093ef184d7f9a1b9797e2465296f55510adb6dab8842b0c3ed53329663096dc",
+        "url": "https://www.cpan.org/src/5.0/perl-5.42.0.tar.gz"
+    },
+    "dependencies": [
+        "all:native/make"
+    ],
+    "build": {
+        "env": [],
+        "steps": [
+            "all:sed -i.bak '/^#ifndef PERL_BUILD_DATE$/,/^#endif$/{/^#ifndef PERL_BUILD_DATE$/!d; s/.*/\\#define PERL_BUILD_DATE \"Jan  1 1970 00:00:01\"/;}' perl.c",
+            "all:./Configure -des -Dprefix=$PREFIX/native -Duseithreads -Dall_static",
+            "all:make -j$NUM_CORES",
+            "all:make DESTDIR=$STAGING_DIR install"
+        ]
+    }
+}

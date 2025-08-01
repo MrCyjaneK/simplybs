@@ -76,7 +76,7 @@ func (p *Package) GetEnv(h *host.Host) map[string]string {
 		"HOME":        h.GetEnvPath() + "/home/user",
 		"HOST_PREFIX": h.GetEnvPath(),
 		"NUM_CORES":   strconv.Itoa(runtime.NumCPU()),
-		"PATCH_DIR":   filepath.Join(getwd, "patches", p.Package),
+		"PATCH_DIR":   filepath.Join(getwd, "patches"),
 	}
 
 	env = utils.AppendEnv(env, builder.HostBuilder.GlobalEnv, h)

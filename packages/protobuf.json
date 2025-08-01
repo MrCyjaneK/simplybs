@@ -8,9 +8,9 @@
         "url": "https://github.com/protocolbuffers/protobuf/releases/download/v3.6.1/protobuf-cpp-3.6.1.tar.gz"
     },
     "dependencies": [
-        "*-android*:native_android_ndk",
-        "all:native_config",
-        "all:native_protobuf"
+        "*-android*:native/android_ndk",
+        "all:native/config",
+        "all:native/protobuf"
     ],
     "patches": [
         "visibility.patch"
@@ -33,7 +33,7 @@
             "all:cp -f $PREFIX/native/usr/share/config/config.sub third_party/googletest/googletest/build-aux/config.sub",
             "all:cp -f $PREFIX/native/usr/share/config/config.guess third_party/googletest/googlemock/build-aux/config.guess",
             "all:cp -f $PREFIX/native/usr/share/config/config.sub third_party/googletest/googlemock/build-aux/config.sub",
-            "all:$SHOULD_BUILD patch -p0 < $PATCH_DIR/visibility.patch",
+            "all:$SHOULD_BUILD patch -p0 < $PATCH_DIR/protobuf/visibility.patch",
             "all:$SHOULD_BUILD ./configure $config_opts",
             "all:$SHOULD_BUILD make -j$NUM_CORES -C src libprotobuf.la",
             "all:$SHOULD_BUILD make -j$NUM_CORES -C src DESTDIR=$STAGING_DIR install-libLTLIBRARIES install-nobase_includeHEADERS",

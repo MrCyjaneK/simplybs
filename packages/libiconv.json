@@ -8,9 +8,9 @@
         "url": "https://ftp.gnu.org/gnu/libiconv/libiconv-1.17.tar.gz"
     },
     "dependencies": [
-        "*-android*:native_android_ndk",
-        "all:native_config",
-        "all:native_make"
+        "*-android*:native/android_ndk",
+        "all:native/config",
+        "all:native/make"
     ],
     "build": {
         "env": [

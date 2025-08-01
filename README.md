@@ -44,14 +44,14 @@ All package definitions live inside of this repo (this is going to change soon *
   },
   "dependencies": [
     // *-android* is being checked against $HOST (always, even on type: native builds)
-    // so here native_android_ndk is only going to be extracted into $PREFIX when the
+    // so here native/android_ndk is only going to be extracted into $PREFIX when the
     // build is targetting android.
     // Currently dependency system is not doing recursive resolution (it will properly
     // build all packages recursively but it won't inherit parent dependencies)
-    "*-android*:native_android_ndk",
+    "*-android*:native/android_ndk",
     // all is a magic keyword that works just like *
-    "all:native_make",
-    "all:native_libtool"
+    "all:native/make",
+    "all:native/libtool"
   ],
   "build": {
     "env": [

@@ -8,12 +8,12 @@
         "url": "https://gitlab.torproject.org/tpo/core/tor.git"
     },
     "dependencies": [
-        "*-android*:native_android_ndk",
-        "all:native_autoconf",
-        "all:native_automake",
-        "all:native_m4",
-        "all:native_make",
-        "all:native_perl",
+        "*-android*:native/android_ndk",
+        "all:native/autoconf",
+        "all:native/automake",
+        "all:native/m4",
+        "all:native/make",
+        "all:native/perl",
         "all:libevent",
         "all:openssl",
         "all:xz",

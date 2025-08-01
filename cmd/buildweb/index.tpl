@@ -60,6 +60,34 @@
             background-color: #e3f2fd;
             text-decoration: none; 
         }
+        .progress-bar {
+            width: 100px;
+            height: 20px;
+            background-color: #e9ecef;
+            border-radius: 10px;
+            overflow: hidden;
+            display: inline-block;
+            vertical-align: middle;
+            margin-left: 10px;
+            box-shadow: inset 0 1px 3px rgba(0,0,0,0.2);
+        }
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #28a745 0%, #20c997 100%);
+            border-radius: 10px;
+            transition: width 0.3s ease;
+            position: relative;
+        }
+        .progress-text {
+            position: absolute;
+            width: 100px;
+            text-align: center;
+            line-height: 20px;
+            font-size: 11px;
+            font-weight: 600;
+            color: #333;
+            text-shadow: 1px 1px 1px rgba(255,255,255,0.8);
+        }
     </style>
 </head>
 <body>
@@ -71,16 +99,24 @@
                 <th>Package</th>
                 <th>Version</th>
                 <th>Type</th>
+                <th>Build Progress</th>
                 <th>Details</th>
             </tr>
             {{range .}}
             <tr>
-                <td><strong>{{.Package}}</strong></td>
-                <td>{{.Version}}</td>
+                <td><strong>{{.Package.Package}}</strong></td>
+                <td>{{.Package.Version}}</td>
                 <td>
-                    <span class="type-badge type-{{.Type}}">{{.Type}}</span>
+                    <span class="type-badge type-{{.Package.Type}}">{{.Package.Type}}</span>
                 </td>
-                <td><a href="{{.Package}}.html">View Details →</a></td>
+                <td>
+                    {{$progress := getBuildProgress .}}
+                    <div class="progress-bar">
+                        <div class="progress-fill" style="width: {{$progress}}%"></div>
+                        <div class="progress-text">{{$progress}}%</div>
+                    </div>
+                </td>
+                <td><a href="{{.Package.Package}}.html">View Details →</a></td>
             </tr>
             {{end}}
         </table>

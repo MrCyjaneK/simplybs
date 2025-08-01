@@ -8,7 +8,9 @@ import (
 	"log"
 	"os"
 	"path/filepath"
+	"sort"
 	"strings"
+	"time"
 
 	"github.com/ulikunitz/xz"
 )
@@ -305,6 +307,21 @@ func ExtractTarXz(archivePath, destPath string) error {
 	return nil
 }
 
+func writeFileToTar(tw *tar.Writer, header *tar.Header, filePath string) error {
+	if err := tw.WriteHeader(header); err != nil {
+		return err
+	}
+
+	file, err := os.Open(filePath)
+	if err != nil {
+		return err
+	}
+	defer file.Close()
+
+	_, err = io.Copy(tw, file)
+	return err
+}
+
 func CreateTarGz(sourcePath, archivePath string) error {
 	file, err := os.Create(archivePath)
 	if err != nil {
@@ -320,13 +337,31 @@ func CreateTarGz(sourcePath, archivePath string) error {
 
 	log.Printf("Creating archive: %s from %s", archivePath, sourcePath)
 
-	return filepath.Walk(sourcePath, func(path string, info os.FileInfo, err error) error {
+	var filePaths []string
+	err = filepath.Walk(sourcePath, func(path string, info os.FileInfo, err error) error {
 		if err != nil {
 			return err
 		}
 
 		if path == sourcePath {
 			return nil
+		}
+
+		filePaths = append(filePaths, path)
+		return nil
+	})
+	if err != nil {
+		return err
+	}
+
+	sort.Strings(filePaths)
+
+	fixedTime := time.Unix(1, 0)
+
+	for _, path := range filePaths {
+		info, err := os.Lstat(path)
+		if err != nil {
+			return err
 		}
 
 		relPath, err := filepath.Rel(sourcePath, path)
@@ -340,6 +375,9 @@ func CreateTarGz(sourcePath, archivePath string) error {
 		}
 
 		header.Name = filepath.ToSlash(relPath)
+		header.ModTime = fixedTime
+		header.AccessTime = fixedTime
+		header.ChangeTime = fixedTime
 
 		if info.Mode()&os.ModeSymlink != 0 {
 			linkTarget, err := os.Readlink(path)
@@ -351,23 +389,29 @@ func CreateTarGz(sourcePath, archivePath string) error {
 			header.Size = 0
 		}
 
-		if err := tw.WriteHeader(header); err != nil {
-			return err
-		}
-
 		if info.Mode().IsRegular() {
-			file, err := os.Open(path)
-			if err != nil {
+			var filePath string
+			var cleanup func()
+
+			if strings.HasSuffix(strings.ToLower(relPath), ".a") {
+				// TODO: repack static libraries
+				filePath = path
+				cleanup = func() {}
+			} else {
+				filePath = path
+				cleanup = func() {}
+			}
+
+			defer cleanup()
+			if err := writeFileToTar(tw, header, filePath); err != nil {
 				return err
 			}
-			defer file.Close()
-
-			_, err = io.Copy(tw, file)
-			if err != nil {
+		} else {
+			if err := tw.WriteHeader(header); err != nil {
 				return err
 			}
 		}
+	}
 
-		return nil
-	})
+	return nil
 }

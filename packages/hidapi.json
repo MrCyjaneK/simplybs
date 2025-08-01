@@ -8,14 +8,14 @@
         "url": "https://github.com/libusb/hidapi/archive/refs/tags/hidapi-0.13.1.tar.gz"
     },
     "dependencies": [
-        "*-android*:native_android_ndk",
-        "all:native_autoconf",
-        "all:native_automake",
-        "all:native_libtool",
-        "all:native_m4",
-        "all:native_make",
-        "all:native_patch",
-        "all:native_perl",
+        "*-android*:native/android_ndk",
+        "all:native/autoconf",
+        "all:native/automake",
+        "all:native/libtool",
+        "all:native/m4",
+        "all:native/make",
+        "all:native/patch",
+        "all:native/perl",
         "all:eudev",
         "all:libusb"
     ],
@@ -34,7 +34,7 @@
             "*-apple-darwin:SHOULD_BUILD="
         ],
         "steps": [
-            "all:$SHOULD_BUILD patch -p1 < $PATCH_DIR/missing_win_include.patch",
+            "all:$SHOULD_BUILD patch -p1 < $PATCH_DIR/hidapi/missing_win_include.patch",
             "all:$SHOULD_BUILD ./bootstrap",
             "all:$SHOULD_BUILD ./configure $config_opts libudev_LIBS=\"-L$PREFIX/lib -ludev\" libusb_LIBS=\"-L$PREFIX/lib -lusb-1.0\"",
             "all:$SHOULD_BUILD make -j$NUM_CORES",

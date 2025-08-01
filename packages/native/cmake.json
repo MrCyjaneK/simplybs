@@ -1,0 +1,25 @@
+{
+    "package": "native/cmake",
+    "version": "4.0.3",
+    "type": "native",
+    "download": {
+        "kind": "tar.gz",
+        "sha256": "8d3537b7b7732660ea247398f166be892fe6131d63cc291944b45b91279f3ffb",
+        "url": "https://github.com/Kitware/CMake/releases/download/v4.0.3/cmake-4.0.3.tar.gz"
+    },
+    "dependencies": [
+        "all:native/make",
+        "all:native/openssl"
+    ],
+    "build": {
+        "env": [
+            "all:OPENSSL_ROOT_DIR=$PREFIX/native"
+        ],
+        "steps": [
+            "all:./bootstrap --parallel=$NUM_CORES",
+            "all:./configure --prefix=$PREFIX/native",
+            "all:make -j$NUM_CORES",
+            "all:make DESTDIR=$STAGING_DIR install"
+        ]
+    }
+}

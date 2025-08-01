@@ -9,6 +9,7 @@ import (
 
 	_ "embed"
 
+	"github.com/mrcyjanek/simplybs/builder"
 	"github.com/mrcyjanek/simplybs/crash"
 	"github.com/mrcyjanek/simplybs/host"
 	"github.com/mrcyjanek/simplybs/pack"
@@ -39,6 +40,19 @@ func dependencyExists(dep string, packages []*pack.Package) bool {
 	return false
 }
 
+func formatFileSize(bytes int64) string {
+	const unit = 1024
+	if bytes < unit {
+		return fmt.Sprintf("%d B", bytes)
+	}
+	div, exp := int64(unit), 0
+	for n := bytes / unit; n >= unit; n /= unit {
+		div *= unit
+		exp++
+	}
+	return fmt.Sprintf("%.1f %cB", float64(bytes)/float64(div), "KMGTPE"[exp])
+}
+
 func BuildWeb() {
 	webDir := filepath.Join(host.DataDirRoot(), "web")
 
@@ -49,7 +63,12 @@ func BuildWeb() {
 	err := os.MkdirAll(webDir, 0755)
 	crash.Handle(err)
 
-	packages := pack.GetAllPackages()
+	packagesWithBuilds := pack.GetAllPackagesWithBuilds()
+
+	packages := make([]*pack.Package, len(packagesWithBuilds))
+	for i, pwb := range packagesWithBuilds {
+		packages[i] = pwb.Package
+	}
 
 	funcMap := template.FuncMap{
 		"getGlobPattern": getGlobPattern,
@@ -57,12 +76,88 @@ func BuildWeb() {
 		"depExists": func(dep string) bool {
 			return dependencyExists(dep, packages)
 		},
+		"getRelativePath": func(fromPackage, toPackage string) string {
+			fromDepth := strings.Count(fromPackage, "/")
+			upPath := strings.Repeat("../", fromDepth)
+			if toPackage == "index" {
+				return upPath + "index.html"
+			}
+			return upPath + toPackage + ".html"
+		},
+		"formatFileSize": formatFileSize,
+		"getMirrorPath": func(pkg *pack.PackageWithBuilds) string {
+			packageDepth := strings.Count(pkg.Package.Package, "/")
+			upPath := strings.Repeat("../", packageDepth+1) // +1 to get out of web directory
+
+			packageParts := strings.Split(pkg.Package.Package, "/")
+			var packageName string
+			var sourceDir string
+
+			if len(packageParts) > 1 {
+				sourceDir = packageParts[0]                     // "native"
+				packageName = packageParts[len(packageParts)-1] // "make"
+				return fmt.Sprintf("%ssource/%s/%s-%s.%s", upPath, sourceDir,
+					packageName, pkg.Package.Version, pkg.Package.Download.Kind)
+			} else {
+				packageName = pkg.Package.Package
+				return fmt.Sprintf("%ssource/%s-%s.%s", upPath,
+					packageName, pkg.Package.Version, pkg.Package.Download.Kind)
+			}
+		},
+		"getBuiltFilePath": func(packageName, filePath string) string {
+			packageDepth := strings.Count(packageName, "/")
+			upPath := strings.Repeat("../", packageDepth+1) // +1 to get out of web directory
+			return upPath + filePath
+		},
+		"getBuildMatrix": func(pkg *pack.PackageWithBuilds) map[string]map[string]*pack.BuiltFile {
+			builders := []string{"darwin_arm64", "linux_amd64", "linux_arm64"}
+			targets := []string{
+				"aarch64-apple-darwin", "x86_64-apple-darwin", "aarch64-apple-ios",
+				"aarch64-apple-ios-simulator", "x86_64-linux-gnu", "aarch64-linux-gnu",
+				"aarch64-linux-android", "x86_64-linux-android", "armv7a-linux-androideabi",
+			}
+
+			matrix := make(map[string]map[string]*pack.BuiltFile)
+			for _, builder := range builders {
+				matrix[builder] = make(map[string]*pack.BuiltFile)
+				for _, target := range targets {
+					matrix[builder][target] = nil
+				}
+			}
+
+			for i := range pkg.BuiltFiles {
+				bf := &pkg.BuiltFiles[i]
+				if matrix[bf.Builder] != nil {
+					matrix[bf.Builder][bf.Target] = bf
+				}
+			}
+
+			return matrix
+		},
+		"getBuilders": func() []string {
+			return builder.Builders
+		},
+		"getTargets": func() []string {
+			targets := make([]string, 0, len(host.SupportedHosts))
+			for k := range host.SupportedHosts {
+				targets = append(targets, k)
+			}
+			return targets
+		},
+		"getBuildProgress": func(pkg *pack.PackageWithBuilds) int {
+			totalCombinations := len(builder.Builders) * len(host.SupportedHosts)
+			actualBuilds := len(pkg.BuiltFiles)
+			if totalCombinations == 0 {
+				return 0
+			}
+			return (actualBuilds * 100) / totalCombinations
+		},
 	}
 
-	generateIndexPage(packages, webDir)
+	generateIndexPage(packagesWithBuilds, webDir, funcMap)
 
-	for _, pkg := range packages {
-		generatePackagePage(pkg, webDir, funcMap)
+	for _, pkgWithBuilds := range packagesWithBuilds {
+		generatePackagePage(pkgWithBuilds, webDir, funcMap)
 	}
 
 	fmt.Printf("Generated static website with %d packages in %s\n", len(packages), webDir)
@@ -71,23 +166,23 @@ func BuildWeb() {
 //go:embed index.tpl
 var indexTemplate string
 
-func generateIndexPage(packages []*pack.Package, webDir string) {
+func generateIndexPage(packagesWithBuilds []*pack.PackageWithBuilds, webDir string, funcMap template.FuncMap) {
 
-	tmpl, err := template.New("index").Parse(indexTemplate)
+	tmpl, err := template.New("index").Funcs(funcMap).Parse(indexTemplate)
 	crash.Handle(err)
 
 	file, err := os.Create(filepath.Join(webDir, "index.html"))
 	crash.Handle(err)
 	defer file.Close()
 
-	err = tmpl.Execute(file, packages)
+	err = tmpl.Execute(file, packagesWithBuilds)
 	crash.Handle(err)
 }
 
 //go:embed package.tpl
 var packageTemplate string
 
-func generatePackagePage(pkg *pack.Package, webDir string, funcMap template.FuncMap) {
+func generatePackagePage(pkgWithBuilds *pack.PackageWithBuilds, webDir string, funcMap template.FuncMap) {
 	funcMap["add"] = func(a, b int) int {
 		return a + b
 	}
@@ -95,10 +190,14 @@ func generatePackagePage(pkg *pack.Package, webDir string, funcMap template.Func
 	tmpl, err := template.New("package").Funcs(funcMap).Parse(packageTemplate)
 	crash.Handle(err)
 
-	file, err := os.Create(filepath.Join(webDir, pkg.Package+".html"))
+	path := filepath.Join(webDir, pkgWithBuilds.Package.Package+".html")
+	err = os.MkdirAll(filepath.Dir(path), 0755)
+	crash.Handle(err)
+
+	file, err := os.Create(path)
 	crash.Handle(err)
 	defer file.Close()
 
-	err = tmpl.Execute(file, pkg)
+	err = tmpl.Execute(file, pkgWithBuilds)
 	crash.Handle(err)
 }

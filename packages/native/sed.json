@@ -1,0 +1,22 @@
+{
+    "package": "native/sed",
+    "version": "4.9",
+    "type": "native",
+    "download": {
+        "kind": "tar.gz",
+        "sha256": "d1478a18f033a73ac16822901f6533d30b6be561bcbce46ffd7abce93602282e",
+        "url": "https://ftp.gnu.org/gnu/sed/sed-4.9.tar.gz"
+    },
+    "dependencies": [
+        "all:native/make",
+        "all:native/perl"
+    ],
+    "build": {
+        "env": [],
+        "steps": [
+            "all:./configure --prefix=$PREFIX/native",
+            "all:make -j$NUM_CORES",
+            "all:make DESTDIR=$STAGING_DIR install"
+        ]
+    }
+}

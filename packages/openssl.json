@@ -8,9 +8,9 @@
         "url": "https://www.openssl.org/source/openssl-3.5.1.tar.gz"
     },
     "dependencies": [
-        "*-android*:native_android_ndk",
-        "all:native_make",
-        "all:native_perl"
+        "*-android*:native/android_ndk",
+        "all:native/make",
+        "all:native/perl"
     ],
     "build": {
         "env": [
@@ -51,7 +51,8 @@
             "i686-w64-mingw32:config_opts=$config_opts mingw"
         ],
         "steps": [
-            "all:sed -i.old 's|crypto ssl apps util tools fuzz providers doc|crypto ssl util tools providers|' build.info",
+            "all:sed -i.bak 's/#define DATE \"built on: \\$date\"/#define DATE \"built on: Jan  1 1970 00:00:01\"/' util/mkbuildinf.pl",
+            "all:sed -i.bak 's|crypto ssl apps util tools fuzz providers doc|crypto ssl util tools providers|' build.info",
             "armv7a-linux-androideabi:sed -i.bak s/arm-linux-androideabi/armv7a-linux-androideabi/g ./Configurations/15-android.conf",
             "all:./Configure $config_opts",
             "all:make -j$NUM_CORES build_libs",

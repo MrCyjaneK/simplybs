@@ -1,0 +1,10 @@
+--- a/src/llvm-project/llvm/include/llvm/Support/Signals.h        2025-07-31 16:36:28.290100587 +0200
++++ b/src/llvm-project/llvm/include/llvm/Support/Signals.h        2025-07-31 16:38:14.680982092 +0200
+@@ -15,6 +15,7 @@
+ #define LLVM_SUPPORT_SIGNALS_H
+ 
+ #include <string>
++#include <stdint.h>
+ 
+ namespace llvm {
+ class StringRef;

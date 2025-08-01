@@ -8,7 +8,7 @@
         "url": "https://www.nlnetlabs.nl/downloads/unbound/unbound-1.23.0.tar.gz"
     },
     "dependencies": [
-        "*-android*:native_android_ndk",
+        "*-android*:native/android_ndk",
         "all:expat",
         "all:openssl"
     ],
@@ -29,7 +29,7 @@
             "all:config_opts=$config_opts ac_cv_func_getentropy=no"
         ],
         "steps": [
-            "all:patch -p1 < $PATCH_DIR/disable-glibc-reallocarray.patch",
+            "all:patch -p1 < $PATCH_DIR/unbound/disable-glibc-reallocarray.patch",
             "all:autoconf",
             "all:./configure $config_opts",
             "all:make -j$NUM_CORES $build_opts",

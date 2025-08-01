@@ -8,7 +8,7 @@
         "url": "https://github.com/zeromq/libzmq/releases/download/v4.3.5/zeromq-4.3.5.tar.gz"
     },
     "dependencies": [
-        "*-android*:native_android_ndk"
+        "*-android*:native/android_ndk"
     ],
     "patches": [
         "fix_declaration.patch"
@@ -21,7 +21,7 @@
             "all:cxxflags=-std=c++11"
         ],
         "steps": [
-            "all:patch -p1 < $PATCH_DIR/fix_declaration.patch",
+            "all:patch -p1 < $PATCH_DIR/zeromq/fix_declaration.patch",
             "all:./configure $config_opts",
             "all:make -j$NUM_CORES src/libzmq.la",
             "all:make -j$NUM_CORES DESTDIR=$STAGING_DIR install-pkgconfigDATA VERBOSE=1",

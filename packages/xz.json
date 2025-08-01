@@ -8,14 +8,14 @@
         "url": "https://github.com/tukaani-project/xz/releases/download/v5.8.1/xz-5.8.1.tar.gz"
     },
     "dependencies": [
-        "*-android*:native_android_ndk",
-        "all:native_autoconf",
-        "all:native_automake",
-        "all:native_gettext",
-        "all:native_libtool",
-        "all:native_m4",
-        "all:native_make",
-        "all:native_perl"
+        "*-android*:native/android_ndk",
+        "all:native/autoconf",
+        "all:native/automake",
+        "all:native/gettext",
+        "all:native/libtool",
+        "all:native/m4",
+        "all:native/make",
+        "all:native/perl"
     ],
     "patches": [
         "fix_declaration.patch"
