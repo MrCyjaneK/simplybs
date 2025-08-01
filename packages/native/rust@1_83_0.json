@@ -5,7 +5,7 @@
     "download": {
         "kind": "tar.gz",
         "sha256": "722d773bd4eab2d828d7dd35b59f0b017ddf9a97ee2b46c1b7f7fac5c8841c6e",
-        "url": "https://static.rust-lang.org/dist/rustc-1.83.0-src.tar.gz"
+        "url": "http://static.rust-lang.org/dist/rustc-1.83.0-src.tar.gz"
     },
     "dependencies": [
         "all:native/cmake",

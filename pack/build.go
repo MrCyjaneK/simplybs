@@ -47,7 +47,7 @@ func (p *Package) DownloadSource() {
 		if p.Download.Kind == "git" {
 			err = utils.DownloadGit(sourcePath, p.Download.URL, p.Download.Sha256)
 		} else {
-			err = utils.DownloadFile(sourcePath, p.Download.URL, p.Download.Sha256, false)
+			err = utils.DownloadFile(p.Package, sourcePath, p.Download.URL, p.Download.Sha256, false)
 		}
 		if err != nil {
 			log.Fatalf("Failed to download source: %v", err)
@@ -79,7 +79,22 @@ func (p *Package) ExtractSource(host *host.Host, buildPath string) {
 	}
 }
 
+var bootstrapPackages = []string{
+	"native/bootstrap/make",
+	"native/bootstrap/perl",
+	"native/bootstrap/strip-nondeterminism",
+}
+
 func (p *Package) BuildPackage(h *host.Host, buildDependencies bool) {
+	if !strings.Contains(p.Package, "/bootstrap/") {
+		for _, pkgName := range bootstrapPackages {
+			p.Dependencies = append(p.Dependencies, "all:"+pkgName)
+		}
+	}
+	p.buildPackageInternal(h, buildDependencies)
+}
+
+func (p *Package) buildPackageInternal(h *host.Host, buildDependencies bool) {
 	var deps []*Package
 	if buildDependencies {
 		for _, dep := range p.Dependencies {
@@ -115,6 +130,11 @@ func (p *Package) BuildPackage(h *host.Host, buildDependencies bool) {
 	defer os.RemoveAll(buildPath)
 	defer os.RemoveAll(stagingPath)
 
+	p.ExtractSource(h, buildPath)
+	if !strings.Contains(p.Package, "/bootstrap/") {
+		p.Build.Steps = append(p.Build.Steps, "all:$PREFIX/native/bootstrap/bin/strip-nondeterminism-recursive $PWD")
+	}
+
 	infoPath := filepath.Join(stagingPath, h.GetEnvPath(), "usr", "share", "buildlib", p.ShortName(h)+".txt")
 	os.MkdirAll(filepath.Dir(infoPath), 0755)
 	err := os.WriteFile(infoPath, []byte(p.GeneratePackageInfo(h)), 0644)
@@ -122,7 +142,6 @@ func (p *Package) BuildPackage(h *host.Host, buildDependencies bool) {
 		log.Fatalf("Failed to write build info %s: %v", infoPath, err)
 	}
 
-	p.ExtractSource(h, buildPath)
 	for _, step := range p.Build.Steps {
 		if strings.Contains(step, ":") {
 			prefix := strings.Split(step, ":")[0]

@@ -5,7 +5,7 @@
     "download": {
         "kind": "tar.gz",
         "sha256": "959bd5f3875316d7b3f67ee237a56de5565f5b35fc9b5fc3cea6cfe735a03bb8",
-        "url": "https://www.nlnetlabs.nl/downloads/unbound/unbound-1.23.0.tar.gz"
+        "url": "http://www.nlnetlabs.nl/downloads/unbound/unbound-1.23.0.tar.gz"
     },
     "dependencies": [
         "*-android*:native/android_ndk",

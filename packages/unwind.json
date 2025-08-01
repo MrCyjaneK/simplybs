@@ -5,7 +5,7 @@
     "download": {
         "kind": "tar.gz",
         "sha256": "90337653d92d4a13de590781371c604f9031cdb50520366aa1e3a91e1efb1017",
-        "url": "https://download.savannah.nongnu.org/releases/libunwind/libunwind-1.5.0.tar.gz"
+        "url": "http://download.savannah.nongnu.org/releases/libunwind/libunwind-1.5.0.tar.gz"
     },
     "dependencies": [
         "*-android*:native/android_ndk",

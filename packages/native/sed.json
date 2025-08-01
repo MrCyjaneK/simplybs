@@ -5,7 +5,7 @@
     "download": {
         "kind": "tar.gz",
         "sha256": "d1478a18f033a73ac16822901f6533d30b6be561bcbce46ffd7abce93602282e",
-        "url": "https://ftp.gnu.org/gnu/sed/sed-4.9.tar.gz"
+        "url": "http://ftpmirror.gnu.org/gnu/sed/sed-4.9.tar.gz"
     },
     "dependencies": [
         "all:native/make",

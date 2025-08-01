@@ -5,7 +5,7 @@
     "download": {
         "kind": "git",
         "sha256": "4fc570f91d9d8d843ab32d2198a5c064538d8ffd",
-        "url": "https://github.com/pkgconf/pkgconf.git"
+        "url": "http://github.com/pkgconf/pkgconf.git"
     },
     "dependencies": [
         "all:native/autoconf",

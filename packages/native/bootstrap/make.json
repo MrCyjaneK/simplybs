@@ -1,5 +1,5 @@
 {
-    "package": "native/make",
+    "package": "native/bootstrap/make",
     "version": "4.4",
     "type": "native",
     "download": {
@@ -12,8 +12,8 @@
         "steps": [
             "all:./configure --disable-dependency-tracking",
             "all:./build.sh",
-            "all:mkdir -p $STAGING_DIR$PREFIX/native/bin",
-            "all:cp make $STAGING_DIR/$PREFIX/native/bin/make"
+            "all:mkdir -p $STAGING_DIR$PREFIX/native/bootstrap/bin",
+            "all:cp make $STAGING_DIR/$PREFIX/native/bootstrap/bin/make"
         ]
     }
 }

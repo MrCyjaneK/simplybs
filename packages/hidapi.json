@@ -5,7 +5,7 @@
     "download": {
         "kind": "tar.gz",
         "sha256": "476a2c9a4dc7d1fc97dd223b84338dbea3809a84caea2dcd887d9778725490e3",
-        "url": "https://github.com/libusb/hidapi/archive/refs/tags/hidapi-0.13.1.tar.gz"
+        "url": "http://github.com/libusb/hidapi/archive/refs/tags/hidapi-0.13.1.tar.gz"
     },
     "dependencies": [
         "*-android*:native/android_ndk",

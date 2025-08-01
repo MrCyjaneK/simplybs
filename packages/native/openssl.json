@@ -1,11 +1,11 @@
 {
     "package": "native/openssl",
     "version": "3.5.1",
-    "type": "host",
+    "type": "native",
     "download": {
         "kind": "tar.gz",
         "sha256": "529043b15cffa5f36077a4d0af83f3de399807181d607441d734196d889b641f",
-        "url": "https://www.openssl.org/source/openssl-3.5.1.tar.gz"
+        "url": "http://www.openssl.org/source/openssl-3.5.1.tar.gz"
     },
     "dependencies": [
         "all:native/make",

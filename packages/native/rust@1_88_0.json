@@ -4,8 +4,8 @@
     "type": "native",
     "download": {
         "kind": "tar.gz",
-        "sha256": "7c53f4509eda184e174efa6ba7d5eeb586585686ce8edefc781a2b11a7cf512a",
-        "url": "https://static.rust-lang.org/dist/rustc-1.88.0-src.tar.gz"
+        "sha256": "3a97544434848ae3d193d1d6bc83d6f24cb85c261ad95f955fde47ec64cfcfbe",
+        "url": "http://static.rust-lang.org/dist/rustc-1.88.0-src.tar.gz"
     },
     "dependencies": [
         "all:native/cmake",

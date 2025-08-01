@@ -63,7 +63,7 @@ func fixFormatting() {
 				if s, ok := dep.(string); ok {
 					parts := strings.Split(s, ":")
 					depName := parts[len(parts)-1]
-					if strings.HasPrefix(depName, "native/") {
+					if strings.HasPrefix(depName, "native") {
 						nativeDeps = append(nativeDeps, s)
 					} else {
 						otherDeps = append(otherDeps, s)

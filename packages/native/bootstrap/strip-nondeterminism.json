@@ -1,0 +1,56 @@
+{
+    "package": "native/bootstrap/strip-nondeterminism",
+    "version": "1.13.0",
+    "type": "native",
+    "download": {
+        "kind": "tar.bz2",
+        "sha256": "a70cdad5d728ea78b75d09880c4b51c7d887e89d0b610149b10cfb2abc70b4fc",
+        "url": "https://salsa.debian.org/reproducible-builds/reproducible-lfs/-/raw/master/releases/strip-nondeterminism/strip-nondeterminism_1.13.0.tar.bz2"
+    },
+    "dependencies": [
+        "all:native/bootstrap/make",
+        "all:native/bootstrap/perl"
+    ],
+    "build": {
+        "env": [],
+        "steps": [
+            "all:$PREFIX/native/bootstrap/bin/perl Makefile.PL PREFIX=$PREFIX/native/bootstrap",
+            "all:make",
+            "all:make DESTDIR=$STAGING_DIR install",
+            "all:mkdir -p $STAGING_DIR/$PREFIX/native/bootstrap/bin/",
+            "all:echo '#!/bin/sh' > $STAGING_DIR/$PREFIX/native/bootstrap/bin/strip-nondeterminism-recursive",
+            "all:echo 'set -e' >> $STAGING_DIR/$PREFIX/native/bootstrap/bin/strip-nondeterminism-recursive",
+            "all:echo '# strip-nondeterminism-recursive - find and process archive files' >> $STAGING_DIR/$PREFIX/native/bootstrap/bin/strip-nondeterminism-recursive",
+            "all:echo '# Usage: strip-nondeterminism-recursive [directory]' >> $STAGING_DIR/$PREFIX/native/bootstrap/bin/strip-nondeterminism-recursive",
+            "all:echo '' >> $STAGING_DIR/$PREFIX/native/bootstrap/bin/strip-nondeterminism-recursive",
+            "all:echo 'DIR=\"${1:-.}\"' >> $STAGING_DIR/$PREFIX/native/bootstrap/bin/strip-nondeterminism-recursive",
+            "all:echo '' >> $STAGING_DIR/$PREFIX/native/bootstrap/bin/strip-nondeterminism-recursive",
+            "all:echo 'if [ ! -d \"$DIR\" ]; then' >> $STAGING_DIR/$PREFIX/native/bootstrap/bin/strip-nondeterminism-recursive",
+            "all:echo '    echo \"Error: Directory '\\''$DIR'\\'' does not exist\" >&2' >> $STAGING_DIR/$PREFIX/native/bootstrap/bin/strip-nondeterminism-recursive",
+            "all:echo '    exit 1' >> $STAGING_DIR/$PREFIX/native/bootstrap/bin/strip-nondeterminism-recursive",
+            "all:echo 'fi' >> $STAGING_DIR/$PREFIX/native/bootstrap/bin/strip-nondeterminism-recursive",
+            "all:echo '' >> $STAGING_DIR/$PREFIX/native/bootstrap/bin/strip-nondeterminism-recursive",
+            "all:echo 'echo \"Searching for archive files in: $DIR\"' >> $STAGING_DIR/$PREFIX/native/bootstrap/bin/strip-nondeterminism-recursive",
+            "all:echo '' >> $STAGING_DIR/$PREFIX/native/bootstrap/bin/strip-nondeterminism-recursive",
+            "all:echo '# Find all ar, gzip, jar, zip files and process them' >> $STAGING_DIR/$PREFIX/native/bootstrap/bin/strip-nondeterminism-recursive",
+            "all:echo 'find \"$DIR\" -type f \\\\( \\\\' >> $STAGING_DIR/$PREFIX/native/bootstrap/bin/strip-nondeterminism-recursive",
+            "all:echo '    -name '\\''*.ar'\\'' -o \\\\' >> $STAGING_DIR/$PREFIX/native/bootstrap/bin/strip-nondeterminism-recursive",
+            "all:echo '    -name '\\''*.a'\\'' -o \\\\' >> $STAGING_DIR/$PREFIX/native/bootstrap/bin/strip-nondeterminism-recursive",
+            "all:echo '    -name '\\''*.gz'\\'' -o \\\\' >> $STAGING_DIR/$PREFIX/native/bootstrap/bin/strip-nondeterminism-recursive",
+            "all:echo '    -name '\\''*.gzip'\\'' -o \\\\' >> $STAGING_DIR/$PREFIX/native/bootstrap/bin/strip-nondeterminism-recursive",
+            "all:echo '    -name '\\''*.jar'\\'' -o \\\\' >> $STAGING_DIR/$PREFIX/native/bootstrap/bin/strip-nondeterminism-recursive",
+            "all:echo '    -name '\\''*.zip'\\'' \\\\' >> $STAGING_DIR/$PREFIX/native/bootstrap/bin/strip-nondeterminism-recursive",
+            "all:echo '\\\\) -print0 | while IFS= read -r -d '\\'''\\'''' file; do' >> $STAGING_DIR/$PREFIX/native/bootstrap/bin/strip-nondeterminism-recursive",
+            "all:echo '    echo \"Processing: $file\"' >> $STAGING_DIR/$PREFIX/native/bootstrap/bin/strip-nondeterminism-recursive",
+            "all:echo '    $PREFIX/native/bootstrap/bin/perl $PREFIX/native/bootstrap/bin/strip-nondeterminism -T 1 --normalizers +all \"$file\"' >> $STAGING_DIR/$PREFIX/native/bootstrap/bin/strip-nondeterminism-recursive",
+            "all:echo '    if [ $? -eq 0 ]; then' >> $STAGING_DIR/$PREFIX/native/bootstrap/bin/strip-nondeterminism-recursive",
+            "all:echo '        echo \"Successfully processed $file\"' >> $STAGING_DIR/$PREFIX/native/bootstrap/bin/strip-nondeterminism-recursive",
+            "all:echo '    else' >> $STAGING_DIR/$PREFIX/native/bootstrap/bin/strip-nondeterminism-recursive",
+            "all:echo '        echo \"Failed to process $file\" >&2' >> $STAGING_DIR/$PREFIX/native/bootstrap/bin/strip-nondeterminism-recursive",
+            "all:echo '    fi' >> $STAGING_DIR/$PREFIX/native/bootstrap/bin/strip-nondeterminism-recursive",
+            "all:echo 'done' >> $STAGING_DIR/$PREFIX/native/bootstrap/bin/strip-nondeterminism-recursive",
+            "all:echo '' >> $STAGING_DIR/$PREFIX/native/bootstrap/bin/strip-nondeterminism-recursive",
+            "all:chmod +x $STAGING_DIR/$PREFIX/native/bootstrap/bin/strip-nondeterminism-recursive"
+        ]
+    }
+}

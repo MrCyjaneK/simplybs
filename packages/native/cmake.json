@@ -5,7 +5,7 @@
     "download": {
         "kind": "tar.gz",
         "sha256": "8d3537b7b7732660ea247398f166be892fe6131d63cc291944b45b91279f3ffb",
-        "url": "https://github.com/Kitware/CMake/releases/download/v4.0.3/cmake-4.0.3.tar.gz"
+        "url": "http://github.com/Kitware/CMake/releases/download/v4.0.3/cmake-4.0.3.tar.gz"
     },
     "dependencies": [
         "all:native/make",

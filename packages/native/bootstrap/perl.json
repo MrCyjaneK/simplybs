@@ -1,5 +1,5 @@
 {
-    "package": "native/perl",
+    "package": "native/bootstrap/perl",
     "version": "5.42.0",
     "type": "native",
     "download": {
@@ -8,13 +8,13 @@
         "url": "http://www.cpan.org/src/5.0/perl-5.42.0.tar.gz"
     },
     "dependencies": [
-        "all:native/make"
+        "all:native/bootstrap/make"
     ],
     "build": {
         "env": [],
         "steps": [
             "all:sed -i.bak '/^#ifndef PERL_BUILD_DATE$/,/^#endif$/{/^#ifndef PERL_BUILD_DATE$/!d; s/.*/\\#define PERL_BUILD_DATE \"Jan  1 1970 00:00:01\"/;}' perl.c",
-            "all:./Configure -des -Dprefix=$PREFIX/native -Duseithreads -Dall_static",
+            "all:./Configure -des -Dprefix=$PREFIX/native/bootstrap -Duseithreads -Dall_static",
             "all:make -j$NUM_CORES",
             "all:make DESTDIR=$STAGING_DIR install"
         ]

@@ -5,7 +5,7 @@
     "download": {
         "kind": "tar.gz",
         "sha256": "eb33e51f49a15e023950cd7825ca74a4a2b43db8354825ac24fc1b7ee09e6fa3",
-        "url": "https://github.com/facebook/zstd/releases/download/v1.5.7/zstd-1.5.7.tar.gz"
+        "url": "http://github.com/facebook/zstd/releases/download/v1.5.7/zstd-1.5.7.tar.gz"
     },
     "dependencies": [
         "*-android*:native/android_ndk",

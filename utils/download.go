@@ -8,7 +8,6 @@ import (
 	"log"
 	"net/http"
 	"os"
-	"path/filepath"
 	"strconv"
 	"strings"
 	"time"
@@ -73,12 +72,11 @@ func formatBytes(bytes int64) string {
 	return fmt.Sprintf("%.1f %cB", float64(bytes)/float64(div), "KMGTPE"[exp%len("KMGTPE")])
 }
 
-func DownloadFile(path, url, expectedSha256 string, isMirror bool) error {
+func DownloadFile(packageName, path, url, expectedSha256 string, isMirror bool) error {
 	log.Printf("Downloading %s to %s", url, path)
 
 	if !isMirror {
-		baseName := filepath.Base(path)
-		err := DownloadFile(path, "https://static.mrcyjanek.net/lfs/simplybs/sources/"+baseName, expectedSha256, true)
+		err := DownloadFile(packageName, path, "http://static.mrcyjanek.net/lfs/simplybs/sources/"+packageName, expectedSha256, true)
 		if err != nil {
 			log.Printf("Failed to download file from mirror: %v, trying original URL", err)
 		} else {

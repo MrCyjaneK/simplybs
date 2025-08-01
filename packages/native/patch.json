@@ -5,7 +5,7 @@
     "download": {
         "kind": "tar.gz",
         "sha256": "308a4983ff324521b9b21310bfc2398ca861798f02307c79eb99bb0e0d2bf980",
-        "url": "https://ftp.gnu.org/gnu/patch/patch-2.8.tar.gz"
+        "url": "http://ftpmirror.gnu.org/gnu/patch/patch-2.8.tar.gz"
     },
     "dependencies": [
         "all:native/make"

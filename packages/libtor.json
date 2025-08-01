@@ -5,7 +5,7 @@
     "download": {
         "kind": "git",
         "sha256": "e41649c9a34f39f1d543e064fd2b97de26d3e097",
-        "url": "https://gitlab.torproject.org/tpo/core/tor.git"
+        "url": "http://gitlab.torproject.org/tpo/core/tor.git"
     },
     "dependencies": [
         "*-android*:native/android_ndk",
@@ -43,7 +43,10 @@
             "all:./configure $config_opts",
             "all:make -j$NUM_CORES libtor.a",
             "all:mkdir -p $STAGING_DIR$PREFIX/lib",
-            "all:cp libtor.a $STAGING_DIR$PREFIX/lib/libtor.a"
+            "all:cp libtor.a $STAGING_DIR$PREFIX/lib/libtor.a",
+            "all:mkdir -p $STAGING_DIR$PREFIX/usr/share/tor",
+            "all:cp src/config/geoip $STAGING_DIR$PREFIX/usr/share/tor",
+            "all:cp src/config/geoip6 $STAGING_DIR$PREFIX/usr/share/tor"
         ]
     }
 }

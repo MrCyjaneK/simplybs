@@ -5,7 +5,7 @@
     "download": {
         "kind": "tar.gz",
         "sha256": "a13447b9aa67d7c860783fdf6820f33ebdea996900d6d8bbc50a628f55f099f7",
-        "url": "https://github.com/libexpat/libexpat/releases/download/R_2_6_0/expat-2.6.0.tar.gz"
+        "url": "http://github.com/libexpat/libexpat/releases/download/R_2_6_0/expat-2.6.0.tar.gz"
     },
     "dependencies": [
         "*-android*:native/android_ndk",

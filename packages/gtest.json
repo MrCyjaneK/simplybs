@@ -5,7 +5,7 @@
     "download": {
         "kind": "tar.gz",
         "sha256": "65fab701d9829d38cb77c14acdc431d2108bfdbf8979e40eb8ae567edf10b27c",
-        "url": "https://github.com/google/googletest/releases/download/v1.17.0/googletest-1.17.0.tar.gz"
+        "url": "http://github.com/google/googletest/releases/download/v1.17.0/googletest-1.17.0.tar.gz"
     },
     "dependencies": [
         "*-android*:native/android_ndk",
