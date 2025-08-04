@@ -1,0 +1,22 @@
+{
+    "package": "native/ninja",
+    "version": "1.13.1",
+    "type": "native",
+    "download": {
+        "kind": "tar.gz",
+        "sha256": "f0055ad0369bf2e372955ba55128d000cfcc21777057806015b45e4accbebf23",
+        "url": "https://github.com/ninja-build/ninja/archive/refs/tags/v1.13.1.tar.gz"
+    },
+    "dependencies": [
+        "all:native/python@3.11.13"
+    ],
+    "build": {
+        "env": [],
+        "steps": [
+            "all:python3 ./configure.py --bootstrap",
+            "all:./ninja all",
+            "all:mkdir -p $STAGING_DIR$PREFIX/native/bin",
+            "all:cp ninja $STAGING_DIR$PREFIX/native/bin"
+        ]
+    }
+}

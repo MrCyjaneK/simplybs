@@ -8,6 +8,7 @@ import (
 	"log"
 	"net/http"
 	"os"
+	"path/filepath"
 	"strconv"
 	"strings"
 	"time"
@@ -76,7 +77,7 @@ func DownloadFile(packageName, path, url, expectedSha256 string, isMirror bool) 
 	log.Printf("Downloading %s to %s", url, path)
 
 	if !isMirror {
-		err := DownloadFile(packageName, path, "http://static.mrcyjanek.net/lfs/simplybs/sources/"+packageName, expectedSha256, true)
+		err := DownloadFile(packageName, path, "http://static.mrcyjanek.net/lfs/simplybs/sources/"+filepath.Dir(packageName)+"/"+filepath.Base(path), expectedSha256, true)
 		if err != nil {
 			log.Printf("Failed to download file from mirror: %v, trying original URL", err)
 		} else {

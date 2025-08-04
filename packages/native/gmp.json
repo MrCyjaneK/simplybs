@@ -11,9 +11,13 @@
         "all:native/make"
     ],
     "build": {
-        "env": [],
+        "env": [
+            "all:config_opts=--prefix=$PREFIX/native",
+            "all:config_opts=$config_opts --disable-shared",
+            "all:config_opts=$config_opts --enable-static"
+        ],
         "steps": [
-            "all:./configure --prefix=$PREFIX/native",
+            "all:./configure $config_opts",
             "all:make -j$NUM_CORES",
             "all:make DESTDIR=$STAGING_DIR install"
         ]

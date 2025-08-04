@@ -9,8 +9,11 @@
     },
     "dependencies": [
         "*-android*:native/android_ndk",
+        "all:native/autoconf",
+        "all:native/automake",
         "all:native/config",
-        "all:native/protobuf"
+        "all:native/m4",
+        "all:native/perl"
     ],
     "patches": [
         "visibility.patch"
@@ -27,12 +30,12 @@
             "*-apple-darwin:SHOULD_BUILD="
         ],
         "steps": [
-            "all:cp -f $PREFIX/native/usr/share/config/config.guess config.guess",
-            "all:cp -f $PREFIX/native/usr/share/config/config.sub config.sub",
-            "all:cp -f $PREFIX/native/usr/share/config/config.guess third_party/googletest/googletest/build-aux/config.guess",
-            "all:cp -f $PREFIX/native/usr/share/config/config.sub third_party/googletest/googletest/build-aux/config.sub",
-            "all:cp -f $PREFIX/native/usr/share/config/config.guess third_party/googletest/googlemock/build-aux/config.guess",
-            "all:cp -f $PREFIX/native/usr/share/config/config.sub third_party/googletest/googlemock/build-aux/config.sub",
+            "all:$SHOULD_BUILD cp -f $PREFIX/native/usr/share/config/config.guess config.guess",
+            "all:$SHOULD_BUILD cp -f $PREFIX/native/usr/share/config/config.sub config.sub",
+            "all:$SHOULD_BUILD cp -f $PREFIX/native/usr/share/config/config.guess third_party/googletest/googletest/build-aux/config.guess",
+            "all:$SHOULD_BUILD cp -f $PREFIX/native/usr/share/config/config.sub third_party/googletest/googletest/build-aux/config.sub",
+            "all:$SHOULD_BUILD cp -f $PREFIX/native/usr/share/config/config.guess third_party/googletest/googlemock/build-aux/config.guess",
+            "all:$SHOULD_BUILD cp -f $PREFIX/native/usr/share/config/config.sub third_party/googletest/googlemock/build-aux/config.sub",
             "all:$SHOULD_BUILD patch -p0 < $PATCH_DIR/protobuf/visibility.patch",
             "all:$SHOULD_BUILD ./configure $config_opts",
             "all:$SHOULD_BUILD make -j$NUM_CORES -C src libprotobuf.la",

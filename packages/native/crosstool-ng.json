@@ -1,0 +1,29 @@
+{
+    "package": "native/crosstool-ng",
+    "version": "1.27.0",
+    "type": "native",
+    "download": {
+        "kind": "tar.xz",
+        "sha256": "0506ab98fa0ad6d263a555feeb2c7fff9bc24a434635d4b0cdff9137fe5b4477",
+        "url": "http://crosstool-ng.org/download/crosstool-ng/crosstool-ng-1.27.0.tar.xz"
+    },
+    "dependencies": [
+        "*-linux-gnu:native/autoconf",
+        "*-linux-gnu:native/bash",
+        "*-linux-gnu:native/binutils@2.42",
+        "*-linux-gnu:native/make",
+        "*-linux-gnu:native/make",
+        "*-linux-gnu:native/sed"
+    ],
+    "build": {
+        "env": [
+            "x86_64-linux-gnu:TOOL_TARGET=x86_64-linux-gnu"
+        ],
+        "steps": [
+            "*-linux-gnu:./bootstrap",
+            "*-linux-gnu:./configure --prefix=$PREFIX/native",
+            "*-linux-gnu:make -j$NUM_CORES",
+            "*-linux-gnu:make install DESTDIR=$STAGING_DIR"
+        ]
+    }
+}

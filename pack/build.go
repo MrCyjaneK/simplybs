@@ -20,7 +20,7 @@ func (p *Package) EnsureBuilt(h *host.Host, buildDependencies bool) {
 		p.BuildPackage(h, true)
 		return
 	}
-	if string(info) == p.GeneratePackageInfo(h) {
+	if string(info) == p.GeneratePackageInfo() {
 		log.Printf("[%s] Build cache found, skipping build...", p.Package)
 		return
 	}
@@ -45,7 +45,7 @@ func (p *Package) DownloadSource() {
 	if _, err := os.Stat(sourcePath); os.IsNotExist(err) {
 		var err error
 		if p.Download.Kind == "git" {
-			err = utils.DownloadGit(sourcePath, p.Download.URL, p.Download.Sha256)
+			err = utils.DownloadGit(p.Package, sourcePath, p.Download.URL, p.Download.Sha256)
 		} else {
 			err = utils.DownloadFile(p.Package, sourcePath, p.Download.URL, p.Download.Sha256, false)
 		}
@@ -79,18 +79,8 @@ func (p *Package) ExtractSource(host *host.Host, buildPath string) {
 	}
 }
 
-var bootstrapPackages = []string{
-	"native/bootstrap/make",
-	"native/bootstrap/perl",
-	"native/bootstrap/strip-nondeterminism",
-}
-
 func (p *Package) BuildPackage(h *host.Host, buildDependencies bool) {
-	if !strings.Contains(p.Package, "/bootstrap/") {
-		for _, pkgName := range bootstrapPackages {
-			p.Dependencies = append(p.Dependencies, "all:"+pkgName)
-		}
-	}
+
 	p.buildPackageInternal(h, buildDependencies)
 }
 
@@ -131,13 +121,10 @@ func (p *Package) buildPackageInternal(h *host.Host, buildDependencies bool) {
 	defer os.RemoveAll(stagingPath)
 
 	p.ExtractSource(h, buildPath)
-	if !strings.Contains(p.Package, "/bootstrap/") {
-		p.Build.Steps = append(p.Build.Steps, "all:$PREFIX/native/bootstrap/bin/strip-nondeterminism-recursive $PWD")
-	}
 
-	infoPath := filepath.Join(stagingPath, h.GetEnvPath(), "usr", "share", "buildlib", p.ShortName(h)+".txt")
+	infoPath := filepath.Join(stagingPath, h.GetEnvPath(), "usr", "share", "buildlib", p.ShortName()+".txt")
 	os.MkdirAll(filepath.Dir(infoPath), 0755)
-	err := os.WriteFile(infoPath, []byte(p.GeneratePackageInfo(h)), 0644)
+	err := os.WriteFile(infoPath, []byte(p.GeneratePackageInfo()), 0644)
 	if err != nil {
 		log.Fatalf("Failed to write build info %s: %v", infoPath, err)
 	}
@@ -185,7 +172,7 @@ func (p *Package) buildPackageInternal(h *host.Host, buildDependencies bool) {
 	}
 
 	infoPath = p.GenerateBuildPath(h, "built") + ".info.txt"
-	err = os.WriteFile(infoPath, []byte(p.GeneratePackageInfo(h)), 0644)
+	err = os.WriteFile(infoPath, []byte(p.GeneratePackageInfo()), 0644)
 	if err != nil {
 		log.Fatalf("Failed to write build info %s: %v", infoPath, err)
 	}
@@ -194,7 +181,7 @@ func (p *Package) buildPackageInternal(h *host.Host, buildDependencies bool) {
 }
 
 func (p *Package) StartShell(h *host.Host) {
-	log.Printf("Starting shell for package: %s", p.Package)
+	log.Printf("Starting shell for package: %s for host %s", p.Package, h.Triplet)
 
 	buildPath := p.GenerateBuildPath(h, "work")
 	os.RemoveAll(buildPath)

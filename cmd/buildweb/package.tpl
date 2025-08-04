@@ -496,10 +496,10 @@
                 </div>
                 <div class="download-buttons">
                     <a href="{{getBuiltFilePath $.Package.Package .ArchPath}}" class="download-btn download-btn-primary" download>
-                        ⬇ Download Archive
+                        ⬇ Tar.gz
                     </a>
                     <a href="{{getBuiltFilePath $.Package.Package .InfoPath}}" class="download-btn download-btn-secondary" target="_blank">
-                        📄 Build Info
+                        📄 Info
                     </a>
                 </div>
             </div>

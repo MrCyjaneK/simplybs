@@ -1,0 +1,56 @@
+{
+    "package": "native/binutils@2.42",
+    "version": "2.42",
+    "type": "native",
+    "download": {
+        "kind": "tar.bz2",
+        "sha256": "aa54850ebda5064c72cd4ec2d9b056c294252991486350d9a97ab2a6dfdfaf12",
+        "url": "https://ftp.gnu.org/gnu/binutils/binutils-2.42.tar.bz2"
+    },
+    "dependencies": [
+        "*-linux-gnu:native/bison",
+        "*-linux-gnu:native/libiconv",
+        "*-linux-gnu:native/make",
+        "*-linux-gnu:native/perl",
+        "*-linux-gnu:native/pkgconf",
+        "*-linux-gnu:native/texinfo",
+        "*-linux-gnu:native/zlib"
+    ],
+    "build": {
+        "env": [
+            "x86_64-linux-gnu:TOOL_TARGET=x86_64-linux-gnu",
+            "*-linux-gnu:config_opts=--prefix=$PREFIX/native",
+            "*-linux-gnu:config_opts=$config_opts --disable-nls",
+            "*-linux-gnu:config_opts=$config_opts --disable-werror",
+            "*-linux-gnu:config_opts=$config_opts --with-system-zlib",
+            "*-linux-gnu:config_opts=$config_opts --enable-targets=$TOOL_TARGET",
+            "*-linux-gnu:config_opts=$config_opts --target=$TOOL_TARGET",
+            "*-linux-gnu:config_opts=$config_opts --libdir=$PREFIX/native/lib/$TOOL_TARGET",
+            "*-linux-gnu:config_opts=$config_opts --infodir=$PREFIX/native/share/info/$TOOL_TARGET",
+            "*-linux-gnu:CPPFLAGS=-I$PREFIX/native/include",
+            "*-linux-gnu:LDFLAGS=-L$PREFIX/native/lib"
+        ],
+        "steps": [
+            "*-linux-gnu:mkdir -p build",
+            "*-linux-gnu:cd build && ../configure $config_opts",
+            "*-linux-gnu:cd build && make -j$NUM_CORES",
+            "*-linux-gnu:cd build && make install DESTDIR=$STAGING_DIR",
+            "*-linux-gnu:ln -s $TOOL_TARGET-gprof $STAGING_DIR$PREFIX/native/bin/gprof",
+            "*-linux-gnu:ln -s $TOOL_TARGET-ranlib $STAGING_DIR$PREFIX/native/bin/ranlib",
+            "*-linux-gnu:ln -s $TOOL_TARGET-addr2line $STAGING_DIR$PREFIX/native/bin/addr2line",
+            "*-linux-gnu:ln -s $TOOL_TARGET-ld $STAGING_DIR$PREFIX/native/bin/ld",
+            "*-linux-gnu:ln -s $TOOL_TARGET-readelf $STAGING_DIR$PREFIX/native/bin/readelf",
+            "*-linux-gnu:ln -s $TOOL_TARGET-ar $STAGING_DIR$PREFIX/native/bin/ar",
+            "*-linux-gnu:ln -s $TOOL_TARGET-ld.bfd $STAGING_DIR$PREFIX/native/bin/ld.bfd",
+            "*-linux-gnu:ln -s $TOOL_TARGET-size $STAGING_DIR$PREFIX/native/bin/size",
+            "*-linux-gnu:ln -s $TOOL_TARGET-as $STAGING_DIR$PREFIX/native/bin/as",
+            "*-linux-gnu:ln -s $TOOL_TARGET-nm $STAGING_DIR$PREFIX/native/bin/nm",
+            "*-linux-gnu:ln -s $TOOL_TARGET-strings $STAGING_DIR$PREFIX/native/bin/strings",
+            "*-linux-gnu:ln -s $TOOL_TARGET-c++filt $STAGING_DIR$PREFIX/native/bin/c++filt",
+            "*-linux-gnu:ln -s $TOOL_TARGET-objcopy $STAGING_DIR$PREFIX/native/bin/objcopy",
+            "*-linux-gnu:ln -s $TOOL_TARGET-strip $STAGING_DIR$PREFIX/native/bin/strip",
+            "*-linux-gnu:ln -s $TOOL_TARGET-elfedit $STAGING_DIR$PREFIX/native/bin/elfedit",
+            "*-linux-gnu:ln -s $TOOL_TARGET-objdump $STAGING_DIR$PREFIX/native/bin/objdump"
+        ]
+    }
+}

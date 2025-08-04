@@ -78,7 +78,7 @@ func resolveRef(repo *git.Repository, refStr string) (plumbing.Hash, error) {
 	return plumbing.ZeroHash, err
 }
 
-func DownloadGit(path, url, expectedSha256 string) error {
+func DownloadGit(packageName, path, url, expectedSha256 string) error {
 	log.Printf("Downloading %s to %s", url, path)
 
 	repo, err := git.PlainClone(path, false, &git.CloneOptions{

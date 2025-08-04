@@ -55,7 +55,7 @@
             "*-apple-darwin:SHOULD_BUILD="
         ],
         "steps": [
-            "all:$SHOULD_BUILD cp $PATCH_DIR/fallback.c ncurses",
+            "all:$SHOULD_BUILD cp $PATCH_DIR/ncurses/fallback.c ncurses",
             "all:$SHOULD_BUILD ./configure $config_opts",
             "all:$SHOULD_BUILD make -j$NUM_CORES $build_opts",
             "all:$SHOULD_BUILD make install.libs DESTDIR=$STAGING_DIR"

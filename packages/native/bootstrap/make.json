@@ -8,7 +8,6 @@
         "url": "http://ftpmirror.gnu.org/gnu/make/make-4.4.tar.gz"
     },
     "build": {
-        "env": [],
         "steps": [
             "all:./configure --disable-dependency-tracking",
             "all:./build.sh",

@@ -11,7 +11,9 @@
         "all:native/bootstrap/make"
     ],
     "build": {
-        "env": [],
+        "env": [
+            "all:PATH=$PREFIX/native/bootstrap/bin:$PATH"
+        ],
         "steps": [
             "all:sed -i.bak '/^#ifndef PERL_BUILD_DATE$/,/^#endif$/{/^#ifndef PERL_BUILD_DATE$/!d; s/.*/\\#define PERL_BUILD_DATE \"Jan  1 1970 00:00:01\"/;}' perl.c",
             "all:./Configure -des -Dprefix=$PREFIX/native/bootstrap -Duseithreads -Dall_static",

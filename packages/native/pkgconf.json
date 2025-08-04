@@ -24,7 +24,7 @@
             "all:./configure --prefix=$PREFIX/native --with-pkg-config-dir=$PKGCONFIG_DIR",
             "all:make -j$NUM_CORES",
             "all:make DESTDIR=$STAGING_DIR install",
-            "all: ln -s pkgconf $STAGING_DIR$PREFIX/native/bin/pkg-config"
+            "all:ln -s pkgconf $STAGING_DIR$PREFIX/native/bin/pkg-config"
         ]
     }
 }

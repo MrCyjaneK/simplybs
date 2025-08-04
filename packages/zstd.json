@@ -9,20 +9,18 @@
     },
     "dependencies": [
         "*-android*:native/android_ndk",
-        "all:native/cmake",
         "all:native/make"
     ],
     "build": {
         "env": [
-            "all:CFLAGS=$CFLAGS -fPIC",
-            "all:config_opts=--prefix=$PREFIX --static",
             "all:LIBTOOL=$PREFIX/native/bin/libtool",
-            "all:CROSS_PREFIX=$HOST-"
+            "armv7a-linux-androideabi:CFLAGS=$CFLAGS -DLIBC_NO_FSEEKO",
+            "armv7a-linux-androideabi:CXXFLAGS=$CXXFLAGS -DLIBC_NO_FSEEKO"
         ],
         "steps": [
-            "all:cmake -S build/cmake -DCMAKE_INSTALL_PREFIX=$PREFIX",
             "all:make -j$NUM_CORES",
-            "all:make DESTDIR=$STAGING_DIR install"
+            "all:mkdir -p $STAGING_DIR$PREFIX/lib",
+            "all:cp ./lib/libzstd.a $STAGING_DIR$PREFIX/lib/libzstd.a"
         ]
     }
 }

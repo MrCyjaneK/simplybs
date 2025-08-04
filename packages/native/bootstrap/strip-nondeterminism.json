@@ -8,11 +8,16 @@
         "url": "https://salsa.debian.org/reproducible-builds/reproducible-lfs/-/raw/master/releases/strip-nondeterminism/strip-nondeterminism_1.13.0.tar.bz2"
     },
     "dependencies": [
+        "all:native/bootstrap/cpan/archive-cpio",
+        "all:native/bootstrap/cpan/archive-zip",
+        "all:native/bootstrap/cpan/sub-override",
         "all:native/bootstrap/make",
         "all:native/bootstrap/perl"
     ],
     "build": {
-        "env": [],
+        "env": [
+            "all:PATH=$PREFIX/native/bootstrap/bin:$PATH"
+        ],
         "steps": [
             "all:$PREFIX/native/bootstrap/bin/perl Makefile.PL PREFIX=$PREFIX/native/bootstrap",
             "all:make",
@@ -42,8 +47,21 @@
             "all:echo '    -name '\\''*.zip'\\'' \\\\' >> $STAGING_DIR/$PREFIX/native/bootstrap/bin/strip-nondeterminism-recursive",
             "all:echo '\\\\) -print0 | while IFS= read -r -d '\\'''\\'''' file; do' >> $STAGING_DIR/$PREFIX/native/bootstrap/bin/strip-nondeterminism-recursive",
             "all:echo '    echo \"Processing: $file\"' >> $STAGING_DIR/$PREFIX/native/bootstrap/bin/strip-nondeterminism-recursive",
+            "all:echo '    # Save original permissions' >> $STAGING_DIR/$PREFIX/native/bootstrap/bin/strip-nondeterminism-recursive",
+            "all:echo '    ORIGINAL_PERMS=$(stat -f \"%Mp%Lp\" \"$file\" 2>/dev/null || stat -c \"%a\" \"$file\" 2>/dev/null)' >> $STAGING_DIR/$PREFIX/native/bootstrap/bin/strip-nondeterminism-recursive",
+            "all:echo '    if [ -z \"$ORIGINAL_PERMS\" ]; then' >> $STAGING_DIR/$PREFIX/native/bootstrap/bin/strip-nondeterminism-recursive",
+            "all:echo '        echo \"Warning: Could not determine permissions for $file, skipping\" >&2' >> $STAGING_DIR/$PREFIX/native/bootstrap/bin/strip-nondeterminism-recursive",
+            "all:echo '        continue' >> $STAGING_DIR/$PREFIX/native/bootstrap/bin/strip-nondeterminism-recursive",
+            "all:echo '    fi' >> $STAGING_DIR/$PREFIX/native/bootstrap/bin/strip-nondeterminism-recursive",
+            "all:echo '    # Make file writable if needed' >> $STAGING_DIR/$PREFIX/native/bootstrap/bin/strip-nondeterminism-recursive",
+            "all:echo '    chmod u+w \"$file\"' >> $STAGING_DIR/$PREFIX/native/bootstrap/bin/strip-nondeterminism-recursive",
+            "all:echo '    # Run strip-nondeterminism' >> $STAGING_DIR/$PREFIX/native/bootstrap/bin/strip-nondeterminism-recursive",
             "all:echo '    $PREFIX/native/bootstrap/bin/perl $PREFIX/native/bootstrap/bin/strip-nondeterminism -T 1 --normalizers +all \"$file\"' >> $STAGING_DIR/$PREFIX/native/bootstrap/bin/strip-nondeterminism-recursive",
-            "all:echo '    if [ $? -eq 0 ]; then' >> $STAGING_DIR/$PREFIX/native/bootstrap/bin/strip-nondeterminism-recursive",
+            "all:echo '    STRIP_RESULT=$?' >> $STAGING_DIR/$PREFIX/native/bootstrap/bin/strip-nondeterminism-recursive",
+            "all:echo '    # Restore original permissions' >> $STAGING_DIR/$PREFIX/native/bootstrap/bin/strip-nondeterminism-recursive",
+            "all:echo '    chmod \"$ORIGINAL_PERMS\" \"$file\"' >> $STAGING_DIR/$PREFIX/native/bootstrap/bin/strip-nondeterminism-recursive",
+            "all:echo '    # Check result' >> $STAGING_DIR/$PREFIX/native/bootstrap/bin/strip-nondeterminism-recursive",
+            "all:echo '    if [ $STRIP_RESULT -eq 0 ]; then' >> $STAGING_DIR/$PREFIX/native/bootstrap/bin/strip-nondeterminism-recursive",
             "all:echo '        echo \"Successfully processed $file\"' >> $STAGING_DIR/$PREFIX/native/bootstrap/bin/strip-nondeterminism-recursive",
             "all:echo '    else' >> $STAGING_DIR/$PREFIX/native/bootstrap/bin/strip-nondeterminism-recursive",
             "all:echo '        echo \"Failed to process $file\" >&2' >> $STAGING_DIR/$PREFIX/native/bootstrap/bin/strip-nondeterminism-recursive",

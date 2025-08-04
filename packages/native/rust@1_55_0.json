@@ -23,7 +23,7 @@
     "build": {
         "env": [],
         "steps": [
-            "all:patch -p1 < $PATCH_DIR/rust/assembly.h.patch",
+            "all:patch -p1 < $PATCH_DIR/rust/1_55_0/assembly.h.patch",
             "all:patch -p1 < $PATCH_DIR/rust/Signals.h.patch",
             "all:echo '[build]' > config.toml",
             "all:echo 'full-bootstrap = true' >> config.toml",

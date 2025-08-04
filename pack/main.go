@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"os"
 	"path/filepath"
+	"runtime"
 	"strings"
 
 	"github.com/mrcyjanek/simplybs/builder"
@@ -43,6 +44,15 @@ type PackageWithBuilds struct {
 	BuiltFiles []BuiltFile `json:"built_files"`
 }
 
+var bootstrapPackages = []string{
+	"native/bootstrap/make",
+	"native/bootstrap/perl",
+	"native/bootstrap/cpan/archive-cpio",
+	"native/bootstrap/cpan/archive-zip",
+	"native/bootstrap/cpan/sub-override",
+	"native/bootstrap/strip-nondeterminism",
+}
+
 func FindPackage(name string) (*Package, error) {
 	pkgPath := filepath.Join(host.GetPackagesDir(), name+".json")
 	info, err := os.ReadFile(pkgPath)
@@ -53,6 +63,13 @@ func FindPackage(name string) (*Package, error) {
 	err = json.Unmarshal(info, &pkg)
 	if err != nil {
 		return nil, err
+	}
+
+	if !strings.Contains(pkg.Package, "/bootstrap/") {
+		for _, pkgName := range bootstrapPackages {
+			pkg.Dependencies = append(pkg.Dependencies, "all:"+pkgName)
+		}
+		pkg.Build.Steps = append(pkg.Build.Steps, "all:$PREFIX/native/bootstrap/bin/strip-nondeterminism-recursive $STAGING_DIR")
 	}
 	return &pkg, nil
 }
@@ -100,33 +117,24 @@ func ScanBuiltFiles(packageName string, packageVersion string) []BuiltFile {
 
 	for _, builder := range builder.Builders {
 		for _, target := range targets {
-			// For packages like "native/make", files are stored in the "native" directory
-			// but the filename is just "make-version-id.tar.gz"
-			packageParts := strings.Split(packageName, "/")
-			var builtDir string
-			var expectedPackageName string
+			buildOutputDir := filepath.Join(buildlibDir, builder, "built", target, packageName)
+			buildOutputDir = filepath.Dir(buildOutputDir)
 
-			if len(packageParts) > 1 {
-				// Package like "native/make" - files are in "native/" dir, filename starts with "make"
-				builtDir = filepath.Join(buildlibDir, builder, "built", target, packageParts[0])
-				expectedPackageName = packageParts[1]
-			} else {
-				// Package like "boost" - files are in root, filename starts with "boost"
-				builtDir = filepath.Join(buildlibDir, builder, "built", target)
-				expectedPackageName = packageName
-			}
-
-			if _, err := os.Stat(builtDir); os.IsNotExist(err) {
+			if _, err := os.Stat(buildOutputDir); os.IsNotExist(err) {
 				continue
 			}
 
-			files, err := os.ReadDir(builtDir)
+			files, err := os.ReadDir(buildOutputDir)
 			if err != nil {
 				continue
 			}
 
 			for _, file := range files {
 				fileName := file.Name()
+				fsFilepath := filepath.Join(buildOutputDir, fileName)
+				if !strings.Contains(fsFilepath, packageName) {
+					continue
+				}
 				if !strings.HasSuffix(fileName, ".tar.gz") {
 					continue
 				}
@@ -138,39 +146,27 @@ func ScanBuiltFiles(packageName string, packageVersion string) []BuiltFile {
 					continue
 				}
 
-				// Reconstruct package name and check if this file belongs to our package
-				reconstructedPkg := strings.Join(parts[:len(parts)-2], "-")
-				reconstructedVersion := parts[len(parts)-2]
-				id := parts[len(parts)-1]
+				archPathRelative := filepath.Join(builder, "built", target, filepath.Dir(packageName), fileName)
+				infoPathRelative := filepath.Join(builder, "built", target, filepath.Dir(packageName), strings.TrimSuffix(fileName, ".tar.gz")+".info.txt")
+				archPath := archPathRelative
+				infoPath := infoPathRelative
 
-				if reconstructedPkg == expectedPackageName && reconstructedVersion == packageVersion {
-					var archPathRelative, infoPathRelative string
-					if len(packageParts) > 1 {
-						archPathRelative = filepath.Join(builder, "built", target, packageParts[0], fileName)
-						infoPathRelative = filepath.Join(builder, "built", target, packageParts[0], strings.TrimSuffix(fileName, ".tar.gz")+".info.txt")
-					} else {
-						archPathRelative = filepath.Join(builder, "built", target, fileName)
-						infoPathRelative = filepath.Join(builder, "built", target, strings.TrimSuffix(fileName, ".tar.gz")+".info.txt")
-					}
-					archPath := archPathRelative
-					infoPath := infoPathRelative
-
-					fullArchPath := filepath.Join(buildlibDir, archPath)
-					info, err := os.Stat(fullArchPath)
-					var fileSize int64
-					if err == nil {
-						fileSize = info.Size()
-					}
-
-					builtFiles = append(builtFiles, BuiltFile{
-						Builder:  builder,
-						Target:   target,
-						ID:       id,
-						InfoPath: infoPath,
-						ArchPath: archPath,
-						FileSize: fileSize,
-					})
+				fullArchPath := filepath.Join(buildlibDir, archPath)
+				info, err := os.Stat(fullArchPath)
+				var fileSize int64
+				if err == nil {
+					fileSize = info.Size()
 				}
+				id := strings.Split(parts[len(parts)-1], ".")[0]
+
+				builtFiles = append(builtFiles, BuiltFile{
+					Builder:  builder,
+					Target:   target,
+					ID:       id,
+					InfoPath: infoPath,
+					ArchPath: archPath,
+					FileSize: fileSize,
+				})
 			}
 		}
 	}
@@ -185,7 +181,7 @@ func Cleanup() {
 
 	keepFiles := make(map[string]bool)
 
-	builders := builder.Builders
+	builders := []string{runtime.GOOS + "_" + runtime.GOARCH}
 	targets := make([]string, 0, len(host.SupportedHosts))
 	for k := range host.SupportedHosts {
 		targets = append(targets, k)
@@ -194,25 +190,11 @@ func Cleanup() {
 	for _, pkg := range packages {
 		for _, builder := range builders {
 			for _, target := range targets {
-				h := &host.Host{Triplet: target}
+				currentBuildID := pkg.GeneratePackageInfoShortHash()
 
-				currentBuildID := pkg.GeneratePackageInfoShortHash(h)
-
-				packageParts := strings.Split(pkg.Package, "/")
-				var expectedPackageName string
-				var baseDir string
-
-				if len(packageParts) > 1 {
-					expectedPackageName = packageParts[1]
-					baseDir = filepath.Join(builder, "built", target, packageParts[0])
-				} else {
-					expectedPackageName = pkg.Package
-					baseDir = filepath.Join(builder, "built", target)
-				}
-
-				currentFileName := fmt.Sprintf("%s-%s-%s", expectedPackageName, pkg.Version, currentBuildID)
-				archPath := filepath.Join(baseDir, currentFileName+".tar.gz")
-				infoPath := filepath.Join(baseDir, currentFileName+".info.txt")
+				currentFileName := fmt.Sprintf("%s-%s-%s", pkg.Package, pkg.Version, currentBuildID)
+				archPath := filepath.Join(builder, "built", target, currentFileName+".tar.gz")
+				infoPath := filepath.Join(builder, "built", target, currentFileName+".info.txt")
 
 				keepFiles[archPath] = true
 				keepFiles[infoPath] = true

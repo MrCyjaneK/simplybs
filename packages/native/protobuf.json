@@ -8,7 +8,11 @@
         "url": "http://github.com/protocolbuffers/protobuf/releases/download/v3.6.1/protobuf-cpp-3.6.1.tar.gz"
     },
     "dependencies": [
-        "all:native/config"
+        "all:native/autoconf",
+        "all:native/automake",
+        "all:native/config",
+        "all:native/m4",
+        "all:native/perl"
     ],
     "build": {
         "env": [
@@ -20,12 +24,12 @@
             "*-apple-darwin:SHOULD_BUILD="
         ],
         "steps": [
-            "all:cp -f $PREFIX/native/usr/share/config/config.guess config.guess",
-            "all:cp -f $PREFIX/native/usr/share/config/config.sub config.sub",
-            "all:cp -f $PREFIX/native/usr/share/config/config.guess third_party/googletest/googletest/build-aux/config.guess",
-            "all:cp -f $PREFIX/native/usr/share/config/config.sub third_party/googletest/googletest/build-aux/config.sub",
-            "all:cp -f $PREFIX/native/usr/share/config/config.guess third_party/googletest/googlemock/build-aux/config.guess",
-            "all:cp -f $PREFIX/native/usr/share/config/config.sub third_party/googletest/googlemock/build-aux/config.sub",
+            "all:$SHOULD_BUILD cp -f $PREFIX/native/usr/share/config/config.guess config.guess",
+            "all:$SHOULD_BUILD cp -f $PREFIX/native/usr/share/config/config.sub config.sub",
+            "all:$SHOULD_BUILD cp -f $PREFIX/native/usr/share/config/config.guess third_party/googletest/googletest/build-aux/config.guess",
+            "all:$SHOULD_BUILD cp -f $PREFIX/native/usr/share/config/config.sub third_party/googletest/googletest/build-aux/config.sub",
+            "all:$SHOULD_BUILD cp -f $PREFIX/native/usr/share/config/config.guess third_party/googletest/googlemock/build-aux/config.guess",
+            "all:$SHOULD_BUILD cp -f $PREFIX/native/usr/share/config/config.sub third_party/googletest/googlemock/build-aux/config.sub",
             "all:$SHOULD_BUILD aclocal",
             "all:$SHOULD_BUILD automake --add-missing",
             "all:$SHOULD_BUILD ./configure $config_opts",

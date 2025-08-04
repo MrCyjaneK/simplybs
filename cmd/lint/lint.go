@@ -32,7 +32,16 @@ func Lint() {
 }
 
 func fixFormatting() {
-	files, err := filepath.Glob("packages/*.json")
+	var files []string
+	err := filepath.WalkDir("packages", func(path string, d os.DirEntry, err error) error {
+		if err != nil {
+			return err
+		}
+		if !d.IsDir() && strings.HasSuffix(path, ".json") {
+			files = append(files, path)
+		}
+		return nil
+	})
 	crash.Handle(err)
 	for _, file := range files {
 		contentInitial, err := os.ReadFile(file)

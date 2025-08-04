@@ -5,7 +5,7 @@
     "download": {
         "kind": "git",
         "sha256": "a2287c3041a3f2a204eb942e09c015eab00dc7dd",
-        "url": "http://https.git.savannah.gnu.org/git/config.git"
+        "url": "https://https.git.savannah.gnu.org/git/config.git"
     },
     "build": {
         "env": [],

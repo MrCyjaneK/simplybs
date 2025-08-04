@@ -1,0 +1,21 @@
+{
+    "package": "native/bash",
+    "version": "5.3",
+    "type": "native",
+    "download": {
+        "kind": "tar.gz",
+        "sha256": "0d5cd86965f869a26cf64f4b71be7b96f90a3ba8b3d74e27e8e9d9d5550f31ba",
+        "url": "http://ftpmirror.gnu.org/bash/bash-5.3.tar.gz"
+    },
+    "dependencies": [
+        "all:native/make"
+    ],
+    "build": {
+        "env": [],
+        "steps": [
+            "all:./configure --prefix=$PREFIX/native",
+            "all:make -j$NUM_CORES V=1",
+            "all:make install DESTDIR=$STAGING_DIR"
+        ]
+    }
+}

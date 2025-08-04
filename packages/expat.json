@@ -17,10 +17,12 @@
     "build": {
         "env": [
             "all:CFLAGS=$CFLAGS -fPIC",
-            "all:LDFLAGS=$LDFLAGS -fPIC"
+            "all:LDFLAGS=$LDFLAGS -fPIC",
+            "all:BUILD_HOST=$HOST",
+            "aarch64-apple-ios-simulator:BUILD_HOST=aarch64-apple-ios"
         ],
         "steps": [
-            "all:./configure --host=$HOST --prefix=$PREFIX --disable-shared --without-docbook --without-tests --without-examples --enable-option-checking --without-xmlwf --with-pic",
+            "all:./configure --host=$BUILD_HOST --prefix=$PREFIX --disable-shared --without-docbook --without-tests --without-examples --enable-option-checking --without-xmlwf --with-pic",
             "all:make -j$NUM_CORES",
             "all:make DESTDIR=$STAGING_DIR install"
         ]

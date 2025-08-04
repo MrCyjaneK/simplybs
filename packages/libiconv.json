@@ -15,14 +15,15 @@
     "build": {
         "env": [
             "all:CFLAGS=$CFLAGS -fPIC",
-            "all:config_opts=--host=$HOST --prefix=$PREFIX --disable-nls --enable-static --disable-shared",
+            "all:BUILD_HOST=$HOST",
+            "aarch64-apple-ios-simulator:BUILD_HOST=aarch64-apple-ios",
+            "all:config_opts=--host=$BUILD_HOST --prefix=$PREFIX --disable-nls --enable-static --disable-shared",
             "all:config_opts=$config_opts",
             "*linux:config_opts=$config_opts --with-pic"
         ],
         "steps": [
             "all:cp -f $PREFIX/native/usr/share/config/config.guess build-aux/",
             "all:cp -f $PREFIX/native/usr/share/config/config.sub build-aux/",
-            "all:echo Building for HOST",
             "all:./configure $config_opts",
             "all:make -j$NUM_CORES",
             "all:make DESTDIR=$STAGING_DIR install"

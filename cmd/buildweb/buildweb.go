@@ -5,6 +5,7 @@ import (
 	"html/template"
 	"os"
 	"path/filepath"
+	"sort"
 	"strings"
 
 	_ "embed"
@@ -89,20 +90,7 @@ func BuildWeb() {
 			packageDepth := strings.Count(pkg.Package.Package, "/")
 			upPath := strings.Repeat("../", packageDepth+1) // +1 to get out of web directory
 
-			packageParts := strings.Split(pkg.Package.Package, "/")
-			var packageName string
-			var sourceDir string
-
-			if len(packageParts) > 1 {
-				sourceDir = packageParts[0]                     // "native"
-				packageName = packageParts[len(packageParts)-1] // "make"
-				return fmt.Sprintf("%ssource/%s/%s-%s.%s", upPath, sourceDir,
-					packageName, pkg.Package.Version, pkg.Package.Download.Kind)
-			} else {
-				packageName = pkg.Package.Package
-				return fmt.Sprintf("%ssource/%s-%s.%s", upPath,
-					packageName, pkg.Package.Version, pkg.Package.Download.Kind)
-			}
+			return fmt.Sprintf("%ssource/%s-%s.%s", upPath, pkg.Package.Package, pkg.Package.Version, pkg.Package.Download.Kind)
 		},
 		"getBuiltFilePath": func(packageName, filePath string) string {
 			packageDepth := strings.Count(packageName, "/")
@@ -110,12 +98,15 @@ func BuildWeb() {
 			return upPath + filePath
 		},
 		"getBuildMatrix": func(pkg *pack.PackageWithBuilds) map[string]map[string]*pack.BuiltFile {
-			builders := []string{"darwin_arm64", "linux_amd64", "linux_arm64"}
-			targets := []string{
-				"aarch64-apple-darwin", "x86_64-apple-darwin", "aarch64-apple-ios",
-				"aarch64-apple-ios-simulator", "x86_64-linux-gnu", "aarch64-linux-gnu",
-				"aarch64-linux-android", "x86_64-linux-android", "armv7a-linux-androideabi",
+			builders := make([]string, len(builder.Builders))
+			copy(builders, builder.Builders)
+			sort.Strings(builders)
+
+			targets := make([]string, 0, len(host.SupportedHosts))
+			for k := range host.SupportedHosts {
+				targets = append(targets, k)
 			}
+			sort.Strings(targets)
 
 			matrix := make(map[string]map[string]*pack.BuiltFile)
 			for _, builder := range builders {
@@ -135,13 +126,17 @@ func BuildWeb() {
 			return matrix
 		},
 		"getBuilders": func() []string {
-			return builder.Builders
+			builders := make([]string, len(builder.Builders))
+			copy(builders, builder.Builders)
+			sort.Strings(builders)
+			return builders
 		},
 		"getTargets": func() []string {
 			targets := make([]string, 0, len(host.SupportedHosts))
 			for k := range host.SupportedHosts {
 				targets = append(targets, k)
 			}
+			sort.Strings(targets)
 			return targets
 		},
 		"getBuildProgress": func(pkg *pack.PackageWithBuilds) int {

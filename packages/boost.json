@@ -9,7 +9,8 @@
     },
     "dependencies": [
         "*-android*:native/android_ndk",
-        "all:libiconv"
+        "all:libiconv",
+        "all:native/boost-b2"
     ],
     "patches": [
         "fix_io_control_hpp.patch"
@@ -38,9 +39,8 @@
         ],
         "steps": [
             "all:echo \"using $toolset : $toolset2 : $CXX $CXXFLAGS : <cxxflags>\"$CXXFLAGS\" <linkflags>\"$LDFLAGS\" <archiver>\"$AR\" <arflags>\"$ARFLAGS\" <striper>\"$STRIP\" <ranlib>\"$RANLIB\" <rc>\"$WINDRES\" <target-os>iphone : ;\" > user-config.jam",
-            "all:./bootstrap.sh --with-libraries=$config_libraries",
-            "all:./b2 -d2 -j$NUM_CORES --prefix=$STAGING_DIR$PREFIX $config_opts stage",
-            "all:./b2 -d0 -j$NUM_CORES --prefix=$STAGING_DIR$PREFIX $config_opts install"
+            "all:b2 -d2 -j$NUM_CORES --prefix=$STAGING_DIR$PREFIX $config_opts stage",
+            "all:b2 -d0 -j$NUM_CORES --prefix=$STAGING_DIR$PREFIX $config_opts install"
         ]
     }
 }

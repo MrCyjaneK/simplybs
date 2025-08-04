@@ -1,0 +1,51 @@
+{
+    "package": "native/gcc@13.2@stage1",
+    "version": "13.2",
+    "type": "native",
+    "download": {
+        "kind": "tar.gz",
+        "sha256": "8cb4be3796651976f94b9356fa08d833524f62420d6292c5033a9a26af315078",
+        "url": "http://ftpmirror.gnu.org/gnu/gcc/gcc-13.2.0/gcc-13.2.0.tar.gz"
+    },
+    "dependencies": [
+        "*-linux-gnu:native/config",
+        "*-linux-gnu:native/gmp",
+        "*-linux-gnu:native/libiconv",
+        "*-linux-gnu:native/linux-headers",
+        "*-linux-gnu:native/make",
+        "*-linux-gnu:native/mpc",
+        "*-linux-gnu:native/mpfr",
+        "*-linux-gnu:native/zlib"
+    ],
+    "build": {
+        "env": [
+            "x86_64-linux-gnu:TOOL_TARGET=x86_64-linux-gnu",
+            "*-linux-gnu:SYSROOT=$PREFIX",
+            "*-linux-gnu:config_opts=--prefix=$PREFIX/native",
+            "*-linux-gnu:config_opts=$config_opts --target=$TOOL_TARGET",
+            "*-linux-gnu:config_opts=$config_opts --disable-nls",
+            "*-linux-gnu:config_opts=$config_opts --disable-multilib",
+            "*-linux-gnu:config_opts=$config_opts --enable-languages=c,c++",
+            "*-linux-gnu:config_opts=$config_opts --without-headers",
+            "*-linux-gnu:config_opts=$config_opts --with-newlib",
+            "*-linux-gnu:config_opts=$config_opts --disable-shared",
+            "*-linux-gnu:config_opts=$config_opts --disable-threads",
+            "*-linux-gnu:config_opts=$config_opts --disable-libssp",
+            "*-linux-gnu:config_opts=$config_opts --disable-libstdcxx",
+            "*-linux-gnu:config_opts=$config_opts --disable-libsanitizer",
+            "*-linux-gnu:config_opts=$config_opts --with-system-zlib"
+        ],
+        "steps": [
+            "*-linux-gnu:sed -i.bak 's/^#undef isalpha/\/\/ #undef isalpha/' include/safe-ctype.h",
+            "*-linux-gnu:sed -i.bak 's/^#define isalpha/\/\/ #define isalpha/' include/safe-ctype.h",
+            "*-linux-gnu:sed -i.bak 's/^#undef islower/\/\/ #undef islower/' include/safe-ctype.h",
+            "*-linux-gnu:sed -i.bak 's/^#define islower/\/\/ #define islower/' include/safe-ctype.h",
+            "*-linux-gnu:sed -i.bak 's/^#undef toupper/\/\/ #undef toupper/' include/safe-ctype.h",
+            "*-linux-gnu:sed -i.bak 's/^#define toupper/\/\/ #define toupper/' include/safe-ctype.h",
+            "*-linux-gnu:mkdir -p build",
+            "*-linux-gnu:cd build && ../configure $config_opts",
+            "*-linux-gnu:cd build && make -j1 all-gcc",
+            "*-linux-gnu:cd build && make install-gcc DESTDIR=$STAGING_DIR"
+        ]
+    }
+}

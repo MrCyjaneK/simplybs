@@ -9,6 +9,9 @@
     },
     "dependencies": [
         "*-android*:native/android_ndk",
+        "all:native/autoconf",
+        "all:native/m4",
+        "all:native/perl",
         "all:expat",
         "all:openssl"
     ],
@@ -17,7 +20,9 @@
     ],
     "build": {
         "env": [
-            "all:config_opts=--disable-shared --enable-static --without-pyunbound --prefix=$PREFIX --host=$HOST",
+            "all:BUILD_HOST=$HOST",
+            "aarch64-apple-ios-simulator:BUILD_HOST=aarch64-apple-ios",
+            "all:config_opts=--disable-shared --enable-static --without-pyunbound --prefix=$PREFIX --host=$BUILD_HOST",
             "all:config_opts=$config_opts --with-libexpat=$PREFIX --with-ssl=$PREFIX --with-libevent=no",
             "all:config_opts=$config_opts --without-pythonmodule --disable-flto --with-pthreads --with-libunbound-only",
             "*-linux-*:config_opts=$config_opts --with-pic",

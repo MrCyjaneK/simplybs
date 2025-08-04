@@ -1,0 +1,25 @@
+{
+    "package": "native/gawk@5.2.2",
+    "version": "5.2.2",
+    "type": "native",
+    "download": {
+        "kind": "tar.gz",
+        "sha256": "945aef7ccff101f20b22a10802bc005e994ab2b8ea3e724cc1a197c62f41f650",
+        "url": "http://ftpmirror.gnu.org/gnu/gawk/gawk-5.2.2.tar.gz"
+    },
+    "dependencies": [
+        "all:native/make"
+    ],
+    "build": {
+        "env": [
+            "all:AUTOMAKE=true",
+            "all:ACLOCAL=true",
+            "all:MAKEINFO=true"
+        ],
+        "steps": [
+            "all:./configure --prefix=$PREFIX/native",
+            "all:make -j$NUM_CORES",
+            "all:make DESTDIR=$STAGING_DIR install"
+        ]
+    }
+}

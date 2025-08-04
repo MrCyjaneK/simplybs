@@ -1,0 +1,24 @@
+{
+    "package": "native/bootstrap/cpan/archive-cpio",
+    "version": "0.10",
+    "type": "native",
+    "download": {
+        "kind": "tar.gz",
+        "sha256": "246fb31669764e78336b2191134122e07c44f2d82dc4f37d552ab28f8668bed3",
+        "url": "https://cpan.metacpan.org/authors/id/P/PI/PIXEL/Archive-Cpio-0.10.tar.gz"
+    },
+    "dependencies": [
+        "all:native/bootstrap/make",
+        "all:native/bootstrap/perl"
+    ],
+    "build": {
+        "env": [
+            "all:PATH=$PREFIX/native/bootstrap/bin:$PATH"
+        ],
+        "steps": [
+            "all:$PREFIX/native/bootstrap/bin/perl Makefile.PL PREFIX=$PREFIX/native/bootstrap",
+            "all:make -j$NUM_CORES",
+            "all:make DESTDIR=$STAGING_DIR install"
+        ]
+    }
+}

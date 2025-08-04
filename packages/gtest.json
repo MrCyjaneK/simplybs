@@ -18,11 +18,11 @@
             "*-linux-gnu:CXXFLAGS=$CXXFLAGS -fPIC"
         ],
         "steps": [
-            "all:cd googletest && cmake -DCMAKE_POLICY_VERSION_MINIMUM=3.5 -DCMAKE_INSTALL_PREFIX=$PREFIX -DTOOLCHAIN_PREFIX=$HOST- -DCMAKE_CXX_FLAGS_DEBUG=ON",
+            "all:cd googletest && cmake -DGOOGLETEST_VERSION=1.17.0 -DCMAKE_POLICY_VERSION_MINIMUM=3.5 -DCMAKE_INSTALL_PREFIX=$PREFIX -DCMAKE_CXX_FLAGS_DEBUG=ON",
             "all:cd googletest && make -j$NUM_CORES",
             "all:mkdir $STAGING_DIR$PREFIX/lib $STAGING_DIR$PREFIX/include",
-            "all:cp googletest/libgtest.a $STAGING_DIR$PREFIX/lib",
-            "all:cp googletest/libgtest_main.a $STAGING_DIR$PREFIX/lib",
+            "all:cp googletest/lib/libgtest.a $STAGING_DIR$PREFIX/lib",
+            "all:cp googletest/lib/libgtest_main.a $STAGING_DIR$PREFIX/lib",
             "all:cp -a googletest/include/* $STAGING_DIR$PREFIX/include/"
         ]
     }

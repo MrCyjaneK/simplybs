@@ -19,15 +19,15 @@
         "env": [],
         "steps": [
             "all:echo '[build]' > config.toml",
-            "aarch64-apple-darwin::echo 'targets = [\"aarch64-apple-darwin\"]' >> config.toml",
-            "x86_64-apple-darwin::echo 'targets = [\"x86_64-apple-darwin\"]' >> config.toml",
-            "aarch64-apple-ios::echo 'targets = [\"aarch64-apple-ios\"]' >> config.toml",
-            "aarch64-apple-ios-simulator::echo 'targets = [\"aarch64-apple-ios-sim\"]' >> config.toml",
-            "x86_64-linux-gnu::echo 'targets = [\"x86_64-unknown-linux-gnu\"]' >> config.toml",
-            "aarch64-linux-gnu::echo 'targets = [\"aarch64-unknown-linux-gnu\"]' >> config.toml",
-            "aarch64-linux-android::echo 'targets = [\"aarch64-linux-android\"]' >> config.toml",
-            "x86_64-linux-android::echo 'targets = [\"x86_64-linux-android\"]' >> config.toml",
-            "armv7a-linux-androideabi::echo 'targets = [\"armv7-linux-androideabi\"]' >> config.toml",
+            "aarch64-apple-darwin:echo 'target = [\"aarch64-apple-darwin\"]' >> config.toml",
+            "x86_64-apple-darwin:echo 'target = [\"x86_64-apple-darwin\"]' >> config.toml",
+            "aarch64-apple-ios:echo 'target = [\"aarch64-apple-ios\"]' >> config.toml",
+            "aarch64-apple-ios-simulator:echo 'target = [\"aarch64-apple-ios-sim\"]' >> config.toml",
+            "x86_64-linux-gnu:echo 'target = [\"x86_64-unknown-linux-gnu\"]' >> config.toml",
+            "aarch64-linux-gnu:echo 'target = [\"aarch64-unknown-linux-gnu\"]' >> config.toml",
+            "aarch64-linux-android:echo 'target = [\"aarch64-linux-android\"]' >> config.toml",
+            "x86_64-linux-android:echo 'target = [\"x86_64-linux-android\"]' >> config.toml",
+            "armv7a-linux-androideabi:echo 'target = [\"armv7-linux-androideabi\"]' >> config.toml",
             "all:echo 'full-bootstrap = true' >> config.toml",
             "all:echo 'vendor = true' >> config.toml",
             "all:echo 'extended = true' >> config.toml",
@@ -37,12 +37,11 @@
             "all:echo '[llvm]' >> config.toml",
             "all:echo 'ninja = false' >> config.toml",
             "all:echo 'download-ci-llvm = false' >> config.toml",
-            "all:python3 ./x.py build --stage 3 --verbose -j $NUM_CORES",
+            "all:env -u ARFLAGS python3 ./x.py build --stage 2 --verbose -j $NUM_CORES",
             "all:mkdir -p $STAGING_DIR$PREFIX/native/bin",
             "all:cp -a build/*/stage1/lib $STAGING_DIR$PREFIX/native/",
             "all:cp -a build/*/stage1/bin/rustc $STAGING_DIR$PREFIX/native/bin",
-            "all:cp -a build/*/stage1-tools-bin/cargo $STAGING_DIR$PREFIX/native/bin/cargo",
-            "all:exit 44"
+            "all:cp -a build/*/stage1-tools-bin/cargo $STAGING_DIR$PREFIX/native/bin"
         ]
     }
 }

@@ -1,0 +1,25 @@
+{
+    "package": "native/linux-headers",
+    "version": "6.15.9",
+    "type": "native",
+    "download": {
+        "kind": "tar.xz",
+        "sha256": "e94f3af85492302f7a819441458f80bca0ad9912e5a4c83c699ff3c63c52957d",
+        "url": "https://cdn.kernel.org/pub/linux/kernel/v6.x/linux-6.15.9.tar.xz"
+    },
+    "dependencies": [
+        "*-linux-*:native/make",
+        "*-linux-*:native/sed"
+    ],
+    "build": {
+        "env": [
+            "x86_64*:ARCH=x86_64",
+            "arm*:ARCH=arm",
+            "aarch64*:ARCH=arm64"
+        ],
+        "steps": [
+            "*-linux-*:sed -i.bak '/arch\\/x86\\/tools relocs/ s/.*/\\ttrue/' arch/x86/Makefile",
+            "*-linux-*:make ARCH=$ARCH INSTALL_HDR_PATH=$STAGING_DIR$PREFIX/usr headers_install"
+        ]
+    }
+}

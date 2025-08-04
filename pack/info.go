@@ -15,28 +15,22 @@ import (
 	"github.com/mrcyjanek/simplybs/crash"
 	"github.com/mrcyjanek/simplybs/host"
 	"github.com/mrcyjanek/simplybs/utils"
-	"github.com/ryanuber/go-glob"
 )
 
-func (p *Package) GeneratePackageInfo(h *host.Host) string {
+func (p *Package) GeneratePackageInfo() string {
 	pkgs := map[string]interface{}{}
 	pkgs["_target"] = p
 	for _, dep := range p.Dependencies {
 		if strings.Contains(dep, ":") {
-			prefix := strings.Split(dep, ":")[0]
-			if !glob.Glob(prefix, h.Triplet) && prefix != "all" {
-				continue
-			}
 			dep = dep[strings.Index(dep, ":")+1:]
 		}
 		pkg, err := FindPackage(dep)
 		if err != nil {
-			log.Printf("Package %s not found in info", dep)
-			continue
+			log.Fatalf("Package %s not found in info", dep)
 		}
 		pkgs[dep] = pkg
 	}
-	env := p.GetEnv(h)
+	env := p.GetEnvForLogs()
 	delete(env, "PATH")
 	pkgs["_env"] = env
 	info, err := json.MarshalIndent(pkgs, "", "  ")
@@ -44,26 +38,26 @@ func (p *Package) GeneratePackageInfo(h *host.Host) string {
 	return string(info)
 }
 
-func (p *Package) GeneratePackageInfoHash(h *host.Host) string {
-	info := p.GeneratePackageInfo(h)
+func (p *Package) GeneratePackageInfoHash() string {
+	info := p.GeneratePackageInfo()
 	hash := sha256.Sum256([]byte(info))
 	return hex.EncodeToString(hash[:])
 }
 
-func (p *Package) GeneratePackageInfoShortHash(h *host.Host) string {
-	hash := p.GeneratePackageInfoHash(h)
+func (p *Package) GeneratePackageInfoShortHash() string {
+	hash := p.GeneratePackageInfoHash()
 	return hash[:8]
 }
 
-func (p *Package) ShortName(h *host.Host) string {
-	return p.Package + "-" + p.Version + "-" + p.GeneratePackageInfoShortHash(h)
+func (p *Package) ShortName() string {
+	return p.Package + "-" + p.Version + "-" + p.GeneratePackageInfoShortHash()
 }
 
 func (p *Package) GenerateBuildPath(h *host.Host, kind string) string {
 	if kind == "source" {
 		return filepath.Join(host.DataDir(), "..", kind, p.Package+"-"+p.Version)
 	}
-	return filepath.Join(host.DataDir(), kind, h.Triplet, p.ShortName(h))
+	return filepath.Join(host.DataDir(), kind, h.Triplet, p.ShortName())
 }
 
 func (p *Package) GetEnv(h *host.Host) map[string]string {
@@ -82,11 +76,11 @@ func (p *Package) GetEnv(h *host.Host) map[string]string {
 	env = utils.AppendEnv(env, builder.HostBuilder.GlobalEnv, h)
 	if p.Type == "native" {
 		env = utils.AppendEnv(env, []string{
-			"all:CFLAGS=-I" + h.GetEnvPath() + "/native/include",
-			"all:LDFLAGS=-L" + h.GetEnvPath() + "/native/lib",
-			"all:LD_LIBRARY_PATH=" + h.GetEnvPath() + "/native/lib",
-			"all:PKG_CONFIG_PATH=" + h.GetEnvPath() + "/native/lib/pkgconfig",
-			"all:LIBRARY_PATH=" + h.GetEnvPath() + "/native/lib",
+			"all:CFLAGS=$CFLAGS -I" + h.GetEnvPath() + "/native/include",
+			"all:LDFLAGS=$LDFLAGS -L" + h.GetEnvPath() + "/native/lib",
+			"all:LD_LIBRARY_PATH=$LD_LIBRARY_PATH " + h.GetEnvPath() + "/native/lib",
+			"all:PKG_CONFIG_PATH=$PKG_CONFIG_PATH " + h.GetEnvPath() + "/native/lib/pkgconfig",
+			"all:LIBRARY_PATH=$LIBRARY_PATH " + h.GetEnvPath() + "/native/lib",
 		}, h)
 	} else {
 		env = utils.AppendEnv(env, []string{
@@ -101,5 +95,13 @@ func (p *Package) GetEnv(h *host.Host) map[string]string {
 		env = utils.AppendEnv(env, h.Env, h)
 	}
 	env = utils.AppendEnv(env, p.Build.Env, h)
+	return env
+}
+
+func (p *Package) GetEnvForLogs() map[string]string {
+	env := map[string]string{}
+
+	env = utils.AppendEnv(env, builder.HostBuilder.GlobalEnv, &host.Host{Triplet: "all"})
+	env = utils.AppendEnv(env, p.Build.Env, &host.Host{Triplet: "all"})
 	return env
 }

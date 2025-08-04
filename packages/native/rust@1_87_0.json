@@ -28,11 +28,11 @@
             "all:echo '[llvm]' >> config.toml",
             "all:echo 'ninja = false' >> config.toml",
             "all:echo 'download-ci-llvm = false' >> config.toml",
-            "all:python3 ./x.py build --stage 1 --verbose -j $NUM_CORES",
+            "all:env -u ARFLAGS python3 ./x.py build --stage 1 --verbose -j $NUM_CORES",
             "all:mkdir -p $STAGING_DIR$PREFIX/native/bin",
             "all:cp -a build/*/stage1/lib $STAGING_DIR$PREFIX/native/",
             "all:cp -a build/*/stage1/bin/rustc $STAGING_DIR$PREFIX/native/bin",
-            "all:cp -a build/*/stage1-tools-bin/cargo $STAGING_DIR$PREFIX/native/bin"
+            "all:cp -a build/*/stage0-tools-bin/cargo $STAGING_DIR$PREFIX/native/bin"
         ]
     }
 }
