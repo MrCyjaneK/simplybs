@@ -20,8 +20,6 @@
         ],
         "steps": [
             "all:./configure $config_opts",
-            "all:sed -i.bak s\\|^AR=.*\\|AR=$AR\\|g Makefile",
-            "all:sed -i.bak s\\|^ARFLAGS=.*\\|ARFLAGS=$ARFLAGS\\|g Makefile",
             "all:make -j$NUM_CORES",
             "all:make DESTDIR=$STAGING_DIR install"
         ]

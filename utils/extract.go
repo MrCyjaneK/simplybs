@@ -329,7 +329,10 @@ func CreateTarGz(sourcePath, archivePath string) error {
 	}
 	defer file.Close()
 
-	gzw := gzip.NewWriter(file)
+	gzw, err := gzip.NewWriterLevel(file, gzip.BestCompression)
+	if err != nil {
+		return err
+	}
 	defer gzw.Close()
 
 	tw := tar.NewWriter(gzw)

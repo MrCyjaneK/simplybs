@@ -24,9 +24,9 @@
             "*-linux-gnu:HOST_TARGET=x86_64-linux-gnu",
             "*-linux-gnu:SYSROOT=$PREFIX/sysroots/$HOST_TARGET",
             "*-linux-gnu:config_opts=--prefix=$PREFIX --host=$HOST_TARGET --with-headers=$PREFIX/include --disable-multilib --enable-kernel=4.14",
+            "*-linux-gnu:config_opts=$config_opts --disable-werror",
             "*-linux-gnu:CFLAGS=$CFLAGS -O2",
-            "*-linux-gnu:CFLAGS=$CFLAGS -Wno-error=attributes",
-            "*-linux-gnu:CFLAGS=$CFLAGS -Wa,--noexecstack"
+            "*-linux-gnu:CFLAGS=$CFLAGS -Wno-error=attributes"
         ],
         "steps": [
             "*-linux-gnu:mkdir -p build",

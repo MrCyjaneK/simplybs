@@ -7,7 +7,6 @@ var HostBuilder = Builder{
 		"all:CC=clang",
 		"all:CXX=clang++",
 		"all:AR=ar",
-		"all:ARFLAGS=cr",
 		"all:RANLIB=ranlib",
 		"all:STRIP=strip",
 		"all:NM=nm",

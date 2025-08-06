@@ -55,7 +55,13 @@ func (p *Package) ShortName() string {
 
 func (p *Package) GenerateBuildPath(h *host.Host, kind string) string {
 	if kind == "source" {
-		return filepath.Join(host.DataDir(), "..", kind, p.Package+"-"+p.Version)
+		var name string
+		if p.Download.Kind == "git" {
+			name = filepath.Base(p.Download.URL) + "-" + p.Download.Sha256[0:8] + ".git"
+		} else {
+			name = filepath.Base(p.Download.URL)
+		}
+		return filepath.Join(host.DataDir(), "..", kind, name)
 	}
 	return filepath.Join(host.DataDir(), kind, h.Triplet, p.ShortName())
 }
@@ -78,9 +84,9 @@ func (p *Package) GetEnv(h *host.Host) map[string]string {
 		env = utils.AppendEnv(env, []string{
 			"all:CFLAGS=$CFLAGS -I" + h.GetEnvPath() + "/native/include",
 			"all:LDFLAGS=$LDFLAGS -L" + h.GetEnvPath() + "/native/lib",
-			"all:LD_LIBRARY_PATH=$LD_LIBRARY_PATH " + h.GetEnvPath() + "/native/lib",
-			"all:PKG_CONFIG_PATH=$PKG_CONFIG_PATH " + h.GetEnvPath() + "/native/lib/pkgconfig",
-			"all:LIBRARY_PATH=$LIBRARY_PATH " + h.GetEnvPath() + "/native/lib",
+			"all:LD_LIBRARY_PATH=$LD_LIBRARY_PATH:" + h.GetEnvPath() + "/native/lib",
+			"all:PKG_CONFIG_PATH=$PKG_CONFIG_PATH:" + h.GetEnvPath() + "/native/lib/pkgconfig",
+			"all:LIBRARY_PATH=$LIBRARY_PATH:" + h.GetEnvPath() + "/native/lib",
 		}, h)
 	} else {
 		env = utils.AppendEnv(env, []string{

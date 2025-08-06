@@ -29,7 +29,7 @@
             "all:if [ $(uname) = 'Darwin' ]; then sed -i.bak 's/^[[:space:]]*RUSTC_TARGET ?= x86_64-apple-darwin/RUSTC_TARGET ?= aarch64-apple-darwin/' run_rustc/Makefile; else true; fi",
             "all:echo >> build-1.54.0.sh",
             "all:echo make -C run_rustc >> build-1.54.0.sh",
-            "all:env -i CXXFLAGS_EXTRA=$CFLAGS LINKFLAGS_EXTRA=$LDFLAGS PATH=$PATH PARLEVEL=$NUM_CORES ./build-1.54.0.sh -j$NUM_CORES",
+            "all:env -i CXXFLAGS_EXTRA=\"$CFLAGS\" LINKFLAGS_EXTRA=\"$LDFLAGS\" PATH=$PATH PARLEVEL=$NUM_CORES ./build-1.54.0.sh -j$NUM_CORES",
             "none:# FIXME bad dylib paths embedded in the rustc binary, forcing install_name_tool dark magic",
             "all:mkdir -p $STAGING_DIR$PREFIX/native/bin",
             "all:mkdir -p $STAGING_DIR$PREFIX/native/lib",

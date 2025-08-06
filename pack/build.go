@@ -37,7 +37,7 @@ func (p *Package) ExtractEnv(host *host.Host, envPath string) {
 }
 
 func (p *Package) DownloadSource() {
-	sourcePath := p.GenerateBuildPath(&host.Host{}, "source") + "." + p.Download.Kind
+	sourcePath := p.GenerateBuildPath(&host.Host{}, "source")
 	os.MkdirAll(filepath.Dir(sourcePath), 0755)
 	if p.Download.Kind == "none" {
 		return
@@ -56,7 +56,7 @@ func (p *Package) DownloadSource() {
 }
 
 func (p *Package) ExtractSource(host *host.Host, buildPath string) {
-	sourcePath := p.GenerateBuildPath(host, "source") + "." + p.Download.Kind
+	sourcePath := p.GenerateBuildPath(host, "source")
 	p.DownloadSource()
 	var err error
 	switch p.Download.Kind {

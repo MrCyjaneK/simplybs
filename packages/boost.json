@@ -17,11 +17,13 @@
     ],
     "build": {
         "env": [
+            "all:ARFLAGS=rcs",
             "all:config_opts=variant=release",
             "all:config_opts=$config_opts --layout=system --user-config=user-config.jam",
             "all:config_opts=$config_opts threading=multi link=static -sNO_BZIP2=1 -sNO_ZLIB=1",
             "*-linux-gnu:config_opts=$config_opts threadapi=pthread runtime-link=static",
-            "*-linux-android*:config_opts=$config_opts threadapi=pthread runtime-link=static target-os=android",
+            "*-linux-android*:config_opts=$config_opts threadapi=pthread runtime-link=static target-os=android binary-format=elf",
+            "aarch64-linux-android*:config_opts=$config_opts architecture=arm address-model=64 abi=aapcs",
             "*-apple-darwin:config_opts=$config_opts --toolset=darwin runtime-link=static",
             "*-apple-ios*:config_opts=$config_opts --toolset=darwin-$IOS_COMPILER_VERSION~iphone runtime-link=static",
             "-*mingw32:config_opts=$config_opts binary-format=pe target-os=windows threadapi=win32 runtime-link=static",
@@ -39,8 +41,8 @@
         ],
         "steps": [
             "all:echo \"using $toolset : $toolset2 : $CXX $CXXFLAGS : <cxxflags>\"$CXXFLAGS\" <linkflags>\"$LDFLAGS\" <archiver>\"$AR\" <arflags>\"$ARFLAGS\" <striper>\"$STRIP\" <ranlib>\"$RANLIB\" <rc>\"$WINDRES\" <target-os>iphone : ;\" > user-config.jam",
-            "all:b2 -d2 -j$NUM_CORES --prefix=$STAGING_DIR$PREFIX $config_opts stage",
-            "all:b2 -d0 -j$NUM_CORES --prefix=$STAGING_DIR$PREFIX $config_opts install"
+            "all:b2 -d3 -j1 --prefix=$STAGING_DIR$PREFIX $config_opts stage",
+            "all:b2 -d0 -j1 --prefix=$STAGING_DIR$PREFIX $config_opts install"
         ]
     }
 }
