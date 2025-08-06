@@ -94,6 +94,15 @@
     <div class="container">
         <h1>Package Information</h1>
         <p class="stats">Total packages: {{len .}}</p>
+        
+        <div style="margin-bottom: 30px;">
+            <h2>Builder Matrices</h2>
+            <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+                {{range getBuilders}}
+                <a href="builder_{{.}}.html" style="background: #007bff; color: white; padding: 8px 16px; border-radius: 5px; text-decoration: none; font-weight: 500;">{{.}}</a>
+                {{end}}
+            </div>
+        </div>
         <table>
             <tr>
                 <th>Package</th>

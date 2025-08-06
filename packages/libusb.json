@@ -18,7 +18,6 @@
             "*-linux-gnu:config_opts=$config_opts --with-pic --disable-udev",
             "*-w64-mingw32:config_opts=$config_opts --disable-udev",
             "*-apple-darwin:config_opts=$config_opts --disable-udev",
-            "all:config_opts=$config_opts AR_FLAGS=$ARFLAGS",
             "all:SHOULD_BUILD=echo",
             "*-linux-gnu:SHOULD_BUILD=",
             "*-w64-mingw32:SHOULD_BUILD=",

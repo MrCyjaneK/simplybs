@@ -169,7 +169,7 @@ var SupportedHosts = map[string]*Host{
 			"all:RANLIB=llvm-ranlib",
 			"all:AR=llvm-ar",
 			"all:AS=llvm-as",
-			"all:LIBTOOL=llvm-libtool",
+			"all:LIBTOOL=libtool",
 			"all:ANDROID_NDK_HOME=$PREFIX/native/",
 		},
 	},

@@ -9,9 +9,9 @@
     },
     "dependencies": [
         "*-android*:native/android_ndk",
-        "all:ncurses",
         "all:native/autoconf",
-        "all:native/perl"
+        "all:native/perl",
+        "all:ncurses"
     ],
     "build": {
         "env": [

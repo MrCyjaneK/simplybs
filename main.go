@@ -70,7 +70,9 @@ func main() {
 			crash.Handle(fmt.Errorf("host %s not supported", h))
 		}
 		buildForHost(host, packageNames, *argList, *argExtract, *argBuild, *argShell)
-		cmd.BuildWeb()
+		if *argBuildWeb {
+			cmd.BuildWeb()
+		}
 	}
 }
 

@@ -16,11 +16,12 @@
         "env": [
             "all:CFLAGS=$CFLAGS -fPIC",
             "all:config_opts=--prefix=$PREFIX --static",
-            "all:LIBTOOL=$PREFIX/native/bin/libtool",
             "all:CROSS_PREFIX=$HOST-"
         ],
         "steps": [
             "all:./configure $config_opts",
+            "*-android*:sed -i.bak s/^AR=.\\*$/AR=\"llvm-ar\"/ Makefile",
+            "*-android*:sed -i.bak s/^ARFLAGS=.\\*$/ARFLAGS=\"rcs\"/ Makefile",
             "all:make -j$NUM_CORES",
             "all:make DESTDIR=$STAGING_DIR install"
         ]

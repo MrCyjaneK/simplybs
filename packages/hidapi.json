@@ -24,7 +24,7 @@
     ],
     "build": {
         "env": [
-            "all:config_opts=--prefix=$PREFIX --host=$HOST AR_FLAGS=$ARFLAGS --enable-static --disable-shared",
+            "all:config_opts=--prefix=$PREFIX --host=$HOST --enable-static --disable-shared",
             "*-linux-gnu:config_opts=$config_opts libudev_CFLAGS=-I$PREFIX/include",
             "*-linux-gnu:config_opts=$config_opts libusb_CFLAGS=-I$PREFIX/include/libusb-1.0",
             "*-linux-gnu:config_opts=$config_opts --with-pic",

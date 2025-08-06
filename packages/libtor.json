@@ -29,6 +29,7 @@
             "all:config_opts=$config_opts --disable-system-torrc",
             "all:config_opts=$config_opts --disable-manpage",
             "all:config_opts=$config_opts --disable-html-manual",
+            "all:config_opts=$config_opts --disable-tool-name-check",
             "all:config_opts=$config_opts --enable-pic",
             "all:config_opts=$config_opts --enable-static-openssl",
             "all:config_opts=$config_opts --enable-static-libevent",

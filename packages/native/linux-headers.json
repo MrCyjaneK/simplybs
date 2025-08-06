@@ -9,6 +9,7 @@
     },
     "dependencies": [
         "*-linux-*:native/make",
+        "*-linux-*:native/rsync",
         "*-linux-*:native/sed"
     ],
     "build": {
