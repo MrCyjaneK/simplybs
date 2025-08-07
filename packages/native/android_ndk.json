@@ -6,7 +6,14 @@
         "kind": "none"
     },
     "dependencies": [
-        "all:native/p7zip"
+        "all:native/bison",
+        "all:native/make",
+        "all:native/texinfo",
+        "all:native/repo",
+        "all:native/python@3.11.13"
+    ],
+    "patches": [
+        "no_ctest.patch"
     ],
     "build": {
         "env": [
@@ -21,12 +28,23 @@
             "*-android*:API_LEVEL=21"
         ],
         "steps": [
-            "*-android*:if [ $(uname) = 'Darwin' ]; then curl -o android-ndk-r28c-darwin.zip https://dl.google.com/android/repository/android-ndk-r28c-darwin.zip; else true; fi",
-            "*-android*:if [ $(uname) = 'Darwin' ]; then echo '0d4599e8bbf1a1668a0d51a541729b2246360f350018a2081d0b302dbb594f2a  android-ndk-r28c-darwin.zip' | shasum -a 256 -c -; else true; fi",
-            "*-android*:if [ $(uname) = 'Linux' ]; then curl -o android-ndk-r28c-linux.zip https://dl.google.com/android/repository/android-ndk-r28c-linux.zip; else true; fi",
-            "*-android*:if [ $(uname) = 'Linux' ]; then echo 'dfb20d396df28ca02a8c708314b814a4d961dc9074f9a161932746f815aa552f android-ndk-r28c-linux.zip' | sha256sum -c -; else true; fi",
-            "*-android*:7z x $PWD/android-ndk-r28c-*.zip",
-            "*-android*:android-ndk-r28c/build/tools/make_standalone_toolchain.py --api $API_LEVEL --install-dir $PWD/toolchain --stl=libc++ $config_opts",
+            "*-android*:mkdir -p $HOME",
+            "*-android*:repo init -u https://android.googlesource.com/platform/manifest -b ndk-r28c --partial-clone",
+            "*-android*:if [ $(uname) = 'Darwin' ]; then echo -n darwin > .sys_detected.txt ; repo manifest | grep -v windows | grep -v linux > .repo/manifests/striped.xml ; fi",
+            "*-android*:if [ $(uname) = 'Windows' ]; then echo -n windows64 > .sys_detected.txt ; repo manifest | grep -v darwin | grep -v linux > .repo/manifests/striped.xml ; fi",
+            "*-android*:if [ $(uname) = 'Linux' ]; then echo -n linux > .sys_detected.txt ; repo manifest | grep -v windows | grep -v darwin > .repo/manifests/striped.xml ; fi",
+            "*-android*:if [ ! -f .sys_detected.txt ]; then echo \"No file .sys_detected.txt. environment not implemented for: $(uname)\" && exit 1 ; fi",
+            "*-android*:export SYSTEM_TARGET=$(cat .sys_detected.txt) ; echo Performing as host $SYSTEM_TARGET ",
+            "*-android*:repo init -u https://android.googlesource.com/platform/manifest -b ndk-r28c --partial-clone -m striped.xml",
+            "*-android*:repo sync",
+            "*-android*:pip3 install poetry",
+            "*-android*:cd ndk && poetry install",
+            "*-android*:mkdir -p prebuilts/clang/host/darwin-x86/clang-r530567e",
+            "*-android*:touch prebuilts/clang/host/darwin-x86/clang-r530567e/NOTICE",
+            "*-android*:mkdir -p prebuilts/clang/host/windows-x86/clang-r530567e",
+            "*-android*:touch prebuilts/clang/host/windows-x86/clang-r530567e/NOTICE",
+            "*-android*:export SYSTEM_TARGET=$(cat .sys_detected.txt) ; cd ndk && poetry run ./checkbuild.py --no-build-tests --no-package-tests --system $SYSTEM_TARGET",
+            "*-android*:out/android-ndk-r28c/build/tools/make_standalone_toolchain.py --api $API_LEVEL --install-dir $PWD/toolchain --stl=libc++ $config_opts",
             "*-android*:mkdir -p $STAGING_DIR$PREFIX/native",
             "*-android*:mv $PWD/toolchain/* $STAGING_DIR$PREFIX/native",
             "*-android*:cp $STAGING_DIR$PREFIX/native/bin/llvm-ar $STAGING_DIR$PREFIX/native/bin/$BUILDLIB_HOST-ar",
