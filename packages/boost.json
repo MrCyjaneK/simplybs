@@ -11,6 +11,7 @@
         "*-android*:native/android_ndk",
         "*-linux-*:native/libtool",
         "all:native/boost-b2",
+        "all:native/python@3.11.13",
         "all:libiconv"
     ],
     "patches": [
@@ -19,14 +20,20 @@
     "build": {
         "env": [
             "all:config_opts=variant=release",
+            "*-apple-ios*:target_os=iphone",
+            "*-linux-android*:target_os=android",
+            "*-mingw32*:target_os=windows",
+            "*-linux-gnu*:target_os=linux",
             "all:config_opts=$config_opts --layout=system --user-config=user-config.jam",
             "all:config_opts=$config_opts threading=multi link=static -sNO_BZIP2=1 -sNO_ZLIB=1",
             "*-linux-gnu*:config_opts=$config_opts threadapi=pthread runtime-link=static",
-            "*-android*:config_opts=$config_opts threadapi=pthread runtime-link=static target-os=android",
+            "*-android*:config_opts=$config_opts threadapi=pthread runtime-link=static target-os=$target_os binary-format=elf abi=aapcs",
+            "*64-linux-android*:config_opts=$config_opts address-model=64",
+            "armv7-linux-androideabi*:config_opts=$config_opts address-model=32",
             "*-darwin*:config_opts=$config_opts --toolset=darwin runtime-link=static",
             "*-ios*:config_opts=$config_opts --toolset=darwin-iphone runtime-link=static",
             "*-ios-simulator*:config_opts=$config_opts --toolset=darwin-iphone runtime-link=static",
-            "*mingw32*:config_opts=$config_opts binary-format=pe target-os=windows threadapi=win32 runtime-link=static",
+            "*mingw32*:config_opts=$config_opts binary-format=pe target-os=$target_os threadapi=win32 runtime-link=static",
             "*x86_64-*-mingw32*:config_opts=$config_opts address-model=64",
             "*i686-*-mingw32*:config_opts=$config_opts address-model=32",
             "*i686-linux-gnu*:config_opts=$config_opts address-model=32 architecture=x86",
@@ -46,7 +53,7 @@
             "*-linux-android*:ARFLAGS=rcs"
         ],
         "steps": [
-            "all:echo \"using $toolset : $toolset2 : $CXX $CXXFLAGS : <CXXFLAGS>\"$CXXFLAGS\" <linkflags>\"$LDFLAGS\" <archiver>\"$AR\" <arflags>\"$ARFLAGS\" <striper>\"$STRIP\" <ranlib>\"$RANLIB\" <rc>\"$WINDRES\" <target-os>iphone : ;\" > user-config.jam",
+            "all:echo \"using $toolset : $toolset2 : $CXX $CXXFLAGS : <CXXFLAGS>\"$CXXFLAGS\" <linkflags>\"$LDFLAGS\" <archiver>\"$AR\" <arflags>\"$ARFLAGS\" <striper>\"$STRIP\" <ranlib>\"$RANLIB\" <rc>\"$WINDRES\" <target-os>\"$target_os\" : ;\" > user-config.jam",
             "all:b2 -d2 -j$NUM_CORES --prefix=$STAGING_DIR$PREFIX $config_opts stage",
             "all:b2 -d0 -j1 --prefix=$STAGING_DIR$PREFIX $config_opts install"
         ]

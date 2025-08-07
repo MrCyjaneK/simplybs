@@ -9,8 +9,10 @@ import (
 	"log"
 	"os"
 	"path/filepath"
+	"runtime"
 	"sort"
 	"strings"
+	"sync"
 
 	_ "embed"
 
@@ -319,13 +321,23 @@ func BuildWeb() {
 
 	log.Printf("Generating %d file detail pages...\n", totalFiles)
 	fileCount := 0
+	wg := sync.WaitGroup{}
+	semaphore := make(chan struct{}, runtime.NumCPU())
 	for _, pkgWithBuilds := range packagesWithBuilds {
 		for _, builtFile := range pkgWithBuilds.BuiltFiles {
 			fileCount++
 			log.Printf("\tProgress: %d/%d file pages\n", fileCount, totalFiles)
-			generateFilePage(pkgWithBuilds, &builtFile, webDir, funcMap)
+			wg.Add(1)
+			semaphore <- struct{}{}
+			go func(pkgWithBuilds *pack.PackageWithBuilds, builtFile pack.BuiltFile) {
+				defer wg.Done()
+				generateFilePage(pkgWithBuilds, &builtFile, webDir, funcMap)
+				<-semaphore
+			}(pkgWithBuilds, builtFile)
 		}
 	}
+
+	wg.Wait()
 
 	log.Printf("Generated static website with %d packages, %d builder matrices, and %d file details in %s\n", len(packages), len(builder.Builders), totalFiles, webDir)
 }
@@ -404,7 +416,12 @@ type ArchiveInfo struct {
 	TotalSize int64
 }
 
+var filePageMutex sync.Mutex
+
+var funcMapMutex sync.Mutex
+
 func generateFilePage(pkg *pack.PackageWithBuilds, builtFile *pack.BuiltFile, webDir string, funcMap template.FuncMap) {
+	funcMapMutex.Lock()
 	funcMap["getArchiveInfo"] = func(archPath string) ArchiveInfo {
 		baseBuildDir := host.DataDirRoot()
 		fullPath := filepath.Join(baseBuildDir, archPath)
@@ -420,9 +437,12 @@ func generateFilePage(pkg *pack.PackageWithBuilds, builtFile *pack.BuiltFile, we
 
 		return ArchiveInfo{Files: files, TotalSize: totalSize}
 	}
+	funcMapMutex.Unlock()
 
+	filePageMutex.Lock()
 	tmpl, err := template.New("file_details").Funcs(funcMap).Parse(fileDetailsTemplate)
 	crash.Handle(err)
+	filePageMutex.Unlock()
 
 	fileName := fmt.Sprintf("%s-%s-%s.html", pkg.Package.Package, pkg.Package.Version, builtFile.ID)
 	path := filepath.Join(webDir, "files", builtFile.Builder, builtFile.Target, fileName)

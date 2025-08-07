@@ -252,12 +252,6 @@ func Cleanup() {
 		}
 	}
 
-	webDir := filepath.Join(buildlibDir, "web")
-	if _, err := os.Stat(webDir); !os.IsNotExist(err) {
-		fmt.Printf("Removing web directory\n")
-		os.RemoveAll(webDir)
-	}
-
 	fmt.Println("Cleanup completed!")
 }
 

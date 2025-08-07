@@ -47,7 +47,9 @@
             "all:cp libtor.a $STAGING_DIR$PREFIX/lib/libtor.a",
             "all:mkdir -p $STAGING_DIR$PREFIX/usr/share/tor",
             "all:cp src/config/geoip $STAGING_DIR$PREFIX/usr/share/tor",
-            "all:cp src/config/geoip6 $STAGING_DIR$PREFIX/usr/share/tor"
+            "all:cp src/config/geoip6 $STAGING_DIR$PREFIX/usr/share/tor",
+            "all:mkdir -p $STAGING_DIR$PREFIX/include/tor",
+            "all:cd src && find . -name '*.h' -exec sh -c 'mkdir -p \"$STAGING_DIR$PREFIX/include/tor/$(dirname \"$1\")\" && cp \"$1\" \"$STAGING_DIR$PREFIX/include/tor/$1\"' _ {} \\;"
         ]
     }
 }

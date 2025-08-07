@@ -66,6 +66,14 @@ func (p *Package) GenerateBuildPath(h *host.Host, kind string) string {
 	return filepath.Join(host.DataDir(), kind, h.Triplet, p.ShortName())
 }
 
+func getNumCores() int {
+	cores, err := strconv.Atoi(os.Getenv("NUM_CORES"))
+	if err != nil {
+		cores = runtime.NumCPU()
+	}
+	return cores
+}
+
 func (p *Package) GetEnv(h *host.Host) map[string]string {
 	getwd, err := os.Getwd()
 	crash.Handle(err)
