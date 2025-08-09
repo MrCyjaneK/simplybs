@@ -12,6 +12,7 @@
         "all:native/automake",
         "all:native/config",
         "all:native/m4",
+        "all:native/make",
         "all:native/perl"
     ],
     "build": {
