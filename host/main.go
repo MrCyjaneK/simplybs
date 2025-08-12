@@ -120,6 +120,27 @@ var SupportedHosts = map[string]*Host{
 			"all:SDK_PATH=" + shellOutput("xcrun --sdk iphonesimulator --show-sdk-path"),
 		},
 	},
+	"x86_64-linux-musl": {
+		Triplet: "x86_64-linux-musl",
+		Env: []string{
+			"all:HOST=x86_64-linux-musl",
+			"all:TARGET=x86_64-linux-musl",
+			"all:CC_target=x86_64-linux-musl",
+			"all:CC=x86_64-linux-musl-gcc",
+			"all:CXX=x86_64-linux-musl-g++",
+			"all:CXXFLAGS=$CFLAGS",
+			"all:RANLIB=x86_64-linux-musl-ranlib",
+			"all:AR=x86_64-linux-musl-ar",
+			"all:AS=x86_64-linux-musl-as",
+			"all:LIBTOOL=x86_64-linux-musl-libtool",
+			"all:OBJCOPY=x86_64-linux-musl-objcopy",
+			"all:OBJDUMP=x86_64-linux-musl-objdump",
+			"all:STRIP=x86_64-linux-musl-strip",
+			"all:READELF=x86_64-linux-musl-readelf",
+			"all:LD=x86_64-linux-musl-ld",
+			"all:NM=x86_64-linux-musl-nm",
+		},
+	},
 	"x86_64-linux-gnu": {
 		Triplet: "x86_64-linux-gnu",
 		Env: []string{

@@ -1,0 +1,34 @@
+{
+    "package": "torch",
+    "version": "tor-0.4.8.17",
+    "type": "host",
+    "download": {
+        "kind": "git",
+        "sha256": "292d0d3d8ffb03d06cf2cd0aa90bcb3b9b07dedc",
+        "url": "https://github.com/MrCyjaneK/torch.git"
+    },
+    "dependencies": [
+        "*-android*:native/android_ndk",
+        "all:native/cmake",
+        "all:native/cmake-toolchain",
+        "all:native/make",
+        "all:libevent",
+        "all:libtor",
+        "all:openssl",
+        "all:xz",
+        "all:zlib",
+        "all:zstd"
+    ],
+    "build": {
+        "env": [
+            "all:config_opts=-DCMAKE_TOOLCHAIN_FILE=$PREFIX/native/toolchain.cmake",
+            "all:config_opts=$config_opts -DTOR_BUILD_DIR=$PREFIX"
+        ],
+        "steps": [
+            "all:mkdir build",
+            "all:cd build && cmake .. $config_opts",
+            "all:cd build && make -j$NUM_CORES",
+            "all:cd build && make install DESTDIR=$STAGING_DIR"
+        ]
+    }
+}

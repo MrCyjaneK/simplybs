@@ -25,9 +25,12 @@
             "all:config_opts=$config_opts --disable-openssl",
             "all:config_opts=$config_opts --disable-libevent-regress",
             "all:config_opts=$config_opts --disable-doxygen-html",
+            "all:config_opts=$config_opts --disable-debug-mode",
             "all:config_opts=$config_opts --enable-static",
             "all:config_opts=$config_opts --enable-gcc-hardening",
-            "all:config_opts=$config_opts --disable-debug-mode"
+            "all:config_opts=$config_opts --with-pic",
+            "all:CFLAGS=$CFLAGS -fPIC",
+            "all:CXXFLAGS=$CXXFLAGS -fPIC"
         ],
         "steps": [
             "all:./autogen.sh",

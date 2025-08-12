@@ -9,7 +9,8 @@
     },
     "dependencies": [
         "*-android*:native/android_ndk",
-        "all:native/cmake"
+        "all:native/cmake",
+        "all:native/cmake-toolchain"
     ],
     "build": {
         "env": [],

@@ -1,0 +1,17 @@
+{
+    "package": "native/cmake-toolchain",
+    "version": "0.0.0",
+    "type": "native",
+    "download": {
+        "kind": "git",
+        "sha256": "323ab2fb7d023595f67621562e5ed4dc9a4b7814",
+        "url": "https://github.com/MrCyjaneK/cmake-toolchain.git"
+    },
+    "build": {
+        "env": [],
+        "steps": [
+            "all:mkdir -p $STAGING_DIR$PREFIX/native/",
+            "all:cp toolchain.cmake $STAGING_DIR$PREFIX/native/toolchain.cmake"
+        ]
+    }
+}

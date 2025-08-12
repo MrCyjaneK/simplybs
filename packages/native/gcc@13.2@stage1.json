@@ -65,8 +65,12 @@
             "*-linux-gnu:sed -i.bak 's/^#define tolower/\\/\\/ #define tolower/' include/safe-ctype.h",
             "*-linux-gnu:mkdir -p build",
             "*-linux-gnu:cd build && ../configure $config_opts",
-            "*-linux-gnu:cd build && make -j1 all-gcc",
-            "*-linux-gnu:cd build && make install-gcc DESTDIR=$STAGING_DIR"
+            "*-linux-gnu:cd build && make -j$NUM_CORES all-gcc",
+            "*-linux-gnu:cd build && make install-gcc DESTDIR=$STAGING_DIR",
+            "*-linux-gnu:cd build && make -j$NUM_CORES all-target-libgcc TARGET_CONFIGARGS='--disable-shared --enable-static --without-headers --with-newlib' CFLAGS_FOR_TARGET='-g -O2 -nostdlib -nostartfiles' CXXFLAGS_FOR_TARGET='-g -O2 -nostdlib -nostartfiles'",
+            "*-linux-gnu:cd build && make install-target-libgcc DESTDIR=$STAGING_DIR",
+            "*-linux-gnu:ln -s $TOOL_TARGET-gcc $STAGING_DIR$PREFIX/native/bin/gcc",
+            "*-linux-gnu:ln -s $TOOL_TARGET-g++ $STAGING_DIR$PREFIX/native/bin/g++"
         ]
     }
 }

@@ -16,6 +16,7 @@
         "*-linux-gnu:native/linux-headers",
         "*-linux-gnu:native/m4",
         "*-linux-gnu:native/make",
+        "*-linux-gnu:native/perl",
         "*-linux-gnu:native/python@3.11.13",
         "*-linux-gnu:native/sed"
     ],
@@ -23,15 +24,16 @@
         "env": [
             "*-linux-gnu:HOST_TARGET=x86_64-linux-gnu",
             "*-linux-gnu:SYSROOT=$PREFIX/sysroots/$HOST_TARGET",
-            "*-linux-gnu:config_opts=--prefix=$PREFIX --host=$HOST_TARGET --with-headers=$PREFIX/include --disable-multilib --enable-kernel=4.14",
+            "*-linux-gnu:config_opts=--prefix=$PREFIX --host=$HOST_TARGET --with-headers=$PREFIX/include --disable-multilib",
             "*-linux-gnu:config_opts=$config_opts --disable-werror",
             "*-linux-gnu:CFLAGS=$CFLAGS -O2",
             "*-linux-gnu:CFLAGS=$CFLAGS -Wno-error=attributes"
         ],
         "steps": [
             "*-linux-gnu:mkdir -p build",
+            "*-linux-gnu:sed -i.bak '/.eh_frame/d' sysdeps/unix/sysv/linux/x86_64/libc_sigaction.c",
             "*-linux-gnu:cd build && ../configure $config_opts",
-            "*-linux-gnu:cd build && make -j$NUM_CORES",
+            "*-linux-gnu:cd build && make -j1",
             "*-linux-gnu:cd build && make -j1 install DESTDIR=$STAGING_DIR"
         ]
     }

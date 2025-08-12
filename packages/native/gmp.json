@@ -21,6 +21,7 @@
         "steps": [
             "all:./configure $config_opts",
             "all:make -j$NUM_CORES",
+            "all:make check",
             "all:make DESTDIR=$STAGING_DIR install"
         ]
     }
