@@ -4,7 +4,7 @@
     "type": "host",
     "download": {
         "kind": "git",
-        "sha256": "292d0d3d8ffb03d06cf2cd0aa90bcb3b9b07dedc",
+        "sha256": "14897abf919a3062afd1a23262a7268449818198",
         "url": "https://github.com/MrCyjaneK/torch.git"
     },
     "dependencies": [
