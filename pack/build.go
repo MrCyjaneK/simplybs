@@ -20,7 +20,7 @@ func (p *Package) EnsureBuilt(h *host.Host, buildDependencies bool) {
 		p.BuildPackage(h, true)
 		return
 	}
-	if string(info) == p.GeneratePackageInfo() {
+	if string(info) == p.GeneratePackageInfo(h) {
 		log.Printf("[%s] Build cache found, skipping build...", p.Package)
 		return
 	}
@@ -122,9 +122,9 @@ func (p *Package) buildPackageInternal(h *host.Host, buildDependencies bool) {
 
 	p.ExtractSource(h, buildPath)
 
-	infoPath := filepath.Join(stagingPath, h.GetEnvPath(), "usr", "share", "buildlib", p.ShortName()+".txt")
+	infoPath := filepath.Join(stagingPath, h.GetEnvPath(), "usr", "share", "buildlib", p.ShortName(h)+".txt")
 	os.MkdirAll(filepath.Dir(infoPath), 0755)
-	err := os.WriteFile(infoPath, []byte(p.GeneratePackageInfo()), 0644)
+	err := os.WriteFile(infoPath, []byte(p.GeneratePackageInfo(h)), 0644)
 	if err != nil {
 		log.Fatalf("Failed to write build info %s: %v", infoPath, err)
 	}
@@ -172,7 +172,7 @@ func (p *Package) buildPackageInternal(h *host.Host, buildDependencies bool) {
 	}
 
 	infoPath = p.GenerateBuildPath(h, "built") + ".info.txt"
-	err = os.WriteFile(infoPath, []byte(p.GeneratePackageInfo()), 0644)
+	err = os.WriteFile(infoPath, []byte(p.GeneratePackageInfo(h)), 0644)
 	if err != nil {
 		log.Fatalf("Failed to write build info %s: %v", infoPath, err)
 	}

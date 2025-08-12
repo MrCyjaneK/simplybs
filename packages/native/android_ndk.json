@@ -33,7 +33,11 @@
             "*-android*:cp $STAGING_DIR$PREFIX/native/bin/$BUILDLIB_HOST$API_LEVEL-clang $STAGING_DIR$PREFIX/native/bin/$BUILDLIB_HOST-clang",
             "*-android*:cp $STAGING_DIR$PREFIX/native/bin/$BUILDLIB_HOST$API_LEVEL-clang++ $STAGING_DIR$PREFIX/native/bin/$BUILDLIB_HOST-clang++",
             "*-android*:cp $STAGING_DIR$PREFIX/native/bin/llvm-ranlib $STAGING_DIR$PREFIX/native/bin/$BUILDLIB_HOST-ranlib",
-            "*-android*:cp $STAGING_DIR$PREFIX/native/bin/llvm-ar $STAGING_DIR$PREFIX/native/bin/$BUILDLIB_HOST-ar"
+            "*-android*:cp $STAGING_DIR$PREFIX/native/bin/llvm-ar $STAGING_DIR$PREFIX/native/bin/$BUILDLIB_HOST-ar",
+            "*-android*:mkdir -p $STAGING_DIR$PREFIX/usr/lib",
+            "aarch64-linux-android:cp $STAGING_DIR$PREFIX/native/sysroot/usr/lib/aarch64-linux-android/*.a $STAGING_DIR$PREFIX/usr/lib",
+            "x86_64-linux-android:cp $STAGING_DIR$PREFIX/native/sysroot/usr/lib/x86_64-linux-android/*.a $STAGING_DIR$PREFIX/usr/lib",
+            "armv7a-linux-androideabi:cp $STAGING_DIR$PREFIX/native/sysroot/usr/lib/arm-linux-androideabi/*.a $STAGING_DIR$PREFIX/usr/lib"
         ]
     }
 }

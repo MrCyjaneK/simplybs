@@ -190,7 +190,7 @@ func Cleanup() {
 	for _, pkg := range packages {
 		for _, builder := range builders {
 			for _, target := range targets {
-				currentBuildID := pkg.GeneratePackageInfoShortHash()
+				currentBuildID := pkg.GeneratePackageInfoShortHash(host.SupportedHosts[target])
 
 				currentFileName := fmt.Sprintf("%s-%s-%s", pkg.Package, pkg.Version, currentBuildID)
 				archPath := filepath.Join(builder, "built", target, currentFileName+".tar.gz")

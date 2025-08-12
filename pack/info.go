@@ -17,7 +17,7 @@ import (
 	"github.com/mrcyjanek/simplybs/utils"
 )
 
-func (p *Package) GeneratePackageInfo() string {
+func (p *Package) GeneratePackageInfo(h *host.Host) string {
 	pkgs := map[string]interface{}{}
 	pkgs["_target"] = p
 	for _, dep := range p.Dependencies {
@@ -30,7 +30,7 @@ func (p *Package) GeneratePackageInfo() string {
 		}
 		pkgs[dep] = pkg
 	}
-	env := p.GetEnvForLogs()
+	env := p.GetEnvForLogs(h)
 	delete(env, "PATH")
 	pkgs["_env"] = env
 	info, err := json.MarshalIndent(pkgs, "", "  ")
@@ -38,19 +38,19 @@ func (p *Package) GeneratePackageInfo() string {
 	return string(info)
 }
 
-func (p *Package) GeneratePackageInfoHash() string {
-	info := p.GeneratePackageInfo()
+func (p *Package) GeneratePackageInfoHash(h *host.Host) string {
+	info := p.GeneratePackageInfo(h)
 	hash := sha256.Sum256([]byte(info))
 	return hex.EncodeToString(hash[:])
 }
 
-func (p *Package) GeneratePackageInfoShortHash() string {
-	hash := p.GeneratePackageInfoHash()
+func (p *Package) GeneratePackageInfoShortHash(h *host.Host) string {
+	hash := p.GeneratePackageInfoHash(h)
 	return hash[:8]
 }
 
-func (p *Package) ShortName() string {
-	return p.Package + "-" + p.Version + "-" + p.GeneratePackageInfoShortHash()
+func (p *Package) ShortName(h *host.Host) string {
+	return p.Package + "-" + p.Version + "-" + p.GeneratePackageInfoShortHash(h)
 }
 
 func (p *Package) GenerateBuildPath(h *host.Host, kind string) string {
@@ -63,7 +63,7 @@ func (p *Package) GenerateBuildPath(h *host.Host, kind string) string {
 		}
 		return filepath.Join(host.DataDir(), "..", kind, name)
 	}
-	return filepath.Join(host.DataDir(), kind, h.Triplet, p.ShortName())
+	return filepath.Join(host.DataDir(), kind, h.Triplet, p.ShortName(h))
 }
 
 func getNumCores() int {
@@ -112,10 +112,12 @@ func (p *Package) GetEnv(h *host.Host) map[string]string {
 	return env
 }
 
-func (p *Package) GetEnvForLogs() map[string]string {
+func (p *Package) GetEnvForLogs(h *host.Host) map[string]string {
 	env := map[string]string{}
-
-	env = utils.AppendEnv(env, builder.HostBuilder.GlobalEnv, &host.Host{Triplet: "all"})
-	env = utils.AppendEnv(env, p.Build.Env, &host.Host{Triplet: "all"})
+	env = utils.AppendEnv(env, builder.HostBuilder.GlobalEnv, h)
+	env = utils.AppendEnv(env, p.Build.Env, h)
+	if p.Type != "native" {
+		env = utils.AppendEnv(env, h.Env, h)
+	}
 	return env
 }

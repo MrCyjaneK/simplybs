@@ -4,7 +4,7 @@
     "type": "native",
     "download": {
         "kind": "git",
-        "sha256": "323ab2fb7d023595f67621562e5ed4dc9a4b7814",
+        "sha256": "c4e7b0e5f437121d1b9c05bc5c43dac75371d799",
         "url": "https://github.com/MrCyjaneK/cmake-toolchain.git"
     },
     "build": {
