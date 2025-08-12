@@ -22,7 +22,8 @@
     "build": {
         "env": [
             "all:config_opts=-DCMAKE_TOOLCHAIN_FILE=$PREFIX/native/toolchain.cmake",
-            "all:config_opts=$config_opts -DTOR_BUILD_DIR=$PREFIX"
+            "all:config_opts=$config_opts -DTOR_BUILD_DIR=$PREFIX",
+            "all:config_opts=$config_opts -DCMAKE_INSTALL_PREFIX=$PREFIX"
         ],
         "steps": [
             "all:mkdir build",
