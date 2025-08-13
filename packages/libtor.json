@@ -31,6 +31,7 @@
             "all:config_opts=$config_opts --disable-html-manual",
             "all:config_opts=$config_opts --disable-tool-name-check",
             "*-linux-android*:config_opts=$config_opts --enable-android",
+            "*-linux-android*:config_opts=$config_opts ac_cv_member_struct_tcp_info_tcpi_snd_mss=no",
             "all:config_opts=$config_opts --enable-pic",
             "all:config_opts=$config_opts --enable-static-openssl",
             "all:config_opts=$config_opts --enable-static-libevent",
