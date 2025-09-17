@@ -2,11 +2,13 @@
     "package": "torch",
     "version": "tor-0.4.8.17",
     "type": "host",
-    "download": {
-        "kind": "git",
-        "sha256": "b7a785a538a31ab0cf5baf62d936e3e41182e0b7",
-        "url": "https://github.com/MrCyjaneK/torch.git"
-    },
+    "download": [
+        {
+            "kind": "git",
+            "sha256": "b7a785a538a31ab0cf5baf62d936e3e41182e0b7",
+            "url": "https://github.com/MrCyjaneK/torch.git"
+        }
+    ],
     "dependencies": [
         "*-android*:native/android_ndk",
         "all:native/cmake",

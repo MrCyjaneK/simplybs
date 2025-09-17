@@ -31,7 +31,7 @@ All package definitions live inside of this repo (this is going to change soon *
   // (soon) "source" indicationg a package that only contains source code (e.g. that was pulled using custom tools such as `repo` or are too complex for the built in system to handle)
   "type": "host",
   // where to find the source code
-  "download": {
+  "download": [{
     // "tar.gz" indicates a (who wouldn't have guessed) .tar.gz archive that will be extracted before build steps occur
     // "tar.bz2" indicares a (no way.. is it gonna be..) .tar.bz2 archive that will be extracted.. you get the drill
     // "git" indicates a Git repository being used

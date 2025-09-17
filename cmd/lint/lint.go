@@ -16,13 +16,13 @@ import (
 )
 
 type OrderedPackage struct {
-	Package      string                 `json:"package"`
-	Version      string                 `json:"version"`
-	Type         string                 `json:"type"`
-	Download     map[string]interface{} `json:"download,omitempty"`
-	Dependencies []string               `json:"dependencies,omitempty"`
-	Patches      []string               `json:"patches,omitempty"`
-	Build        map[string]interface{} `json:"build,omitempty"`
+	Package      string                   `json:"package"`
+	Version      string                   `json:"version"`
+	Type         string                   `json:"type"`
+	Download     []map[string]interface{} `json:"download,omitempty"`
+	Dependencies []string                 `json:"dependencies,omitempty"`
+	Patches      []string                 `json:"patches,omitempty"`
+	Build        map[string]interface{}   `json:"build,omitempty"`
 }
 
 func Lint() {
@@ -61,8 +61,13 @@ func fixFormatting() {
 		if v, ok := data["type"].(string); ok {
 			ordered.Type = v
 		}
-		if v, ok := data["download"].(map[string]interface{}); ok {
-			ordered.Download = v
+		if v, ok := data["download"].([]interface{}); ok {
+			ordered.Download = make([]map[string]interface{}, len(v))
+			for i, download := range v {
+				if m, ok := download.(map[string]interface{}); ok {
+					ordered.Download[i] = m
+				}
+			}
 		}
 		if v, ok := data["dependencies"].([]interface{}); ok {
 			nativeDeps := []string{}

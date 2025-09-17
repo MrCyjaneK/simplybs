@@ -2,11 +2,13 @@
     "package": "native/automake",
     "version": "1.18",
     "type": "native",
-    "download": {
-        "kind": "tar.gz",
-        "sha256": "af6043a5d4b3beef0c48161f4a6936259321cd101a34c1ab0768328515626c8a",
-        "url": "http://ftpmirror.gnu.org/gnu/automake/automake-1.18.tar.gz"
-    },
+    "download": [
+        {
+            "kind": "tar.gz",
+            "sha256": "af6043a5d4b3beef0c48161f4a6936259321cd101a34c1ab0768328515626c8a",
+            "url": "http://ftpmirror.gnu.org/gnu/automake/automake-1.18.tar.gz"
+        }
+    ],
     "dependencies": [
         "all:native/autoconf",
         "all:native/m4",

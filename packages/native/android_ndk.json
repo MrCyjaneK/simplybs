@@ -2,9 +2,6 @@
     "package": "native/android_ndk",
     "version": "r28c",
     "type": "native",
-    "download": {
-        "kind": "none"
-    },
     "dependencies": [
         "all:native/p7zip"
     ],

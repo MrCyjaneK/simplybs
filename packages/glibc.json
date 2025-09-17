@@ -2,11 +2,13 @@
     "package": "glibc",
     "version": "2.39",
     "type": "host",
-    "download": {
-        "kind": "tar.gz",
-        "sha256": "97f84f3b7588cd54093a6f6389b0c1a81e70d99708d74963a2e3eab7c7dc942d",
-        "url": "http://ftpmirror.gnu.org/gnu/libc/glibc-2.39.tar.gz"
-    },
+    "download": [
+        {
+            "kind": "tar.gz",
+            "sha256": "97f84f3b7588cd54093a6f6389b0c1a81e70d99708d74963a2e3eab7c7dc942d",
+            "url": "http://ftpmirror.gnu.org/gnu/libc/glibc-2.39.tar.gz"
+        }
+    ],
     "dependencies": [
         "*-linux-gnu:native/binutils@2.42",
         "*-linux-gnu:native/bison",

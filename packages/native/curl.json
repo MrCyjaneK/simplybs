@@ -1,0 +1,27 @@
+{
+    "package": "native/curl",
+    "version": "8.15.0",
+    "type": "native",
+    "download": [
+        {
+            "kind": "tar.gz",
+            "sha256": "d85cfc79dc505ff800cb1d321a320183035011fa08cb301356425d86be8fc53c",
+            "url": "https://curl.se/download/curl-8.15.0.tar.gz"
+        }
+    ],
+    "dependencies": [
+        "all:native/libpsl",
+        "all:native/make",
+        "all:native/openssl"
+    ],
+    "build": {
+        "env": [
+            "all:config_opts=--with-openssl"
+        ],
+        "steps": [
+            "all:./configure $config_opts --prefix=$PREFIX/native",
+            "all:make -j$NUM_CORES",
+            "all:make DESTDIR=$STAGING_DIR install"
+        ]
+    }
+}

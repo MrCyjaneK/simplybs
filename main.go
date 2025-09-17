@@ -57,7 +57,9 @@ func main() {
 	}
 	if *argDownload {
 		for _, pkg := range packageNames {
-			pkg.DownloadSource()
+			for _, download := range pkg.Download {
+				pkg.DownloadSource(download)
+			}
 		}
 		log.Println("Downloaded all sources")
 		return

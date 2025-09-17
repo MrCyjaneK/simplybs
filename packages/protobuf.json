@@ -2,11 +2,13 @@
     "package": "protobuf",
     "version": "3.6.1",
     "type": "host",
-    "download": {
-        "kind": "tar.gz",
-        "sha256": "b3732e471a9bb7950f090fd0457ebd2536a9ba0891b7f3785919c654fe2a2529",
-        "url": "http://github.com/protocolbuffers/protobuf/releases/download/v3.6.1/protobuf-cpp-3.6.1.tar.gz"
-    },
+    "download": [
+        {
+            "kind": "tar.gz",
+            "sha256": "b3732e471a9bb7950f090fd0457ebd2536a9ba0891b7f3785919c654fe2a2529",
+            "url": "http://github.com/protocolbuffers/protobuf/releases/download/v3.6.1/protobuf-cpp-3.6.1.tar.gz"
+        }
+    ],
     "dependencies": [
         "*-android*:native/android_ndk",
         "all:native/autoconf",

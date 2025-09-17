@@ -14,16 +14,19 @@ import (
 	"github.com/ryanuber/go-glob"
 )
 
+type Download struct {
+	Kind   string `json:"kind"`
+	URL    string `json:"url"`
+	Sha256 string `json:"sha256"`
+	Path   string `json:"path"`
+}
+
 type Package struct {
-	Package  string `json:"package"`
-	Version  string `json:"version"`
-	Type     string `json:"type"`
-	Download struct {
-		Kind   string `json:"kind"`
-		URL    string `json:"url"`
-		Sha256 string `json:"sha256"`
-	} `json:"download"`
-	Build struct {
+	Package  string      `json:"package"`
+	Version  string      `json:"version"`
+	Type     string      `json:"type"`
+	Download []*Download `json:"download"`
+	Build    struct {
 		Env   []string `json:"env"`
 		Steps []string `json:"steps"`
 	} `json:"build"`

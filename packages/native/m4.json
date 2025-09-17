@@ -2,11 +2,13 @@
     "package": "native/m4",
     "version": "1.4.20",
     "type": "native",
-    "download": {
-        "kind": "tar.gz",
-        "sha256": "6ac4fc31ce440debe63987c2ebbf9d7b6634e67a7c3279257dc7361de8bdb3ef",
-        "url": "http://ftpmirror.gnu.org/gnu/m4/m4-1.4.20.tar.gz"
-    },
+    "download": [
+        {
+            "kind": "tar.gz",
+            "sha256": "6ac4fc31ce440debe63987c2ebbf9d7b6634e67a7c3279257dc7361de8bdb3ef",
+            "url": "http://ftpmirror.gnu.org/gnu/m4/m4-1.4.20.tar.gz"
+        }
+    ],
     "dependencies": [
         "all:native/make"
     ],

@@ -239,7 +239,7 @@ func BuildWeb() {
 			packageDepth := strings.Count(pkg.Package.Package, "/")
 			upPath := strings.Repeat("../", packageDepth+1) // +1 to get out of web directory
 
-			return fmt.Sprintf("%ssource/%s-%s.%s", upPath, pkg.Package.Package, pkg.Package.Version, pkg.Package.Download.Kind)
+			return fmt.Sprintf("%ssource/%s-%s.%s", upPath, pkg.Package.Package, pkg.Package.Version, pkg.Package.Download[0].Kind)
 		},
 		"getBuiltFilePath": func(packageName, filePath string) string {
 			packageDepth := strings.Count(packageName, "/")

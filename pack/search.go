@@ -19,7 +19,7 @@ func GetPackagesByList(list string) []*Package {
 	for _, name := range packageNames {
 		pkg, err := FindPackage(name)
 		if err != nil {
-			log.Printf("Package %s not found in %s", name, host.GetPackagesDir())
+			log.Printf("Package %s not found in %s, %s", name, host.GetPackagesDir(), err)
 			continue
 		}
 		packages = append(packages, pkg)

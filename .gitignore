@@ -1,2 +1,4 @@
 .buildlib
 *.tar.gz
+.build
+ct-config

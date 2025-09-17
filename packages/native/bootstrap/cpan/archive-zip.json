@@ -2,11 +2,13 @@
     "package": "native/bootstrap/cpan/archive-zip",
     "version": "1.68",
     "type": "native",
-    "download": {
-        "kind": "tar.gz",
-        "sha256": "984e185d785baf6129c6e75f8eb44411745ac00bf6122fb1c8e822a3861ec650",
-        "url": "https://cpan.metacpan.org/authors/id/P/PH/PHRED/Archive-Zip-1.68.tar.gz"
-    },
+    "download": [
+        {
+            "kind": "tar.gz",
+            "sha256": "984e185d785baf6129c6e75f8eb44411745ac00bf6122fb1c8e822a3861ec650",
+            "url": "https://cpan.metacpan.org/authors/id/P/PH/PHRED/Archive-Zip-1.68.tar.gz"
+        }
+    ],
     "dependencies": [
         "all:native/bootstrap/make",
         "all:native/bootstrap/perl"

@@ -2,11 +2,13 @@
     "package": "native/bootstrap/strip-nondeterminism",
     "version": "1.13.0",
     "type": "native",
-    "download": {
-        "kind": "tar.bz2",
-        "sha256": "a70cdad5d728ea78b75d09880c4b51c7d887e89d0b610149b10cfb2abc70b4fc",
-        "url": "https://salsa.debian.org/reproducible-builds/reproducible-lfs/-/raw/master/releases/strip-nondeterminism/strip-nondeterminism_1.13.0.tar.bz2"
-    },
+    "download": [
+        {
+            "kind": "tar.bz2",
+            "sha256": "a70cdad5d728ea78b75d09880c4b51c7d887e89d0b610149b10cfb2abc70b4fc",
+            "url": "https://salsa.debian.org/reproducible-builds/reproducible-lfs/-/raw/master/releases/strip-nondeterminism/strip-nondeterminism_1.13.0.tar.bz2"
+        }
+    ],
     "dependencies": [
         "all:native/bootstrap/cpan/archive-cpio",
         "all:native/bootstrap/cpan/archive-zip",

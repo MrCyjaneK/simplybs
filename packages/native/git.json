@@ -1,0 +1,24 @@
+{
+    "package": "native/git",
+    "version": "2.51",
+    "type": "native",
+    "download": [
+        {
+            "kind": "tar.gz",
+            "sha256": "3524fc5fd81f16f80e1696a8281bd8ad831048b67848015d7b7382bf365ae685",
+            "url": "https://github.com/git/git/archive/refs/tags/v2.51.0.tar.gz"
+        }
+    ],
+    "dependencies": [
+        "all:native/curl",
+        "all:native/expat",
+        "all:native/make"
+    ],
+    "build": {
+        "env": [],
+        "steps": [
+            "all:make -j$NUM_CORES",
+            "all:make DESTDIR=$STAGING_DIR$PREFIX/native install"
+        ]
+    }
+}

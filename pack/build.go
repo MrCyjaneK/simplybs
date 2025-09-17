@@ -36,18 +36,18 @@ func (p *Package) ExtractEnv(host *host.Host, envPath string) {
 	}
 }
 
-func (p *Package) DownloadSource() {
-	sourcePath := p.GenerateBuildPath(&host.Host{}, "source")
+func (p *Package) DownloadSource(download *Download) {
+	sourcePath := p.GenerateSourceBuildPath(download)
 	os.MkdirAll(filepath.Dir(sourcePath), 0755)
-	if p.Download.Kind == "none" {
+	if download.Kind == "none" {
 		return
 	}
 	if _, err := os.Stat(sourcePath); os.IsNotExist(err) {
 		var err error
-		if p.Download.Kind == "git" {
-			err = utils.DownloadGit(p.Package, sourcePath, p.Download.URL, p.Download.Sha256)
+		if download.Kind == "git" {
+			err = utils.DownloadGit(p.Package, sourcePath, download.URL, download.Sha256)
 		} else {
-			err = utils.DownloadFile(p.Package, sourcePath, p.Download.URL, p.Download.Sha256, false)
+			err = utils.DownloadFile(p.Package, sourcePath, download.URL, download.Sha256, false)
 		}
 		if err != nil {
 			log.Fatalf("Failed to download source: %v", err)
@@ -56,26 +56,38 @@ func (p *Package) DownloadSource() {
 }
 
 func (p *Package) ExtractSource(host *host.Host, buildPath string) {
-	sourcePath := p.GenerateBuildPath(host, "source")
-	p.DownloadSource()
-	var err error
-	switch p.Download.Kind {
-	case "tar.bz2":
-		err = utils.ExtractTarBz2(sourcePath, buildPath)
-	case "tar.gz":
-		err = utils.ExtractTarGz(sourcePath, buildPath)
-	case "tar.xz":
-		err = utils.ExtractTarXz(sourcePath, buildPath)
-	case "git":
-		os.MkdirAll(buildPath, 0755)
-		err = os.CopyFS(buildPath, os.DirFS(sourcePath))
-	case "none":
-		return
-	default:
-		log.Fatalf("Unsupported archive kind: %s", p.Download.Kind)
+	for _, download := range p.Download {
+		p.DownloadSource(download)
 	}
-	if err != nil {
-		log.Fatalf("Failed to extract archive %s: %v", sourcePath, err)
+	var err error
+	for _, download := range p.Download {
+		sourcePath := p.GenerateSourceBuildPath(download)
+		actualBuildPath := buildPath
+		if download.Path != "" {
+			actualBuildPath = filepath.Join(buildPath, download.Path)
+		}
+		switch download.Kind {
+		case "tar.bz2":
+			err = utils.ExtractTarBz2(sourcePath, actualBuildPath)
+		case "tar.gz":
+			err = utils.ExtractTarGz(sourcePath, actualBuildPath)
+		case "tar.xz":
+			err = utils.ExtractTarXz(sourcePath, actualBuildPath)
+		case "git":
+			os.MkdirAll(actualBuildPath, 0755)
+			err = os.CopyFS(actualBuildPath, os.DirFS(sourcePath))
+		case "blob":
+			os.MkdirAll(filepath.Dir(actualBuildPath), 0755)
+			err = utils.Copy(sourcePath, actualBuildPath)
+		case "none":
+			return
+		default:
+			log.Fatalf("Unsupported archive kind: %s", download.Kind)
+		}
+
+		if err != nil {
+			log.Fatalf("Failed to extract archive %s: %v", sourcePath, err)
+		}
 	}
 }
 

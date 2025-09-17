@@ -2,11 +2,13 @@
     "package": "native/gcc@13.2@stage1",
     "version": "13.2",
     "type": "native",
-    "download": {
-        "kind": "tar.gz",
-        "sha256": "8cb4be3796651976f94b9356fa08d833524f62420d6292c5033a9a26af315078",
-        "url": "http://ftpmirror.gnu.org/gnu/gcc/gcc-13.2.0/gcc-13.2.0.tar.gz"
-    },
+    "download": [
+        {
+            "kind": "tar.gz",
+            "sha256": "8cb4be3796651976f94b9356fa08d833524f62420d6292c5033a9a26af315078",
+            "url": "http://ftpmirror.gnu.org/gnu/gcc/gcc-13.2.0/gcc-13.2.0.tar.gz"
+        }
+    ],
     "dependencies": [
         "*-linux-gnu:native/config",
         "*-linux-gnu:native/gmp",

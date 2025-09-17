@@ -2,11 +2,13 @@
     "package": "native/rust@1_63_0",
     "version": "1.63.0",
     "type": "native",
-    "download": {
-        "kind": "tar.gz",
-        "sha256": "1f9580295642ef5da7e475a8da2397d65153d3f2cb92849dbd08ed0effca99d0",
-        "url": "http://static.rust-lang.org/dist/rustc-1.63.0-src.tar.gz"
-    },
+    "download": [
+        {
+            "kind": "tar.gz",
+            "sha256": "1f9580295642ef5da7e475a8da2397d65153d3f2cb92849dbd08ed0effca99d0",
+            "url": "http://static.rust-lang.org/dist/rustc-1.63.0-src.tar.gz"
+        }
+    ],
     "dependencies": [
         "all:native/cmake",
         "all:native/make",

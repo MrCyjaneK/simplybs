@@ -2,11 +2,13 @@
     "package": "libevent",
     "version": "2.1.12",
     "type": "host",
-    "download": {
-        "kind": "tar.gz",
-        "sha256": "92e6de1be9ec176428fd2367677e61ceffc2ee1cb119035037a27d346b0403bb",
-        "url": "http://github.com/libevent/libevent/releases/download/release-2.1.12-stable/libevent-2.1.12-stable.tar.gz"
-    },
+    "download": [
+        {
+            "kind": "tar.gz",
+            "sha256": "92e6de1be9ec176428fd2367677e61ceffc2ee1cb119035037a27d346b0403bb",
+            "url": "http://github.com/libevent/libevent/releases/download/release-2.1.12-stable/libevent-2.1.12-stable.tar.gz"
+        }
+    ],
     "dependencies": [
         "*-android*:native/android_ndk",
         "all:native/autoconf",

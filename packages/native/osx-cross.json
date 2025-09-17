@@ -1,0 +1,83 @@
+{
+    "package": "native/osx-cross",
+    "version": "master@f873f53",
+    "type": "native",
+    "download": [
+        {
+            "kind": "tar.gz",
+            "sha256": "7ff7657a435e709dfc81e79965bf2d0544d71bea26432991db8837b797290c28",
+            "url": "https://github.com/tpoechtrager/osxcross/archive/f873f534c6cdb0776e457af8c7513da1e02abe59.tar.gz"
+        },
+        {
+            "kind": "blob",
+            "path": "Xcode_16.4.xip",
+            "sha256": "2dbf65ba28fb85b34e72c14c529a42d5c3189ab0f11fb29fdebd5f4ee6c87900",
+            "url": "https://download.developer.apple.com/Developer_Tools/Xcode_16.4/Xcode_16.4.xip"
+        },
+        {
+            "kind": "blob",
+            "path": "tarballs/llvmorg-20.1.8.zip",
+            "sha256": "b115ce6285dd9f3f401459912c12d28eb2e2d81e2387a71f6300aa11f7bc3288",
+            "url": "https://github.com/llvm/llvm-project/archive/refs/tags/llvmorg-20.1.8.zip"
+        },
+        {
+            "kind": "blob",
+            "path": "tarballs/20250402.zip",
+            "sha256": "b8e87f026e19259e6eac347746661e11592e0ff8bcdb657e177800223d7438ce",
+            "url": "https://github.com/apple/llvm-project/archive/refs/heads/stable/20250402.zip"
+        },
+        {
+            "kind": "tar.gz",
+            "path": "build/apple-libtapi",
+            "sha256": "a00b170901cc484c7041bbae1288e88ff3169728b572febd37418c52c2036935",
+            "url": "https://github.com/tpoechtrager/apple-libtapi/archive/refs/heads/1300.6.5.tar.gz"
+        },
+        {
+            "kind": "tar.gz",
+            "path": "build/cctools-port",
+            "sha256": "1b69237d99047afa8e840975d97b1733dcaba1d9135e1116d07f2f81cc0b8b64",
+            "url": "https://github.com/tpoechtrager/cctools-port/archive/refs/heads/986-ld64-711.tar.gz"
+        }
+    ],
+    "dependencies": [
+        "all:native/cmake",
+        "all:native/cpio",
+        "all:native/git",
+        "all:native/libxml2",
+        "all:native/openssl",
+        "all:native/patch",
+        "all:native/pbzx",
+        "all:native/perl",
+        "all:native/python@3.11.13",
+        "all:native/xar",
+        "all:native/xz"
+    ],
+    "build": {
+        "env": [
+            "all:JOBS=$NUM_CORES",
+            "all:PORTABLE=1",
+            "all:TARGET_DIR=$STAGING_DIR$PREFIX/native/",
+            "aarch64-apple-darwin:ENABLE_ARCHS=arm64",
+            "x86_64-apple-darwin:ENABLE_ARCHS=x86_64",
+            "all:UNATTENDED=1",
+            "all:SDK_VERSION=15.5"
+        ],
+        "steps": [
+            "all:sed -i.bak 's/build_xar/echo build_xar/g' tools/gen_sdk_package_pbzx.sh",
+            "all:sed -i.bak 's/build_xar/echo build_xar/g' build.sh",
+            "all:sed -i.bak 's/build_pbxz/echo build_pbxz/g' tools/gen_sdk_package_pbzx.sh",
+            "all:sed -i.bak 's/git /echo git /g' tools/tools.sh",
+            "all:sed -i.bak 's/$TARGET_DIR\\/bin\\///g' tools/gen_sdk_package_pbzx.sh",
+            "all:sed -i.bak 's/$TARGET_DIR\\/SDK\\/tools\\/bin\\///g' tools/gen_sdk_package_pbzx.sh",
+            "all:sed -i.bak 's/download $CLANG_LLVM_PKG/echo download $CLANG_LLVM_PKG/g' build_clang.sh",
+            "all:sed -i.bak 's/rm -f $(basename $CLANG_LLVM_PKG)/echo rm -f $(basename $CLANG_LLVM_PKG)/g' build_clang.sh",
+            "all:./tools/gen_sdk_package_pbzx.sh ./Xcode_16.4.xip",
+            "all:mv MacOSX15.* tarballs",
+            "all:yes | INSTALLPREFIX=$PREFIX/native ./build_clang.sh",
+            "none:cd build/clang-20.1.8/build_stage2 && make install DESTDIR=$STAGING_DIR && make install",
+            "all:yes | INSTALLPREFIX=$PREFIX/native ./build_apple_clang.sh",
+            "all:cd build/clang-21/build_stage2 && make install DESTDIR=$STAGING_DIR && make install",
+            "all:./build.sh"
+        ]
+    }
+}

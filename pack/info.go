@@ -53,15 +53,22 @@ func (p *Package) ShortName(h *host.Host) string {
 	return p.Package + "-" + p.Version + "-" + p.GeneratePackageInfoShortHash(h)
 }
 
+func (p *Package) GenerateSourceBuildPath(download *Download) string {
+	if download.Kind == "source" {
+		var name string
+		if download.Kind == "git" {
+			name = filepath.Base(download.URL) + "-" + download.Sha256[0:8] + ".git"
+		} else {
+			name = filepath.Base(download.URL)
+		}
+		return filepath.Join(host.DataDir(), "..", download.Kind, name)
+	}
+	return filepath.Join(host.DataDir(), "source", filepath.Base(download.URL))
+}
+
 func (p *Package) GenerateBuildPath(h *host.Host, kind string) string {
 	if kind == "source" {
-		var name string
-		if p.Download.Kind == "git" {
-			name = filepath.Base(p.Download.URL) + "-" + p.Download.Sha256[0:8] + ".git"
-		} else {
-			name = filepath.Base(p.Download.URL)
-		}
-		return filepath.Join(host.DataDir(), "..", kind, name)
+		log.Fatalf("Source build path is not supported")
 	}
 	return filepath.Join(host.DataDir(), kind, h.Triplet, p.ShortName(h))
 }
@@ -83,7 +90,7 @@ func (p *Package) GetEnv(h *host.Host) map[string]string {
 		"PREFIX":      h.GetEnvPath(),
 		"HOME":        h.GetEnvPath() + "/home/user",
 		"HOST_PREFIX": h.GetEnvPath(),
-		"NUM_CORES":   strconv.Itoa(runtime.NumCPU()),
+		"NUM_CORES":   strconv.Itoa(getNumCores()),
 		"PATCH_DIR":   filepath.Join(getwd, "patches"),
 	}
 
