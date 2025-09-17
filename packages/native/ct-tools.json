@@ -98,12 +98,17 @@
         "all:native/autoconf",
         "all:native/automake",
         "all:native/bash",
+        "all:native/bison",
         "all:native/crosstool-ng",
         "all:native/m4",
+        "all:native/libtool",
+        "all:native/help2man",
         "all:native/make",
         "all:native/perl",
+        "all:native/python@3.11.13",
         "all:native/sed",
-        "all:native/flex"
+        "all:native/flex",
+        "all:native/zlib"
     ],
     "build": {
         "env": [
@@ -113,6 +118,7 @@
         "steps": [
             "all:ct-ng $TOOL_TARGET",
             "all:echo 'CT_FORBID_DOWNLOAD=y' >> .config",
+            "all:sed -i.bak 's/CT_GDB_CROSS=y/CT_GDB_CROSS=n/g' .config",
             "all:env -i PATH=$PATH HOME=$HOME ct-ng build"
         ]
     }
