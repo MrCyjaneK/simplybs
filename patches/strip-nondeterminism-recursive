@@ -1,0 +1,210 @@
+#!/usr/bin/env perl
+use strict;
+use warnings;
+use autodie;
+use File::Find;
+use File::stat;
+use Getopt::Long;
+use Pod::Usage;
+
+our $VERSION = '1.0.0';
+
+my $STRIP_NONDETERMINISM_CMD = "$ENV{PREFIX}/native/bootstrap/bin/strip-nondeterminism";
+my $PERL_CMD = "$ENV{PREFIX}/native/bootstrap/bin/perl";
+
+my @ARCHIVE_EXTENSIONS = qw(.ar .a .gz .gzip .jar .zip .tar);
+
+my ($processed_count, $success_count, $error_count) = (0, 0, 0);
+
+my $help = 0;
+my $verbose = 0;
+my $dry_run = 0;
+my $directory = '.';
+
+GetOptions(
+    'help|h'     => \$help,
+    'verbose|v'  => \$verbose,
+    'dry-run|n'  => \$dry_run,
+    'directory|d=s' => \$directory,
+) or pod2usage(2);
+
+pod2usage(1) if $help;
+
+unless (-d $directory) {
+    die "Error: Directory '$directory' does not exist or is not accessible\n";
+}
+
+unless (-r $directory) {
+    die "Error: Directory '$directory' is not readable\n";
+}
+
+unless (-x $STRIP_NONDETERMINISM_CMD) {
+    die "Error: strip-nondeterminism command not found at '$STRIP_NONDETERMINISM_CMD'\n";
+}
+
+unless (-x $PERL_CMD) {
+    die "Error: Perl command not found at '$PERL_CMD'\n";
+}
+
+print "strip-nondeterminism-recursive v$VERSION\n";
+print "Searching for archive files in: $directory\n";
+print "Dry run mode: " . ($dry_run ? "enabled" : "disabled") . "\n\n";
+
+find(\&process_file, $directory);
+
+print "\n" . "=" x 50 . "\n";
+print "Processing Summary:\n";
+print "  Total files found: $processed_count\n";
+print "  Successfully processed: $success_count\n";
+print "  Errors: $error_count\n";
+print "=" x 50 . "\n";
+
+exit($error_count > 0 ? 1 : 0);
+
+sub process_file {
+    my $file = $File::Find::name;
+    
+    return unless -f $file;
+    
+    my $has_archive_extension = 0;
+    for my $ext (@ARCHIVE_EXTENSIONS) {
+        if ($file =~ /\Q$ext\E$/i) {
+            $has_archive_extension = 1;
+            last;
+        }
+    }
+    
+    return unless $has_archive_extension;
+    
+    $processed_count++;
+    
+    if ($verbose) {
+        print "Processing: $file\n";
+    }
+    
+    if ($dry_run) {
+        print "DRY RUN: Would process $file\n";
+        $success_count++;
+        return;
+    }
+    
+    eval {
+        process_archive_file($file);
+        $success_count++;
+        print "Successfully processed: $file\n" if $verbose;
+    };
+    
+    if ($@) {
+        $error_count++;
+        warn "Failed to process '$file': $@\n";
+    }
+}
+
+sub process_archive_file {
+    my $file = shift;
+    
+    my $stat = stat($file) or die "Cannot stat file '$file': $!\n";
+    my $original_perms = $stat->mode;
+    
+    my $current_perms = $stat->mode;
+    unless ($current_perms & 0200) {
+        chmod($current_perms | 0200, $file) or die "Cannot make file writable '$file': $!\n";
+    }
+    
+    my $cmd = "$PERL_CMD $STRIP_NONDETERMINISM_CMD -T 1 --normalizers +all " . quotemeta($file);
+    
+    my $exit_code = system($cmd);
+    my $strip_result = $exit_code >> 8;
+    
+    chmod($original_perms, $file) or warn "Warning: Could not restore permissions for '$file': $!\n";
+    
+    if ($strip_result != 0) {
+        die "strip-nondeterminism failed with exit code $strip_result";
+    }
+}
+
+__END__
+
+=head1 NAME
+
+strip-nondeterminism-recursive - Find and process archive files with strip-nondeterminism
+
+=head1 SYNOPSIS
+
+strip-nondeterminism-recursive [options] [directory]
+
+=head1 DESCRIPTION
+
+This script recursively searches for archive files (*.ar, *.a, *.gz, *.gzip, *.jar, *.zip)
+in the specified directory and processes them with strip-nondeterminism to remove
+non-deterministic elements.
+
+=head1 OPTIONS
+
+=over 8
+
+=item B<-h, --help>
+
+Print this help message and exit.
+
+=item B<-v, --verbose>
+
+Enable verbose output showing each file being processed.
+
+=item B<-n, --dry-run>
+
+Show what would be processed without actually processing files.
+
+=item B<-d, --directory> I<DIR>
+
+Specify the directory to search (default: current directory).
+
+=back
+
+=head1 ENVIRONMENT
+
+=over 8
+
+=item B<PREFIX>
+
+The prefix path where strip-nondeterminism and perl are located.
+Expected paths:
+- strip-nondeterminism: $PREFIX/native/bootstrap/bin/strip-nondeterminism
+- perl: $PREFIX/native/bootstrap/bin/perl
+
+=back
+
+=head1 EXAMPLES
+
+    # Process current directory
+    strip-nondeterminism-recursive
+
+    # Process specific directory with verbose output
+    strip-nondeterminism-recursive -v -d /path/to/archives
+
+    # Dry run to see what would be processed
+    strip-nondeterminism-recursive -n -d /path/to/archives
+
+=head1 EXIT STATUS
+
+=over 8
+
+=item 0
+
+Success - all files processed successfully
+
+=item 1
+
+Error - one or more files failed to process
+
+=back
+
+=head1 AUTHOR
+
+Czarek Nakamoto <cyjan@mrcyjanek.net>
+
+=head1 VERSION
+
+$VERSION
+
+=cut

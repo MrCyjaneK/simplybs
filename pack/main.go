@@ -45,7 +45,6 @@ type PackageWithBuilds struct {
 }
 
 var bootstrapPackages = []string{
-	"native/bootstrap/make",
 	"native/bootstrap/perl",
 	"native/bootstrap/cpan/archive-cpio",
 	"native/bootstrap/cpan/archive-zip",
@@ -69,7 +68,7 @@ func FindPackage(name string) (*Package, error) {
 		for _, pkgName := range bootstrapPackages {
 			pkg.Dependencies = append(pkg.Dependencies, "all:"+pkgName)
 		}
-		pkg.Build.Steps = append(pkg.Build.Steps, "all:$PREFIX/native/bootstrap/bin/strip-nondeterminism-recursive $STAGING_DIR")
+		pkg.Build.Steps = append(pkg.Build.Steps, "all:$PREFIX/native/bootstrap/bin/strip-nondeterminism-recursive --directory $STAGING_DIR")
 	}
 	return &pkg, nil
 }
