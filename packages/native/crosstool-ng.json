@@ -12,17 +12,17 @@
     "dependencies": [
         "all:native/autoconf",
         "all:native/automake",
-        "all:native/texinfo",
         "all:native/bash",
         "all:native/bison",
-        "all:native/m4",
-        "all:native/libtool",
+        "all:native/flex",
         "all:native/help2man",
+        "all:native/libtool",
+        "all:native/m4",
         "all:native/make",
         "all:native/perl",
         "all:native/python@3.11.13",
         "all:native/sed",
-        "all:native/flex",
+        "all:native/texinfo",
         "all:native/zlib"
     ],
     "build": {

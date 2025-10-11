@@ -113,13 +113,24 @@
     "build": {
         "env": [
             "x86_64-linux-gnu:TOOL_TARGET=x86_64-unknown-linux-gnu",
-            "aarch64-linux-gnu:TOOL_TARGET=aarch64-unknown-linux-gnu"
+            "aarch64-linux-gnu:TOOL_TARGET=aarch64-unknown-linux-gnu",
+            "x86_64-linux-musl:TOOL_TARGET=x86_64-multilib-linux-musl",
+            "x86_64-w64-mingw32:TOOL_TARGET=x86_64-w64-mingw32"
         ],
         "steps": [
             "all:ct-ng $TOOL_TARGET",
             "all:echo 'CT_FORBID_DOWNLOAD=y' >> .config",
+            "all:echo 'CT_CC_SUPPORT_GOLANG=y' >> .config",
+            "all:echo 'CT_CC_SUPPORT_FORTRAN=y' >> .config",
+            "none:echo 'CT_CC_SUPPORT_JAVA=y' >> .config",
+            "all:echo 'CT_CC_SUPPORT_ADA=y' >> .config",
+            "all:echo 'CT_CC_SUPPORT_OBJC=y' >> .config",
+            "all:echo 'CT_CC_SUPPORT_OBJCXX=y' >> .config",
             "all:sed -i.bak 's/CT_GDB_CROSS=y/CT_GDB_CROSS=n/g' .config",
-            "all:env -i PATH=$PATH HOME=$HOME ct-ng build"
+            "all:env -i PATH=$PATH HOME=$HOME ct-ng build",
+            "all:mkdir -p $STAGING_DIR$PREFIX/native",
+            "all:chmod -R u+x $HOME/x-tools/$TOOL_TARGET/",
+            "all:cp -a $HOME/x-tools/$TOOL_TARGET/* $STAGING_DIR$PREFIX/native"
         ]
     }
 }

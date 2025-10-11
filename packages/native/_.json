@@ -1,0 +1,42 @@
+{
+    "package": "native/_",
+    "version": "0.0.0",
+    "type": "native",
+    "dependencies": [
+        "*-android*:native/android_ndk",
+        "*-apple-*:native/osx-cross",
+        "all:native/autoconf",
+        "all:native/automake",
+        "all:native/bash",
+        "all:native/bison",
+        "all:native/cmake",
+        "all:native/cmake-toolchain",
+        "all:native/config",
+        "all:native/ct-tools",
+        "all:native/gawk",
+        "all:native/gettext",
+        "all:native/m4",
+        "all:native/make",
+        "all:native/mpc",
+        "all:native/mpfr",
+        "all:native/ninja",
+        "all:native/nproc",
+        "all:native/patch",
+        "all:native/perl",
+        "all:native/pkgconf",
+        "all:native/rsync",
+        "all:native/sed",
+        "all:native/texinfo"
+    ],
+    "build": {
+        "env": [
+            "none:A_=This is a meta-package library that includes common tools needed for builds",
+            "none:B_=All packages included as dependencies (other than bootstrap packages) are copied over to staging dir"
+        ],
+        "steps": [
+            "all:mkdir -p $STAGING_DIR$PREFIX ",
+            "all:rsync -a $PREFIX/* $STAGING_DIR$PREFIX",
+            "all:rm -rf $STAGING_DIR$PREFIX/native/bootstrap"
+        ]
+    }
+}
