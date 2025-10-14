@@ -1,116 +1,163 @@
 package utils
 
 import (
+	"fmt"
 	"log"
+	"net/http"
 	"os"
-
-	"github.com/go-git/go-git/v5"
-	"github.com/go-git/go-git/v5/plumbing"
+	"os/exec"
+	"path/filepath"
+	"strings"
 )
 
-func optimizeGitRepo(repoPath string) {
-	log.Printf("Optimizing repository at %s", repoPath)
+func verifyBundleHasRef(bundlePath, ref string) bool {
+	// Try to verify the bundle contains our ref by attempting to fetch it
+	tempVerifyDir := bundlePath + ".verify.tmp"
+	defer os.RemoveAll(tempVerifyDir)
 
-	repo, err := git.PlainOpen(repoPath)
-	if err != nil {
-		log.Printf("Warning: Failed to open repository at %s: %v", repoPath, err)
-		return
+	os.MkdirAll(tempVerifyDir, 0755)
+
+	// Initialize a temporary git repo
+	initCmd := exec.Command("git", "init")
+	initCmd.Dir = tempVerifyDir
+	if err := initCmd.Run(); err != nil {
+		return false
 	}
 
-	remotes, err := repo.Remotes()
-	if err == nil {
-		for _, remote := range remotes {
-			err = repo.DeleteRemote(remote.Config().Name)
-			if err != nil {
-				log.Printf("Warning: Failed to remove remote %s in %s: %v", remote.Config().Name, repoPath, err)
-			}
-		}
+	// Try to fetch the specific ref from the bundle
+	fetchCmd := exec.Command("git", "fetch", bundlePath, ref)
+	fetchCmd.Dir = tempVerifyDir
+	if err := fetchCmd.Run(); err != nil {
+		log.Printf("Bundle does not contain ref %s", ref)
+		return false
 	}
 
-	refs, err := repo.References()
-	if err == nil {
-		head, headErr := repo.Head()
-		if headErr == nil {
-			err = refs.ForEach(func(ref *plumbing.Reference) error {
-				if ref.Name().IsBranch() && ref.Hash() != head.Hash() {
-					return repo.Storer.RemoveReference(ref.Name())
-				}
-				return nil
-			})
-			if err != nil {
-				log.Printf("Warning: Failed to remove some branches in %s: %v", repoPath, err)
-			}
-		}
-	}
-
-	log.Printf("Repository optimization completed for %s", repoPath)
+	log.Printf("Bundle contains ref %s", ref)
+	return true
 }
 
-func resolveRef(repo *git.Repository, refStr string) (plumbing.Hash, error) {
-	if len(refStr) == 40 {
-		hash := plumbing.NewHash(refStr)
-		_, err := repo.CommitObject(hash)
-		if err == nil {
-			return hash, nil
-		}
+func downloadBundleFromMirror(bundlePath, ref string) error {
+	mirrorURL := "http://static.mrcyjanek.net/lfs/simplybs/source/" + filepath.Base(bundlePath)
+	log.Printf("Trying to download bundle from mirror: %s", mirrorURL)
+
+	resp, err := http.Get(mirrorURL)
+	if err != nil {
+		return fmt.Errorf("failed to download from mirror: %w", err)
+	}
+	defer resp.Body.Close()
+
+	if resp.StatusCode != http.StatusOK {
+		return fmt.Errorf("mirror returned HTTP %d", resp.StatusCode)
 	}
 
-	tagRef, err := repo.Tag(refStr)
-	if err == nil {
-		return tagRef.Hash(), nil
+	tempFile := bundlePath + ".download.tmp"
+	defer os.Remove(tempFile)
+
+	out, err := os.Create(tempFile)
+	if err != nil {
+		return fmt.Errorf("failed to create temp file: %w", err)
 	}
 
-	branchRef, err := repo.Reference(plumbing.ReferenceName("refs/heads/"+refStr), true)
-	if err == nil {
-		return branchRef.Hash(), nil
+	_, err = out.ReadFrom(resp.Body)
+	out.Close()
+	if err != nil {
+		return fmt.Errorf("failed to download bundle: %w", err)
 	}
 
-	remoteRef, err := repo.Reference(plumbing.ReferenceName("refs/remotes/origin/"+refStr), true)
-	if err == nil {
-		return remoteRef.Hash(), nil
+	if !verifyBundleHasRef(tempFile, ref) {
+		return fmt.Errorf("mirror bundle does not contain ref %s", ref)
 	}
 
-	ref, err := repo.Reference(plumbing.ReferenceName(refStr), true)
-	if err == nil {
-		return ref.Hash(), nil
+	os.MkdirAll(filepath.Dir(bundlePath), 0755)
+	if err := os.Rename(tempFile, bundlePath); err != nil {
+		return fmt.Errorf("failed to move bundle to final location: %w", err)
 	}
 
-	return plumbing.ZeroHash, err
+	log.Printf("Successfully downloaded bundle from mirror")
+	return nil
 }
 
-func DownloadGit(packageName, path, url, expectedSha256 string) error {
-	log.Printf("Downloading %s to %s", url, path)
+func createBundleFromRepo(bundlePath, url, ref string) error {
+	log.Printf("Creating bundle from repository %s", url)
 
-	repo, err := git.PlainClone(path, false, &git.CloneOptions{
-		URL:      url,
-		Progress: os.Stdout,
-	})
-	if err != nil {
-		return err
+	tempDir := bundlePath + ".clone.tmp"
+	defer os.RemoveAll(tempDir)
+
+	log.Printf("Cloning repository from %s", url)
+	cloneCmd := exec.Command("git", "clone", url, tempDir)
+	cloneCmd.Stdout = os.Stdout
+	cloneCmd.Stderr = os.Stderr
+	if err := cloneCmd.Run(); err != nil {
+		return fmt.Errorf("failed to clone repository: %w", err)
 	}
 
-	worktree, err := repo.Worktree()
-	if err != nil {
-		return err
+	log.Printf("Checking out reference %s", ref)
+	checkoutCmd := exec.Command("git", "checkout", ref)
+	checkoutCmd.Dir = tempDir
+	checkoutCmd.Stdout = os.Stdout
+	checkoutCmd.Stderr = os.Stderr
+	if err := checkoutCmd.Run(); err != nil {
+		return fmt.Errorf("failed to checkout ref %s: %w", ref, err)
 	}
 
-	log.Printf("Checking out reference %s", expectedSha256)
-	targetHash, err := resolveRef(repo, expectedSha256)
+	revParseCmd := exec.Command("git", "rev-parse", "HEAD")
+	revParseCmd.Dir = tempDir
+	commitHash, err := revParseCmd.Output()
 	if err != nil {
-		return err
+		return fmt.Errorf("failed to get commit hash: %w", err)
+	}
+	log.Printf("Checked out commit: %s", strings.TrimSpace(string(commitHash)))
+
+	log.Printf("Creating bundle file...")
+	os.MkdirAll(filepath.Dir(bundlePath), 0755)
+	bundleCmd := exec.Command("git", "bundle", "create", bundlePath, "HEAD")
+	bundleCmd.Dir = tempDir
+	bundleCmd.Stdout = os.Stdout
+	bundleCmd.Stderr = os.Stderr
+	if err := bundleCmd.Run(); err != nil {
+		return fmt.Errorf("failed to create bundle: %w", err)
 	}
 
-	err = worktree.Checkout(&git.CheckoutOptions{
-		Hash: targetHash,
-	})
-	if err != nil {
-		return err
+	log.Printf("Successfully created bundle at %s", bundlePath)
+	return nil
+}
+
+func DownloadGit(packageName, bundlePath, url, ref string) error {
+	log.Printf("Downloading %s to bundle %s", url, bundlePath)
+
+	if _, err := os.Stat(bundlePath); err == nil {
+		log.Printf("Bundle already exists, verifying it contains ref %s", ref)
+		if verifyBundleHasRef(bundlePath, ref) {
+			log.Printf("Bundle is valid and contains the required ref")
+			return nil
+		}
+		log.Printf("Bundle does not contain ref %s, removing and re-downloading", ref)
+		os.Remove(bundlePath)
 	}
 
-	log.Printf("Cleaning up and optimizing repository...")
+	err := downloadBundleFromMirror(bundlePath, ref)
+	if err != nil {
+		log.Printf("Failed to download from mirror: %v, creating bundle from original URL", err)
+		return createBundleFromRepo(bundlePath, url, ref)
+	}
 
-	optimizeGitRepo(path)
+	return nil
+}
 
-	log.Printf("Successfully downloaded and optimized %s", path)
+func ExtractGitCloneBundle(bundlePath, destPath string) error {
+	log.Printf("Extracting git bundle from %s to %s", bundlePath, destPath)
+
+	// Ensure destination directory exists
+	os.MkdirAll(destPath, 0755)
+
+	// Clone from bundle
+	cloneCmd := exec.Command("git", "clone", bundlePath, destPath)
+	cloneCmd.Stdout = os.Stdout
+	cloneCmd.Stderr = os.Stderr
+	if err := cloneCmd.Run(); err != nil {
+		return fmt.Errorf("failed to clone from bundle: %w", err)
+	}
+
+	log.Printf("Successfully extracted bundle to %s", destPath)
 	return nil
 }

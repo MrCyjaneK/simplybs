@@ -12,6 +12,7 @@
     "dependencies": [
         "all:native/curl",
         "all:native/expat",
+        "all:native/gettext",
         "all:native/make"
     ],
     "build": {

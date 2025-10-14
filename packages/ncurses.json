@@ -10,7 +10,7 @@
         }
     ],
     "dependencies": [
-        "*-android*:native/android_ndk"
+        "all:native/_"
     ],
     "patches": [
         "fallback.c"

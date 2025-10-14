@@ -5,39 +5,45 @@
     "download": [
         {
             "kind": "blob",
-            "path": ".build/tarballs/binutils-2.43.1.tar.xz",
-            "sha256": "13f74202a3c4c51118b797a39ea4200d3f6cfbe224da6d1d95bb938480132dfd",
-            "url": "https://ftpmirror.gnu.org/gnu/binutils/binutils-2.43.1.tar.xz"
+            "path": ".build/tarballs/binutils-2.45.tar.xz",
+            "sha256": "c50c0e7f9cb188980e2cc97e4537626b1672441815587f1eab69d2a1bfbef5d2",
+            "url": "https://ftpmirror.gnu.org/gnu/binutils/binutils-2.45.tar.xz"
         },
         {
             "kind": "blob",
-            "path": ".build/tarballs/expat-2.5.0.tar.xz",
-            "sha256": "ef2420f0232c087801abf705e89ae65f6257df6b7931d37846a193ef2e8cdcbe",
-            "url": "http://github.com/libexpat/libexpat/releases/download/R_2_5_0/expat-2.5.0.tar.xz"
+            "path": ".build/tarballs/VERSION_2_5_21.tar.gz",
+            "sha256": "470aa72e7018f0beadb5fbe3c932a62ba1b0594c29158a744c614bfa42133e59",
+            "url": "https://github.com/johnsonjh/duma/archive/refs/tags/VERSION_2_5_21.tar.gz"
         },
         {
             "kind": "blob",
-            "path": ".build/tarballs/gcc-14.2.0.tar.xz",
-            "sha256": "a7b39bc69cbf9e25826c5a60ab26477001f7c08d85cec04bc0e29cabed6f3cc9",
-            "url": "http://ftpmirror.gnu.org/gnu/gcc/gcc-14.2.0/gcc-14.2.0.tar.xz"
+            "path": ".build/tarballs/expat-2.7.1.tar.xz",
+            "sha256": "354552544b8f99012e5062f7d570ec77f14b412a3ff5c7d8d0dae62c0d217c30",
+            "url": "http://github.com/libexpat/libexpat/releases/download/R_2_7_1/expat-2.7.1.tar.xz"
         },
         {
             "kind": "blob",
-            "path": ".build/tarballs/gdb-16.2.tar.xz",
-            "sha256": "4002cb7f23f45c37c790536a13a720942ce4be0402d929c9085e92f10d480119",
-            "url": "http://ftpmirror.gnu.org/gnu/gdb/gdb-16.2.tar.xz"
+            "path": ".build/tarballs/gcc-15.2.0.tar.xz",
+            "sha256": "438fd996826b0c82485a29da03a72d71d6e3541a83ec702df4271f6fe025d24e",
+            "url": "http://ftpmirror.gnu.org/gnu/gcc/gcc-15.2.0/gcc-15.2.0.tar.xz"
         },
         {
             "kind": "blob",
-            "path": ".build/tarballs/gettext-0.23.1.tar.xz",
-            "sha256": "c1f97a72a7385b7e71dd07b5fea6cdaf12c9b88b564976b23bd8c11857af2970",
-            "url": "http://ftpmirror.gnu.org/gnu/gettext/gettext-0.23.1.tar.xz"
+            "path": ".build/tarballs/gdb-16.3.tar.xz",
+            "sha256": "bcfcd095528a987917acf9fff3f1672181694926cc18d609c99d0042c00224c5",
+            "url": "http://ftpmirror.gnu.org/gnu/gdb/gdb-16.3.tar.xz"
         },
         {
             "kind": "blob",
-            "path": ".build/tarballs/glibc-2.41.tar.xz",
-            "sha256": "a5a26b22f545d6b7d7b3dd828e11e428f24f4fac43c934fb071b6a7d0828e901",
-            "url": "http://ftpmirror.gnu.org/gnu/glibc/glibc-2.41.tar.xz"
+            "path": ".build/tarballs/gettext-0.26.tar.xz",
+            "sha256": "d1fb86e260cfe7da6031f94d2e44c0da55903dbae0a2fa0fae78c91ae1b56f00",
+            "url": "http://ftpmirror.gnu.org/gnu/gettext/gettext-0.26.tar.xz"
+        },
+        {
+            "kind": "blob",
+            "path": ".build/tarballs/glibc-2.42.tar.xz",
+            "sha256": "d1775e32e4628e64ef930f435b67bb63af7599acb6be2b335b9f19f16509f17f",
+            "url": "http://ftpmirror.gnu.org/gnu/glibc/glibc-2.42.tar.xz"
         },
         {
             "kind": "blob",
@@ -47,21 +53,33 @@
         },
         {
             "kind": "blob",
-            "path": ".build/tarballs/isl-0.26.tar.xz",
-            "sha256": "a0b5cb06d24f9fa9e77b55fabbe9a3c94a336190345c2555f9915bb38e976504",
-            "url": "https://libisl.sourceforge.io/isl-0.26.tar.xz"
+            "path": ".build/tarballs/isl-0.27.tar.xz",
+            "sha256": "6d8babb59e7b672e8cb7870e874f3f7b813b6e00e6af3f8b04f7579965643d5c",
+            "url": "https://libisl.sourceforge.io/isl-0.27.tar.xz"
         },
         {
             "kind": "blob",
-            "path": ".build/tarballs/libiconv-1.16.tar.gz",
-            "sha256": "e6a1b1b589654277ee790cce3734f07876ac4ccfaecbee8afa0b649cf529cc04",
-            "url": "https://ftpmirror.gnu.org/gnu/libiconv/libiconv-1.16.tar.gz"
+            "path": ".build/tarballs/libiconv-1.18.tar.gz",
+            "sha256": "3b08f5f4f9b4eb82f151a7040bfd6fe6c6fb922efe4b1659c66ea933276965e8",
+            "url": "https://ftpmirror.gnu.org/gnu/libiconv/libiconv-1.18.tar.gz"
         },
         {
             "kind": "blob",
-            "path": ".build/tarballs/linux-6.13.tar.xz",
-            "sha256": "e79dcc6eb86695c6babfb07c2861912b635d5075c6cd1cd0567d1ea155f80d6e",
-            "url": "https://www.kernel.org/pub/linux/kernel/v6.x/linux-6.13.tar.xz"
+            "path": ".build/tarballs/linux-6.16.tar.xz",
+            "sha256": "1a4be2fe6b5246aa4ac8987a8a4af34c42a8dd7d08b46ab48516bcc1befbcd83",
+            "url": "https://www.kernel.org/pub/linux/kernel/v6.x/linux-6.16.tar.xz"
+        },
+        {
+            "kind": "blob",
+            "path": ".build/tarballs/mingw-w64-v13.0.0.tar.bz2",
+            "sha256": "5afe822af5c4edbf67daaf45eec61d538f49eef6b19524de64897c6b95828caf",
+            "url": "https://downloads.sourceforge.net/project/mingw-w64/mingw-w64/mingw-w64-release/mingw-w64-v13.0.0.tar.bz2"
+        },
+        {
+            "kind": "blob",
+            "path": ".build/tarballs/musl-1.2.5.tar.gz",
+            "sha256": "a9a118bbe84d8764da0ea0d28b3ab3fae8477fc7e4085d90102b8596fc7c75e4",
+            "url": "https://www.musl-libc.org/releases/musl-1.2.5.tar.gz"
         },
         {
             "kind": "blob",
@@ -71,15 +89,15 @@
         },
         {
             "kind": "blob",
-            "path": ".build/tarballs/mpfr-4.2.1.tar.xz",
+            "path": ".build/tarballs/mpfr-4.2.2.tar.xz",
             "sha256": "277807353a6726978996945af13e52829e3abd7a9a5b7fb2793894e18f1fcbb2",
-            "url": "http://ftpmirror.gnu.org/gnu/mpfr/mpfr-4.2.1.tar.xz"
+            "url": "http://ftpmirror.gnu.org/gnu/mpfr/mpfr-4.2.2.tar.xz"
         },
         {
             "kind": "blob",
-            "path": ".build/tarballs/ncurses-6.4.tar.gz",
+            "path": ".build/tarballs/ncurses-6.5.tar.gz",
             "sha256": "6931283d9ac87c5073f30b6290c4c75f21632bb4fc3603ac8100812bed248159",
-            "url": "http://ftpmirror.gnu.org/gnu/ncurses/ncurses-6.4.tar.gz"
+            "url": "http://ftpmirror.gnu.org/gnu/ncurses/ncurses-6.5.tar.gz"
         },
         {
             "kind": "blob",
@@ -89,48 +107,64 @@
         },
         {
             "kind": "blob",
-            "path": ".build/tarballs/zstd-1.5.6.tar.gz",
-            "sha256": "8c29e06cf42aacc1eafc4077ae2ec6c6fcb96a626157e0593d5e82a34fd403c1",
-            "url": "https://github.com/facebook/zstd/releases/download/v1.5.6/zstd-1.5.6.tar.gz"
+            "path": ".build/tarballs/zstd-1.5.7.tar.gz",
+            "sha256": "eb33e51f49a15e023950cd7825ca74a4a2b43db8354825ac24fc1b7ee09e6fa3",
+            "url": "https://github.com/facebook/zstd/releases/download/v1.5.7/zstd-1.5.7.tar.gz"
         }
     ],
     "dependencies": [
         "all:native/autoconf",
         "all:native/automake",
         "all:native/bash",
+        "all:native/binutils@2.42",
         "all:native/bison",
         "all:native/crosstool-ng",
-        "all:native/m4",
-        "all:native/libtool",
+        "all:native/flex",
+        "all:native/gawk",
+        "all:native/gettext",
         "all:native/help2man",
+        "all:native/libtool",
+        "all:native/m4",
         "all:native/make",
         "all:native/perl",
         "all:native/python@3.11.13",
         "all:native/sed",
-        "all:native/flex",
+        "all:native/texinfo",
+        "all:native/xz",
         "all:native/zlib"
     ],
     "build": {
         "env": [
             "x86_64-linux-gnu:TOOL_TARGET=x86_64-unknown-linux-gnu",
+            "x86_64-linux-gnu:TOOL_TARGET_ALT=x86_64-linux-gnu",
             "aarch64-linux-gnu:TOOL_TARGET=aarch64-unknown-linux-gnu",
+            "aarch64-linux-gnu:TOOL_TARGET_ALT=aarch64-linux-gnu",
             "x86_64-linux-musl:TOOL_TARGET=x86_64-multilib-linux-musl",
-            "x86_64-w64-mingw32:TOOL_TARGET=x86_64-w64-mingw32"
+            "x86_64-linux-musl:TOOL_TARGET_ALT=x86_64-linux-musl",
+            "x86_64-w64-mingw32:TOOL_TARGET=x86_64-w64-mingw32",
+            "x86_64-w64-mingw32:TOOL_TARGET_ALT=x86_64-w64-mingw32"
         ],
         "steps": [
             "all:ct-ng $TOOL_TARGET",
+            "all:echo 'CT_EXPERIMENTAL=y' >> .config",
             "all:echo 'CT_FORBID_DOWNLOAD=y' >> .config",
-            "all:echo 'CT_CC_SUPPORT_GOLANG=y' >> .config",
-            "all:echo 'CT_CC_SUPPORT_FORTRAN=y' >> .config",
-            "none:echo 'CT_CC_SUPPORT_JAVA=y' >> .config",
-            "all:echo 'CT_CC_SUPPORT_ADA=y' >> .config",
-            "all:echo 'CT_CC_SUPPORT_OBJC=y' >> .config",
-            "all:echo 'CT_CC_SUPPORT_OBJCXX=y' >> .config",
+            "all:echo 'CT_CC_LANG_GOLANG=y' >> .config",
+            "all:echo 'CT_BINUTILS_EXTRA_CONFIG_ARRAY=\"--with-system-zlib\"' >> .config",
+            "all:echo 'CT_CC_GCC_SYSTEM_ZLIB=y' >> .config",
+            "all:echo 'CT_DEBUG_CT_SAVE_STEPS=y' >> .config",
             "all:sed -i.bak 's/CT_GDB_CROSS=y/CT_GDB_CROSS=n/g' .config",
-            "all:env -i PATH=$PATH HOME=$HOME ct-ng build",
+            "all:sed -i.bak 's/CT_GDB_GDBSERVER=y/CT_GDB_GDBSERVER=n/g' .config",
+            "all:echo 'CT_GDB=n' >> .config",
+            "all:echo 'CT_GDB_NATIVE=n' >> .config",
+            "all:ln -s $TOOL_TARGET_ALT-objcopy $PREFIX/native/bin/objcopy",
+            "all:ln -s $TOOL_TARGET_ALT-readelf $PREFIX/native/bin/readelf",
+            "x86_64-w64-mingw32:ln -s $TOOL_TARGET_ALT-ar $PREFIX/native/bin/ar",
+            "x86_64-w64-mingw32:ln -s $TOOL_TARGET_ALT-ranlib $PREFIX/native/bin/ranlib",
+            "all:unset LD_LIBRARY_PATH LIBRARY_PATH CC CXX CFLAGS; ct-ng build",
             "all:mkdir -p $STAGING_DIR$PREFIX/native",
-            "all:chmod -R u+x $HOME/x-tools/$TOOL_TARGET/",
-            "all:cp -a $HOME/x-tools/$TOOL_TARGET/* $STAGING_DIR$PREFIX/native"
+            "all:chmod -R u+rwx $HOME/x-tools/$TOOL_TARGET/",
+            "all:cp -a $HOME/x-tools/$TOOL_TARGET/* $STAGING_DIR$PREFIX/native",
+            "all:rm $STAGING_DIR$PREFIX/native/*.log*"
         ]
     }
 }

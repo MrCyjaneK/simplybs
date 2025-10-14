@@ -11,7 +11,8 @@
     ],
     "dependencies": [
         "all:native/make",
-        "all:native/perl"
+        "all:native/perl",
+        "all:native/xz"
     ],
     "build": {
         "env": [

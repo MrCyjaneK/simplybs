@@ -11,6 +11,7 @@
     ],
     "dependencies": [
         "all:native/make",
+        "all:native/openssl",
         "all:native/xz"
     ],
     "build": {

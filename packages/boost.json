@@ -10,8 +10,7 @@
         }
     ],
     "dependencies": [
-        "*-android*:native/android_ndk",
-        "*-linux-*:native/libtool",
+        "all:native/_",
         "all:native/boost-b2",
         "all:native/python@3.11.13",
         "all:libiconv"

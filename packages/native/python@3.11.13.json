@@ -17,7 +17,7 @@
     "build": {
         "env": [],
         "steps": [
-            "all:sed -i.bak '/^#ifndef DATE/i\\\n\\/* Deterministic date and time.  *\\/\\\n#define DATE \"Jan  1 1970\"\\\n#define TIME \"00:00:01\"' Modules/getbuildinfo.c",
+            "all:sed -i.bak '/^#ifndef DATE/i\\\n\\/* Deterministic date and time.  *\\/\\\n#define DATE \"Jan  1 1970\"\\\n#define TIME \"00:00:01\"\\\n' Modules/getbuildinfo.c",
             "all:sed -i.bak 's/^#\\(zlib[[:space:]]\\+zlibmodule\\.c[[:space:]]\\+-lz\\)/\\1/' Modules/Setup",
             "all:./configure --disable-test-modules --prefix=$PREFIX/native",
             "all:make -j$NUM_CORES",

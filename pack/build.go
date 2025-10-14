@@ -74,8 +74,7 @@ func (p *Package) ExtractSource(host *host.Host, buildPath string) {
 		case "tar.xz":
 			err = utils.ExtractTarXz(sourcePath, actualBuildPath)
 		case "git":
-			os.MkdirAll(actualBuildPath, 0755)
-			err = os.CopyFS(actualBuildPath, os.DirFS(sourcePath))
+			err = utils.ExtractGitCloneBundle(sourcePath, actualBuildPath)
 		case "blob":
 			os.MkdirAll(filepath.Dir(actualBuildPath), 0755)
 			err = utils.Copy(sourcePath, actualBuildPath)

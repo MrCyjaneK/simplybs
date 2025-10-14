@@ -10,8 +10,7 @@
         }
     ],
     "dependencies": [
-        "*-linux-gnu:native/gperf",
-        "*-linux-gnu:native/make"
+        "*-linux-gnu:native/_"
     ],
     "build": {
         "env": [

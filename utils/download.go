@@ -88,12 +88,12 @@ func DownloadFile(packageName, path, url, expectedSha256 string, isMirror bool) 
 
 	resp, err := http.Get(url)
 	if err != nil {
-		return fmt.Errorf("Failed to download file from %s: %v", url, err)
+		return fmt.Errorf("failed to download file from %s: %v", url, err)
 	}
 	defer resp.Body.Close()
 
 	if resp.StatusCode != http.StatusOK {
-		return fmt.Errorf("Failed to download file: HTTP %d %s", resp.StatusCode, resp.Status)
+		return fmt.Errorf("failed to download file: HTTP %d %s", resp.StatusCode, resp.Status)
 	}
 
 	var totalSize int64
@@ -105,7 +105,7 @@ func DownloadFile(packageName, path, url, expectedSha256 string, isMirror bool) 
 
 	out, err := os.Create(path)
 	if err != nil {
-		return fmt.Errorf("Failed to create file %s: %v", path, err)
+		return fmt.Errorf("failed to create file %s: %v", path, err)
 	}
 	defer out.Close()
 
@@ -121,7 +121,7 @@ func DownloadFile(packageName, path, url, expectedSha256 string, isMirror bool) 
 
 	_, err = io.Copy(multiWriter, resp.Body)
 	if err != nil {
-		return fmt.Errorf("Failed to write file %s: %v", path, err)
+		return fmt.Errorf("failed to write file %s: %v", path, err)
 	}
 
 	progressWriter.finish()

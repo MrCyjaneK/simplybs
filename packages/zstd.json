@@ -10,14 +10,18 @@
         }
     ],
     "dependencies": [
-        "*-android*:native/android_ndk",
-        "all:native/make"
+        "all:native/_"
     ],
     "build": {
         "env": [
             "all:LIBTOOL=$PREFIX/native/bin/libtool",
             "armv7a-linux-androideabi:CFLAGS=$CFLAGS -DLIBC_NO_FSEEKO",
-            "armv7a-linux-androideabi:CXXFLAGS=$CXXFLAGS -DLIBC_NO_FSEEKO"
+            "armv7a-linux-androideabi:CXXFLAGS=$CXXFLAGS -DLIBC_NO_FSEEKO",
+            "*-linux-*:TARGET_SYSTEM=Linux",
+            "*-apple-*:TARGET_SYSTEM=Darwin",
+            "*-mingw32:TARGET_SYSTEM=Windows",
+            "all:UNAME_TARGET_SYSTEM=$TARGET_SYSTEM",
+            "all:OS=$TARGET_SYSTEM"
         ],
         "steps": [
             "all:make -j$NUM_CORES",

@@ -1,20 +1,23 @@
 {
     "package": "native/crosstool-ng",
-    "version": "1.27.0",
+    "version": "1.28.0",
     "type": "native",
     "download": [
         {
             "kind": "tar.xz",
-            "sha256": "0506ab98fa0ad6d263a555feeb2c7fff9bc24a434635d4b0cdff9137fe5b4477",
-            "url": "http://crosstool-ng.org/download/crosstool-ng/crosstool-ng-1.27.0.tar.xz"
+            "sha256": "5750e29a2bda5cd8d67900592576b1670a1987a4dcd5e4f6beae09138a1f5699",
+            "url": "http://crosstool-ng.org/download/crosstool-ng/crosstool-ng-1.28.0.tar.xz"
         }
     ],
     "dependencies": [
         "all:native/autoconf",
         "all:native/automake",
         "all:native/bash",
+        "all:native/binutils@2.42",
         "all:native/bison",
         "all:native/flex",
+        "all:native/gawk",
+        "all:native/gettext",
         "all:native/help2man",
         "all:native/libtool",
         "all:native/m4",
@@ -23,14 +26,20 @@
         "all:native/python@3.11.13",
         "all:native/sed",
         "all:native/texinfo",
+        "all:native/xz",
         "all:native/zlib"
     ],
     "build": {
         "env": [
-            "x86_64-linux-gnu:TOOL_TARGET=x86_64-linux-gnu"
+            "x86_64-linux-gnu:TOOL_TARGET=x86_64-linux-gnu",
+            "x86_64-w64-mingw32:TOOL_TARGET=x86_64-w64-mingw32",
+            "aarch64-linux-gnu:TOOL_TARGET=aarch64-linux-gnu",
+            "x86_64-linux-musl:TOOL_TARGET=x86_64-linux-musl"
         ],
         "steps": [
             "all:./bootstrap",
+            "all:ln -s $TOOL_TARGET-objcopy $PREFIX/native/bin/objcopy",
+            "all:ln -s $TOOL_TARGET-readelf $PREFIX/native/bin/readelf",
             "all:./configure --prefix=$PREFIX/native",
             "all:make -j$NUM_CORES",
             "all:make install DESTDIR=$STAGING_DIR"

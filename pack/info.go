@@ -15,11 +15,56 @@ import (
 	"github.com/mrcyjanek/simplybs/crash"
 	"github.com/mrcyjanek/simplybs/host"
 	"github.com/mrcyjanek/simplybs/utils"
+	"github.com/ryanuber/go-glob"
 )
+
+func (p *Package) FilterForHost(h *host.Host) *Package {
+	filtered := &Package{
+		Package:      p.Package,
+		Version:      p.Version,
+		Type:         p.Type,
+		Download:     p.Download,
+		Dependencies: []string{},
+	}
+	filtered.Build.Env = []string{}
+	filtered.Build.Steps = []string{}
+
+	for _, dep := range p.Dependencies {
+		if strings.Contains(dep, ":") {
+			prefix := strings.Split(dep, ":")[0]
+			if !glob.Glob(prefix, h.Triplet) && prefix != "all" {
+				continue
+			}
+		}
+		filtered.Dependencies = append(filtered.Dependencies, dep)
+	}
+
+	for _, env := range p.Build.Env {
+		if strings.Contains(env, ":") {
+			prefix := strings.Split(env, ":")[0]
+			if !glob.Glob(prefix, h.Triplet) && prefix != "all" {
+				continue
+			}
+		}
+		filtered.Build.Env = append(filtered.Build.Env, env)
+	}
+
+	for _, step := range p.Build.Steps {
+		if strings.Contains(step, ":") {
+			prefix := strings.Split(step, ":")[0]
+			if !glob.Glob(prefix, h.Triplet) && prefix != "all" {
+				continue
+			}
+		}
+		filtered.Build.Steps = append(filtered.Build.Steps, step)
+	}
+
+	return filtered
+}
 
 func (p *Package) GeneratePackageInfo(h *host.Host) string {
 	pkgs := map[string]interface{}{}
-	pkgs["_target"] = p
+	pkgs["_target"] = p.FilterForHost(h)
 	for _, dep := range p.Dependencies {
 		if strings.Contains(dep, ":") {
 			dep = dep[strings.Index(dep, ":")+1:]
@@ -28,7 +73,7 @@ func (p *Package) GeneratePackageInfo(h *host.Host) string {
 		if err != nil {
 			log.Fatalf("Package %s not found in info", dep)
 		}
-		pkgs[dep] = pkg
+		pkgs[dep] = pkg.FilterForHost(h)
 	}
 	env := p.GetEnvForLogs(h)
 	delete(env, "PATH")
