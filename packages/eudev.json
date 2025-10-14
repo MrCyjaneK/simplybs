@@ -16,6 +16,7 @@
         "env": [
             "all:config_opts=--host=$HOST --prefix=$PREFIX",
             "all:config_opts=$config_opts --disable-gudev --disable-introspection --disable-hwdb --disable-manpages --disable-shared",
+            "*-linux-gnu:ARFLAGS=rcs",
             "all:config_opts=$config_opts AR_FLAGS=$ARFLAGS",
             "all:SHOULD_BUILD=echo",
             "*-linux-gnu:SHOULD_BUILD="

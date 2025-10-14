@@ -1,12 +1,12 @@
 {
     "package": "boost",
-    "version": "1_85_0",
+    "version": "1_89_0",
     "type": "host",
     "download": [
         {
             "kind": "tar.bz2",
-            "sha256": "7009fe1faa1697476bdc7027703a2badb84e849b7b0baad5086b087b971f8617",
-            "url": "http://downloads.sourceforge.net/project/boost/boost/1.85.0/boost_1_85_0.tar.bz2"
+            "sha256": "85a33fa22621b4f314f8e85e1a5e2a9363d22e4f4992925d4bb3bc631b5a0c7a",
+            "url": "http://downloads.sourceforge.net/project/boost/boost/1.89.0/boost_1_89_0.tar.bz2"
         }
     ],
     "dependencies": [
@@ -46,12 +46,12 @@
             "*-ios*:toolset2=iphone",
             "*-ios-simulator*:toolset2=~iphone",
             "all:config_libraries=system,filesystem,thread,timer,date_time,chrono,regex,serialization,atomic,program_options,locale,log",
-            "all:CXXFLAGS=-fPIC",
+            "all:CXXFLAGS=-fPIC -std=c++17",
             "*-darwin*:LDFLAGS=-L$PREFIX/lib -L$SDK_PATH/usr/lib",
             "*-ios*:LDFLAGS=-L$PREFIX/lib -L$SDK_PATH/usr/lib",
             "*-ios-simulator*:LDFLAGS=-L$PREFIX/lib -L$SDK_PATH/usr/lib",
             "*-apple-*:AR=libtool",
-            "*-linux-android*:ARFLAGS=rcs"
+            "*-linux-*:ARFLAGS=rcs"
         ],
         "steps": [
             "all:echo \"using $toolset : $toolset2 : $CXX $CXXFLAGS : <CXXFLAGS>\"$CXXFLAGS\" <linkflags>\"$LDFLAGS\" <archiver>\"$AR\" <arflags>\"$ARFLAGS\" <striper>\"$STRIP\" <ranlib>\"$RANLIB\" <rc>\"$WINDRES\" <target-os>\"$target_os\" : ;\" > user-config.jam",
