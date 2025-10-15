@@ -35,8 +35,22 @@ func main() {
 			return err
 		}
 
-		// Check if this is a .git directory
-		if info.IsDir() && info.Name() == ".git" {
+		// Check if this is a .git directory (or symlink to one)
+		if info.Name() == ".git" {
+			// Check if it's a directory or a symlink to a directory
+			isGitDir := info.IsDir()
+			if !isGitDir && info.Mode()&os.ModeSymlink != 0 {
+				// It's a symlink, check if it points to a directory
+				target, err := os.Stat(path)
+				if err == nil && target.IsDir() {
+					isGitDir = true
+				}
+			}
+
+			if !isGitDir {
+				return filepath.SkipDir
+			}
+
 			// Get the repository directory (parent of .git)
 			repoDir := filepath.Dir(path)
 
@@ -107,11 +121,35 @@ func getGitCommit(repoDir string) (string, error) {
 }
 
 func getGitRemoteURL(repoDir string) (string, error) {
+	// Try origin first
 	cmd := exec.Command("git", "config", "--get", "remote.origin.url")
 	cmd.Dir = repoDir
 	output, err := cmd.Output()
+	if err == nil {
+		return strings.TrimSpace(string(output)), nil
+	}
+
+	// If origin doesn't exist, get the first available remote
+	cmd = exec.Command("git", "remote")
+	cmd.Dir = repoDir
+	output, err = cmd.Output()
 	if err != nil {
 		return "", err
 	}
+
+	remotes := strings.Split(strings.TrimSpace(string(output)), "\n")
+	if len(remotes) == 0 || remotes[0] == "" {
+		return "", fmt.Errorf("no remotes found")
+	}
+
+	// Get the URL of the first remote
+	firstRemote := remotes[0]
+	cmd = exec.Command("git", "config", "--get", fmt.Sprintf("remote.%s.url", firstRemote))
+	cmd.Dir = repoDir
+	output, err = cmd.Output()
+	if err != nil {
+		return "", err
+	}
+
 	return strings.TrimSpace(string(output)), nil
 }
