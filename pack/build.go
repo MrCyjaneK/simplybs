@@ -32,7 +32,7 @@ func (p *Package) ExtractEnv(host *host.Host, envPath string) {
 	archive := p.GenerateBuildPath(host, "built") + ".tar.gz"
 	err := utils.ExtractTarGz(archive, envPath)
 	if err != nil {
-		log.Fatalf("Failed to extract archive %s: %v", archive, err)
+		log.Panicf("Failed to extract archive %s: %v", archive, err)
 	}
 }
 
@@ -91,7 +91,6 @@ func (p *Package) ExtractSource(host *host.Host, buildPath string) {
 }
 
 func (p *Package) BuildPackage(h *host.Host, buildDependencies bool) {
-
 	p.buildPackageInternal(h, buildDependencies)
 }
 

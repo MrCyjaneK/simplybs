@@ -345,14 +345,37 @@
         </table>
     </div>
 
+    {{if .Package.Download}}
     <div class="info-section">
-        <h2>Source Download</h2>
-        <table class="info-table">
-            <tr><th>Kind</th><td>{{.Package.Download.Kind}}</td></tr>
-            <tr><th>URL</th><td><a href="{{getMirrorPath .}}" download>{{.Package.Download.URL}}</a></td></tr>
-            <tr><th>SHA256</th><td><code>{{.Package.Download.Sha256}}</code></td></tr>
-        </table>
+        <h2>Source Downloads</h2>
+        {{range $index, $download := .Package.Download}}
+        <div class="download-card" {{if gt $index 0}}style="margin-top: 20px;"{{end}}>
+            <div class="download-header">
+                <div class="download-title">Download {{if gt (len $.Package.Download) 1}}{{add $index 1}}{{end}}</div>
+                <div class="download-builder">{{$download.Kind}}</div>
+            </div>
+            <div class="download-details">
+                <div class="download-detail">
+                    <span class="download-detail-label">URL:</span>
+                    <span class="download-detail-value">
+                        <a href="{{getMirrorPath $ $download}}" download>{{$download.URL}}</a>
+                    </span>
+                </div>
+                <div class="download-detail">
+                    <span class="download-detail-label">SHA256:</span>
+                    <span class="download-detail-value"><code>{{$download.Sha256}}</code></span>
+                </div>
+                {{if $download.Path}}
+                <div class="download-detail">
+                    <span class="download-detail-label">Path:</span>
+                    <span class="download-detail-value"><code>{{$download.Path}}</code></span>
+                </div>
+                {{end}}
+            </div>
+        </div>
+        {{end}}
     </div>
+    {{end}}
 
     {{if .Package.Dependencies}}
     <div class="info-section">

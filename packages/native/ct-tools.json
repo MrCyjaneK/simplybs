@@ -41,9 +41,9 @@
         },
         {
             "kind": "blob",
-            "path": ".build/tarballs/glibc-2.42.tar.xz",
-            "sha256": "d1775e32e4628e64ef930f435b67bb63af7599acb6be2b335b9f19f16509f17f",
-            "url": "http://ftpmirror.gnu.org/gnu/glibc/glibc-2.42.tar.xz"
+            "path": ".build/tarballs/glibc-2.38.tar.xz",
+            "sha256": "fb82998998b2b29965467bc1b69d152e9c307d2cf301c9eafb4555b770ef3fd2",
+            "url": "http://ftpmirror.gnu.org/gnu/glibc/glibc-2.38.tar.xz"
         },
         {
             "kind": "blob",
@@ -148,23 +148,38 @@
             "all:ct-ng $TOOL_TARGET",
             "all:echo 'CT_EXPERIMENTAL=y' >> .config",
             "all:echo 'CT_FORBID_DOWNLOAD=y' >> .config",
+            "all:echo 'CT_CC_LANG_CXX=y' >> .config",
+            "all:echo 'CT_CC_LANG_FORTRAN=y' >> .config",
+            "none:echo 'CT_CC_LANG_D=y' >> .config",
+            "none:echo 'CT_CC_LANG_OBJC=y' >> .config",
+            "none:echo 'CT_CC_LANG_OBJCXX=y' >> .config",
             "all:echo 'CT_CC_LANG_GOLANG=y' >> .config",
             "all:echo 'CT_BINUTILS_EXTRA_CONFIG_ARRAY=\"--with-system-zlib\"' >> .config",
             "all:echo 'CT_CC_GCC_SYSTEM_ZLIB=y' >> .config",
             "all:echo 'CT_DEBUG_CT_SAVE_STEPS=y' >> .config",
             "all:sed -i.bak 's/CT_GDB_CROSS=y/CT_GDB_CROSS=n/g' .config",
+            "all:sed -i.bak 's/CT_GLIBC_VERSION=\"2.42\"/CT_GLIBC_VERSION=\"2.38\"/g' .config",
             "all:sed -i.bak 's/CT_GDB_GDBSERVER=y/CT_GDB_GDBSERVER=n/g' .config",
             "all:echo 'CT_GDB=n' >> .config",
             "all:echo 'CT_GDB_NATIVE=n' >> .config",
+            "all:echo 'CT_PREFIX_DIR_RO=y' >> .config",
             "all:ln -s $TOOL_TARGET_ALT-objcopy $PREFIX/native/bin/objcopy",
             "all:ln -s $TOOL_TARGET_ALT-readelf $PREFIX/native/bin/readelf",
             "x86_64-w64-mingw32:ln -s $TOOL_TARGET_ALT-ar $PREFIX/native/bin/ar",
             "x86_64-w64-mingw32:ln -s $TOOL_TARGET_ALT-ranlib $PREFIX/native/bin/ranlib",
             "all:unset LD_LIBRARY_PATH LIBRARY_PATH CC CXX CFLAGS; ct-ng build",
             "all:mkdir -p $STAGING_DIR$PREFIX/native",
-            "all:chmod -R u+rwx $HOME/x-tools/$TOOL_TARGET/",
-            "all:cp -a $HOME/x-tools/$TOOL_TARGET/* $STAGING_DIR$PREFIX/native",
-            "all:rm $STAGING_DIR$PREFIX/native/*.log*"
+            "all:cp -a $HOME/x-tools/$TOOL_TARGET/bin $STAGING_DIR$PREFIX/native",
+            "all:cp -a $HOME/x-tools/$TOOL_TARGET/include $STAGING_DIR$PREFIX/native",
+            "all:cp -a $HOME/x-tools/$TOOL_TARGET/lib $STAGING_DIR$PREFIX/native",
+            "all:cp -a $HOME/x-tools/$TOOL_TARGET/libexec $STAGING_DIR$PREFIX/native",
+            "all:cp -a $HOME/x-tools/$TOOL_TARGET/share $STAGING_DIR$PREFIX/native",
+            "all:cp -a $HOME/x-tools/$TOOL_TARGET/*/sysroot/etc $STAGING_DIR$PREFIX/etc",
+            "all:cp -a $HOME/x-tools/$TOOL_TARGET/*/sysroot/lib $STAGING_DIR$PREFIX/lib",
+            "all:cp -a $HOME/x-tools/$TOOL_TARGET/*/sysroot/lib64 $STAGING_DIR$PREFIX/lib64",
+            "all:cp -a $HOME/x-tools/$TOOL_TARGET/*/sysroot/sbin $STAGING_DIR$PREFIX/sbin",
+            "all:cp -a $HOME/x-tools/$TOOL_TARGET/*/sysroot/usr $STAGING_DIR$PREFIX/usr",
+            "all:cp -a $HOME/x-tools/$TOOL_TARGET/*/sysroot/var $STAGING_DIR$PREFIX/var"
         ]
     }
 }

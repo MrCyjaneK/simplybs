@@ -1,0 +1,39 @@
+{
+    "package": "selinux",
+    "version": "3.9",
+    "type": "host",
+    "download": [
+        {
+            "kind": "git",
+            "sha256": "919e9e64cc4b20f5a1e4df1e38cce1bfe15aff09",
+            "url": "https://github.com/SELinuxProject/selinux"
+        }
+    ],
+    "dependencies": [
+        "all:native/_",
+        "all:native/flex",
+        "all:native/python@3.11.13",
+        "all:audit-userspace",
+        "all:bzip2",
+        "all:glib",
+        "all:libcap",
+        "all:libxcrypt",
+        "all:pcre2"
+    ],
+    "build": {
+        "env": [
+            "all:PANDOC=true"
+        ],
+        "steps": [
+            "all:cd libsepol && make PREFIX=$PREFIX -j$NUM_CORES",
+            "all:cd libsepol && make PREFIX=$PREFIX install && make install PREFIX=$PREFIX DESTDIR=$STAGING_DIR",
+            "all:cd checkpolicy && make y.tab.c",
+            "all:sed -i.bak 's/void yyerror/int yyerror/g' ./checkpolicy/y.tab.*",
+            "all:sed -i.bak 's/XMLTO = xmlto/XMLTO = true/g' ./secilc/Makefile",
+            "all:sed -i.bak 's/$(LIBSELINUX_LDLIBS)/$(LIBSELINUX_LDLIBS) -lsemanage/g' policycoreutils/semodule/Makefile",
+            "all:sed -i.bak 's/$(LIBSELINUX_LDLIBS)/$(LIBSELINUX_LDLIBS) -lsemanage -lsepol/g' policycoreutils/setsebool/Makefile",
+            "all:make PREFIX=$PREFIX -j$NUM_CORES",
+            "all:make PREFIX=$PREFIX install DESTDIR=$STAGING_DIR"
+        ]
+    }
+}

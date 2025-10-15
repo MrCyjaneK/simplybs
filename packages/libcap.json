@@ -1,0 +1,22 @@
+{
+    "package": "libcap",
+    "version": "v1.2.76",
+    "type": "host",
+    "download": [
+        {
+            "kind": "git",
+            "sha256": "413789501269f0f258a6716c6fa3edae178ba4a3",
+            "url": "https://git.kernel.org/pub/scm/libs/libcap/libcap.git"
+        }
+    ],
+    "dependencies": [
+        "all:native/_"
+    ],
+    "build": {
+        "steps": [
+            "all:make prefix=$PREFIX -j$NUM_CORES",
+            "all:make prefix=$PREFIX DESTDIR=$STAGING_DIR install",
+            "x86_64-linux-gnu:mv $STAGING_DIR$PREFIX/lib64 $STAGING_DIR$PREFIX/lib"
+        ]
+    }
+}

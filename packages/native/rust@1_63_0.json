@@ -16,7 +16,7 @@
         "all:native/patch",
         "all:native/pkgconf",
         "all:native/python@3.11.13",
-        "all:native/rust@1_62_0"
+        "all:native/rust@1_62_1"
     ],
     "patches": [
         "assembly.h.patch",

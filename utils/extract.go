@@ -59,6 +59,32 @@ func detectCommonPrefix(readerFactory readerFactory) (string, error) {
 	return "", nil
 }
 
+func ensureParentDirsPermissions(target, destPath string) error {
+	parentDir := filepath.Dir(target)
+
+	for {
+		if parentDir == destPath || parentDir == filepath.Dir(destPath) {
+			break
+		}
+
+		if err := os.MkdirAll(parentDir, 0755); err != nil {
+			return err
+		}
+
+		if err := os.Chmod(parentDir, 0755); err != nil {
+			return err
+		}
+
+		nextParent := filepath.Dir(parentDir)
+		if nextParent == parentDir {
+			break
+		}
+		parentDir = nextParent
+	}
+
+	return nil
+}
+
 func extractTar(tr *tar.Reader, destPath, commonPrefix string) error {
 	for {
 		header, err := tr.Next()
@@ -85,17 +111,21 @@ func extractTar(tr *tar.Reader, destPath, commonPrefix string) error {
 			continue
 		}
 
+		// Ensure parent directories have rwx permissions up to destPath
+		if err := ensureParentDirsPermissions(target, destPath); err != nil {
+			log.Printf("Warning: Failed to set permissions for parent directories of %s: %v", target, err)
+		}
+
 		switch header.Typeflag {
 		case tar.TypeDir:
 			dirMode := os.FileMode(header.Mode) & 0777
 			if dirMode == 0 {
 				dirMode = 0755
 			}
-			if dirMode&0111 == 0 {
-				dirMode |= 0755
-			}
+			dirMode |= 0700
 
 			if err := os.MkdirAll(target, dirMode); err != nil {
+				panic(err)
 				return err
 			}
 
@@ -104,6 +134,7 @@ func extractTar(tr *tar.Reader, destPath, commonPrefix string) error {
 			}
 		case tar.TypeReg:
 			if err := os.MkdirAll(filepath.Dir(target), 0755); err != nil {
+				panic(err)
 				return err
 			}
 
@@ -113,6 +144,7 @@ func extractTar(tr *tar.Reader, destPath, commonPrefix string) error {
 			}
 			fileMode &^= (os.ModeSetuid | os.ModeSetgid | os.ModeSticky)
 
+			os.Chmod(target, 0777)
 			os.Remove(target)
 
 			outFile, err := os.OpenFile(target, os.O_CREATE|os.O_RDWR, fileMode)
@@ -131,6 +163,7 @@ func extractTar(tr *tar.Reader, destPath, commonPrefix string) error {
 			}
 		case tar.TypeSymlink:
 			if err := os.MkdirAll(filepath.Dir(target), 0755); err != nil {
+				panic(err)
 				return err
 			}
 

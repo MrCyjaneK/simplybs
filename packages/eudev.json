@@ -10,7 +10,8 @@
         }
     ],
     "dependencies": [
-        "*-linux-gnu:native/_"
+        "*-linux-gnu:native/_",
+        "*-linux-gnu:selinux"
     ],
     "build": {
         "env": [

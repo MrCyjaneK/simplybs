@@ -1,0 +1,34 @@
+{
+    "package": "audit-userspace",
+    "version": "4.1.2",
+    "type": "host",
+    "download": [
+        {
+            "kind": "git",
+            "sha256": "4db9c700b0c8b24a8113bc00d98101228e7d0212",
+            "url": "https://github.com/linux-audit/audit-userspace"
+        }
+    ],
+    "dependencies": [
+        "all:native/_",
+        "all:linux-headers"
+    ],
+    "build": {
+        "env": [
+            "all:config_opts=--prefix=$PREFIX --host=$HOST --disable-shared --enable-static",
+            "all:config_opts=$config_opts --with-python3=no",
+            "all:config_opts=$config_opts --enable-gssapi-krb5=no",
+            "arm*:config_opts=$config_opts --with-arm=no",
+            "aarch64-*:config_opts=$config_opts --with-aarch64=no",
+            "all:config_opts=$config_opts --with-libcap-ng=no",
+            "all:config_opts=$config_opts --with-io_uring=no",
+            "all:config_opts=$config_opts --disable-zos-remote"
+        ],
+        "steps": [
+            "all:autoreconf -f --install",
+            "all:./configure $config_opts",
+            "all:make -j$NUM_CORES",
+            "all:make install DESTDIR=$STAGING_DIR"
+        ]
+    }
+}

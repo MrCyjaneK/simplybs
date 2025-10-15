@@ -235,11 +235,11 @@ func BuildWeb() {
 			return upPath + toPackage + ".html"
 		},
 		"formatFileSize": formatFileSize,
-		"getMirrorPath": func(pkg *pack.PackageWithBuilds) string {
+		"getMirrorPath": func(pkg *pack.PackageWithBuilds, download *pack.Download) string {
 			packageDepth := strings.Count(pkg.Package.Package, "/")
 			upPath := strings.Repeat("../", packageDepth+1) // +1 to get out of web directory
 
-			return fmt.Sprintf("%ssource/%s-%s.%s", upPath, pkg.Package.Package, pkg.Package.Version, pkg.Package.Download[0].Kind)
+			return fmt.Sprintf("%ssource/%s-%s.%s", upPath, pkg.Package.Package, pkg.Package.Version, download.Kind)
 		},
 		"getBuiltFilePath": func(packageName, filePath string) string {
 			packageDepth := strings.Count(packageName, "/")

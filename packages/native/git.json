@@ -13,7 +13,8 @@
         "all:native/curl",
         "all:native/expat",
         "all:native/gettext",
-        "all:native/make"
+        "all:native/make",
+        "all:native/openssl"
     ],
     "build": {
         "env": [],

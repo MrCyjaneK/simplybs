@@ -10,6 +10,7 @@
         }
     ],
     "dependencies": [
+        "all:native/bzip2",
         "all:native/make",
         "all:native/openssl",
         "all:native/xz"

@@ -1,0 +1,27 @@
+{
+    "package": "libxcrypt",
+    "version": "4.4.38",
+    "type": "host",
+    "download": [
+        {
+            "kind": "git",
+            "sha256": "55ea777e8d567e5e86ffac917c28815ac54cc341",
+            "url": "https://github.com/besser82/libxcrypt"
+        }
+    ],
+    "dependencies": [
+        "all:native/_"
+    ],
+    "build": {
+        "env": [
+            "all:config_opts=--host=$HOST --prefix=$PREFIX",
+            "all:config_opts=$config_opts --enable-static --disable-shared --with-pic"
+        ],
+        "steps": [
+            "all:./autogen.sh",
+            "all:./configure $config_opts",
+            "all:make -j$NUM_CORES",
+            "all:make install DESTDIR=$STAGING_DIR"
+        ]
+    }
+}

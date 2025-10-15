@@ -99,14 +99,9 @@ func (p *Package) ShortName(h *host.Host) string {
 }
 
 func (p *Package) GenerateSourceBuildPath(download *Download) string {
-	if download.Kind == "source" {
-		var name string
-		if download.Kind == "git" {
-			name = filepath.Base(download.URL) + "-" + download.Sha256[0:8] + ".git"
-		} else {
-			name = filepath.Base(download.URL)
-		}
-		return filepath.Join(host.DataDir(), "..", download.Kind, name)
+	if download.Kind == "git" {
+		name := filepath.Base(download.URL) + "-" + download.Sha256[0:8] + ".bundle"
+		return filepath.Join(host.DataDir(), "source", name)
 	}
 	return filepath.Join(host.DataDir(), "source", filepath.Base(download.URL))
 }

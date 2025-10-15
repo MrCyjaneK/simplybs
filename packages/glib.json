@@ -1,0 +1,42 @@
+{
+    "package": "glib",
+    "version": "2.86.0",
+    "type": "host",
+    "download": [
+        {
+            "kind": "git",
+            "sha256": "e33be08bda99f453e497064e9e021d6306bbeb7d",
+            "url": "https://gitlab.gnome.org/GNOME/glib.git"
+        },
+        {
+            "kind": "git",
+            "path": "subprojects/gvdb",
+            "sha256": "2b42fc75f09dbe1cd1057580b5782b08f2dcb400",
+            "url": "https://gitlab.gnome.org/GNOME/gvdb"
+        },
+        {
+            "kind": "git",
+            "path": "subprojects/sysprof",
+            "sha256": "02e50efa49885a5a20a84a8cd7feda10ae7e7e98",
+            "url": "https://gitlab.gnome.org/GNOME/sysprof"
+        }
+    ],
+    "dependencies": [
+        "all:native/_",
+        "all:native/meson",
+        "all:native/ninja",
+        "all:native/python@3.11.13",
+        "all:libffi",
+        "all:libiconv",
+        "all:pcre2",
+        "all:unwind",
+        "all:zlib"
+    ],
+    "build": {
+        "steps": [
+            "all:meson setup --prefix $PREFIX _build",
+            "all:meson compile -C _build -j$NUM_CORES",
+            "all:meson install -C _build DESTDIR=$STAGING_DIR"
+        ]
+    }
+}

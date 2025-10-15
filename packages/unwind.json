@@ -20,8 +20,7 @@
     "build": {
         "env": [
             "*-linux-gnu:config_opts=--host=$HOST --prefix=$PREFIX",
-            "*-linux-gnu:config_opts=$config_opts --disable-shared --enable-static --disable-tests --disable-documentation",
-            "*-linux-gnu:AR_FLAGS=$ARFLAGS"
+            "*-linux-gnu:config_opts=$config_opts --disable-shared --enable-static --disable-tests --disable-documentation"
         ],
         "steps": [
             "all:cp -f $PREFIX/native/usr/share/config/config.guess config/config.guess",
