@@ -1,0 +1,27 @@
+{
+    "package": "native/gn",
+    "version": "0.0.0",
+    "type": "native",
+    "download": [
+        {
+            "kind": "git",
+            "sha256": "07d3c6f4dc290fae5ca6152ebcb37d6815c411ab",
+            "url": "https://gn.googlesource.com/gn.git"
+        }
+    ],
+    "dependencies": [
+        "all:native/git",
+        "all:native/ninja",
+        "all:native/python@3.11.13"
+    ],
+    "build": {
+        "env": [],
+        "steps": [
+            "all:git tag -a initial-commit -m '0.0.0' 95374957437b818e9addc26c83340b27a1b38202",
+            "all:python3 build/gen.py",
+            "all:ninja -C out",
+            "all:mkdir -p $STAGING_DIR$PREFIX/native/bin",
+            "all:cp out/gn $STAGING_DIR$PREFIX/native/bin/gn"
+        ]
+    }
+}

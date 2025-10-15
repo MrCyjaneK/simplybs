@@ -162,7 +162,7 @@
             "all:sed -i.bak 's/CT_GDB_GDBSERVER=y/CT_GDB_GDBSERVER=n/g' .config",
             "all:echo 'CT_GDB=n' >> .config",
             "all:echo 'CT_GDB_NATIVE=n' >> .config",
-            "all:echo 'CT_PREFIX_DIR_RO=y' >> .config",
+            "all:echo 'CT_PREFIX_DIR_RO=n' >> .config",
             "all:ln -s $TOOL_TARGET_ALT-objcopy $PREFIX/native/bin/objcopy",
             "all:ln -s $TOOL_TARGET_ALT-readelf $PREFIX/native/bin/readelf",
             "x86_64-w64-mingw32:ln -s $TOOL_TARGET_ALT-ar $PREFIX/native/bin/ar",
