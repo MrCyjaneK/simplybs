@@ -224,19 +224,6 @@ func (p *Package) StartShell(h *host.Host) {
 	if userShell == "" {
 		userShell = "/bin/sh"
 	}
-
-	for _, step := range p.Build.Steps {
-		if strings.Contains(step, ":") {
-			prefix := strings.Split(step, ":")[0]
-			if !glob.Glob(prefix, h.Triplet) && prefix != "all" {
-				log.Printf("[no match] %s", step)
-				continue
-			}
-			log.Printf("   [match] %s", step)
-		} else {
-			log.Fatalf("Invalid step: %s", step)
-		}
-	}
 	fmt.Print("\n\n")
 	for _, step := range p.Build.Steps {
 		if strings.Contains(step, ":") {
@@ -245,7 +232,21 @@ func (p *Package) StartShell(h *host.Host) {
 				continue
 			}
 			step = step[strings.Index(step, ":")+1:]
-			fmt.Printf("%s;", step)
+			fmt.Printf("%s;\n", utils.ExpandEnvFromMap(step, env))
+		}
+	}
+	fmt.Print("\n\n")
+
+	for _, step := range p.Build.Steps {
+		if strings.Contains(step, ":") {
+			prefix := strings.Split(step, ":")[0]
+			if !glob.Glob(prefix, h.Triplet) && prefix != "all" {
+				log.Printf("[no match] %s", utils.ExpandEnvFromMap(step, env))
+				continue
+			}
+			log.Printf("   [match] %s", utils.ExpandEnvFromMap(step, env))
+		} else {
+			log.Fatalf("Invalid step: %s", step)
 		}
 	}
 	fmt.Print("\n\n")
