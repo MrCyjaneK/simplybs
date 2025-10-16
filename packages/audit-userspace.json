@@ -10,25 +10,24 @@
         }
     ],
     "dependencies": [
-        "all:native/_",
-        "all:linux-headers"
+        "*-linux-gnu:native/_"
     ],
     "build": {
         "env": [
-            "all:config_opts=--prefix=$PREFIX --host=$HOST --disable-shared --enable-static",
-            "all:config_opts=$config_opts --with-python3=no",
-            "all:config_opts=$config_opts --enable-gssapi-krb5=no",
+            "*-linux-gnu:config_opts=--prefix=$PREFIX --host=$HOST --disable-shared --enable-static",
+            "*-linux-gnu:config_opts=$config_opts --with-python3=no",
+            "*-linux-gnu:config_opts=$config_opts --enable-gssapi-krb5=no",
             "arm*:config_opts=$config_opts --with-arm=no",
             "aarch64-*:config_opts=$config_opts --with-aarch64=no",
-            "all:config_opts=$config_opts --with-libcap-ng=no",
-            "all:config_opts=$config_opts --with-io_uring=no",
-            "all:config_opts=$config_opts --disable-zos-remote"
+            "*-linux-gnu:config_opts=$config_opts --with-libcap-ng=no",
+            "*-linux-gnu:config_opts=$config_opts --with-io_uring=no",
+            "*-linux-gnu:config_opts=$config_opts --disable-zos-remote"
         ],
         "steps": [
-            "all:autoreconf -f --install",
-            "all:./configure $config_opts",
-            "all:make -j$NUM_CORES",
-            "all:make install DESTDIR=$STAGING_DIR"
+            "*-linux-gnu:autoreconf -f --install",
+            "*-linux-gnu:./configure $config_opts",
+            "*-linux-gnu:make -j$NUM_CORES",
+            "*-linux-gnu:make install DESTDIR=$STAGING_DIR"
         ]
     }
 }
