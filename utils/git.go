@@ -91,13 +91,25 @@ func createBundleFromRepo(bundlePath, url, ref string) error {
 		return fmt.Errorf("failed to clone repository: %w", err)
 	}
 
-	log.Printf("Checking out reference %s", ref)
-	checkoutCmd := exec.Command("git", "checkout", ref)
-	checkoutCmd.Dir = tempDir
-	checkoutCmd.Stdout = os.Stdout
-	checkoutCmd.Stderr = os.Stderr
-	if err := checkoutCmd.Run(); err != nil {
-		return fmt.Errorf("failed to checkout ref %s: %w", ref, err)
+	log.Printf("Checking out reference %s and creating bundle...", ref)
+	os.MkdirAll(filepath.Dir(bundlePath), 0755)
+
+	cmds := [][]string{
+		{"git", "checkout", ref},
+		{"git", "gc", "--aggressive", "--prune=now"},
+		{"git", "repack", "-Ad", "-l"},
+		{"git", "prune", "--expire", "now"},
+		{"git", "bundle", "create", bundlePath, "HEAD"},
+	}
+
+	for _, cmdArgs := range cmds {
+		cmd := exec.Command(cmdArgs[0], cmdArgs[1:]...)
+		cmd.Dir = tempDir
+		cmd.Stdout = os.Stdout
+		cmd.Stderr = os.Stderr
+		if err := cmd.Run(); err != nil {
+			return fmt.Errorf("failed to run %v: %w", cmdArgs, err)
+		}
 	}
 
 	revParseCmd := exec.Command("git", "rev-parse", "HEAD")
@@ -107,16 +119,6 @@ func createBundleFromRepo(bundlePath, url, ref string) error {
 		return fmt.Errorf("failed to get commit hash: %w", err)
 	}
 	log.Printf("Checked out commit: %s", strings.TrimSpace(string(commitHash)))
-
-	log.Printf("Creating bundle file...")
-	os.MkdirAll(filepath.Dir(bundlePath), 0755)
-	bundleCmd := exec.Command("git", "bundle", "create", bundlePath, "HEAD")
-	bundleCmd.Dir = tempDir
-	bundleCmd.Stdout = os.Stdout
-	bundleCmd.Stderr = os.Stderr
-	if err := bundleCmd.Run(); err != nil {
-		return fmt.Errorf("failed to create bundle: %w", err)
-	}
 
 	log.Printf("Successfully created bundle at %s", bundlePath)
 	return nil

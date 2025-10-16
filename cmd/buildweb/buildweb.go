@@ -239,12 +239,22 @@ func BuildWeb() {
 			packageDepth := strings.Count(pkg.Package.Package, "/")
 			upPath := strings.Repeat("../", packageDepth+1) // +1 to get out of web directory
 
-			return fmt.Sprintf("%ssource/%s-%s.%s", upPath, pkg.Package.Package, pkg.Package.Version, download.Kind)
+			if download.Kind == "git" {
+				bundleName := filepath.Base(download.URL) + "-" + download.Sha256[0:8] + ".bundle"
+				return fmt.Sprintf("%ssource/%s", upPath, bundleName)
+			}
+			return fmt.Sprintf("%ssource/%s", upPath, filepath.Base(download.URL))
 		},
 		"getBuiltFilePath": func(packageName, filePath string) string {
 			packageDepth := strings.Count(packageName, "/")
 			upPath := strings.Repeat("../", packageDepth+1) // +1 to get out of web directory
 			return upPath + filePath
+		},
+		"getFileDetailsPath": func(packageName, builder, target, packageVersion, buildID string) string {
+			packageDepth := strings.Count(packageName, "/")
+			upPath := strings.Repeat("../", packageDepth)
+			fileName := fmt.Sprintf("%s-%s-%s.html", packageName, packageVersion, buildID)
+			return fmt.Sprintf("%sfiles/%s/%s/%s", upPath, builder, target, fileName)
 		},
 		"getBuildMatrix": func(pkg *pack.PackageWithBuilds) map[string]map[string]*pack.BuiltFile {
 			builders := make([]string, len(builder.Builders))

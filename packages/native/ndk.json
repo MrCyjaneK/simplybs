@@ -95,99 +95,9 @@
         },
         {
             "kind": "git",
-            "path": "prebuilts/build-tools",
-            "sha256": "434d914996ecc2abcda46a1841c82946241b1c35",
-            "url": "https://android.googlesource.com/platform/prebuilts/build-tools"
-        },
-        {
-            "kind": "git",
-            "path": "prebuilts/clang/host/darwin-x86",
-            "sha256": "2ede290b28d234595fcc23207c633961690c57ba",
-            "url": "https://android.googlesource.com/platform/prebuilts/clang/host/darwin-x86"
-        },
-        {
-            "kind": "git",
-            "path": "prebuilts/clang/host/linux-x86",
-            "sha256": "568b941cf0c249b9c2a1f853e94a29f0e6291c59",
-            "url": "https://android.googlesource.com/platform/prebuilts/clang/host/linux-x86"
-        },
-        {
-            "kind": "git",
-            "path": "prebuilts/clang/host/windows-x86",
-            "sha256": "31edac0247a8e13bd12d2f7359fc290689c84ab8",
-            "url": "https://android.googlesource.com/platform/prebuilts/clang/host/windows-x86"
-        },
-        {
-            "kind": "git",
-            "path": "prebuilts/cmake/darwin-x86",
-            "sha256": "7aea7e9880110799088cd1de509886871078306f",
-            "url": "https://android.googlesource.com/platform/prebuilts/cmake/darwin-x86"
-        },
-        {
-            "kind": "git",
-            "path": "prebuilts/cmake/linux-x86",
-            "sha256": "e57c88d59d7d8408a32b16425158fd2aa64e2b3e",
-            "url": "https://android.googlesource.com/platform/prebuilts/cmake/linux-x86"
-        },
-        {
-            "kind": "git",
-            "path": "prebuilts/cmake/windows-x86",
-            "sha256": "f6283abb0a655968016437be07d04370fd815e6c",
-            "url": "https://android.googlesource.com/platform/prebuilts/cmake/windows-x86"
-        },
-        {
-            "kind": "git",
-            "path": "prebuilts/gcc/linux-x86/host/x86_64-linux-glibc2.17-4.8",
-            "sha256": "49917e030f76c01f35d5a46b66a2b85b2976647c",
-            "url": "https://android.googlesource.com/platform/prebuilts/gcc/linux-x86/host/x86_64-linux-glibc2.17-4.8"
-        },
-        {
-            "kind": "git",
-            "path": "prebuilts/gcc/linux-x86/host/x86_64-w64-mingw32-4.8",
-            "sha256": "d6b93efcc5c2d123cb44eee4f74d6fd35d5efd9f",
-            "url": "https://android.googlesource.com/platform/prebuilts/gcc/linux-x86/host/x86_64-w64-mingw32-4.8"
-        },
-        {
-            "kind": "git",
             "path": "prebuilts/ndk",
             "sha256": "c0815fea3a8081be6215440de330c63246e6551f",
             "url": "https://android.googlesource.com/platform/prebuilts/ndk"
-        },
-        {
-            "kind": "git",
-            "path": "prebuilts/ninja/darwin-x86",
-            "sha256": "f321e197944c19d273cec788b9a3e8ca94331248",
-            "url": "https://android.googlesource.com/platform/prebuilts/ninja/darwin-x86"
-        },
-        {
-            "kind": "git",
-            "path": "prebuilts/ninja/linux-x86",
-            "sha256": "8a10824f74fe0e22af9bf314a837f5b70e2bb67f",
-            "url": "https://android.googlesource.com/platform/prebuilts/ninja/linux-x86"
-        },
-        {
-            "kind": "git",
-            "path": "prebuilts/ninja/windows-x86",
-            "sha256": "4d526002f0158a5d103bb6e54d43943c0e1c2778",
-            "url": "https://android.googlesource.com/platform/prebuilts/ninja/windows-x86"
-        },
-        {
-            "kind": "git",
-            "path": "prebuilts/python/darwin-x86",
-            "sha256": "3400487f6a77cc05ee5d4799575372713ce63232",
-            "url": "https://android.googlesource.com/platform/prebuilts/python/darwin-x86"
-        },
-        {
-            "kind": "git",
-            "path": "prebuilts/python/linux-x86",
-            "sha256": "fce2346610379fdcce9dc7423c0e9a04e1a43cbf",
-            "url": "https://android.googlesource.com/platform/prebuilts/python/linux-x86"
-        },
-        {
-            "kind": "git",
-            "path": "prebuilts/python/windows-x86",
-            "sha256": "6d619afe3f821388a57b7b2b473bee85debfdd7c",
-            "url": "https://android.googlesource.com/platform/prebuilts/python/windows-x86"
         },
         {
             "kind": "git",
@@ -209,11 +119,21 @@
         }
     ],
     "dependencies": [
+        "all:native/cmake",
         "all:native/make",
+        "all:native/ninja",
         "all:native/python@3.11.13"
     ],
     "build": {
         "steps": [
+            "*-android*:mkdir -p prebuilts/clang/host/darwin-x86/clang-r563880c",
+            "*-android*:mkdir -p prebuilts/clang/host/linux-x86/clang-r563880c",
+            "*-android*:mkdir -p prebuilts/clang/host/windows-x86/clang-r563880c",
+            "*-android*:touch prebuilts/clang/host/darwin-x86/clang-r563880c/NOTICE",
+            "*-android*:touch prebuilts/clang/host/linux-x86/clang-r563880c/NOTICE",
+            "*-android*:touch prebuilts/clang/host/windows-x86/clang-r563880c/NOTICE",
+            "*-android*:mkdir -p prebuilts/simpleperf",
+            "*-android*:touch prebuilts/simpleperf/NOTICE",
             "*-android*:cd ndk && python3 checkbuild.py"
         ]
     }

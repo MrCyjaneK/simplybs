@@ -1,6 +1,7 @@
 package pack
 
 import (
+	"fmt"
 	"log"
 	"os"
 	"os/exec"
@@ -236,6 +237,18 @@ func (p *Package) StartShell(h *host.Host) {
 			log.Fatalf("Invalid step: %s", step)
 		}
 	}
+	fmt.Print("\n\n")
+	for _, step := range p.Build.Steps {
+		if strings.Contains(step, ":") {
+			prefix := strings.Split(step, ":")[0]
+			if !glob.Glob(prefix, h.Triplet) && prefix != "all" {
+				continue
+			}
+			step = step[strings.Index(step, ":")+1:]
+			fmt.Printf("%s;", step)
+		}
+	}
+	fmt.Print("\n\n")
 	log.Printf("Starting %s in %s with build environment for %s", userShell, buildPath, h.Triplet)
 	log.Printf("Type 'exit' to leave the shell")
 

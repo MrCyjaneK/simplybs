@@ -151,7 +151,7 @@
                         {{if and (eq .Builder $.Builder) (eq .Target $target)}}
                         {{$found = true}}
                         <td>
-                            <a href="files/{{.Builder}}/{{.Target}}/{{$pkg.Package.Package}}-{{$pkg.Package.Version}}-{{.ID}}.html" 
+                            <a href="{{getFileDetailsPath $pkg.Package.Package .Builder .Target $pkg.Package.Version .ID}}" 
                                class="matrix-cell matrix-cell-available" 
                                title="{{formatFileSize .FileSize}} - Build ID: {{.ID}}">
                                 ✓

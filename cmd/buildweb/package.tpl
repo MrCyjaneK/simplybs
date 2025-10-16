@@ -477,7 +477,7 @@
                         {{$build := index (index $matrix $builder) $target}}
                         <td>
                             {{if $build}}
-                                <a href="files/{{$builder}}/{{$target}}/{{$.Package.Package}}-{{$.Package.Version}}-{{$build.ID}}.html" 
+                                <a href="{{getFileDetailsPath $.Package.Package $builder $target $.Package.Version $build.ID}}" 
                                    class="matrix-cell matrix-cell-available" 
                                    title="View {{$builder}} build details for {{$target}} ({{formatFileSize $build.FileSize}})">
                                     ✓
@@ -518,7 +518,7 @@
                     </div>
                 </div>
                 <div class="download-buttons">
-                    <a href="files/{{.Builder}}/{{.Target}}/{{$.Package.Package}}-{{$.Package.Version}}-{{.ID}}.html" class="download-btn download-btn-primary">
+                    <a href="{{getFileDetailsPath $.Package.Package .Builder .Target $.Package.Version .ID}}" class="download-btn download-btn-primary">
                         📋 View Contents
                     </a>
                     <a href="{{getBuiltFilePath $.Package.Package .ArchPath}}" class="download-btn download-btn-secondary" download>
