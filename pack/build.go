@@ -134,7 +134,7 @@ func (p *Package) buildPackageInternal(h *host.Host, buildDependencies bool) {
 
 	p.ExtractSource(h, buildPath)
 
-	infoPath := filepath.Join(stagingPath, h.GetEnvPath(), "usr", "share", "buildlib", p.ShortName(h)+".txt")
+	infoPath := filepath.Join(stagingPath, h.GetEnvPath(), "share", "buildlib", p.ShortName(h)+".txt")
 	os.MkdirAll(filepath.Dir(infoPath), 0755)
 	err := os.WriteFile(infoPath, []byte(p.GeneratePackageInfo(h)), 0644)
 	if err != nil {
