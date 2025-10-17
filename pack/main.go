@@ -8,10 +8,10 @@ import (
 	"runtime"
 	"strings"
 
+	"github.com/gobwas/glob"
 	"github.com/mrcyjanek/simplybs/builder"
 	"github.com/mrcyjanek/simplybs/crash"
 	"github.com/mrcyjanek/simplybs/host"
-	"github.com/ryanuber/go-glob"
 )
 
 type Download struct {
@@ -69,9 +69,9 @@ func FindPackage(name string) (*Package, error) {
 
 	if !strings.Contains(pkg.Package, "/bootstrap/") {
 		for _, pkgName := range bootstrapPackages {
-			pkg.Dependencies = append(pkg.Dependencies, "all:"+pkgName)
+			pkg.Dependencies = append(pkg.Dependencies, "*:"+pkgName)
 		}
-		pkg.Build.Steps = append(pkg.Build.Steps, "all:$PREFIX/native/bootstrap/bin/strip-nondeterminism-recursive --directory $STAGING_DIR")
+		pkg.Build.Steps = append(pkg.Build.Steps, "*:$PREFIX/native/bootstrap/bin/strip-nondeterminism-recursive --directory $STAGING_DIR")
 	}
 	return &pkg, nil
 }
@@ -278,7 +278,8 @@ func collectDependenciesByLevel(pkgName string, host string) [][]string {
 				var actualDep string
 				if strings.Contains(dep, ":") {
 					prefix := strings.Split(dep, ":")[0]
-					if !glob.Glob(prefix, host) && prefix != "all" {
+					g := glob.MustCompile(prefix)
+					if !g.Match(host) {
 						continue
 					}
 					actualDep = dep[strings.Index(dep, ":")+1:]

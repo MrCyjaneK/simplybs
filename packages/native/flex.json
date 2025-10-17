@@ -10,17 +10,17 @@
         }
     ],
     "dependencies": [
-        "all:native/make"
+        "*:native/make"
     ],
     "build": {
         "env": [
-            "all:CFLAGS=$CFLAGS -fPIC",
-            "all:LDFLAGS=$LDFLAGS -fPIC"
+            "*:CFLAGS=$CFLAGS -fPIC",
+            "*:LDFLAGS=$LDFLAGS -fPIC"
         ],
         "steps": [
-            "all:./configure --prefix=$PREFIX/native --with-pic",
-            "all:make -j$NUM_CORES",
-            "all:make DESTDIR=$STAGING_DIR install"
+            "*:./configure --prefix=$PREFIX/native --with-pic",
+            "*:make -j$NUM_CORES",
+            "*:make DESTDIR=$STAGING_DIR install"
         ]
     }
 }

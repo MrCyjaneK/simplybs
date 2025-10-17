@@ -12,9 +12,9 @@
     "build": {
         "env": [],
         "steps": [
-            "all:mkdir -p $STAGING_DIR$PREFIX/native/usr/share/config",
-            "all:cp config.guess $STAGING_DIR$PREFIX/native/usr/share/config/config.guess",
-            "all:cp config.sub $STAGING_DIR$PREFIX/native/usr/share/config/config.sub"
+            "*:mkdir -p $STAGING_DIR$PREFIX/native/share/config",
+            "*:cp config.guess $STAGING_DIR$PREFIX/native/share/config/config.guess",
+            "*:cp config.sub $STAGING_DIR$PREFIX/native/share/config/config.sub"
         ]
     }
 }

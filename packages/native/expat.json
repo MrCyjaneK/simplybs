@@ -10,20 +10,20 @@
         }
     ],
     "dependencies": [
-        "all:native/autoconf",
-        "all:native/libiconv",
-        "all:native/make",
-        "all:native/perl"
+        "*:native/autoconf",
+        "*:native/libiconv",
+        "*:native/make",
+        "*:native/perl"
     ],
     "build": {
         "env": [
-            "all:CFLAGS=$CFLAGS -fPIC",
-            "all:LDFLAGS=$LDFLAGS -fPIC"
+            "*:CFLAGS=$CFLAGS -fPIC",
+            "*:LDFLAGS=$LDFLAGS -fPIC"
         ],
         "steps": [
-            "all:./configure --prefix=$PREFIX/native --disable-shared --without-docbook --without-tests --without-examples --enable-option-checking --without-xmlwf --with-pic",
-            "all:make -j$NUM_CORES",
-            "all:make DESTDIR=$STAGING_DIR install"
+            "*:./configure --prefix=$PREFIX/native --disable-shared --without-docbook --without-tests --without-examples --enable-option-checking --without-xmlwf --with-pic",
+            "*:make -j$NUM_CORES",
+            "*:make DESTDIR=$STAGING_DIR install"
         ]
     }
 }

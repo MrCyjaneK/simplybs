@@ -50,24 +50,24 @@ All package definitions live inside of this repo (this is going to change soon *
     // build all packages recursively but it won't inherit parent dependencies)
     "*-android*:native/android_ndk",
     // all is a magic keyword that works just like *
-    "all:native/make",
-    "all:native/libtool"
+    "*:native/make",
+    "*:native/libtool"
   ],
   "build": {
     "env": [
       // same logic as in dependencies applies, most variables are available during this phase (like $PREFIX or $HOST)
-      "all:CFLAGS=$CFLAGS -fPIC",
-      "all:config_opts=--prefix=$PREFIX --static",
-      "all:LIBTOOL=$PREFIX/native/bin/libtool",
-      "all:CROSS_PREFIX=$HOST-"
+      "*:CFLAGS=$CFLAGS -fPIC",
+      "*:config_opts=--prefix=$PREFIX --static",
+      "*:LIBTOOL=$PREFIX/native/bin/libtool",
+      "*:CROSS_PREFIX=$HOST-"
     ],
     "steps": [
       // step-by-step instructions to build the package.
-      "all:./configure $config_opts",
-      "all:sed -i.bak s\\|^AR=.*\\|AR=$AR\\|g Makefile",
-      "all:sed -i.bak s\\|^ARFLAGS=.*\\|ARFLAGS=$ARFLAGS\\|g Makefile",
-      "all:make -j$NUM_CORES",
-      "all:make DESTDIR=$STAGING_DIR install"
+      "*:./configure $config_opts",
+      "*:sed -i.bak s\\|^AR=.*\\|AR=$AR\\|g Makefile",
+      "*:sed -i.bak s\\|^ARFLAGS=.*\\|ARFLAGS=$ARFLAGS\\|g Makefile",
+      "*:make -j$NUM_CORES",
+      "*:make DESTDIR=$STAGING_DIR install"
     ]
   }
 }

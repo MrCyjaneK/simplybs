@@ -119,10 +119,10 @@
         }
     ],
     "dependencies": [
-        "all:native/cmake",
-        "all:native/make",
-        "all:native/ninja",
-        "all:native/python@3.11.13"
+        "*-android*:native/cmake",
+        "*-android*:native/make",
+        "*-android*:native/ninja",
+        "*-android*:native/python@3.11.13"
     ],
     "build": {
         "steps": [

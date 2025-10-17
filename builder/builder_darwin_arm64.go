@@ -2,16 +2,16 @@ package builder
 
 var HostBuilder = Builder{
 	GlobalEnv: []string{
-		"all:HOST=aarch64-apple-darwin",
-		"all:TARGET=aarch64-apple-darwin",
-		"all:OSX_MIN_VERSION=13",
-		"all:CC=/usr/bin/clang",
-		"all:CXX=/usr/bin/clang++",
-		"all:AR=/usr/bin/ar",
-		"all:RANLIB=/usr/bin/ranlib",
-		"all:STRIP=/usr/bin/strip",
-		"all:NM=/usr/bin/nm",
-		"all:OTOOL=/usr/bin/otool",
-		"all:INSTALL_NAME_TOOL=/usr/bin/install_name_tool",
+		"*:HOST=aarch64-apple-darwin",
+		"*:TARGET=aarch64-apple-darwin",
+		"*:OSX_MIN_VERSION=13",
+		"*:CC=/usr/bin/clang",
+		"*:CXX=/usr/bin/clang++",
+		"*:AR=/usr/bin/ar",
+		"*:RANLIB=/usr/bin/ranlib",
+		"*:STRIP=/usr/bin/strip",
+		"*:NM=/usr/bin/nm",
+		"*:OTOOL=/usr/bin/otool",
+		"*:INSTALL_NAME_TOOL=/usr/bin/install_name_tool",
 	},
 }

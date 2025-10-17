@@ -10,19 +10,19 @@
         }
     ],
     "dependencies": [
-        "all:native/libiconv",
-        "all:native/make",
-        "all:native/sed"
+        "*:native/libiconv",
+        "*:native/make",
+        "*:native/sed"
     ],
     "build": {
         "env": [
-            "all:config_opts=--prefix=$PREFIX/native",
-            "all:config_opts=$config_opts --with-libiconv-prefix=$PREFIX/native"
+            "*:config_opts=--prefix=$PREFIX/native",
+            "*:config_opts=$config_opts --with-libiconv-prefix=$PREFIX/native"
         ],
         "steps": [
-            "all:./configure $config_opts",
-            "all:make -j$NUM_CORES",
-            "all:make DESTDIR=$STAGING_DIR install"
+            "*:./configure $config_opts",
+            "*:make -j$NUM_CORES",
+            "*:make DESTDIR=$STAGING_DIR install"
         ]
     }
 }

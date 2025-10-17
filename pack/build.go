@@ -8,9 +8,9 @@ import (
 	"path/filepath"
 	"strings"
 
+	"github.com/gobwas/glob"
 	"github.com/mrcyjanek/simplybs/host"
 	"github.com/mrcyjanek/simplybs/utils"
-	"github.com/ryanuber/go-glob"
 )
 
 func (p *Package) EnsureBuilt(h *host.Host, buildDependencies bool) {
@@ -101,7 +101,8 @@ func (p *Package) buildPackageInternal(h *host.Host, buildDependencies bool) {
 		for _, dep := range p.Dependencies {
 			if strings.Contains(dep, ":") {
 				prefix := strings.Split(dep, ":")[0]
-				if !glob.Glob(prefix, h.Triplet) && prefix != "all" {
+				g := glob.MustCompile(prefix)
+				if !g.Match(h.Triplet) {
 					continue
 				}
 				dep = dep[strings.Index(dep, ":")+1:]
@@ -143,7 +144,8 @@ func (p *Package) buildPackageInternal(h *host.Host, buildDependencies bool) {
 	for _, step := range p.Build.Steps {
 		if strings.Contains(step, ":") {
 			prefix := strings.Split(step, ":")[0]
-			if !glob.Glob(prefix, h.Triplet) && prefix != "all" {
+			g := glob.MustCompile(prefix)
+			if !g.Match(h.Triplet) {
 				continue
 			}
 			step = step[strings.Index(step, ":")+1:]
@@ -202,7 +204,8 @@ func (p *Package) StartShell(h *host.Host) {
 	for _, depName := range p.Dependencies {
 		if strings.Contains(depName, ":") {
 			prefix := strings.Split(depName, ":")[0]
-			if !glob.Glob(prefix, h.Triplet) && prefix != "all" {
+			g := glob.MustCompile(prefix)
+			if !g.Match(h.Triplet) {
 				continue
 			}
 			depName = depName[strings.Index(depName, ":")+1:]
@@ -228,7 +231,8 @@ func (p *Package) StartShell(h *host.Host) {
 	for _, step := range p.Build.Steps {
 		if strings.Contains(step, ":") {
 			prefix := strings.Split(step, ":")[0]
-			if !glob.Glob(prefix, h.Triplet) && prefix != "all" {
+			g := glob.MustCompile(prefix)
+			if !g.Match(h.Triplet) {
 				continue
 			}
 			step = step[strings.Index(step, ":")+1:]
@@ -240,7 +244,8 @@ func (p *Package) StartShell(h *host.Host) {
 	for _, step := range p.Build.Steps {
 		if strings.Contains(step, ":") {
 			prefix := strings.Split(step, ":")[0]
-			if !glob.Glob(prefix, h.Triplet) && prefix != "all" {
+			g := glob.MustCompile(prefix)
+			if !g.Match(h.Triplet) {
 				log.Printf("[no match] %s", utils.ExpandEnvFromMap(step, env))
 				continue
 			}

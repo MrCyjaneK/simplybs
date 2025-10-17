@@ -10,14 +10,14 @@
         }
     ],
     "dependencies": [
-        "all:native/make"
+        "*:native/make"
     ],
     "build": {
         "env": [],
         "steps": [
-            "all:./configure --prefix=$PREFIX/native",
-            "all:make -j$NUM_CORES",
-            "all:make DESTDIR=$STAGING_DIR install"
+            "*:./configure --prefix=$PREFIX/native",
+            "*:make -j$NUM_CORES",
+            "*:make DESTDIR=$STAGING_DIR install"
         ]
     }
 }

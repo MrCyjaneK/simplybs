@@ -10,18 +10,18 @@
         }
     ],
     "dependencies": [
-        "all:native/_"
+        "*:native/_"
     ],
     "build": {
         "env": [
-            "all:config_opts=--host=$HOST --prefix=$PREFIX",
-            "all:config_opts=$config_opts --enable-static --disable-shared --with-pic"
+            "*:config_opts=--host=$HOST --prefix=$PREFIX",
+            "*:config_opts=$config_opts --enable-static --disable-shared --with-pic"
         ],
         "steps": [
-            "all:./autogen.sh",
-            "all:./configure $config_opts",
-            "all:make -j$NUM_CORES",
-            "all:make install DESTDIR=$STAGING_DIR"
+            "*:./autogen.sh",
+            "*:./configure $config_opts",
+            "*:make -j$NUM_CORES",
+            "*:make install DESTDIR=$STAGING_DIR"
         ]
     }
 }

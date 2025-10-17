@@ -11,11 +11,11 @@ import (
 	"strconv"
 	"strings"
 
+	"github.com/gobwas/glob"
 	"github.com/mrcyjanek/simplybs/builder"
 	"github.com/mrcyjanek/simplybs/crash"
 	"github.com/mrcyjanek/simplybs/host"
 	"github.com/mrcyjanek/simplybs/utils"
-	"github.com/ryanuber/go-glob"
 )
 
 func (p *Package) FilterForHost(h *host.Host) *Package {
@@ -32,7 +32,8 @@ func (p *Package) FilterForHost(h *host.Host) *Package {
 	for _, dep := range p.Dependencies {
 		if strings.Contains(dep, ":") {
 			prefix := strings.Split(dep, ":")[0]
-			if !glob.Glob(prefix, h.Triplet) && prefix != "all" {
+			g := glob.MustCompile(prefix)
+			if !g.Match(h.Triplet) {
 				continue
 			}
 		}
@@ -42,7 +43,8 @@ func (p *Package) FilterForHost(h *host.Host) *Package {
 	for _, env := range p.Build.Env {
 		if strings.Contains(env, ":") {
 			prefix := strings.Split(env, ":")[0]
-			if !glob.Glob(prefix, h.Triplet) && prefix != "all" {
+			g := glob.MustCompile(prefix)
+			if !g.Match(h.Triplet) {
 				continue
 			}
 		}
@@ -52,7 +54,8 @@ func (p *Package) FilterForHost(h *host.Host) *Package {
 	for _, step := range p.Build.Steps {
 		if strings.Contains(step, ":") {
 			prefix := strings.Split(step, ":")[0]
-			if !glob.Glob(prefix, h.Triplet) && prefix != "all" {
+			g := glob.MustCompile(prefix)
+			if !g.Match(h.Triplet) {
 				continue
 			}
 		}
@@ -137,19 +140,25 @@ func (p *Package) GetEnv(h *host.Host) map[string]string {
 	env = utils.AppendEnv(env, builder.HostBuilder.GlobalEnv, h)
 	if p.Type == "native" {
 		env = utils.AppendEnv(env, []string{
-			"all:CFLAGS=$CFLAGS -I" + h.GetEnvPath() + "/native/include",
-			"all:LDFLAGS=$LDFLAGS -L" + h.GetEnvPath() + "/native/lib",
-			"all:LD_LIBRARY_PATH=$LD_LIBRARY_PATH:" + h.GetEnvPath() + "/native/lib",
-			"all:PKG_CONFIG_PATH=$PKG_CONFIG_PATH:" + h.GetEnvPath() + "/native/lib/pkgconfig",
-			"all:LIBRARY_PATH=$LIBRARY_PATH:" + h.GetEnvPath() + "/native/lib",
+			"*:CFLAGS=$CFLAGS -I" + h.GetEnvPath() + "/native/include",
+			"*:CFLAGS=$CFLAGS -I" + h.GetEnvPath() + "/native/usr/include",
+			"*:LDFLAGS=$LDFLAGS -L" + h.GetEnvPath() + "/native/lib",
+			"*:LDFLAGS=$LDFLAGS -L" + h.GetEnvPath() + "/native/usr/lib",
+			"*:LD_LIBRARY_PATH=$LD_LIBRARY_PATH:" + h.GetEnvPath() + "/native/lib",
+			"*:PKG_CONFIG_PATH=$PKG_CONFIG_PATH:" + h.GetEnvPath() + "/native/lib/pkgconfig",
+			"*:LIBRARY_PATH=$LIBRARY_PATH:" + h.GetEnvPath() + "/native/lib",
 		}, h)
 	} else {
 		env = utils.AppendEnv(env, []string{
-			"all:CFLAGS=-I" + h.GetEnvPath() + "/include",
-			"all:LDFLAGS=-L" + h.GetEnvPath() + "/lib",
-			"all:LD_LIBRARY_PATH=" + h.GetEnvPath() + "/lib",
-			"all:PKG_CONFIG_PATH=" + h.GetEnvPath() + "/lib/pkgconfig",
-			"all:LIBRARY_PATH=" + h.GetEnvPath() + "/lib",
+			"*:CFLAGS=$CFLAGS -I" + h.GetEnvPath() + "/include",
+			"*:CFLAGS=$CFLAGS -I" + h.GetEnvPath() + "/usr/include",
+			"*:LDFLAGS=$LDFLAGS -L" + h.GetEnvPath() + "/lib",
+			"*:LDFLAGS=$LDFLAGS -L" + h.GetEnvPath() + "/usr/lib",
+			"*:LD_LIBRARY_PATH=" + h.GetEnvPath() + "/native/lib",
+			"*:PKG_CONFIG_PATH=$PKG_CONFIG_PATH:" + h.GetEnvPath() + "/lib/pkgconfig",
+			"*:PKG_CONFIG_PATH=$PKG_CONFIG_PATH:" + h.GetEnvPath() + "/usr/lib/pkgconfig",
+			"*:LIBRARY_PATH=$LIBRARY_PATH:" + h.GetEnvPath() + "/lib",
+			"*:LIBRARY_PATH=$LIBRARY_PATH:" + h.GetEnvPath() + "/usr/lib",
 		}, h)
 	}
 	if p.Type != "native" {

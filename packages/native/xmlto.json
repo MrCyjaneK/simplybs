@@ -10,21 +10,21 @@
         }
     ],
     "dependencies": [
-        "all:native/automake",
-        "all:native/flex",
-        "all:native/gawk",
-        "all:native/gettext",
-        "all:native/libxml2",
-        "all:native/make",
-        "all:native/perl"
+        "*:native/automake",
+        "*:native/flex",
+        "*:native/gawk",
+        "*:native/gettext",
+        "*:native/libxml2",
+        "*:native/make",
+        "*:native/perl"
     ],
     "build": {
         "env": [],
         "steps": [
-            "all:autoreconf -f -i",
-            "all:./configure --prefix=$PREFIX/native",
-            "all:make xmlto -j$NUM_CORES",
-            "all:make DESTDIR=$STAGING_DIR install-exec"
+            "*:autoreconf -f -i",
+            "*:./configure --prefix=$PREFIX/native",
+            "*:make xmlto -j$NUM_CORES",
+            "*:make DESTDIR=$STAGING_DIR install-exec"
         ]
     }
 }

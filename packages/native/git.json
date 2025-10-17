@@ -10,17 +10,17 @@
         }
     ],
     "dependencies": [
-        "all:native/curl",
-        "all:native/expat",
-        "all:native/gettext",
-        "all:native/make",
-        "all:native/openssl"
+        "*:native/curl",
+        "*:native/expat",
+        "*:native/gettext",
+        "*:native/make",
+        "*:native/openssl"
     ],
     "build": {
         "env": [],
         "steps": [
-            "all:make -j$NUM_CORES",
-            "all:make DESTDIR=$STAGING_DIR$PREFIX/native install"
+            "*:make -j$NUM_CORES",
+            "*:make DESTDIR=$STAGING_DIR$PREFIX/native install"
         ]
     }
 }

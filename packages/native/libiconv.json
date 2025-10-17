@@ -10,22 +10,22 @@
         }
     ],
     "dependencies": [
-        "all:native/config",
-        "all:native/make"
+        "*:native/config",
+        "*:native/make"
     ],
     "build": {
         "env": [
-            "all:CFLAGS=$CFLAGS -fPIC",
-            "all:config_opts=--prefix=$PREFIX/native --disable-nls --enable-static --disable-shared",
-            "all:config_opts=$config_opts",
+            "*:CFLAGS=$CFLAGS -fPIC",
+            "*:config_opts=--prefix=$PREFIX/native --disable-nls --enable-static --disable-shared",
+            "*:config_opts=$config_opts",
             "*linux:config_opts=$config_opts --with-pic"
         ],
         "steps": [
-            "all:cp -f $PREFIX/native/usr/share/config/config.guess build-aux/",
-            "all:cp -f $PREFIX/native/usr/share/config/config.sub build-aux/",
-            "all:./configure $config_opts",
-            "all:make -j$NUM_CORES",
-            "all:make DESTDIR=$STAGING_DIR install"
+            "*:cp -f $PREFIX/native/share/config/config.guess build-aux/",
+            "*:cp -f $PREFIX/native/share/config/config.sub build-aux/",
+            "*:./configure $config_opts",
+            "*:make -j$NUM_CORES",
+            "*:make DESTDIR=$STAGING_DIR install"
         ]
     }
 }

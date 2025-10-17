@@ -10,30 +10,30 @@
         }
     ],
     "dependencies": [
-        "all:native/_"
+        "*:native/_"
     ],
     "build": {
         "env": [
-            "all:HOSTOVERRIDE=$HOST",
+            "*:HOSTOVERRIDE=$HOST",
             "aarch64-apple-ios-simulator:HOSTOVERRIDE=aarch64-apple-ios",
-            "all:config_opts=--host=$HOSTOVERRIDE --prefix=$PREFIX ",
-            "all:config_opts=$config_opts --disable-shared",
-            "all:config_opts=$config_opts --disable-openssl",
-            "all:config_opts=$config_opts --disable-libevent-regress",
-            "all:config_opts=$config_opts --disable-doxygen-html",
-            "all:config_opts=$config_opts --disable-debug-mode",
-            "all:config_opts=$config_opts --enable-static",
-            "all:config_opts=$config_opts --enable-gcc-hardening",
-            "all:config_opts=$config_opts --with-pic",
-            "all:CFLAGS=$CFLAGS -fPIC",
-            "all:CXXFLAGS=$CXXFLAGS -fPIC"
+            "*:config_opts=--host=$HOSTOVERRIDE --prefix=$PREFIX ",
+            "*:config_opts=$config_opts --disable-shared",
+            "*:config_opts=$config_opts --disable-openssl",
+            "*:config_opts=$config_opts --disable-libevent-regress",
+            "*:config_opts=$config_opts --disable-doxygen-html",
+            "*:config_opts=$config_opts --disable-debug-mode",
+            "*:config_opts=$config_opts --enable-static",
+            "*:config_opts=$config_opts --enable-gcc-hardening",
+            "*:config_opts=$config_opts --with-pic",
+            "*:CFLAGS=$CFLAGS -fPIC",
+            "*:CXXFLAGS=$CXXFLAGS -fPIC"
         ],
         "steps": [
-            "all:./autogen.sh",
-            "all:./configure $config_opts",
-            "all:make -j$NUM_CORES",
-            "all:make DESTDIR=$STAGING_DIR install",
-            "all:rm $STAGING_DIR$PREFIX/lib/*.la"
+            "*:./autogen.sh",
+            "*:./configure $config_opts",
+            "*:make -j$NUM_CORES",
+            "*:make DESTDIR=$STAGING_DIR install",
+            "*:rm $STAGING_DIR$PREFIX/lib/*.la"
         ]
     }
 }

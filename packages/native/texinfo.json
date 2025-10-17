@@ -10,20 +10,20 @@
         }
     ],
     "dependencies": [
-        "all:native/automake",
-        "all:native/gawk",
-        "all:native/gettext",
-        "all:native/make",
-        "all:native/perl"
+        "*:native/automake",
+        "*:native/gawk",
+        "*:native/gettext",
+        "*:native/make",
+        "*:native/perl"
     ],
     "build": {
         "env": [
-            "all:HELP2MAN=true"
+            "*:HELP2MAN=true"
         ],
         "steps": [
-            "all:./configure --prefix=$PREFIX/native",
-            "all:make -j$NUM_CORES",
-            "all:make DESTDIR=$STAGING_DIR install"
+            "*:./configure --prefix=$PREFIX/native",
+            "*:make -j$NUM_CORES",
+            "*:make DESTDIR=$STAGING_DIR install"
         ]
     }
 }

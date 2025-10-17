@@ -10,14 +10,14 @@
         }
     ],
     "dependencies": [
-        "all:native/python@3.11.13"
+        "*:native/python@3.11.13"
     ],
     "build": {
         "env": [],
         "steps": [
-            "all:python3 ./packaging/create_zipapp.py --outfile meson.pyz --interpreter \"$(which python3)\" .",
-            "all:mkdir -p $STAGING_DIR$PREFIX/native/bin/",
-            "all:mv meson.pyz $STAGING_DIR$PREFIX/native/bin/meson"
+            "*:python3 ./packaging/create_zipapp.py --outfile meson.pyz --interpreter \"$(which python3)\" .",
+            "*:mkdir -p $STAGING_DIR$PREFIX/native/bin/",
+            "*:mv meson.pyz $STAGING_DIR$PREFIX/native/bin/meson"
         ]
     }
 }

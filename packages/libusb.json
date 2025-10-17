@@ -10,28 +10,28 @@
         }
     ],
     "dependencies": [
-        "all:native/_",
-        "all:native/config",
-        "all:native/make"
+        "*:native/_",
+        "*:native/config",
+        "*:native/make"
     ],
     "build": {
         "env": [
-            "all:config_opts=--host=$HOST --prefix=$PREFIX --disable-shared",
+            "*:config_opts=--host=$HOST --prefix=$PREFIX --disable-shared",
             "*-linux-gnu:config_opts=$config_opts --with-pic --disable-udev",
             "*-w64-mingw32:config_opts=$config_opts --disable-udev",
             "*-apple-darwin:config_opts=$config_opts --disable-udev",
-            "all:SHOULD_BUILD=echo",
+            "*:SHOULD_BUILD=echo",
             "*-linux-gnu:SHOULD_BUILD=",
             "*-w64-mingw32:SHOULD_BUILD=",
             "*-apple-darwin:SHOULD_BUILD="
         ],
         "steps": [
-            "all:cp -f $PREFIX/native/usr/share/config/config.guess config.guess",
-            "all:cp -f $PREFIX/native/usr/share/config/config.sub config.sub",
-            "all:$SHOULD_BUILD ./configure $config_opts",
-            "all:$SHOULD_BUILD make -j$NUM_CORES",
-            "all:$SHOULD_BUILD make -j$NUM_CORES DESTDIR=$STAGING_DIR install",
-            "all:$SHOULD_BUILD cp -f $STAGING_DIR$PREFIX/lib/libusb-1.0.a $STAGING_DIR$PREFIX/lib/libusb.a"
+            "*:cp -f $PREFIX/native/share/config/config.guess config.guess",
+            "*:cp -f $PREFIX/native/share/config/config.sub config.sub",
+            "*:$SHOULD_BUILD ./configure $config_opts",
+            "*:$SHOULD_BUILD make -j$NUM_CORES",
+            "*:$SHOULD_BUILD make -j$NUM_CORES DESTDIR=$STAGING_DIR install",
+            "*:$SHOULD_BUILD cp -f $STAGING_DIR$PREFIX/lib/libusb-1.0.a $STAGING_DIR$PREFIX/lib/libusb.a"
         ]
     }
 }

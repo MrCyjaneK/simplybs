@@ -3,7 +3,7 @@
     "version": "r28c",
     "type": "native",
     "dependencies": [
-        "all:native/p7zip"
+        "*:native/p7zip"
     ],
     "build": {
         "env": [

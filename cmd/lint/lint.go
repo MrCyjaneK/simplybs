@@ -9,10 +9,10 @@ import (
 	"sort"
 	"strings"
 
+	"github.com/gobwas/glob"
 	"github.com/mrcyjanek/simplybs/crash"
 	"github.com/mrcyjanek/simplybs/host"
 	"github.com/mrcyjanek/simplybs/pack"
-	"github.com/ryanuber/go-glob"
 )
 
 type OrderedPackage struct {
@@ -151,11 +151,12 @@ func ensureValidDependencies(pkg *pack.Package) {
 
 		usedIn := 0
 		for _, host := range host.SupportedHosts {
-			if glob.Glob(prefix, host.Triplet) {
+			g := glob.MustCompile(prefix)
+			if g.Match(host.Triplet) {
 				usedIn++
 			}
 		}
-		if usedIn == 0 && prefix != "all" && prefix != "none" {
+		if usedIn == 0 && prefix != "none" {
 			log.Printf("Package %s is not used in any of host.SupportedHosts %s", pkg.Package, prefix)
 		}
 
@@ -185,7 +186,8 @@ func checkCyclesForHost(pkgs []*pack.Package, hostTriplet string) {
 			var actualDep string
 			if strings.Contains(dep, ":") {
 				prefix := strings.Split(dep, ":")[0]
-				if !glob.Glob(prefix, hostTriplet) && prefix != "all" {
+				g := glob.MustCompile(prefix)
+				if !g.Match(hostTriplet) {
 					continue
 				}
 				actualDep = dep[strings.Index(dep, ":")+1:]

@@ -10,17 +10,17 @@
         }
     ],
     "dependencies": [
-        "all:native/bootstrap/make",
-        "all:native/bootstrap/perl"
+        "*:native/bootstrap/make",
+        "*:native/bootstrap/perl"
     ],
     "build": {
         "env": [
-            "all:PATH=$PREFIX/native/bootstrap/bin:$PATH"
+            "*:PATH=$PREFIX/native/bootstrap/bin:$PATH"
         ],
         "steps": [
-            "all:$PREFIX/native/bootstrap/bin/perl Makefile.PL PREFIX=$PREFIX/native/bootstrap",
-            "all:make -j$NUM_CORES",
-            "all:make DESTDIR=$STAGING_DIR install"
+            "*:$PREFIX/native/bootstrap/bin/perl Makefile.PL PREFIX=$PREFIX/native/bootstrap",
+            "*:make -j$NUM_CORES",
+            "*:make DESTDIR=$STAGING_DIR install"
         ]
     }
 }

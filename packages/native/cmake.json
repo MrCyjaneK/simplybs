@@ -10,18 +10,18 @@
         }
     ],
     "dependencies": [
-        "all:native/make",
-        "all:native/openssl"
+        "*:native/make",
+        "*:native/openssl"
     ],
     "build": {
         "env": [
-            "all:OPENSSL_ROOT_DIR=$PREFIX/native"
+            "*:OPENSSL_ROOT_DIR=$PREFIX/native"
         ],
         "steps": [
-            "all:./bootstrap --parallel=$NUM_CORES",
-            "all:./configure --prefix=$PREFIX/native",
-            "all:make -j$NUM_CORES",
-            "all:make DESTDIR=$STAGING_DIR install"
+            "*:./bootstrap --parallel=$NUM_CORES",
+            "*:./configure --prefix=$PREFIX/native",
+            "*:make -j$NUM_CORES",
+            "*:make DESTDIR=$STAGING_DIR install"
         ]
     }
 }

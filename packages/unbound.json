@@ -10,34 +10,34 @@
         }
     ],
     "dependencies": [
-        "all:native/_",
-        "all:expat",
-        "all:openssl"
+        "*:native/_",
+        "*:expat",
+        "*:openssl"
     ],
     "patches": [
         "disable-glibc-reallocarray.patch"
     ],
     "build": {
         "env": [
-            "all:BUILD_HOST=$HOST",
+            "*:BUILD_HOST=$HOST",
             "aarch64-apple-ios-simulator:BUILD_HOST=aarch64-apple-ios",
-            "all:config_opts=--disable-shared --enable-static --without-pyunbound --prefix=$PREFIX --host=$BUILD_HOST",
-            "all:config_opts=$config_opts --with-libexpat=$PREFIX --with-ssl=$PREFIX --with-libevent=no",
-            "all:config_opts=$config_opts --without-pythonmodule --disable-flto --with-pthreads --with-libunbound-only",
+            "*:config_opts=--disable-shared --enable-static --without-pyunbound --prefix=$PREFIX --host=$BUILD_HOST",
+            "*:config_opts=$config_opts --with-libexpat=$PREFIX --with-ssl=$PREFIX --with-libevent=no",
+            "*:config_opts=$config_opts --without-pythonmodule --disable-flto --with-pthreads --with-libunbound-only",
             "*-linux-*:config_opts=$config_opts --with-pic",
             "*-w64-*:config_opts=$config_opts --enable-static-exe --sysconfdir=/etc --prefix=$PREFIX --target=$PREFIX",
             "x86_64-apple-darwin:config_opts=$config_opts ac_cv_func_SHA384_Init=yes",
             "*-linux-android*:config_opts=$config_opts ac_cv_type_pthread_spinlock_t=no",
             "*-w64-mingw32:build_opts=$build_opts LDFLAGS=\"$LDFLAGS -lpthread\"",
             "*-w64-mingw32:CFLAGS=$CFLAGS -D_WIN32_WINNT=0x600",
-            "all:config_opts=$config_opts ac_cv_func_getentropy=no"
+            "*:config_opts=$config_opts ac_cv_func_getentropy=no"
         ],
         "steps": [
-            "all:patch -p1 < $PATCH_DIR/unbound/disable-glibc-reallocarray.patch",
-            "all:autoconf",
-            "all:./configure $config_opts",
-            "all:make -j$NUM_CORES $build_opts",
-            "all:make -j$NUM_CORES DESTDIR=$STAGING_DIR install"
+            "*:patch -p1 < $PATCH_DIR/unbound/disable-glibc-reallocarray.patch",
+            "*:autoconf",
+            "*:./configure $config_opts",
+            "*:make -j$NUM_CORES $build_opts",
+            "*:make -j$NUM_CORES DESTDIR=$STAGING_DIR install"
         ]
     }
 }

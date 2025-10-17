@@ -10,24 +10,24 @@
         }
     ],
     "dependencies": [
-        "all:native/autoconf",
-        "all:native/automake",
-        "all:native/bash",
-        "all:native/binutils@2.42",
-        "all:native/bison",
-        "all:native/flex",
-        "all:native/gawk",
-        "all:native/gettext",
-        "all:native/help2man",
-        "all:native/libtool",
-        "all:native/m4",
-        "all:native/make",
-        "all:native/perl",
-        "all:native/python@3.11.13",
-        "all:native/sed",
-        "all:native/texinfo",
-        "all:native/xz",
-        "all:native/zlib"
+        "*:native/autoconf",
+        "*:native/automake",
+        "*:native/bash",
+        "*:native/binutils@2.42",
+        "*:native/bison",
+        "*:native/flex",
+        "*:native/gawk",
+        "*:native/gettext",
+        "*:native/help2man",
+        "*:native/libtool",
+        "*:native/m4",
+        "*:native/make",
+        "*:native/perl",
+        "*:native/python@3.11.13",
+        "*:native/sed",
+        "*:native/texinfo",
+        "*:native/xz",
+        "*:native/zlib"
     ],
     "build": {
         "env": [
@@ -37,12 +37,12 @@
             "x86_64-linux-musl:TOOL_TARGET=x86_64-linux-musl"
         ],
         "steps": [
-            "all:./bootstrap",
-            "all:ln -s $TOOL_TARGET-objcopy $PREFIX/native/bin/objcopy",
-            "all:ln -s $TOOL_TARGET-readelf $PREFIX/native/bin/readelf",
-            "all:./configure --prefix=$PREFIX/native",
-            "all:make -j$NUM_CORES",
-            "all:make install DESTDIR=$STAGING_DIR"
+            "*:./bootstrap",
+            "*:ln -s $TOOL_TARGET-objcopy $PREFIX/native/bin/objcopy",
+            "*:ln -s $TOOL_TARGET-readelf $PREFIX/native/bin/readelf",
+            "*:./configure --prefix=$PREFIX/native",
+            "*:make -j$NUM_CORES",
+            "*:make install DESTDIR=$STAGING_DIR"
         ]
     }
 }

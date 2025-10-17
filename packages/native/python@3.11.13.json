@@ -10,18 +10,18 @@
         }
     ],
     "dependencies": [
-        "all:native/make",
-        "all:native/patch",
-        "all:native/zlib"
+        "*:native/make",
+        "*:native/patch",
+        "*:native/zlib"
     ],
     "build": {
         "env": [],
         "steps": [
-            "all:sed -i.bak '/^#ifndef DATE/i\\\n\\/* Deterministic date and time.  *\\/\\\n#define DATE \"Jan  1 1970\"\\\n#define TIME \"00:00:01\"\\\n' Modules/getbuildinfo.c",
-            "all:sed -i.bak 's/^#\\(zlib[[:space:]]\\+zlibmodule\\.c[[:space:]]\\+-lz\\)/\\1/' Modules/Setup",
-            "all:./configure --disable-test-modules --prefix=$PREFIX/native",
-            "all:make -j$NUM_CORES",
-            "all:make DESTDIR=$STAGING_DIR install",
+            "*:sed -i.bak '/^#ifndef DATE/i\\\n\\/* Deterministic date and time.  *\\/\\\n#define DATE \"Jan  1 1970\"\\\n#define TIME \"00:00:01\"\\\n' Modules/getbuildinfo.c",
+            "*:sed -i.bak 's/^#\\(zlib[[:space:]]\\+zlibmodule\\.c[[:space:]]\\+-lz\\)/\\1/' Modules/Setup",
+            "*:./configure --disable-test-modules --prefix=$PREFIX/native",
+            "*:make -j$NUM_CORES",
+            "*:make DESTDIR=$STAGING_DIR install",
             "none:mkdir -p $STAGING_DIR$PREFIX/native/python3.11.13",
             "none:cp -r pybuild/* $STAGING_DIR$PREFIX/native/python3.11.13"
         ]

@@ -10,15 +10,15 @@
         }
     ],
     "dependencies": [
-        "all:native/python@3.11.13"
+        "*:native/python@3.11.13"
     ],
     "build": {
         "env": [],
         "steps": [
-            "all:python3 ./configure.py --bootstrap",
-            "all:./ninja all",
-            "all:mkdir -p $STAGING_DIR$PREFIX/native/bin",
-            "all:cp ninja $STAGING_DIR$PREFIX/native/bin"
+            "*:python3 ./configure.py --bootstrap",
+            "*:./ninja all",
+            "*:mkdir -p $STAGING_DIR$PREFIX/native/bin",
+            "*:cp ninja $STAGING_DIR$PREFIX/native/bin"
         ]
     }
 }

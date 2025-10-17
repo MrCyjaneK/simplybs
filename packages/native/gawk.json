@@ -10,24 +10,24 @@
         }
     ],
     "dependencies": [
-        "all:native/autoconf",
-        "all:native/automake",
-        "all:native/gettext",
-        "all:native/libtool",
-        "all:native/make",
-        "all:native/perl",
-        "all:native/pkgconf"
+        "*:native/autoconf",
+        "*:native/automake",
+        "*:native/gettext",
+        "*:native/libtool",
+        "*:native/make",
+        "*:native/perl",
+        "*:native/pkgconf"
     ],
     "build": {
         "env": [
-            "all:AUTOMAKE=true",
-            "all:ACLOCAL=true",
-            "all:MAKEINFO=true"
+            "*:AUTOMAKE=true",
+            "*:ACLOCAL=true",
+            "*:MAKEINFO=true"
         ],
         "steps": [
-            "all:./configure --prefix=$PREFIX/native",
-            "all:make -j$NUM_CORES",
-            "all:make DESTDIR=$STAGING_DIR install"
+            "*:./configure --prefix=$PREFIX/native",
+            "*:make -j$NUM_CORES",
+            "*:make DESTDIR=$STAGING_DIR install"
         ]
     }
 }

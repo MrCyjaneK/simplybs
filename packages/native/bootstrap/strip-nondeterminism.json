@@ -10,22 +10,22 @@
         }
     ],
     "dependencies": [
-        "all:native/bootstrap/cpan/archive-cpio",
-        "all:native/bootstrap/cpan/archive-zip",
-        "all:native/bootstrap/cpan/sub-override",
-        "all:native/bootstrap/make",
-        "all:native/bootstrap/perl"
+        "*:native/bootstrap/cpan/archive-cpio",
+        "*:native/bootstrap/cpan/archive-zip",
+        "*:native/bootstrap/cpan/sub-override",
+        "*:native/bootstrap/make",
+        "*:native/bootstrap/perl"
     ],
     "build": {
         "env": [
-            "all:PATH=$PREFIX/native/bootstrap/bin:$PATH"
+            "*:PATH=$PREFIX/native/bootstrap/bin:$PATH"
         ],
         "steps": [
-            "all:$PREFIX/native/bootstrap/bin/perl Makefile.PL PREFIX=$PREFIX/native/bootstrap",
-            "all:make",
-            "all:make DESTDIR=$STAGING_DIR install",
-            "all:mkdir -p $STAGING_DIR/$PREFIX/native/bootstrap/bin/",
-            "all:cp $PATCH_DIR/strip-nondeterminism-recursive $STAGING_DIR/$PREFIX/native/bootstrap/bin"
+            "*:$PREFIX/native/bootstrap/bin/perl Makefile.PL PREFIX=$PREFIX/native/bootstrap",
+            "*:make",
+            "*:make DESTDIR=$STAGING_DIR install",
+            "*:mkdir -p $STAGING_DIR/$PREFIX/native/bootstrap/bin/",
+            "*:cp $PATCH_DIR/strip-nondeterminism-recursive $STAGING_DIR/$PREFIX/native/bootstrap/bin"
         ]
     }
 }

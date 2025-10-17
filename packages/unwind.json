@@ -10,9 +10,9 @@
         }
     ],
     "dependencies": [
-        "all:native/_",
-        "all:native/config",
-        "all:native/gettext"
+        "*:native/_",
+        "*:native/config",
+        "*:native/gettext"
     ],
     "patches": [
         "fix_obj_order.patch"
@@ -23,8 +23,8 @@
             "*-linux-gnu:config_opts=$config_opts --disable-shared --enable-static --disable-tests --disable-documentation"
         ],
         "steps": [
-            "all:cp -f $PREFIX/native/usr/share/config/config.guess config/config.guess",
-            "all:cp -f $PREFIX/native/usr/share/config/config.sub config/config.sub",
+            "*:cp -f $PREFIX/native/share/config/config.guess config/config.guess",
+            "*:cp -f $PREFIX/native/share/config/config.sub config/config.sub",
             "*-linux-gnu:patch -p0 < $PATCH_DIR/unwind/fix_obj_order.patch",
             "*-linux-gnu:./configure $config_opts",
             "*-linux-gnu:make -j$NUM_CORES",

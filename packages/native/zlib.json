@@ -10,20 +10,20 @@
         }
     ],
     "dependencies": [
-        "all:native/libtool",
-        "all:native/make"
+        "*:native/libtool",
+        "*:native/make"
     ],
     "build": {
         "env": [
-            "all:CFLAGS=$CFLAGS -fPIC",
-            "all:config_opts=--prefix=$PREFIX/native --static",
-            "all:LIBTOOL=$PREFIX/native/bin/libtool",
-            "all:CROSS_PREFIX=$HOST-"
+            "*:CFLAGS=$CFLAGS -fPIC",
+            "*:config_opts=--prefix=$PREFIX/native --static",
+            "*:LIBTOOL=$PREFIX/native/bin/libtool",
+            "*:CROSS_PREFIX=$HOST-"
         ],
         "steps": [
-            "all:./configure $config_opts",
-            "all:make -j$NUM_CORES",
-            "all:make DESTDIR=$STAGING_DIR install"
+            "*:./configure $config_opts",
+            "*:make -j$NUM_CORES",
+            "*:make DESTDIR=$STAGING_DIR install"
         ]
     }
 }

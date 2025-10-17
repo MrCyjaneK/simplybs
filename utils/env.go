@@ -24,7 +24,7 @@ func AppendEnv(env map[string]string, newEnv []string, host *host.Host) map[stri
 		colonIndex := strings.Index(exp, ":")
 		equalIndex := strings.Index(exp, "=")
 		if colonIndex == -1 || equalIndex == -1 {
-			log.Fatalf("Invalid env var: %s. Vars needs to be in the form of all:KEY=VALUE", exp)
+			log.Fatalf("Invalid env var: %s. Vars needs to be in the form of *:KEY=VALUE", exp)
 		}
 		prefix := exp[0:colonIndex]
 		if !glob.Glob(prefix, host.Triplet) && prefix != "all" {

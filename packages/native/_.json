@@ -8,28 +8,28 @@
         "*-linux-gnu:native/ct-tools",
         "*-linux-musl:native/ct-tools",
         "*-w64-mingw32:native/ct-tools",
-        "all:native/autoconf",
-        "all:native/automake",
-        "all:native/bash",
-        "all:native/bison",
-        "all:native/cmake",
-        "all:native/cmake-toolchain",
-        "all:native/config",
-        "all:native/gawk",
-        "all:native/gettext",
-        "all:native/libtool",
-        "all:native/m4",
-        "all:native/make",
-        "all:native/mpc",
-        "all:native/mpfr",
-        "all:native/ninja",
-        "all:native/nproc",
-        "all:native/patch",
-        "all:native/perl",
-        "all:native/pkgconf",
-        "all:native/rsync",
-        "all:native/sed",
-        "all:native/texinfo"
+        "*:native/autoconf",
+        "*:native/automake",
+        "*:native/bash",
+        "*:native/bison",
+        "*:native/cmake",
+        "*:native/cmake-toolchain",
+        "*:native/config",
+        "*:native/gawk",
+        "*:native/gettext",
+        "*:native/libtool",
+        "*:native/m4",
+        "*:native/make",
+        "*:native/mpc",
+        "*:native/mpfr",
+        "*:native/ninja",
+        "*:native/nproc",
+        "*:native/patch",
+        "*:native/perl",
+        "*:native/pkgconf",
+        "*:native/rsync",
+        "*:native/sed",
+        "*:native/texinfo"
     ],
     "build": {
         "env": [
@@ -37,9 +37,9 @@
             "none:B_=All packages included as dependencies (other than bootstrap packages) are copied over to staging dir"
         ],
         "steps": [
-            "all:mkdir -p $STAGING_DIR$PREFIX ",
-            "all:rsync -a $PREFIX/* $STAGING_DIR$PREFIX",
-            "all:rm -rf $STAGING_DIR$PREFIX/native/bootstrap"
+            "*:mkdir -p $STAGING_DIR$PREFIX ",
+            "*:rsync -a $PREFIX/* $STAGING_DIR$PREFIX",
+            "*:rm -rf $STAGING_DIR$PREFIX/native/bootstrap"
         ]
     }
 }
