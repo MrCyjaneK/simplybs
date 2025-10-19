@@ -1,0 +1,27 @@
+{
+    "package": "native/libtapi",
+    "version": "1300.6.5",
+    "type": "native",
+    "download": [
+        {
+            "kind": "git",
+            "sha256": "640b4623929c923c0468143ff2a363a48665fa54",
+            "url": "https://github.com/tpoechtrager/apple-libtapi.git"
+        }
+    ],
+    "dependencies": [
+        "*:native/cmake",
+        "*:native/make",
+        "*:native/ninja"
+    ],
+    "build": {
+        "env": [
+            "*:config_opts=--prefix=$PREFIX/native --disable-shared",
+            "*:INSTALLPREFIX=$PREFIX/native"
+        ],
+        "steps": [
+            "*:./build.sh",
+            "*:DESTDIR=$STAGING_DIR ./install.sh"
+        ]
+    }
+}

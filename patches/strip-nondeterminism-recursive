@@ -1,4 +1,4 @@
-#!/usr/bin/env perl
+#!$PREFIX/native/bootstrap/bin/perl
 use strict;
 use warnings;
 use autodie;

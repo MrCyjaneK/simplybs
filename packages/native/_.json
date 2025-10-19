@@ -18,6 +18,7 @@
         "*:native/gawk",
         "*:native/gettext",
         "*:native/libtool",
+        "*:native/libxml2",
         "*:native/m4",
         "*:native/make",
         "*:native/mpc",
@@ -29,7 +30,8 @@
         "*:native/pkgconf",
         "*:native/rsync",
         "*:native/sed",
-        "*:native/texinfo"
+        "*:native/texinfo",
+        "*:native/xar"
     ],
     "build": {
         "env": [

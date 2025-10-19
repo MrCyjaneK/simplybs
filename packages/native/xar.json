@@ -13,7 +13,8 @@
         "*:native/bzip2",
         "*:native/make",
         "*:native/openssl",
-        "*:native/xz"
+        "*:native/xz",
+        "*:native/zlib"
     ],
     "build": {
         "env": [

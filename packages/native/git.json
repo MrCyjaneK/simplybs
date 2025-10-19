@@ -14,7 +14,8 @@
         "*:native/expat",
         "*:native/gettext",
         "*:native/make",
-        "*:native/openssl"
+        "*:native/openssl",
+        "*:native/zlib"
     ],
     "build": {
         "env": [],

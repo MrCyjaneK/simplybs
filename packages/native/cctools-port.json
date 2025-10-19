@@ -1,0 +1,38 @@
+{
+    "package": "native/cctools-port",
+    "version": "986-ld64-711",
+    "type": "native",
+    "download": [
+        {
+            "kind": "git",
+            "sha256": "6e31355ca5babc708681bd906eaaef86c3ac93be",
+            "url": "https://github.com/tpoechtrager/cctools-port.git"
+        }
+    ],
+    "dependencies": [
+        "*-apple-darwin:native/bzip2",
+        "*-apple-darwin:native/libtapi",
+        "*-apple-darwin:native/make",
+        "*-apple-darwin:native/openssl",
+        "*-apple-darwin:native/xar",
+        "*-apple-darwin:native/xz",
+        "*-apple-darwin:native/zlib"
+    ],
+    "build": {
+        "env": [
+            "*-apple-darwin:config_opts=--prefix=$PREFIX/native",
+            "aarch64-apple-darwin:config_opts=$config_opts --target=arm64-apple-darwin25",
+            "x86_64-apple-darwin:config_opts=$config_opts --target=x86_64-apple-darwin25",
+            "*-apple-darwin:config_opts=$config_opts --with-libtapi=$PREFIX/native",
+            "*-apple-darwin:config_opts=$config_opts --with-libxar=$PREFIX/native",
+            "*-apple-darwin:CC=clang",
+            "*-apple-darwin:CXX=clang++"
+        ],
+        "steps": [
+            "*-apple-darwin:sed -i.bak '3182d' cctools/configure",
+            "*-apple-darwin:cd cctools && ./configure $config_opts",
+            "*-apple-darwin:cd cctools && make -j$NUM_CORES",
+            "*-apple-darwin:cd cctools && DESTDIR=$STAGING_DIR make -j$NUM_CORES install"
+        ]
+    }
+}

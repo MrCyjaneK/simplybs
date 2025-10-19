@@ -12,6 +12,7 @@
     "dependencies": [
         "*:native/bootstrap/cpan/archive-cpio",
         "*:native/bootstrap/cpan/archive-zip",
+        "*:native/bootstrap/cpan/autodie",
         "*:native/bootstrap/cpan/sub-override",
         "*:native/bootstrap/make",
         "*:native/bootstrap/perl"

@@ -1,5 +1,5 @@
 {
-    "package": "native/dart",
+    "package": "native/dart@3.9.4",
     "version": "3.9.4",
     "type": "native",
     "download": [
@@ -273,7 +273,10 @@
             "*:ln -s $(which clang) buildtools/mac-arm64/clang/bin/clang",
             "*:ln -s $(which clang++) buildtools/mac-arm64/clang/bin/clang++",
             "*:sed -i.bak 's/\"-Wno-dangling-reference\",/ /g' runtime/BUILD.gn",
-            "*:python3 ./tools/build.py"
+            "*:python3 ./tools/generate_package_config.py # HOOK Generate the .dart_tool/package_confg.json file.",
+            "*:python3 ./tools/generate_sdk_version_file.py # HOOK Generate sdk/version.",
+            "*:python3 ./tools/generate_large_tests.py # HOOK Generate large tests.",
+            "*:python3 ./tools/build.py --mode=release"
         ]
     }
 }

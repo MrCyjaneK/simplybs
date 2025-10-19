@@ -1,0 +1,17 @@
+{
+    "package": "native/dart",
+    "version": "3.9.4",
+    "type": "native",
+    "download": [
+        {}
+    ],
+    "build": {
+        "env": [
+            "*:config_opts=--prefix=$PREFIX/native"
+        ],
+        "steps": [
+            "make -j$NUM_CORES",
+            "make -j$NUM_CORES install DESTDIR=$STAGING_DIR"
+        ]
+    }
+}

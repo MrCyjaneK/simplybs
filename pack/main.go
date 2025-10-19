@@ -49,6 +49,7 @@ type PackageWithBuilds struct {
 
 var bootstrapPackages = []string{
 	"native/bootstrap/perl",
+	"native/bootstrap/cpan/autodie",
 	"native/bootstrap/cpan/archive-cpio",
 	"native/bootstrap/cpan/archive-zip",
 	"native/bootstrap/cpan/sub-override",
@@ -71,7 +72,7 @@ func FindPackage(name string) (*Package, error) {
 		for _, pkgName := range bootstrapPackages {
 			pkg.Dependencies = append(pkg.Dependencies, "*:"+pkgName)
 		}
-		pkg.Build.Steps = append(pkg.Build.Steps, "*:$PREFIX/native/bootstrap/bin/strip-nondeterminism-recursive --directory $STAGING_DIR")
+		pkg.Build.Steps = append(pkg.Build.Steps, "*:$PREFIX/native/bootstrap/bin/perl $PREFIX/native/bootstrap/bin/strip-nondeterminism-recursive --directory $STAGING_DIR")
 	}
 	return &pkg, nil
 }

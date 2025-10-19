@@ -127,6 +127,7 @@ func getNumCores() int {
 func (p *Package) GetEnv(h *host.Host) map[string]string {
 	getwd, err := os.Getwd()
 	crash.Handle(err)
+	stagingPath := p.GenerateBuildPath(h, "staging")
 	env := map[string]string{
 		"PATH":        h.GetEnvPath() + "/native/bin:" + utils.GetHostPath(),
 		"HOST":        h.Triplet,
@@ -135,6 +136,7 @@ func (p *Package) GetEnv(h *host.Host) map[string]string {
 		"HOST_PREFIX": h.GetEnvPath(),
 		"NUM_CORES":   strconv.Itoa(getNumCores()),
 		"PATCH_DIR":   filepath.Join(getwd, "patches"),
+		"STAGING_DIR": stagingPath,
 	}
 
 	env = utils.AppendEnv(env, builder.HostBuilder.GlobalEnv, h)
@@ -150,6 +152,8 @@ func (p *Package) GetEnv(h *host.Host) map[string]string {
 		}, h)
 	} else {
 		env = utils.AppendEnv(env, []string{
+			"*:CC_FOR_BUILD=" + builder.HostBuilder.GetCC(),
+			"*:CXX_FOR_BUILD=" + builder.HostBuilder.GetCXX(),
 			"*:CFLAGS=$CFLAGS -I" + h.GetEnvPath() + "/include",
 			"*:CFLAGS=$CFLAGS -I" + h.GetEnvPath() + "/usr/include",
 			"*:LDFLAGS=$LDFLAGS -L" + h.GetEnvPath() + "/lib",

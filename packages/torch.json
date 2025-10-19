@@ -12,8 +12,8 @@
     "dependencies": [
         "*:native/_",
         "*:libevent",
-        "*:libtor",
         "*:openssl",
+        "*:tor",
         "*:xz",
         "*:zlib",
         "*:zstd"

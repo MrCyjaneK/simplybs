@@ -18,3 +18,25 @@ func shellOutput(cmd string) string {
 	}
 	return strings.TrimSpace(string(output))
 }
+
+func (b *Builder) GetCC() string {
+	for _, env := range b.GlobalEnv {
+		splitIndex := strings.Index(env, ":")
+		envVar := env[splitIndex+1:]
+		if strings.HasPrefix(envVar, "CC=") {
+			return envVar[3:]
+		}
+	}
+	return ""
+}
+
+func (b *Builder) GetCXX() string {
+	for _, env := range b.GlobalEnv {
+		splitIndex := strings.Index(env, ":")
+		envVar := env[splitIndex+1:]
+		if strings.HasPrefix(envVar, "CXX=") {
+			return envVar[4:]
+		}
+	}
+	return ""
+}

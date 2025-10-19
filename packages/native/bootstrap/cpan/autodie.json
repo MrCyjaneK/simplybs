@@ -1,0 +1,26 @@
+{
+    "package": "native/bootstrap/cpan/autodie",
+    "version": "2.37",
+    "type": "native",
+    "download": [
+        {
+            "kind": "tar.gz",
+            "sha256": "4921d211b0cea63c2ca06dfc0c948a7203a3d48ad80a06f43b46104354f2c1c3",
+            "url": "https://cpan.metacpan.org/authors/id/T/TO/TODDR/autodie-2.37.tar.gz"
+        }
+    ],
+    "dependencies": [
+        "*:native/bootstrap/make",
+        "*:native/bootstrap/perl"
+    ],
+    "build": {
+        "env": [
+            "*:PATH=$PREFIX/native/bootstrap/bin:$PATH"
+        ],
+        "steps": [
+            "*:$PREFIX/native/bootstrap/bin/perl Makefile.PL PREFIX=$PREFIX/native/bootstrap",
+            "*:make -j$NUM_CORES",
+            "*:make DESTDIR=$STAGING_DIR install"
+        ]
+    }
+}

@@ -1,5 +1,5 @@
 {
-    "package": "libtor",
+    "package": "tor",
     "version": "tor-0.4.8.17",
     "type": "host",
     "download": [
