@@ -372,6 +372,14 @@
                 </div>
                 {{end}}
             </div>
+            <div class="download-buttons">
+                <a href="{{getSourceDetailsPath $.Package.Package $index}}" class="download-btn download-btn-primary">
+                    📋 View Contents
+                </a>
+                <a href="{{getMirrorPath $ $download}}" class="download-btn download-btn-secondary" download>
+                    ⬇ Download
+                </a>
+            </div>
         </div>
         {{end}}
     </div>

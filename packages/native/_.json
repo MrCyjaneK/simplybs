@@ -4,6 +4,7 @@
     "type": "native",
     "dependencies": [
         "*-android*:native/android_ndk",
+        "*-apple-*:native/cctools-port",
         "*-apple-*:native/osx-cross",
         "*-linux-gnu:native/ct-tools",
         "*-linux-musl:native/ct-tools",
@@ -17,6 +18,7 @@
         "*:native/config",
         "*:native/gawk",
         "*:native/gettext",
+        "*:native/libtapi",
         "*:native/libtool",
         "*:native/libxml2",
         "*:native/m4",

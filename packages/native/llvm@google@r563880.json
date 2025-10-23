@@ -30,7 +30,8 @@
             "*-android*:config_opts=$config_opts -DCOMPILER_RT_BUILD_XRAY=OFF",
             "*-android*:config_opts=$config_opts -DCOMPILER_RT_BUILD_LIBFUZZER=OFF",
             "*-android*:config_opts=$config_opts -DCOMPILER_RT_BUILD_PROFILE=OFF",
-            "*-android*:config_opts=$config_opts -DCOMPILER_RT_BUILD_BUILTINS=ON"
+            "*-android*:config_opts=$config_opts -DCOMPILER_RT_BUILD_BUILTINS=ON",
+            "*-android*:config_opts=$config_opts -DCLANG_ENABLE_BOOTSTRAP=ON"
         ],
         "steps": [
             "*-android*:cmake -S llvm -B build -G Ninja $config_opts",

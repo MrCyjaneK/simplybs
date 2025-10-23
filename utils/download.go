@@ -7,6 +7,7 @@ import (
 	"io"
 	"log"
 	"net/http"
+	"net/url"
 	"os"
 	"path/filepath"
 	"strconv"
@@ -73,18 +74,50 @@ func formatBytes(bytes int64) string {
 	return fmt.Sprintf("%.1f %cB", float64(bytes)/float64(div), "KMGTPE"[exp%len("KMGTPE")])
 }
 
+func GetMirrors() []string {
+	mirrors := []string{
+		"http://static.mrcyjanek.net/lfs/simplybs/source/",
+	}
+	if customMirror := os.Getenv("SIMPLYBS_MIRROR"); customMirror != "" {
+		mirrors = append([]string{customMirror}, mirrors...)
+	}
+	return mirrors
+}
+
+func URLToPath(urlStr string) (string, error) {
+	parsedURL, err := url.Parse(urlStr)
+	if err != nil {
+		return "", fmt.Errorf("failed to parse URL: %v", err)
+	}
+
+	path := strings.TrimPrefix(parsedURL.Path, "/")
+	return filepath.Join(parsedURL.Host, path), nil
+}
+
 func DownloadFile(packageName, path, url, expectedSha256 string, isMirror bool) error {
 	log.Printf("Downloading %s to %s", url, path)
 
 	if !isMirror {
-		err := DownloadFile(packageName, path, "http://static.mrcyjanek.net/lfs/simplybs/source/"+filepath.Base(path), expectedSha256, true)
+		urlPath, err := URLToPath(url)
 		if err != nil {
-			log.Printf("Failed to download file from mirror: %v, trying original URL", err)
+			log.Printf("Failed to convert URL to path: %v", err)
 		} else {
-			log.Printf("Downloaded file from mirror: %s", path)
-			return nil
+			mirrors := GetMirrors()
+			for _, mirror := range mirrors {
+				mirrorURL := mirror + urlPath
+				err := DownloadFile(packageName, path, mirrorURL, expectedSha256, true)
+				if err != nil {
+					log.Printf("Failed to download file from mirror %s: %v", mirror, err)
+					continue
+				}
+				log.Printf("Downloaded file from mirror: %s", path)
+				return nil
+			}
+			log.Printf("All mirrors failed, trying original URL")
 		}
 	}
+
+	os.MkdirAll(filepath.Dir(path), 0755)
 
 	resp, err := http.Get(url)
 	if err != nil {

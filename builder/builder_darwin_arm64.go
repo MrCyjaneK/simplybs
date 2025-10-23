@@ -1,5 +1,7 @@
 package builder
 
+import "runtime"
+
 var HostBuilder = Builder{
 	GlobalEnv: []string{
 		"*:HOST=aarch64-apple-darwin",
@@ -13,5 +15,7 @@ var HostBuilder = Builder{
 		"*:NM=/usr/bin/nm",
 		"*:OTOOL=/usr/bin/otool",
 		"*:INSTALL_NAME_TOOL=/usr/bin/install_name_tool",
+		"*:BUILDER_GOOS=" + runtime.GOOS,
+		"*:BUILDER_GOARCH=" + runtime.GOARCH,
 	},
 }

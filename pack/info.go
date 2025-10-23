@@ -103,10 +103,18 @@ func (p *Package) ShortName(h *host.Host) string {
 
 func (p *Package) GenerateSourceBuildPath(download *Download) string {
 	if download.Kind == "git" {
-		name := filepath.Base(download.URL) + "-" + download.Sha256[0:8] + ".bundle"
-		return filepath.Join(host.DataDir(), "source", name)
+		urlPath, err := utils.URLToPath(download.URL)
+		crash.Handle(err)
+		urlPath = strings.TrimSuffix(urlPath, ".git")
+		name := urlPath + ".bundle"
+		return filepath.Join(host.DataDirRoot(), "source", name)
 	}
-	return filepath.Join(host.DataDir(), "source", filepath.Base(download.URL))
+
+	urlPath, err := utils.URLToPath(download.URL)
+	if err != nil {
+		return filepath.Join(host.DataDirRoot(), "source", filepath.Base(download.URL))
+	}
+	return filepath.Join(host.DataDirRoot(), "source", urlPath)
 }
 
 func (p *Package) GenerateBuildPath(h *host.Host, kind string) string {

@@ -15,6 +15,14 @@ import (
 	"github.com/mrcyjanek/simplybs/pack"
 )
 
+type RepositoryInfo struct {
+	Refs []string `json:"refs"`
+}
+
+type SourcesFile struct {
+	Repositories map[string]RepositoryInfo `json:"repositories"`
+}
+
 type OrderedPackage struct {
 	Package      string                   `json:"package"`
 	Version      string                   `json:"version"`
@@ -28,7 +36,7 @@ type OrderedPackage struct {
 func Lint() {
 	fixFormatting()
 	ensureSaneDependencies()
-
+	createSourcesFile()
 }
 
 func fixFormatting() {
@@ -241,4 +249,83 @@ func dfsCycleDetection(packageName string, graph map[string][]string, color map[
 
 	color[packageName] = 2
 	return false
+}
+
+func createSourcesFile() {
+	log.Println("Creating sources.json file...")
+	sources := SourcesFile{
+		Repositories: make(map[string]RepositoryInfo),
+	}
+
+	pkgs := pack.GetAllPackages()
+	for _, pkg := range pkgs {
+		content, err := os.ReadFile(filepath.Join(host.GetPackagesDir(), pkg.Package+".json"))
+		if err != nil {
+			log.Printf("Failed to read package %s: %v", pkg.Package, err)
+			continue
+		}
+
+		var packageData map[string]interface{}
+		if err := json.Unmarshal(content, &packageData); err != nil {
+			log.Printf("Failed to parse package %s: %v", pkg.Package, err)
+			continue
+		}
+
+		downloads, ok := packageData["download"].([]interface{})
+		if !ok {
+			continue
+		}
+
+		for _, downloadInterface := range downloads {
+			download, ok := downloadInterface.(map[string]interface{})
+			if !ok {
+				continue
+			}
+
+			kind, ok := download["kind"].(string)
+			if !ok || kind != "git" {
+				continue
+			}
+
+			url, ok := download["url"].(string)
+			if !ok {
+				continue
+			}
+
+			sha256, ok := download["sha256"].(string)
+			if !ok || sha256 == "" {
+				continue
+			}
+
+			if repoInfo, exists := sources.Repositories[url]; exists {
+				refExists := false
+				for _, ref := range repoInfo.Refs {
+					if ref == sha256 {
+						refExists = true
+						break
+					}
+				}
+				if !refExists {
+					repoInfo.Refs = append(repoInfo.Refs, sha256)
+				}
+
+				sources.Repositories[url] = repoInfo
+			} else {
+				sources.Repositories[url] = RepositoryInfo{
+					Refs: []string{sha256},
+				}
+			}
+		}
+	}
+
+	sourcesJSON, err := json.MarshalIndent(sources, "", "    ")
+	if err != nil {
+		log.Fatalf("Failed to marshal sources.json: %v", err)
+	}
+
+	if err := os.WriteFile("sources.json", sourcesJSON, 0644); err != nil {
+		log.Fatalf("Failed to write sources.json: %v", err)
+	}
+
+	log.Printf("Created sources.json with %d repositories", len(sources.Repositories))
 }

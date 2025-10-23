@@ -46,7 +46,7 @@ func (p *Package) DownloadSource(download *Download) {
 	if _, err := os.Stat(sourcePath); os.IsNotExist(err) {
 		var err error
 		if download.Kind == "git" {
-			err = utils.DownloadGit(p.Package, sourcePath, download.URL, download.Sha256)
+			err = utils.DownloadGit(p.Package, sourcePath, download.URL)
 		} else {
 			err = utils.DownloadFile(p.Package, sourcePath, download.URL, download.Sha256, false)
 		}
@@ -75,7 +75,7 @@ func (p *Package) ExtractSource(host *host.Host, buildPath string) {
 		case "tar.xz":
 			err = utils.ExtractTarXz(sourcePath, actualBuildPath)
 		case "git":
-			err = utils.ExtractGitCloneBundle(sourcePath, actualBuildPath)
+			err = utils.ExtractGitCloneBundle(sourcePath, actualBuildPath, download.Sha256)
 		case "blob":
 			os.MkdirAll(filepath.Dir(actualBuildPath), 0755)
 			err = utils.Copy(sourcePath, actualBuildPath)

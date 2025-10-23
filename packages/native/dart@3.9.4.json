@@ -247,10 +247,21 @@
             "path": "third_party/zlib",
             "sha256": "470d3a2ee4ef721688ce6961bc865a99fcb64070",
             "url": "https://chromium.googlesource.com/chromium/src/third_party/zlib.git"
+        },
+        {
+            "kind": "tar.gz",
+            "path": "third_party/devtools/devtools_shared",
+            "sha256": "275e48a8a145fa09c7ae433a96fd433c01cc079d39b40acf5ba883236ae2c887",
+            "url": "https://pub.dev/api/archives/devtools_shared-12.0.0.tar.gz"
         }
     ],
     "dependencies": [
+        "*:native/dart-bin@3.9.0-100.2.beta",
         "*:native/gn",
+        "*:native/libc++",
+        "*:native/llvm-ar",
+        "*:native/llvm-nm",
+        "*:native/llvm-strip",
         "*:native/make",
         "*:native/ninja",
         "*:native/python@3.11.13",
@@ -270,13 +281,27 @@
             "*:mkdir -p buildtools/ninja",
             "*:ln -s $(which ninja) buildtools/ninja/ninja",
             "*:mkdir -p buildtools/mac-arm64/clang/bin",
+            "*:mkdir -p buildtools/mac-arm64/clang/lib",
+            "*:ln -s $PREFIX/native/lib/libc++.a buildtools/mac-arm64/clang/lib/libc++.a",
             "*:ln -s $(which clang) buildtools/mac-arm64/clang/bin/clang",
             "*:ln -s $(which clang++) buildtools/mac-arm64/clang/bin/clang++",
+            "*:ln -s $(which llvm-ar) buildtools/mac-arm64/clang/bin/llvm-ar",
+            "*:ln -s $(which llvm-nm) buildtools/mac-arm64/clang/bin/llvm-nm",
+            "*:ln -s $(which llvm-strip) buildtools/mac-arm64/clang/bin/llvm-strip",
             "*:sed -i.bak 's/\"-Wno-dangling-reference\",/ /g' runtime/BUILD.gn",
+            "*:mkdir -p tools/sdks/dart-sdk/bin",
+            "*:ln -s $(which dart) tools/sdks/dart-sdk/bin/dart",
+            "*:chmod +x buildtools/mac-arm64/clang/bin/llvm-ar",
             "*:python3 ./tools/generate_package_config.py # HOOK Generate the .dart_tool/package_confg.json file.",
-            "*:python3 ./tools/generate_sdk_version_file.py # HOOK Generate sdk/version.",
-            "*:python3 ./tools/generate_large_tests.py # HOOK Generate large tests.",
-            "*:python3 ./tools/build.py --mode=release"
+            "*:echo 3.9.4 > sdk/version",
+            "*:mkdir -p third_party/devtools/web",
+            "*:echo 'no devtools :(' > third_party/devtools/web/index.html",
+            "*:python3 ./tools/build.py --mode=product",
+            "*:mkdir -p $STAGING_DIR$PREFIX/native/bin $STAGING_DIR$PREFIX/native/lib $STAGING_DIR$PREFIX/native/include/",
+            "*:cp ./xcodebuild/ProductARM64/dart $STAGING_DIR$PREFIX/native/bin/ || true",
+            "*:cp -r runtime/ $STAGING_DIR$PREFIX/native/lib/",
+            "*:cp -r runtime/include/* $STAGING_DIR$PREFIX/native/include/",
+            "*:$STAGING_DIR$PREFIX/native/bin/dart --version"
         ]
     }
 }

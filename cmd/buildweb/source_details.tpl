@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>{{.Package.Package.Package}} - {{.BuiltFile.Builder}}/{{.BuiltFile.Target}} Archive Contents</title>
+    <title>{{.Package.Package}} - Source Archive Contents</title>
     <style>
         body { 
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; 
@@ -122,14 +122,6 @@
             background: #0056b3;
             color: white;
         }
-        .download-btn-secondary {
-            background: #6c757d;
-            color: white;
-        }
-        .download-btn-secondary:hover {
-            background: #545b62;
-            color: white;
-        }
         
         .stats {
             background: #e9ecef;
@@ -155,18 +147,7 @@
             font-size: 0.9em;
         }
         
-        .builder-badge {
-            display: inline-block;
-            background: #e9ecef;
-            color: #495057;
-            padding: 4px 8px;
-            border-radius: 4px;
-            font-size: 0.85em;
-            font-weight: 500;
-            margin-left: 10px;
-        }
-        
-        .target-badge {
+        .source-badge {
             display: inline-block;
             background: #d4edda;
             color: #155724;
@@ -180,40 +161,52 @@
 </head>
 <body>
     <div class="container">
-        <a href="../../../{{.Package.Package.Package}}.html" class="back-link">← Back to Package</a>
-        <a href="../../../builder_{{.BuiltFile.Builder}}.html" class="back-link">← Back to {{.BuiltFile.Builder}}</a>
+        <a href="{{getRelativePath .Package.Package "index"}}" class="back-link">← Back to Package</a>
         
-        <h1>{{.Package.Package.Package}}</h1>
+        <h1>{{.Package.Package}}</h1>
         <div style="margin-bottom: 20px;">
-            <span class="builder-badge">{{.BuiltFile.Builder}}</span>
-            <span class="target-badge">{{.BuiltFile.Target}}</span>
+            <span class="source-badge">{{.Download.Kind}} source</span>
         </div>
 
         <div class="download-buttons">
-            <a href="../../../{{getBuiltFilePath .Package.Package.Package .BuiltFile.ArchPath}}" class="download-btn download-btn-primary" download>
-                ⬇ Download Archive ({{formatFileSize .BuiltFile.FileSize}})
-            </a>
-            <a href="../../../{{getBuiltFilePath .Package.Package.Package .BuiltFile.InfoPath}}" class="download-btn download-btn-secondary" target="_blank">
-                📄 Build Info
+            <a href="{{getSourceFilePath .Package.Package .SourcePath}}" class="download-btn download-btn-primary" download>
+                ⬇ Download Source ({{formatFileSize .FileSize}})
             </a>
         </div>
 
         <div class="info-section">
-            <h2>Build Information</h2>
+            <h2>Source Information</h2>
             <table class="info-table">
-                <tr><th>Package</th><td>{{.Package.Package.Package}}</td></tr>
-                <tr><th>Version</th><td>{{.Package.Package.Version}}</td></tr>
-                <tr><th>Builder</th><td>{{.BuiltFile.Builder}}</td></tr>
-                <tr><th>Target</th><td>{{.BuiltFile.Target}}</td></tr>
-                <tr><th>Build ID</th><td><code>{{.BuiltFile.ID}}</code></td></tr>
-                <tr><th>Archive Size</th><td>{{formatFileSize .BuiltFile.FileSize}}</td></tr>
+                <tr><th>Package</th><td>{{.Package.Package}}</td></tr>
+                <tr><th>Version</th><td>{{.Package.Version}}</td></tr>
+                <tr><th>Download Kind</th><td>{{.Download.Kind}}</td></tr>
+                <tr><th>URL</th><td><code style="word-break: break-all;">{{.Download.URL}}</code></td></tr>
+                <tr><th>SHA256</th><td><code>{{.Download.Sha256}}</code></td></tr>
+                {{if .Download.Path}}
+                <tr><th>Extract Path</th><td><code>{{.Download.Path}}</code></td></tr>
+                {{end}}
+                <tr><th>File Size</th><td>{{formatFileSize .FileSize}}</td></tr>
             </table>
         </div>
 
+        {{if eq .Download.Kind "blob"}}
+        <div class="info-section">
+            <h2>File Information</h2>
+            <div class="stats">
+                <div class="stats-left">This is a single file (blob)</div>
+            </div>
+        </div>
+        {{else if eq .Download.Kind "none"}}
+        <div class="info-section">
+            <h2>No Download</h2>
+            <div class="stats">
+                <div class="stats-left">This package has no downloadable source</div>
+            </div>
+        </div>
+        {{else}}
         <div class="info-section">
             <h2>Archive Contents</h2>
-            {{$tempDownload := index (list (dict "Kind" "tar.gz")) 0}}
-            {{$archiveInfo := getArchiveInfo .Package.Package $tempDownload}}
+            {{$archiveInfo := getArchiveInfo .Package .Download}}
             {{if $archiveInfo.Files}}
             <div class="stats">
                 <div class="stats-left">{{len $archiveInfo.Files}} files in archive</div>
@@ -240,6 +233,8 @@
             </div>
             {{end}}
         </div>
+        {{end}}
     </div>
 </body>
 </html>
+

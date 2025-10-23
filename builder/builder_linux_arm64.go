@@ -1,5 +1,7 @@
 package builder
 
+import "runtime"
+
 var HostBuilder = Builder{
 	GlobalEnv: []string{
 		"*:HOST=aarch64-linux-gnu",
@@ -13,5 +15,7 @@ var HostBuilder = Builder{
 		"*:OTOOL=otool",
 		"*:AUTOMAKE=automake",
 		"*:INSTALL_NAME_TOOL=install_name_tool",
+		"*:BUILDER_GOOS=" + runtime.GOOS,
+		"*:BUILDER_GOARCH=" + runtime.GOARCH,
 	},
 }

@@ -183,6 +183,7 @@ func Cleanup() {
 	packages := GetAllPackages()
 
 	keepFiles := make(map[string]bool)
+	keepSources := make(map[string]bool)
 
 	builders := []string{runtime.GOOS + "_" + runtime.GOARCH}
 	targets := make([]string, 0, len(host.SupportedHosts))
@@ -203,9 +204,17 @@ func Cleanup() {
 				keepFiles[infoPath] = true
 			}
 		}
+
+		for _, download := range pkg.Download {
+			sourcePath := pkg.GenerateSourceBuildPath(download)
+			relPath, err := filepath.Rel(buildlibDir, sourcePath)
+			if err == nil {
+				keepSources[relPath] = true
+			}
+		}
 	}
 
-	fmt.Printf("Cleanup: Will keep %d current build files\n", len(keepFiles))
+	fmt.Printf("Cleanup: Will keep %d current build files and %d source files\n", len(keepFiles), len(keepSources))
 
 	for _, builder := range builders {
 		builderDir := filepath.Join(buildlibDir, builder)
@@ -253,6 +262,46 @@ func Cleanup() {
 				os.RemoveAll(dir)
 			}
 		}
+	}
+
+	sourceDir := filepath.Join(buildlibDir, "source")
+	if _, err := os.Stat(sourceDir); !os.IsNotExist(err) {
+		err := filepath.WalkDir(sourceDir, func(path string, d os.DirEntry, err error) error {
+			if err != nil {
+				return err
+			}
+
+			if d.IsDir() {
+				return nil
+			}
+
+			relPath, err := filepath.Rel(buildlibDir, path)
+			if err != nil {
+				return nil
+			}
+
+			relPath = filepath.ToSlash(relPath)
+
+			if !keepSources[relPath] {
+				fmt.Printf("Removing stale source file: %s\n", relPath)
+				os.Remove(path)
+			}
+
+			return nil
+		})
+		if err != nil {
+			fmt.Printf("Error walking source directory %s: %v\n", sourceDir, err)
+		}
+
+		filepath.WalkDir(sourceDir, func(path string, d os.DirEntry, err error) error {
+			if err != nil {
+				return err
+			}
+			if d.IsDir() && path != sourceDir {
+				os.Remove(path)
+			}
+			return nil
+		})
 	}
 
 	fmt.Println("Cleanup completed!")
