@@ -80,3 +80,10 @@ In order to build, let's say, `tor` for armv7a-linux-androideabi you would run t
 ```
 $ go run . -host armv7a-linux-androideabi -package tor -build
 ```
+
+## Recommended / "official" cache settings
+
+
+```bash
+SIMPLYBS_ENV_DIR=/opt/_
+```

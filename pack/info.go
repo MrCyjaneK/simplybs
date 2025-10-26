@@ -81,6 +81,7 @@ func (p *Package) GeneratePackageInfo(h *host.Host) string {
 	env := p.GetEnvForLogs(h)
 	delete(env, "PATH")
 	pkgs["_env"] = env
+	pkgs["_prefix"] = h.GetEnvPath()
 	info, err := json.MarshalIndent(pkgs, "", "  ")
 	crash.Handle(err)
 	return string(info)

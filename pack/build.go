@@ -118,7 +118,11 @@ func (p *Package) buildPackageInternal(h *host.Host, buildDependencies bool) {
 		}
 	}
 	envPath := h.GetEnvPath()
-	os.RemoveAll(envPath)
+	if entries, err := os.ReadDir(envPath); err == nil {
+		for _, entry := range entries {
+			os.RemoveAll(filepath.Join(envPath, entry.Name()))
+		}
+	}
 	os.MkdirAll(envPath, 0755)
 	for _, dep := range deps {
 		dep.ExtractEnv(h, envPath)
