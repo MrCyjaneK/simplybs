@@ -1,24 +1,22 @@
 {
-    "package": "native/gettext",
-    "version": "0.26",
+    "package": "native/unistring",
+    "version": "1.4.1",
     "type": "native",
     "download": [
         {
             "kind": "tar.gz",
-            "sha256": "39acf4b0371e9b110b60005562aace5b3631fed9b1bb9ecccfc7f56e58bb1d7f",
-            "url": "http://ftpmirror.gnu.org/gnu/gettext/gettext-0.26.tar.gz"
+            "sha256": "12542ad7619470efd95a623174dcd4b364f2483caf708c6bee837cb53a54cb9d",
+            "url": "http://ftpmirror.gnu.org/gnu/libunistring/libunistring-1.4.1.tar.gz"
         }
     ],
     "dependencies": [
-        "*:native/libiconv",
-        "*:native/unistring",
         "*:native/make",
         "*:native/sed"
     ],
     "build": {
         "env": [
             "*:config_opts=--prefix=$PREFIX/native",
-            "*:config_opts=$config_opts --with-libiconv-prefix=$PREFIX/native"
+            "*:config_opts=$config_opts --disable-shared --enable-static"
         ],
         "steps": [
             "*:./configure $config_opts",
