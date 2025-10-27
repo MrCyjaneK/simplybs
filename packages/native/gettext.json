@@ -18,7 +18,8 @@
     "build": {
         "env": [
             "*:config_opts=--prefix=$PREFIX/native",
-            "*:config_opts=$config_opts --with-libiconv-prefix=$PREFIX/native"
+            "*:config_opts=$config_opts --with-libiconv-prefix=$PREFIX/native",
+            "*:config_opts=$config_opts --with-libunistring-prefix=$PREFIX/native"
         ],
         "steps": [
             "*:./configure $config_opts",
