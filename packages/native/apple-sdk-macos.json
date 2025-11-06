@@ -1,0 +1,60 @@
+{
+    "package": "native/apple-sdk-macos",
+    "version": "master@f873f53",
+    "type": "native",
+    "download": [
+        {
+            "kind": "tar.gz",
+            "sha256": "7ff7657a435e709dfc81e79965bf2d0544d71bea26432991db8837b797290c28",
+            "url": "https://github.com/tpoechtrager/osxcross/archive/f873f534c6cdb0776e457af8c7513da1e02abe59.tar.gz"
+        },
+        {
+            "kind": "blob",
+            "path": "Xcode_26.1.xip",
+            "sha256": "9881c457068c86ac91e94cca2d7116dfd01cb7179c22b0863b63c7f3bb7e7695",
+            "url": "https://download.developer.apple.com/Developer_Tools/Xcode_26.1/XcodeXIP_26.1_Universal.xip"
+        }
+    ],
+    "dependencies": [
+        "*-apple-darwin:native/bzip2",
+        "*-apple-darwin:native/cctools-port",
+        "*-apple-darwin:native/cmake",
+        "*-apple-darwin:native/cpio",
+        "*-apple-darwin:native/gettext",
+        "*-apple-darwin:native/git",
+        "*-apple-darwin:native/libtapi",
+        "*-apple-darwin:native/libxml2",
+        "*-apple-darwin:native/make",
+        "*-apple-darwin:native/openssl",
+        "*-apple-darwin:native/patch",
+        "*-apple-darwin:native/pbzx",
+        "*-apple-darwin:native/perl",
+        "*-apple-darwin:native/pkgconf",
+        "*-apple-darwin:native/python@3.11.13",
+        "*-apple-darwin:native/xar",
+        "*-apple-darwin:native/xz"
+    ],
+    "build": {
+        "env": [
+            "*-apple-darwin:JOBS=$NUM_CORES",
+            "*-apple-darwin:PORTABLE=1",
+            "*-apple-darwin:TARGET_DIR=$PREFIX/native/",
+            "aarch64-apple-darwin:ENABLE_ARCHS=arm64",
+            "x86_64-apple-darwin:ENABLE_ARCHS=x86_64",
+            "*-apple-darwin:UNATTENDED=1",
+            "*-apple-darwin:SDK_VERSION=26.0",
+            "*-apple-darwin:COMPRESSLEVEL=9 -e"
+        ],
+        "steps": [
+            "*-apple-darwin:sed -i.bak 's/$TARGET_DIR\\/bin\\///g' tools/gen_sdk_package_pbzx.sh",
+            "*-apple-darwin:sed -i.bak 's/$TARGET_DIR\\/SDK\\/tools\\/bin\\///g' tools/gen_sdk_package_pbzx.sh",
+            "*-apple-darwin:sed -i.bak 's/build_xar/echo build_xar/g' tools/gen_sdk_package_pbzx.sh",
+            "*-apple-darwin:sed -i.bak 's/build_pbxz/echo build_pbxz/g' tools/gen_sdk_package_pbzx.sh",
+            "*-apple-darwin:sed -i.bak 's/git /echo git /g' tools/tools.sh",
+            "*-apple-darwin:sed -i.bak '8,11d' tools/gen_sdk_package_pbzx.sh",
+            "*-apple-darwin:./tools/gen_sdk_package_pbzx.sh ./Xcode_*.xip",
+            "*-apple-darwin:mkdir -p $STAGING_DIR$PREFIX/native/share",
+            "*-apple-darwin:mv MacOSX26.sdk.tar.xz $STAGING_DIR$PREFIX/native/share"
+        ]
+    }
+}

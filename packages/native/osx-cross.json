@@ -10,12 +10,6 @@
         },
         {
             "kind": "blob",
-            "path": "Xcode_26.0.1.xip",
-            "sha256": "9881c457068c86ac91e94cca2d7116dfd01cb7179c22b0863b63c7f3bb7e7695",
-            "url": "https://download.developer.apple.com/Developer_Tools/Xcode_26.0.1/Xcode_26.0.1_Universal.xip"
-        },
-        {
-            "kind": "blob",
             "path": "tarballs/llvmorg-20.1.8.zip",
             "sha256": "b115ce6285dd9f3f401459912c12d28eb2e2d81e2387a71f6300aa11f7bc3288",
             "url": "https://github.com/llvm/llvm-project/archive/refs/tags/llvmorg-20.1.8.zip"
@@ -28,6 +22,7 @@
         }
     ],
     "dependencies": [
+        "*-apple-darwin:native/apple-sdk-macos",
         "*-apple-darwin:native/bzip2",
         "*-apple-darwin:native/cctools-port",
         "*-apple-darwin:native/cmake",
@@ -54,27 +49,22 @@
             "aarch64-apple-darwin:ENABLE_ARCHS=arm64",
             "x86_64-apple-darwin:ENABLE_ARCHS=x86_64",
             "*-apple-darwin:UNATTENDED=1",
-            "*-apple-darwin:SDK_VERSION=26.0",
+            "*-apple-darwin:SDK_VERSION=26",
             "*-apple-darwin:COMPRESSLEVEL=0"
         ],
         "steps": [
-            "*-apple-darwin:sed -i.bak 's/$TARGET_DIR\\/bin\\///g' tools/gen_sdk_package_pbzx.sh",
-            "*-apple-darwin:sed -i.bak 's/$TARGET_DIR\\/SDK\\/tools\\/bin\\///g' tools/gen_sdk_package_pbzx.sh",
-            "*-apple-darwin:sed -i.bak 's/build_xar/echo build_xar/g' tools/gen_sdk_package_pbzx.sh",
             "*-apple-darwin:sed -i.bak 's/build_xar/echo build_xar/g' build.sh",
             "*-apple-darwin:sed -i.bak 's/git clone/echo git clone/g' build.sh",
             "*-apple-darwin:sed -i.bak 's/--with-libtapi=$TARGET_DIR/--with-libtapi=$PREFIX\\/native/g' build.sh",
             "*-apple-darwin:sed -i.bak 's/--with-libxar=$TARGET_DIR/--with-libxar=$PREFIX\\/native/g' build.sh",
-            "*-apple-darwin:sed -i.bak 's/build_pbxz/echo build_pbxz/g' tools/gen_sdk_package_pbzx.sh",
             "*-apple-darwin:sed -i.bak 's/git /echo git /g' tools/tools.sh",
             "*-apple-darwin:sed -i.bak 's/download $CLANG_LLVM_PKG/echo download $CLANG_LLVM_PKG/g' build_clang.sh",
             "*-apple-darwin:sed -i.bak 's/rm -f $(basename $CLANG_LLVM_PKG)/echo rm -f $(basename $CLANG_LLVM_PKG)/g' build_clang.sh",
             "*-apple-darwin:sed -i.bak 's/get_sources/echo get_sources/g' build.sh",
-            "*-apple-darwin:sed -i.bak '8,11d' tools/gen_sdk_package_pbzx.sh",
+            "*-apple-darwin:sed -i.bak 's/-DCMAKE_BUILD_TYPE=Release/& -DCLANG_ENABLE_BOOTSTRAP=ON/g' build.sh",
             "*-apple-darwin:sed -i.bak '135,145d' build.sh",
             "*-apple-darwin:sed -i.bak '145,160d' build.sh",
-            "*-apple-darwin:./tools/gen_sdk_package_pbzx.sh ./Xcode_26.0.1.xip",
-            "*-apple-darwin:mv MacOSX26.* tarballs",
+            "*-apple-darwin:mv $PREFIX/native/share/MacOSX26.* tarballs",
             "none:yes | INSTALLPREFIX=$PREFIX/native ./build_clang.sh",
             "none:cd build/clang-20.1.8/build_stage2 && make install DESTDIR=$STAGING_DIR && make install",
             "*-apple-darwin:yes | INSTALLPREFIX=$PREFIX/native ./build_apple_clang.sh",
