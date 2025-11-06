@@ -8,41 +8,16 @@
         "*-apple-*:native/osx-cross",
         "*-linux-gnu:native/ct-tools",
         "*-linux-musl:native/ct-tools",
-        "*-w64-mingw32:native/ct-tools",
-        "*:native/autoconf",
-        "*:native/automake",
-        "*:native/bash",
-        "*:native/bison",
-        "*:native/cmake",
-        "*:native/cmake-toolchain",
-        "*:native/config",
-        "*:native/gawk",
-        "*:native/gettext",
-        "*:native/libtapi",
-        "*:native/libtool",
-        "*:native/libxml2",
-        "*:native/m4",
-        "*:native/make",
-        "*:native/mpc",
-        "*:native/mpfr",
-        "*:native/ninja",
-        "*:native/nproc",
-        "*:native/patch",
-        "*:native/perl",
-        "*:native/pkgconf",
-        "*:native/rsync",
-        "*:native/sed",
-        "*:native/texinfo",
-        "*:native/xar"
+        "*-w64-mingw32:native/ct-tools"
     ],
     "build": {
         "env": [
-            "none:A_=This is a meta-package library that includes common tools needed for builds",
+            "none:A_=This is a meta-package library that includes c and c++ compiler",
             "none:B_=All packages included as dependencies (other than bootstrap packages) are copied over to staging dir"
         ],
         "steps": [
             "*:mkdir -p $STAGING_DIR$PREFIX ",
-            "*:rsync -a $PREFIX/* $STAGING_DIR$PREFIX",
+            "*:cp -a $PREFIX/* $STAGING_DIR$PREFIX",
             "*:rm -rf $STAGING_DIR$PREFIX/native/bootstrap"
         ]
     }
