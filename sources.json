@@ -70,6 +70,11 @@
                 "12f5c853ee9e06ba6565006d8d36ee261a140d91"
             ]
         },
+        "https://android.googlesource.com/platform/external/toolchain-utils": {
+            "refs": [
+                "d71e320ab860721f764fe7403588641c8a7bc65d"
+            ]
+        },
         "https://android.googlesource.com/platform/external/vulkan-headers": {
             "refs": [
                 "062f62b42a62e18a8eaccbce323d4f58548677be"
@@ -98,7 +103,13 @@
         "https://android.googlesource.com/toolchain/llvm-project": {
             "refs": [
                 "c58bc24fcf678c55b0bf522be89eff070507a005",
+                "3b5e7c83a6e226d5bd7ed2e9b67449b64812074c",
                 "5e96669f06077099aa41290cdb4c5e6fa0f59349"
+            ]
+        },
+        "https://android.googlesource.com/toolchain/llvm_android.git": {
+            "refs": [
+                "e727bfb014bd436f581a66a450c939a6983a1fc3"
             ]
         },
         "https://android.googlesource.com/toolchain/make": {

@@ -11,9 +11,9 @@
     ],
     "dependencies": [
         "*:native/libiconv",
-        "*:native/unistring",
         "*:native/make",
-        "*:native/sed"
+        "*:native/sed",
+        "*:native/unistring"
     ],
     "build": {
         "env": [

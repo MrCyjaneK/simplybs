@@ -18,10 +18,6 @@
         "*:native/python@3.11.13",
         "*:native/rust@1_59_0"
     ],
-    "patches": [
-        "assembly.h.patch",
-        "Signals.h.patch"
-    ],
     "build": {
         "env": [],
         "steps": [

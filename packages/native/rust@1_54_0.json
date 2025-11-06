@@ -22,9 +22,6 @@
         "*:native/perl",
         "*:native/zlib"
     ],
-    "patches": [
-        "codegen_c.cpp.patch"
-    ],
     "build": {
         "env": [
             "*:PARLEVEL=$NUM_CORES"

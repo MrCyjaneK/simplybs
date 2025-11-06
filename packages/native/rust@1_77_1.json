@@ -18,9 +18,6 @@
         "*:native/python@3.11.13",
         "*:native/rust@1_76_0"
     ],
-    "patches": [
-        "assembly.h.patch"
-    ],
     "build": {
         "env": [],
         "steps": [

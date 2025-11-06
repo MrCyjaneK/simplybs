@@ -18,14 +18,10 @@
         "*:native/python@3.11.13",
         "*:native/rust@1_71_1"
     ],
-    "patches": [
-        "assembly.h.patch",
-        "Signals.h.patch"
-    ],
     "build": {
         "env": [],
         "steps": [
-            "*:patch -p1 < $PATCH_DIR/rust/1_56_1/assembly.h.patch",
+            "*:patch -p1 < $PATCH_DIR/rust/1_66_1/assembly.h.patch",
             "*:patch -p1 < $PATCH_DIR/rust/Signals.h.patch",
             "*:echo '[build]' > config.toml",
             "*:echo 'full-bootstrap = true' >> config.toml",
