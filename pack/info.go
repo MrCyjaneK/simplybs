@@ -11,7 +11,6 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/gobwas/glob"
 	"github.com/mrcyjanek/simplybs/builder"
 	"github.com/mrcyjanek/simplybs/crash"
 	"github.com/mrcyjanek/simplybs/host"
@@ -30,36 +29,36 @@ func (p *Package) FilterForHost(h *host.Host) *Package {
 	filtered.Build.Steps = []string{}
 
 	for _, dep := range p.Dependencies {
-		if strings.Contains(dep, ":") {
-			prefix := strings.Split(dep, ":")[0]
-			g := glob.MustCompile(prefix)
-			if !g.Match(h.Triplet) {
-				continue
-			}
+		is := utils.ParseIfString(dep)
+		if !is.HostGlob().Match(h.Triplet) {
+			continue
 		}
-		filtered.Dependencies = append(filtered.Dependencies, dep)
+		if !is.BuilderGlob().Match(builder.GetName()) {
+			continue
+		}
+		filtered.Dependencies = append(filtered.Dependencies, is.Content)
 	}
 
 	for _, env := range p.Build.Env {
-		if strings.Contains(env, ":") {
-			prefix := strings.Split(env, ":")[0]
-			g := glob.MustCompile(prefix)
-			if !g.Match(h.Triplet) {
-				continue
-			}
+		is := utils.ParseIfString(env)
+		if !is.HostGlob().Match(h.Triplet) {
+			continue
 		}
-		filtered.Build.Env = append(filtered.Build.Env, env)
+		if !is.BuilderGlob().Match(builder.GetName()) {
+			continue
+		}
+		filtered.Build.Env = append(filtered.Build.Env, is.Content)
 	}
 
 	for _, step := range p.Build.Steps {
-		if strings.Contains(step, ":") {
-			prefix := strings.Split(step, ":")[0]
-			g := glob.MustCompile(prefix)
-			if !g.Match(h.Triplet) {
-				continue
-			}
+		is := utils.ParseIfString(step)
+		if !is.HostGlob().Match(h.Triplet) {
+			continue
 		}
-		filtered.Build.Steps = append(filtered.Build.Steps, step)
+		if !is.BuilderGlob().Match(builder.GetName()) {
+			continue
+		}
+		filtered.Build.Steps = append(filtered.Build.Steps, is.Content)
 	}
 
 	return filtered
@@ -69,9 +68,8 @@ func (p *Package) GeneratePackageInfo(h *host.Host) string {
 	pkgs := map[string]interface{}{}
 	pkgs["_target"] = p.FilterForHost(h)
 	for _, dep := range p.Dependencies {
-		if strings.Contains(dep, ":") {
-			dep = dep[strings.Index(dep, ":")+1:]
-		}
+		is := utils.ParseIfString(dep)
+		dep := is.Content
 		pkg, err := FindPackage(dep)
 		if err != nil {
 			log.Fatalf("Package %s not found in info", dep)

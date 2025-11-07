@@ -6,7 +6,6 @@ import (
 	"log"
 	"strings"
 
-	cmd "github.com/mrcyjanek/simplybs/cmd/buildweb"
 	"github.com/mrcyjanek/simplybs/cmd/lint"
 	"github.com/mrcyjanek/simplybs/crash"
 	"github.com/mrcyjanek/simplybs/host"
@@ -22,7 +21,6 @@ func main() {
 	argExtract := flag.Bool("extract", false, "Extract packages")
 	argDownload := flag.Bool("download", false, "Download package sources")
 	argBuild := flag.Bool("build", false, "Build packages")
-	argBuildWeb := flag.Bool("buildweb", false, "Generate static website with package information")
 	argLint := flag.Bool("lint", false, "Lint packages")
 	argVersion := flag.Bool("v", false, "Show version")
 	argShell := flag.Bool("shell", false, "Extract source and start shell with build environment")
@@ -30,10 +28,6 @@ func main() {
 	flag.Parse()
 	if *argVersion {
 		fmt.Println("simplybs version 0.0.0")
-		return
-	}
-	if *argBuildWeb {
-		cmd.BuildWeb()
 		return
 	}
 	if *argCleanup {
@@ -65,16 +59,13 @@ func main() {
 		return
 	}
 
-	hosts := strings.Split(*argHost, ",")
-	for _, h := range hosts {
+	hosts := strings.SplitSeq(*argHost, ",")
+	for h := range hosts {
 		host := host.SupportedHosts[h]
 		if host == nil {
 			crash.Handle(fmt.Errorf("host %s not supported", h))
 		}
 		buildForHost(host, packageNames, *argList, *argExtract, *argBuild, *argShell)
-		if *argBuildWeb {
-			cmd.BuildWeb()
-		}
 	}
 }
 

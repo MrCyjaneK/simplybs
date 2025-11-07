@@ -35,7 +35,7 @@ type Package struct {
 
 type BuiltFile struct {
 	Builder  string `json:"builder"`   // e.g. "darwin_arm64"
-	Target   string `json:"target"`    // e.g. "aarch64-apple-ios"
+	Target   string `json:"target"`    // e.g. "*:aarch64-apple-ios"
 	ID       string `json:"id"`        // short hash
 	InfoPath string `json:"info_path"` // relative path to .info.txt
 	ArchPath string `json:"arch_path"` // relative path to .tar.gz
@@ -48,11 +48,6 @@ type PackageWithBuilds struct {
 }
 
 var bootstrapPackages = []string{
-	"native/bootstrap/perl",
-	"native/bootstrap/cpan/autodie",
-	"native/bootstrap/cpan/archive-cpio",
-	"native/bootstrap/cpan/archive-zip",
-	"native/bootstrap/cpan/sub-override",
 	"native/bootstrap/strip-nondeterminism",
 }
 
@@ -70,9 +65,9 @@ func FindPackage(name string) (*Package, error) {
 
 	if !strings.Contains(pkg.Package, "/bootstrap/") {
 		for _, pkgName := range bootstrapPackages {
-			pkg.Dependencies = append(pkg.Dependencies, "*:"+pkgName)
+			pkg.Dependencies = append(pkg.Dependencies, "*:*:"+pkgName)
 		}
-		pkg.Build.Steps = append(pkg.Build.Steps, "*:$PREFIX/native/bootstrap/bin/perl $PREFIX/native/bootstrap/bin/strip-nondeterminism-recursive --directory $STAGING_DIR")
+		// pkg.Build.Steps = append(pkg.Build.Steps, "*:$PREFIX/native/bootstrap/bin/perl $PREFIX/native/bootstrap/bin/strip-nondeterminism-recursive --directory $STAGING_DIR")
 	}
 	return &pkg, nil
 }

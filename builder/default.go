@@ -2,8 +2,15 @@ package builder
 
 import (
 	"os/exec"
+	"runtime"
 	"strings"
+
+	"github.com/mrcyjanek/simplybs/utils"
 )
+
+func GetName() string {
+	return runtime.GOOS + "_" + runtime.GOARCH
+}
 
 type Builder struct {
 	GlobalEnv []string
@@ -21,10 +28,9 @@ func shellOutput(cmd string) string {
 
 func (b *Builder) GetCC() string {
 	for _, env := range b.GlobalEnv {
-		splitIndex := strings.Index(env, ":")
-		envVar := env[splitIndex+1:]
-		if strings.HasPrefix(envVar, "CC=") {
-			return envVar[3:]
+		is := utils.ParseIfString(env)
+		if strings.HasPrefix(is.Content, "CC=") {
+			return is.Content[3:]
 		}
 	}
 	return ""
@@ -32,10 +38,9 @@ func (b *Builder) GetCC() string {
 
 func (b *Builder) GetCXX() string {
 	for _, env := range b.GlobalEnv {
-		splitIndex := strings.Index(env, ":")
-		envVar := env[splitIndex+1:]
-		if strings.HasPrefix(envVar, "CXX=") {
-			return envVar[4:]
+		is := utils.ParseIfString(env)
+		if strings.HasPrefix(is.Content, "CXX=") {
+			return is.Content[4:]
 		}
 	}
 	return ""

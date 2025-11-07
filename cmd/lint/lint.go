@@ -10,6 +10,7 @@ import (
 	"strings"
 
 	"github.com/gobwas/glob"
+	"github.com/mrcyjanek/simplybs/builder"
 	"github.com/mrcyjanek/simplybs/crash"
 	"github.com/mrcyjanek/simplybs/host"
 	"github.com/mrcyjanek/simplybs/pack"
@@ -151,21 +152,30 @@ func ensureValidName(pkg *pack.Package) {
 func ensureValidDependencies(pkg *pack.Package) {
 	for _, dep := range pkg.Dependencies {
 		split := strings.Split(dep, ":")
-		if len(split) <= 1 {
+		if len(split) <= 2 {
 			log.Printf("Package %s has invalid dependency %s", pkg.Package, dep)
 			continue
 		}
-		prefix := split[0]
 
 		usedIn := 0
 		for _, host := range host.SupportedHosts {
-			g := glob.MustCompile(prefix)
+			g := glob.MustCompile(split[0])
 			if g.Match(host.Triplet) {
 				usedIn++
 			}
 		}
-		if usedIn == 0 && prefix != "none" {
-			log.Printf("Package %s is not used in any of host.SupportedHosts %s", pkg.Package, prefix)
+		usedInBuilder := 0
+		for _, b := range builder.Builders {
+			g := glob.MustCompile(split[1])
+			if g.Match(b) {
+				usedInBuilder++
+			}
+		}
+		if usedIn == 0 && split[0] != "none" {
+			log.Printf("Package %s is not used in any of host.SupportedHosts %s", pkg.Package, split[0])
+		}
+		if usedInBuilder == 0 && split[1] != "none" {
+			log.Printf("Package %s is not used in any of host.SupportedHosts %s", pkg.Package, split[1])
 		}
 
 		_, err := pack.FindPackage(split[1])

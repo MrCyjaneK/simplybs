@@ -9,6 +9,7 @@ import (
 	"strings"
 
 	"github.com/gobwas/glob"
+	"github.com/mrcyjanek/simplybs/builder"
 	"github.com/mrcyjanek/simplybs/host"
 	"github.com/mrcyjanek/simplybs/utils"
 )
@@ -100,12 +101,17 @@ func (p *Package) buildPackageInternal(h *host.Host, buildDependencies bool) {
 	if buildDependencies {
 		for _, dep := range p.Dependencies {
 			if strings.Contains(dep, ":") {
-				prefix := strings.Split(dep, ":")[0]
-				g := glob.MustCompile(prefix)
+				builderPrefix := strings.Split(dep, ":")[0]
+				hostPrefix := strings.Split(dep, ":")[1]
+				g := glob.MustCompile(hostPrefix)
 				if !g.Match(h.Triplet) {
 					continue
 				}
-				dep = dep[strings.Index(dep, ":")+1:]
+				g = glob.MustCompile(builderPrefix)
+				if !g.Match(builder.GetName()) {
+					continue
+				}
+				dep = dep[len(builderPrefix)+len(hostPrefix)+2:]
 			} else {
 				log.Fatalf("Invalid dependency: %s", dep)
 			}
