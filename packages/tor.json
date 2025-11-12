@@ -1,11 +1,11 @@
 {
     "package": "tor",
-    "version": "tor-0.4.8.17",
+    "version": "tor-0.4.8.20",
     "type": "host",
     "download": [
         {
             "kind": "git",
-            "sha256": "e41649c9a34f39f1d543e064fd2b97de26d3e097",
+            "sha256": "106dcfa18c1a9539cb97337e57954ff89685840e",
             "url": "http://gitlab.torproject.org/tpo/core/tor.git"
         }
     ],

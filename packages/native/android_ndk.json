@@ -3,7 +3,8 @@
     "version": "r28c",
     "type": "native",
     "dependencies": [
-        "*:native/p7zip"
+        "*:native/p7zip",
+        "*:native/python@3.11.13"
     ],
     "build": {
         "env": [
