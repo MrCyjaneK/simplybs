@@ -48,7 +48,7 @@ type PackageWithBuilds struct {
 }
 
 var bootstrapPackages = []string{
-	"native/bootstrap/strip-nondeterminism",
+	"*:*:native/bootstrap/strip-nondeterminism",
 }
 
 func FindPackage(name string) (*Package, error) {
@@ -65,7 +65,7 @@ func FindPackage(name string) (*Package, error) {
 
 	if !strings.Contains(pkg.Package, "/bootstrap/") {
 		for _, pkgName := range bootstrapPackages {
-			pkg.Dependencies = append(pkg.Dependencies, "*:*:"+pkgName)
+			pkg.Dependencies = append(pkg.Dependencies, pkgName)
 		}
 		// pkg.Build.Steps = append(pkg.Build.Steps, "*:$PREFIX/native/bootstrap/bin/perl $PREFIX/native/bootstrap/bin/strip-nondeterminism-recursive --directory $STAGING_DIR")
 	}
