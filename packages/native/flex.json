@@ -10,18 +10,18 @@
         }
     ],
     "dependencies": [
-        "*:native/m4",
-        "*:native/make"
+        "*:*:native/m4",
+        "*:*:native/make"
     ],
     "build": {
         "env": [
-            "*:CFLAGS=$CFLAGS -fPIC",
-            "*:LDFLAGS=$LDFLAGS -fPIC"
+            "*:*:CFLAGS=$CFLAGS -fPIC",
+            "*:*:LDFLAGS=$LDFLAGS -fPIC"
         ],
         "steps": [
-            "*:./configure --prefix=$PREFIX/native --with-pic",
-            "*:make -j$NUM_CORES",
-            "*:make DESTDIR=$STAGING_DIR install"
+            "*:*:./configure --prefix=$PREFIX/native --with-pic",
+            "*:*:make -j$NUM_CORES",
+            "*:*:make DESTDIR=$STAGING_DIR install"
         ]
     }
 }

@@ -5,7 +5,7 @@ import (
 	"runtime"
 	"strings"
 
-	"github.com/mrcyjanek/simplybs/utils"
+	"github.com/mrcyjanek/simplybs/utils/ifstring"
 )
 
 func GetName() string {
@@ -28,7 +28,7 @@ func shellOutput(cmd string) string {
 
 func (b *Builder) GetCC() string {
 	for _, env := range b.GlobalEnv {
-		is := utils.ParseIfString(env)
+		is := ifstring.ParseIfString(env)
 		if strings.HasPrefix(is.Content, "CC=") {
 			return is.Content[3:]
 		}
@@ -38,7 +38,7 @@ func (b *Builder) GetCC() string {
 
 func (b *Builder) GetCXX() string {
 	for _, env := range b.GlobalEnv {
-		is := utils.ParseIfString(env)
+		is := ifstring.ParseIfString(env)
 		if strings.HasPrefix(is.Content, "CXX=") {
 			return is.Content[4:]
 		}

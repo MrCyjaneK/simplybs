@@ -10,42 +10,44 @@
         }
     ],
     "dependencies": [
-        "*:native/autoconf",
-        "*:native/automake",
-        "*:native/bash",
-        "*:native/binutils@2.42",
-        "*:native/bison",
-        "*:native/bzip2",
-        "*:native/file",
-        "*:native/flex",
-        "*:native/gawk",
-        "*:native/gettext",
-        "*:native/help2man",
-        "*:native/libtool",
-        "*:native/m4",
-        "*:native/make",
-        "*:native/perl",
-        "*:native/python@3.11.13",
-        "*:native/rsync",
-        "*:native/sed",
-        "*:native/texinfo",
-        "*:native/xz",
-        "*:native/zlib"
+        "*:*:native/autoconf",
+        "*:*:native/automake",
+        "*:*:native/bash",
+        "*:*:native/binutils@2.42",
+        "*:*:native/bison",
+        "*:*:native/bzip2",
+        "*:*:native/file",
+        "*:*:native/flex",
+        "*:*:native/gawk",
+        "*:*:native/gettext",
+        "*:*:native/help2man",
+        "*:*:native/libtool",
+        "*:*:native/m4",
+        "*:*:native/make",
+        "*:*:native/ncurses",
+        "*:*:native/perl",
+        "*:*:native/python@3.11",
+        "*:*:native/rsync",
+        "*:*:native/sed",
+        "*:*:native/texinfo",
+        "*:*:native/unzip",
+        "*:*:native/xz",
+        "*:*:native/zlib"
     ],
     "build": {
         "env": [
-            "x86_64-linux-gnu:TOOL_TARGET=x86_64-linux-gnu",
-            "x86_64-w64-mingw32:TOOL_TARGET=x86_64-w64-mingw32",
-            "aarch64-linux-gnu:TOOL_TARGET=aarch64-linux-gnu",
-            "x86_64-linux-musl:TOOL_TARGET=x86_64-linux-musl"
+            "*:x86_64-linux-gnu:TOOL_TARGET=x86_64-linux-gnu",
+            "*:x86_64-w64-mingw32:TOOL_TARGET=x86_64-w64-mingw32",
+            "*:aarch64-linux-gnu:TOOL_TARGET=aarch64-linux-gnu",
+            "*:x86_64-linux-musl:TOOL_TARGET=x86_64-linux-musl"
         ],
         "steps": [
-            "*:./bootstrap",
-            "*:ln -s $TOOL_TARGET-objcopy $PREFIX/native/bin/objcopy",
-            "*:ln -s $TOOL_TARGET-readelf $PREFIX/native/bin/readelf",
-            "*:./configure --prefix=$PREFIX/native",
-            "*:make -j$NUM_CORES",
-            "*:make install DESTDIR=$STAGING_DIR"
+            "*:*:./bootstrap",
+            "*:*:ln -s $TOOL_TARGET-objcopy $PREFIX/native/bin/objcopy",
+            "*:*:ln -s $TOOL_TARGET-readelf $PREFIX/native/bin/readelf",
+            "*:*:./configure --prefix=$PREFIX/native",
+            "*:*:make -j$NUM_CORES",
+            "*:*:make install DESTDIR=$STAGING_DIR"
         ]
     }
 }

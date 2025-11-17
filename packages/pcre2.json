@@ -10,13 +10,13 @@
         }
     ],
     "dependencies": [
-        "*-linux-gnu:native/_"
+        "*:*-linux-gnu:native/_"
     ],
     "build": {
         "steps": [
-            "*-linux-gnu:./configure --host=$HOST --prefix=$PREFIX --enable-static --disable-shared --with-pic",
-            "*-linux-gnu:make -j$NUM_CORES",
-            "*-linux-gnu:make install DESTDIR=$STAGING_DIR"
+            "*:*-linux-gnu:./configure --host=$HOST --prefix=$PREFIX --enable-static --disable-shared --with-pic",
+            "*:*-linux-gnu:make -j$NUM_CORES",
+            "*:*-linux-gnu:make install DESTDIR=$STAGING_DIR"
         ]
     }
 }

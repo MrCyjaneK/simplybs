@@ -10,17 +10,17 @@
         }
     ],
     "dependencies": [
-        "*:native/make"
+        "*:*:native/make"
     ],
     "build": {
         "env": [],
         "steps": [
-            "*:if [ $(uname) = 'Darwin' ]; then cp makefile.macosx_llvm_64bits makefile.machine; else true; fi",
-            "*:if [ $(uname) = 'Linux' ]; then cp makefile.linux_any_cpu makefile.machine; else true; fi",
-            "*:sed -i.bak 's/switch(errorCode)/switch(static_cast<HRESULT>(errorCode))/' ./CPP/Windows/ErrorMsg.cpp",
-            "*:make -j$NUM_CORES 7za",
-            "*:mkdir -p $STAGING_DIR$PREFIX/native/bin",
-            "*:cp bin/7za $STAGING_DIR$PREFIX/native/bin/7z"
+            "*:*:if [ $(uname) = 'Darwin' ]; then cp makefile.macosx_llvm_64bits makefile.machine; else true; fi",
+            "*:*:if [ $(uname) = 'Linux' ]; then cp makefile.linux_any_cpu makefile.machine; else true; fi",
+            "*:*:sed -i.bak 's/switch(errorCode)/switch(static_cast<HRESULT>(errorCode))/' ./CPP/Windows/ErrorMsg.cpp",
+            "*:*:make -j$NUM_CORES 7za",
+            "*:*:mkdir -p $STAGING_DIR$PREFIX/native/bin",
+            "*:*:cp bin/7za $STAGING_DIR$PREFIX/native/bin/7z"
         ]
     }
 }

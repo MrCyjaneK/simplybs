@@ -883,6 +883,11 @@
                 "751b09390996163348612f0b106114256305ee40"
             ]
         },
+        "https://github.com/nodejs/node.git": {
+            "refs": [
+                "1da054d99bb16d35c54d759f36ccc125b90070bd"
+            ]
+        },
         "https://github.com/tpoechtrager/apple-libtapi.git": {
             "refs": [
                 "640b4623929c923c0468143ff2a363a48665fa54"
@@ -938,6 +943,11 @@
         "https://pagure.io/xmlto.git": {
             "refs": [
                 "13a831d76467c88f9e79f9804e2471137ec05331"
+            ]
+        },
+        "https://salsa.debian.org/sanvila/unzip.git": {
+            "refs": [
+                "e811196e79092a387e6ff0b345780710acfab1c4"
             ]
         }
     }

@@ -10,25 +10,25 @@
         }
     ],
     "dependencies": [
-        "*:native/_"
+        "*:*:native/_"
     ],
     "build": {
         "env": [
-            "*:CXXFLAGS=$CXXFLAGS -std=c++11",
-            "*-linux-gnu:CXXFLAGS=$CXXFLAGS -fPIC",
-            "*:config_opts=-DCMAKE_TOOLCHAIN_FILE=$PREFIX/native/toolchain.cmake",
-            "*:config_opts=$config_opts -DGOOGLETEST_VERSION=1.17.0",
-            "*:config_opts=$config_opts -DCMAKE_POLICY_VERSION_MINIMUM=3.5",
-            "*:config_opts=$config_opts -DCMAKE_INSTALL_PREFIX=$PREFIX",
-            "*:config_opts=$config_opts -DCMAKE_CXX_FLAGS_DEBUG=ON"
+            "*:*:CXXFLAGS=$CXXFLAGS -std=c++11",
+            "*:*-linux-gnu:CXXFLAGS=$CXXFLAGS -fPIC",
+            "*:*:config_opts=-DCMAKE_TOOLCHAIN_FILE=$PREFIX/native/toolchain.cmake",
+            "*:*:config_opts=$config_opts -DGOOGLETEST_VERSION=1.17.0",
+            "*:*:config_opts=$config_opts -DCMAKE_POLICY_VERSION_MINIMUM=3.5",
+            "*:*:config_opts=$config_opts -DCMAKE_INSTALL_PREFIX=$PREFIX",
+            "*:*:config_opts=$config_opts -DCMAKE_CXX_FLAGS_DEBUG=ON"
         ],
         "steps": [
-            "*:cd googletest && cmake $config_opts",
-            "*:cd googletest && make -j$NUM_CORES",
-            "*:mkdir $STAGING_DIR$PREFIX/lib $STAGING_DIR$PREFIX/include",
-            "*:cp googletest/lib/libgtest.a $STAGING_DIR$PREFIX/lib",
-            "*:cp googletest/lib/libgtest_main.a $STAGING_DIR$PREFIX/lib",
-            "*:cp -a googletest/include/* $STAGING_DIR$PREFIX/include/"
+            "*:*:cd googletest && cmake $config_opts",
+            "*:*:cd googletest && make -j$NUM_CORES",
+            "*:*:mkdir $STAGING_DIR$PREFIX/lib $STAGING_DIR$PREFIX/include",
+            "*:*:cp googletest/lib/libgtest.a $STAGING_DIR$PREFIX/lib",
+            "*:*:cp googletest/lib/libgtest_main.a $STAGING_DIR$PREFIX/lib",
+            "*:*:cp -a googletest/include/* $STAGING_DIR$PREFIX/include/"
         ]
     }
 }

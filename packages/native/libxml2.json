@@ -10,16 +10,16 @@
         }
     ],
     "dependencies": [
-        "*:native/make",
-        "*:native/pkgconf",
-        "*:native/python@3.11.13"
+        "*:*:native/make",
+        "*:*:native/pkgconf",
+        "*:*:native/python@3.11"
     ],
     "build": {
         "env": [],
         "steps": [
-            "*:./configure --prefix=$PREFIX/native",
-            "*:make -j$NUM_CORES",
-            "*:make DESTDIR=$STAGING_DIR install"
+            "*:*:./configure --prefix=$PREFIX/native",
+            "*:*:make -j$NUM_CORES",
+            "*:*:make DESTDIR=$STAGING_DIR install"
         ]
     }
 }

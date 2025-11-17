@@ -10,22 +10,22 @@
         }
     ],
     "dependencies": [
-        "*-linux-gnu:native/_",
-        "*-linux-gnu:selinux"
+        "*:*-linux-gnu:native/_",
+        "*:*-linux-gnu:selinux"
     ],
     "build": {
         "env": [
-            "*:config_opts=--host=$HOST --prefix=$PREFIX",
-            "*:config_opts=$config_opts --disable-gudev --disable-introspection --disable-hwdb --disable-manpages --disable-shared",
-            "*-linux-gnu:ARFLAGS=rcs",
-            "*:config_opts=$config_opts AR_FLAGS=$ARFLAGS",
-            "*:SHOULD_BUILD=echo",
-            "*-linux-gnu:SHOULD_BUILD="
+            "*:*:config_opts=--host=$HOST --prefix=$PREFIX",
+            "*:*:config_opts=$config_opts --disable-gudev --disable-introspection --disable-hwdb --disable-manpages --disable-shared",
+            "*:*-linux-gnu:ARFLAGS=rcs",
+            "*:*:config_opts=$config_opts AR_FLAGS=$ARFLAGS",
+            "*:*:SHOULD_BUILD=echo",
+            "*:*-linux-gnu:SHOULD_BUILD="
         ],
         "steps": [
-            "*:$SHOULD_BUILD ./configure $config_opts",
-            "*:$SHOULD_BUILD make -j$NUM_CORES",
-            "*:$SHOULD_BUILD make -j$NUM_CORES DESTDIR=$STAGING_DIR install"
+            "*:*:$SHOULD_BUILD ./configure $config_opts",
+            "*:*:$SHOULD_BUILD make -j$NUM_CORES",
+            "*:*:$SHOULD_BUILD make -j$NUM_CORES DESTDIR=$STAGING_DIR install"
         ]
     }
 }

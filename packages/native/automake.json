@@ -10,20 +10,20 @@
         }
     ],
     "dependencies": [
-        "*:native/autoconf",
-        "*:native/m4",
-        "*:native/make",
-        "*:native/perl"
+        "*:*:native/autoconf",
+        "*:*:native/m4",
+        "*:*:native/make",
+        "*:*:native/perl"
     ],
     "build": {
         "env": [
-            "*:MAKEINFO=true"
+            "*:*:MAKEINFO=true"
         ],
         "steps": [
-            "*:./bootstrap",
-            "*:./configure --prefix=$PREFIX/native --disable-doc",
-            "*:make -j$NUM_CORES V=1",
-            "*:make install DESTDIR=$STAGING_DIR "
+            "*:*:./bootstrap",
+            "*:*:./configure --prefix=$PREFIX/native --disable-doc",
+            "*:*:make -j$NUM_CORES V=1",
+            "*:*:make install DESTDIR=$STAGING_DIR "
         ]
     }
 }

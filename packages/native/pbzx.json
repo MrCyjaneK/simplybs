@@ -10,15 +10,15 @@
         }
     ],
     "dependencies": [
-        "*:native/make",
-        "*:native/xar",
-        "*:native/xz"
+        "*:*:native/make",
+        "*:*:native/xar",
+        "*:*:native/xz"
     ],
     "build": {
         "env": [],
         "steps": [
-            "*:mkdir -p $STAGING_DIR$PREFIX/native/bin",
-            "*:$CC -O2 -Wall -I $PREFIX/native/include -L $PREFIX/native/lib pbzx.c -o $STAGING_DIR$PREFIX/native/bin/pbzx -llzma -lxar -Wl,-rpath,$PREFIX/native/lib"
+            "*:*:mkdir -p $STAGING_DIR$PREFIX/native/bin",
+            "*:*:$CC -O2 -Wall -I $PREFIX/native/include -L $PREFIX/native/lib pbzx.c -o $STAGING_DIR$PREFIX/native/bin/pbzx -llzma -lxar -Wl,-rpath,$PREFIX/native/lib"
         ]
     }
 }

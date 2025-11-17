@@ -10,28 +10,28 @@
         }
     ],
     "dependencies": [
-        "*:native/_",
-        "*:native/config",
-        "*:native/make"
+        "*:*:native/_",
+        "*:*:native/config",
+        "*:*:native/make"
     ],
     "build": {
         "env": [
-            "*:config_opts=--host=$HOST --prefix=$PREFIX --disable-shared",
-            "*-linux-gnu:config_opts=$config_opts --with-pic --disable-udev",
-            "*-w64-mingw32:config_opts=$config_opts --disable-udev",
-            "*-apple-darwin:config_opts=$config_opts --disable-udev",
-            "*:SHOULD_BUILD=echo",
-            "*-linux-gnu:SHOULD_BUILD=",
-            "*-w64-mingw32:SHOULD_BUILD=",
-            "*-apple-darwin:SHOULD_BUILD="
+            "*:*:config_opts=--host=$HOST --prefix=$PREFIX --disable-shared",
+            "*:*-linux-gnu:config_opts=$config_opts --with-pic --disable-udev",
+            "*:*-w64-mingw32:config_opts=$config_opts --disable-udev",
+            "*:*-apple-darwin:config_opts=$config_opts --disable-udev",
+            "*:*:SHOULD_BUILD=echo",
+            "*:*-linux-gnu:SHOULD_BUILD=",
+            "*:*-w64-mingw32:SHOULD_BUILD=",
+            "*:*-apple-darwin:SHOULD_BUILD="
         ],
         "steps": [
-            "*:cp -f $PREFIX/native/share/config/config.guess config.guess",
-            "*:cp -f $PREFIX/native/share/config/config.sub config.sub",
-            "*:$SHOULD_BUILD ./configure $config_opts",
-            "*:$SHOULD_BUILD make -j$NUM_CORES",
-            "*:$SHOULD_BUILD make -j$NUM_CORES DESTDIR=$STAGING_DIR install",
-            "*:$SHOULD_BUILD cp -f $STAGING_DIR$PREFIX/lib/libusb-1.0.a $STAGING_DIR$PREFIX/lib/libusb.a"
+            "*:*:cp -f $PREFIX/native/share/config/config.guess config.guess",
+            "*:*:cp -f $PREFIX/native/share/config/config.sub config.sub",
+            "*:*:$SHOULD_BUILD ./configure $config_opts",
+            "*:*:$SHOULD_BUILD make -j$NUM_CORES",
+            "*:*:$SHOULD_BUILD make -j$NUM_CORES DESTDIR=$STAGING_DIR install",
+            "*:*:$SHOULD_BUILD cp -f $STAGING_DIR$PREFIX/lib/libusb-1.0.a $STAGING_DIR$PREFIX/lib/libusb.a"
         ]
     }
 }

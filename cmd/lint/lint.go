@@ -9,11 +9,11 @@ import (
 	"sort"
 	"strings"
 
-	"github.com/gobwas/glob"
 	"github.com/mrcyjanek/simplybs/builder"
 	"github.com/mrcyjanek/simplybs/crash"
 	"github.com/mrcyjanek/simplybs/host"
 	"github.com/mrcyjanek/simplybs/pack"
+	"github.com/mrcyjanek/simplybs/utils/ifstring"
 )
 
 type RepositoryInfo struct {
@@ -84,9 +84,8 @@ func fixFormatting() {
 
 			for _, dep := range v {
 				if s, ok := dep.(string); ok {
-					parts := strings.Split(s, ":")
-					depName := parts[len(parts)-1]
-					if strings.HasPrefix(depName, "native") {
+					is := ifstring.ParseIfString(s)
+					if strings.HasPrefix(is.Content, "native") {
 						nativeDeps = append(nativeDeps, s)
 					} else {
 						otherDeps = append(otherDeps, s)
@@ -151,34 +150,28 @@ func ensureValidName(pkg *pack.Package) {
 
 func ensureValidDependencies(pkg *pack.Package) {
 	for _, dep := range pkg.Dependencies {
-		split := strings.Split(dep, ":")
-		if len(split) <= 2 {
-			log.Printf("Package %s has invalid dependency %s", pkg.Package, dep)
-			continue
-		}
+		is := ifstring.ParseIfString(dep)
 
 		usedIn := 0
 		for _, host := range host.SupportedHosts {
-			g := glob.MustCompile(split[0])
-			if g.Match(host.Triplet) {
+			if is.HostGlob().Match(host.Triplet) {
 				usedIn++
 			}
 		}
 		usedInBuilder := 0
 		for _, b := range builder.Builders {
-			g := glob.MustCompile(split[1])
-			if g.Match(b) {
+			if is.BuilderGlob().Match(b) {
 				usedInBuilder++
 			}
 		}
-		if usedIn == 0 && split[0] != "none" {
-			log.Printf("Package %s is not used in any of host.SupportedHosts %s", pkg.Package, split[0])
+		if usedIn == 0 && is.Host != "none" {
+			log.Printf("Package %s is not used in any of host.SupportedHosts %s", pkg.Package, is.Host)
 		}
-		if usedInBuilder == 0 && split[1] != "none" {
-			log.Printf("Package %s is not used in any of host.SupportedHosts %s", pkg.Package, split[1])
+		if usedInBuilder == 0 && is.Builder != "none" {
+			log.Printf("Package %s is not used in any of builder.Builders %s", pkg.Package, is.Builder)
 		}
 
-		_, err := pack.FindPackage(split[1])
+		_, err := pack.FindPackage(is.Content)
 		if err != nil {
 			log.Printf("Package %s has invalid dependency %s: %v", pkg.Package, dep, err)
 		}
@@ -202,16 +195,11 @@ func checkCyclesForHost(pkgs []*pack.Package, hostTriplet string) {
 
 		for _, dep := range pkg.Dependencies {
 			var actualDep string
-			if strings.Contains(dep, ":") {
-				prefix := strings.Split(dep, ":")[0]
-				g := glob.MustCompile(prefix)
-				if !g.Match(hostTriplet) {
-					continue
-				}
-				actualDep = dep[strings.Index(dep, ":")+1:]
-			} else {
-				actualDep = dep
+			is := ifstring.ParseIfString(dep)
+			if is.HostGlob().Match(hostTriplet) {
+				continue
 			}
+			actualDep = is.Content
 			graph[pkg.Package] = append(graph[pkg.Package], actualDep)
 		}
 	}

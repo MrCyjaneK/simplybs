@@ -10,30 +10,30 @@
         }
     ],
     "dependencies": [
-        "*:native/_"
+        "*:*:native/_"
     ],
     "build": {
         "env": [
-            "*:HOSTOVERRIDE=$HOST",
-            "aarch64-apple-ios-simulator:HOSTOVERRIDE=aarch64-apple-ios",
-            "*:config_opts=--host=$HOSTOVERRIDE --prefix=$PREFIX ",
-            "*:config_opts=$config_opts --disable-shared",
-            "*:config_opts=$config_opts --disable-openssl",
-            "*:config_opts=$config_opts --disable-libevent-regress",
-            "*:config_opts=$config_opts --disable-doxygen-html",
-            "*:config_opts=$config_opts --disable-debug-mode",
-            "*:config_opts=$config_opts --enable-static",
-            "*:config_opts=$config_opts --enable-gcc-hardening",
-            "*:config_opts=$config_opts --with-pic",
-            "*:CFLAGS=$CFLAGS -fPIC",
-            "*:CXXFLAGS=$CXXFLAGS -fPIC"
+            "*:*:HOSTOVERRIDE=$HOST",
+            "*:aarch64-apple-ios-simulator:HOSTOVERRIDE=aarch64-apple-ios",
+            "*:*:config_opts=--host=$HOSTOVERRIDE --prefix=$PREFIX ",
+            "*:*:config_opts=$config_opts --disable-shared",
+            "*:*:config_opts=$config_opts --disable-openssl",
+            "*:*:config_opts=$config_opts --disable-libevent-regress",
+            "*:*:config_opts=$config_opts --disable-doxygen-html",
+            "*:*:config_opts=$config_opts --disable-debug-mode",
+            "*:*:config_opts=$config_opts --enable-static",
+            "*:*:config_opts=$config_opts --enable-gcc-hardening",
+            "*:*:config_opts=$config_opts --with-pic",
+            "*:*:CFLAGS=$CFLAGS -fPIC",
+            "*:*:CXXFLAGS=$CXXFLAGS -fPIC"
         ],
         "steps": [
-            "*:./autogen.sh",
-            "*:./configure $config_opts",
-            "*:make -j$NUM_CORES",
-            "*:make DESTDIR=$STAGING_DIR install",
-            "*:rm $STAGING_DIR$PREFIX/lib/*.la"
+            "*:*:./autogen.sh",
+            "*:*:./configure $config_opts",
+            "*:*:make -j$NUM_CORES",
+            "*:*:make DESTDIR=$STAGING_DIR install",
+            "*:*:rm $STAGING_DIR$PREFIX/lib/*.la"
         ]
     }
 }

@@ -10,18 +10,18 @@
         }
     ],
     "dependencies": [
-        "*:native/make"
+        "*:*:native/make"
     ],
     "build": {
         "env": [
-            "*:AUTOMAKE=true",
-            "*:ACLOCAL=true",
-            "*:MAKEINFO=true"
+            "*:*:AUTOMAKE=true",
+            "*:*:ACLOCAL=true",
+            "*:*:MAKEINFO=true"
         ],
         "steps": [
-            "*:./configure --prefix=$PREFIX/native",
-            "*:make -j$NUM_CORES",
-            "*:make DESTDIR=$STAGING_DIR install"
+            "*:*:./configure --prefix=$PREFIX/native",
+            "*:*:make -j$NUM_CORES",
+            "*:*:make DESTDIR=$STAGING_DIR install"
         ]
     }
 }

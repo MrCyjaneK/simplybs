@@ -10,13 +10,13 @@
         }
     ],
     "dependencies": [
-        "*:native/_"
+        "*:*:native/_"
     ],
     "build": {
         "env": [],
         "steps": [
-            "*:cmake -DCMAKE_INSTALL_PREFIX=$PREFIX -DSTATIC=ON .",
-            "*:make -j$NUM_CORES DESTDIR=$STAGING_DIR install"
+            "*:*:cmake -DCMAKE_INSTALL_PREFIX=$PREFIX -DSTATIC=ON .",
+            "*:*:make -j$NUM_CORES DESTDIR=$STAGING_DIR install"
         ]
     }
 }

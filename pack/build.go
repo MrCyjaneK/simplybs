@@ -6,12 +6,11 @@ import (
 	"os"
 	"os/exec"
 	"path/filepath"
-	"strings"
 
-	"github.com/gobwas/glob"
 	"github.com/mrcyjanek/simplybs/builder"
 	"github.com/mrcyjanek/simplybs/host"
 	"github.com/mrcyjanek/simplybs/utils"
+	"github.com/mrcyjanek/simplybs/utils/ifstring"
 )
 
 func (p *Package) EnsureBuilt(h *host.Host, buildDependencies bool) {
@@ -100,21 +99,14 @@ func (p *Package) buildPackageInternal(h *host.Host, buildDependencies bool) {
 	var deps []*Package
 	if buildDependencies {
 		for _, dep := range p.Dependencies {
-			if strings.Contains(dep, ":") {
-				builderPrefix := strings.Split(dep, ":")[0]
-				hostPrefix := strings.Split(dep, ":")[1]
-				g := glob.MustCompile(hostPrefix)
-				if !g.Match(h.Triplet) {
-					continue
-				}
-				g = glob.MustCompile(builderPrefix)
-				if !g.Match(builder.GetName()) {
-					continue
-				}
-				dep = dep[len(builderPrefix)+len(hostPrefix)+2:]
-			} else {
-				log.Fatalf("Invalid dependency: %s", dep)
+			is := ifstring.ParseIfString(dep)
+			if !is.HostGlob().Match(h.Triplet) {
+				continue
 			}
+			if !is.BuilderGlob().Match(builder.GetName()) {
+				continue
+			}
+			dep = is.Content
 			d, err := FindPackage(dep)
 			if err != nil {
 				log.Fatalf("Package %s not found in build", dep)
@@ -152,16 +144,14 @@ func (p *Package) buildPackageInternal(h *host.Host, buildDependencies bool) {
 	}
 
 	for _, step := range p.Build.Steps {
-		if strings.Contains(step, ":") {
-			prefix := strings.Split(step, ":")[0]
-			g := glob.MustCompile(prefix)
-			if !g.Match(h.Triplet) {
-				continue
-			}
-			step = step[strings.Index(step, ":")+1:]
-		} else {
-			log.Fatalf("Invalid step: %s", step)
+		is := ifstring.ParseIfString(step)
+		if !is.HostGlob().Match(h.Triplet) {
+			continue
 		}
+		if !is.BuilderGlob().Match(builder.GetName()) {
+			continue
+		}
+		step = is.Content
 
 		cmd := exec.Command("sh", "-c", step)
 		cmd.Dir = buildPath
@@ -212,16 +202,14 @@ func (p *Package) StartShell(h *host.Host) {
 
 	log.Printf("Extracting source for package: %s", p.Package)
 	for _, depName := range p.Dependencies {
-		if strings.Contains(depName, ":") {
-			prefix := strings.Split(depName, ":")[0]
-			g := glob.MustCompile(prefix)
-			if !g.Match(h.Triplet) {
-				continue
-			}
-			depName = depName[strings.Index(depName, ":")+1:]
-		} else {
-			log.Fatalf("Invalid dependency: %s", depName)
+		is := ifstring.ParseIfString(depName)
+		if !is.HostGlob().Match(h.Triplet) {
+			continue
 		}
+		if !is.BuilderGlob().Match(builder.GetName()) {
+			continue
+		}
+		depName = is.Content
 		dep, err := FindPackage(depName)
 		if err != nil {
 			log.Fatalf("Package %s not found in build", depName)
@@ -239,30 +227,25 @@ func (p *Package) StartShell(h *host.Host) {
 	}
 	fmt.Print("\n\n")
 	for _, step := range p.Build.Steps {
-		if strings.Contains(step, ":") {
-			prefix := strings.Split(step, ":")[0]
-			g := glob.MustCompile(prefix)
-			if !g.Match(h.Triplet) {
-				continue
-			}
-			step = step[strings.Index(step, ":")+1:]
-			fmt.Printf("%s;\n", utils.ExpandEnvFromMap(step, env))
+		is := ifstring.ParseIfString(step)
+		if !is.HostGlob().Match(h.Triplet) {
+			continue
 		}
+		if !is.BuilderGlob().Match(builder.GetName()) {
+			continue
+		}
+		step = is.Content
+		fmt.Printf("%s;\n", utils.ExpandEnvFromMap(step, env))
 	}
 	fmt.Print("\n\n")
 
 	for _, step := range p.Build.Steps {
-		if strings.Contains(step, ":") {
-			prefix := strings.Split(step, ":")[0]
-			g := glob.MustCompile(prefix)
-			if !g.Match(h.Triplet) {
-				log.Printf("[no match] %s", utils.ExpandEnvFromMap(step, env))
-				continue
-			}
-			log.Printf("   [match] %s", utils.ExpandEnvFromMap(step, env))
-		} else {
-			log.Fatalf("Invalid step: %s", step)
+		is := ifstring.ParseIfString(step)
+		if !(is.HostGlob().Match(h.Triplet) && is.BuilderGlob().Match(builder.GetName())) {
+			log.Printf("[no match] %s", utils.ExpandEnvFromMap(step, env))
+			continue
 		}
+		log.Printf("   [match] %s", utils.ExpandEnvFromMap(step, env))
 	}
 	fmt.Print("\n\n")
 	log.Printf("Starting %s in %s with build environment for %s", userShell, buildPath, h.Triplet)

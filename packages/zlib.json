@@ -10,23 +10,23 @@
         }
     ],
     "dependencies": [
-        "*:native/_",
-        "*:native/libtool"
+        "*:*:native/_",
+        "*:*:native/libtool"
     ],
     "build": {
         "env": [
-            "*:CFLAGS=$CFLAGS -fPIC",
-            "*:config_opts=--prefix=$PREFIX --static",
-            "*:CROSS_PREFIX=$HOST-"
+            "*:*:CFLAGS=$CFLAGS -fPIC",
+            "*:*:config_opts=--prefix=$PREFIX --static",
+            "*:*:CROSS_PREFIX=$HOST-"
         ],
         "steps": [
-            "*:./configure $config_opts",
-            "*-android*:sed -i.bak s/^AR=.\\*$/AR=\"llvm-ar\"/ Makefile",
-            "*-android*:sed -i.bak s/^ARFLAGS=.\\*$/ARFLAGS=\"rcs\"/ Makefile",
-            "*-linux-gnu:sed -i.bak s/^AR=.\\*$/AR=\"$AR\"/ Makefile",
-            "*-linux-gnu:sed -i.bak s/^ARFLAGS=.\\*$/ARFLAGS=\"rcs\"/ Makefile",
-            "*:make -j$NUM_CORES",
-            "*:make DESTDIR=$STAGING_DIR install"
+            "*:*:./configure $config_opts",
+            "*:*-android*:sed -i.bak s/^AR=.\\*$/AR=\"llvm-ar\"/ Makefile",
+            "*:*-android*:sed -i.bak s/^ARFLAGS=.\\*$/ARFLAGS=\"rcs\"/ Makefile",
+            "*:*-linux-gnu:sed -i.bak s/^AR=.\\*$/AR=\"$AR\"/ Makefile",
+            "*:*-linux-gnu:sed -i.bak s/^ARFLAGS=.\\*$/ARFLAGS=\"rcs\"/ Makefile",
+            "*:*:make -j$NUM_CORES",
+            "*:*:make DESTDIR=$STAGING_DIR install"
         ]
     }
 }

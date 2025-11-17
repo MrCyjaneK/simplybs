@@ -10,21 +10,21 @@
         }
     ],
     "dependencies": [
-        "*:native/m4",
-        "*:native/make",
-        "*:native/perl"
+        "*:*:native/m4",
+        "*:*:native/make",
+        "*:*:native/perl"
     ],
     "build": {
         "env": [
-            "*:config_opts=--prefix=$PREFIX/native",
-            "*:config_opts=$config_opts --disable-shared",
-            "*:config_opts=$config_opts --enable-static"
+            "*:*:config_opts=--prefix=$PREFIX/native",
+            "*:*:config_opts=$config_opts --disable-shared",
+            "*:*:config_opts=$config_opts --enable-static"
         ],
         "steps": [
-            "*:./configure $config_opts",
-            "*:make -j$NUM_CORES",
-            "*:make check",
-            "*:make DESTDIR=$STAGING_DIR install"
+            "*:*:./configure $config_opts",
+            "*:*:make -j$NUM_CORES",
+            "*:*:make check",
+            "*:*:make DESTDIR=$STAGING_DIR install"
         ]
     }
 }

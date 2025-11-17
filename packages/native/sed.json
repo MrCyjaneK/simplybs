@@ -10,15 +10,15 @@
         }
     ],
     "dependencies": [
-        "*:native/make",
-        "*:native/perl"
+        "*:*:native/make",
+        "*:*:native/perl"
     ],
     "build": {
         "env": [],
         "steps": [
-            "*:./configure --prefix=$PREFIX/native",
-            "*:make -j$NUM_CORES",
-            "*:make DESTDIR=$STAGING_DIR install"
+            "*:*:./configure --prefix=$PREFIX/native",
+            "*:*:make -j$NUM_CORES",
+            "*:*:make DESTDIR=$STAGING_DIR install"
         ]
     }
 }

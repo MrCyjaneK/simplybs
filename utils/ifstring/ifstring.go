@@ -1,6 +1,7 @@
-package utils
+package ifstring
 
 import (
+	"log"
 	"strings"
 
 	"github.com/gobwas/glob"
@@ -23,6 +24,10 @@ func ParseIfString(str string) *IfString {
 	is := &IfString{}
 	is.Builder = strings.Split(str, ":")[0]
 	is.Host = strings.Split(str, ":")[1]
-	is.Content = str[len(is.Builder)+len(is.Host)+2:]
+	offset := len(is.Builder) + len(is.Host) + 2
+	if len(str) < offset {
+		log.Fatalln("failed to parse:", str)
+	}
+	is.Content = str[offset:]
 	return is
 }

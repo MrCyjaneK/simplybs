@@ -22,21 +22,21 @@
         }
     ],
     "dependencies": [
-        "*:native/_",
-        "*:native/meson",
-        "*:native/ninja",
-        "*:native/python@3.11.13",
-        "*:libffi",
-        "*:libiconv",
-        "*:pcre2",
-        "*:unwind",
-        "*:zlib"
+        "*:*:native/_",
+        "*:*:native/meson",
+        "*:*:native/ninja",
+        "*:*:native/python@3.11",
+        "*:*:libffi",
+        "*:*:libiconv",
+        "*:*:pcre2",
+        "*:*:unwind",
+        "*:*:zlib"
     ],
     "build": {
         "steps": [
-            "*:meson setup --prefix $PREFIX _build",
-            "*:meson compile -C _build -j$NUM_CORES",
-            "*:meson install -C _build DESTDIR=$STAGING_DIR"
+            "*:*:meson setup --prefix $PREFIX _build",
+            "*:*:meson compile -C _build -j$NUM_CORES",
+            "*:*:meson install -C _build DESTDIR=$STAGING_DIR"
         ]
     }
 }

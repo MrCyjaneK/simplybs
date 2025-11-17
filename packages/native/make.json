@@ -12,12 +12,12 @@
     "build": {
         "env": [],
         "steps": [
-            "*:./configure --disable-dependency-tracking",
-            "*:./build.sh",
-            "*:mkdir -p $STAGING_DIR$PREFIX/native/bin",
-            "*:cp make $STAGING_DIR/$PREFIX/native/bin/make",
-            "*:ln -s make $STAGING_DIR$PREFIX/native/bin/gmake",
-            "*:ln -s make $STAGING_DIR$PREFIX/native/bin/gnumake"
+            "*:*:./configure --disable-dependency-tracking",
+            "*:*:./build.sh",
+            "*:*:mkdir -p $STAGING_DIR$PREFIX/native/bin",
+            "*:*:cp make $STAGING_DIR/$PREFIX/native/bin/make",
+            "*:*:ln -s make $STAGING_DIR$PREFIX/native/bin/gmake",
+            "*:*:ln -s make $STAGING_DIR$PREFIX/native/bin/gnumake"
         ]
     }
 }

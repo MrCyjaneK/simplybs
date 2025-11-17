@@ -16,9 +16,9 @@
     ],
     "build": {
         "steps": [
-            "*:make -f unix/Makefile D_USE_BZ2=-DUSE_BZIP2 L_BZ2=-lbz2 CC=\"$CC\" LF2=\"$LDFLAGS\" CF=\"$CFLAGS $CPPFLAGS -I.\" unzips",
-            "*:make -f unix/Makefile install prefix=$STAGING_DIR$PREFIX/native",
-            "*:cd $STAGING_DIR$PREFIX/native/bin && rm -f zipinfo && ln unzip zipinfo"
+            "*:*:make -f unix/Makefile D_USE_BZ2=-DUSE_BZIP2 L_BZ2=-lbz2 CC=\"$CC\" LF2=\"$LDFLAGS\" CF=\"$CFLAGS $CPPFLAGS -I.\" unzips",
+            "*:*:make -f unix/Makefile install prefix=$STAGING_DIR$PREFIX/native",
+            "*:*:cd $STAGING_DIR$PREFIX/native/bin && rm -f zipinfo && ln unzip zipinfo"
         ]
     }
 }

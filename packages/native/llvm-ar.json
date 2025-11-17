@@ -10,18 +10,18 @@
         }
     ],
     "dependencies": [
-        "*:native/cmake",
-        "*:native/make",
-        "*:native/ninja"
+        "*:*:native/cmake",
+        "*:*:native/make",
+        "*:*:native/ninja"
     ],
     "build": {
         "env": [],
         "steps": [
-            "*:mkdir build && cd build",
-            "*:cd build && cmake -G Ninja -DLLVM_ENABLE_PROJECTS='llvm' -DCMAKE_BUILD_TYPE=Release ../llvm",
-            "*:cd build && ninja llvm-ar",
-            "*:mkdir -p $STAGING_DIR$PREFIX/native/bin/",
-            "*:cp build/bin/llvm-ar $STAGING_DIR$PREFIX/native/bin/llvm-ar"
+            "*:*:mkdir build && cd build",
+            "*:*:cd build && cmake -G Ninja -DLLVM_ENABLE_PROJECTS='llvm' -DCMAKE_BUILD_TYPE=Release ../llvm",
+            "*:*:cd build && ninja llvm-ar",
+            "*:*:mkdir -p $STAGING_DIR$PREFIX/native/bin/",
+            "*:*:cp build/bin/llvm-ar $STAGING_DIR$PREFIX/native/bin/llvm-ar"
         ]
     }
 }

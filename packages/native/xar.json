@@ -10,23 +10,23 @@
         }
     ],
     "dependencies": [
-        "*:native/bzip2",
-        "*:native/make",
-        "*:native/openssl",
-        "*:native/xz",
-        "*:native/zlib"
+        "*:*:native/bzip2",
+        "*:*:native/make",
+        "*:*:native/openssl",
+        "*:*:native/xz",
+        "*:*:native/zlib"
     ],
     "build": {
         "env": [
-            "*:CFLAGS=$CFLAGS -w",
-            "*:config_opts=--with-bzip2",
-            "*:config_opts=$config_opts --with-lzma=$PREFIX/native"
+            "*:*:CFLAGS=$CFLAGS -w",
+            "*:*:config_opts=--with-bzip2",
+            "*:*:config_opts=$config_opts --with-lzma=$PREFIX/native"
         ],
         "steps": [
-            "*:cd xar && ./configure --prefix=$PREFIX/native",
-            "*:cd xar && make -j$NUM_CORES",
-            "*:cd xar && make DESTDIR=$STAGING_DIR install",
-            "*:mkdir -p $STAGING_DIR$PREFIX/native/include"
+            "*:*:cd xar && ./configure --prefix=$PREFIX/native",
+            "*:*:cd xar && make -j$NUM_CORES",
+            "*:*:cd xar && make DESTDIR=$STAGING_DIR install",
+            "*:*:mkdir -p $STAGING_DIR$PREFIX/native/include"
         ]
     }
 }

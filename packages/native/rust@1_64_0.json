@@ -10,34 +10,34 @@
         }
     ],
     "dependencies": [
-        "*:native/cmake",
-        "*:native/make",
-        "*:native/openssl",
-        "*:native/patch",
-        "*:native/pkgconf",
-        "*:native/python@3.11.13",
-        "*:native/rust@1_63_0"
+        "*:*:native/cmake",
+        "*:*:native/make",
+        "*:*:native/openssl",
+        "*:*:native/patch",
+        "*:*:native/pkgconf",
+        "*:*:native/python@3.11",
+        "*:*:native/rust@1_63_0"
     ],
     "build": {
         "env": [],
         "steps": [
-            "*:patch -p1 < $PATCH_DIR/rust/1_60_0/assembly.h.patch",
-            "*:patch -p1 < $PATCH_DIR/rust/Signals.h.patch",
-            "*:echo '[build]' > config.toml",
-            "*:echo 'full-bootstrap = true' >> config.toml",
-            "*:echo 'vendor = true' >> config.toml",
-            "*:echo 'extended = true' >> config.toml",
-            "*:echo 'tools = [\"cargo\"]' >> config.toml",
-            "*:echo rustc = \\\"$PREFIX/native/bin/rustc\\\" >> config.toml",
-            "*:echo cargo = \\\"$PREFIX/native/bin/cargo\\\" >> config.toml",
-            "*:echo '[llvm]' >> config.toml",
-            "*:echo 'ninja = false' >> config.toml",
-            "*:echo 'download-ci-llvm = false' >> config.toml",
-            "*:python3 ./x.py build --stage 3 --verbose -j $NUM_CORES",
-            "*:mkdir -p $STAGING_DIR$PREFIX/native/bin",
-            "*:cp -a build/*/stage3/lib $STAGING_DIR$PREFIX/native/",
-            "*:cp -a build/*/stage3/bin/rustc $STAGING_DIR$PREFIX/native/bin",
-            "*:cp -a build/*/stage3-tools-bin/cargo $STAGING_DIR$PREFIX/native/bin/cargo"
+            "*:*:patch -p1 < $PATCH_DIR/rust/1_60_0/assembly.h.patch",
+            "*:*:patch -p1 < $PATCH_DIR/rust/Signals.h.patch",
+            "*:*:echo '[build]' > config.toml",
+            "*:*:echo 'full-bootstrap = true' >> config.toml",
+            "*:*:echo 'vendor = true' >> config.toml",
+            "*:*:echo 'extended = true' >> config.toml",
+            "*:*:echo 'tools = [\"cargo\"]' >> config.toml",
+            "*:*:echo rustc = \\\"$PREFIX/native/bin/rustc\\\" >> config.toml",
+            "*:*:echo cargo = \\\"$PREFIX/native/bin/cargo\\\" >> config.toml",
+            "*:*:echo '[llvm]' >> config.toml",
+            "*:*:echo 'ninja = false' >> config.toml",
+            "*:*:echo 'download-ci-llvm = false' >> config.toml",
+            "*:*:python3 ./x.py build --stage 3 --verbose -j $NUM_CORES",
+            "*:*:mkdir -p $STAGING_DIR$PREFIX/native/bin",
+            "*:*:cp -a build/*/stage3/lib $STAGING_DIR$PREFIX/native/",
+            "*:*:cp -a build/*/stage3/bin/rustc $STAGING_DIR$PREFIX/native/bin",
+            "*:*:cp -a build/*/stage3-tools-bin/cargo $STAGING_DIR$PREFIX/native/bin/cargo"
         ]
     }
 }

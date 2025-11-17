@@ -10,20 +10,20 @@
         }
     ],
     "dependencies": [
-        "*:native/gmp",
-        "*:native/make",
-        "*:native/mpfr"
+        "*:*:native/gmp",
+        "*:*:native/make",
+        "*:*:native/mpfr"
     ],
     "build": {
         "env": [
-            "*:config_opts=--prefix=$PREFIX/native",
-            "*:config_opts=$config_opts --disable-shared",
-            "*:config_opts=$config_opts --enable-static"
+            "*:*:config_opts=--prefix=$PREFIX/native",
+            "*:*:config_opts=$config_opts --disable-shared",
+            "*:*:config_opts=$config_opts --enable-static"
         ],
         "steps": [
-            "*:./configure $config_opts",
-            "*:make -j$NUM_CORES",
-            "*:make DESTDIR=$STAGING_DIR install"
+            "*:*:./configure $config_opts",
+            "*:*:make -j$NUM_CORES",
+            "*:*:make DESTDIR=$STAGING_DIR install"
         ]
     }
 }

@@ -10,18 +10,18 @@
         }
     ],
     "dependencies": [
-        "*:native/cmake",
-        "*:native/make",
-        "*:native/ninja"
+        "*:*:native/cmake",
+        "*:*:native/make",
+        "*:*:native/ninja"
     ],
     "build": {
         "env": [
-            "*:config_opts=--prefix=$PREFIX/native --disable-shared",
-            "*:INSTALLPREFIX=$PREFIX/native"
+            "*:*:config_opts=--prefix=$PREFIX/native --disable-shared",
+            "*:*:INSTALLPREFIX=$PREFIX/native"
         ],
         "steps": [
-            "*:./build.sh",
-            "*:DESTDIR=$STAGING_DIR ./install.sh"
+            "*:*:./build.sh",
+            "*:*:DESTDIR=$STAGING_DIR ./install.sh"
         ]
     }
 }

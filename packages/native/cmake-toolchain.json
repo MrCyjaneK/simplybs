@@ -12,8 +12,8 @@
     "build": {
         "env": [],
         "steps": [
-            "*:mkdir -p $STAGING_DIR$PREFIX/native/",
-            "*:cp toolchain.cmake $STAGING_DIR$PREFIX/native/toolchain.cmake"
+            "*:*:mkdir -p $STAGING_DIR$PREFIX/native/",
+            "*:*:cp toolchain.cmake $STAGING_DIR$PREFIX/native/toolchain.cmake"
         ]
     }
 }

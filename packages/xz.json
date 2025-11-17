@@ -10,36 +10,36 @@
         }
     ],
     "dependencies": [
-        "*:native/_",
-        "*:native/m4",
-        "*:native/make",
-        "*:native/perl"
+        "*:*:native/_",
+        "*:*:native/m4",
+        "*:*:native/make",
+        "*:*:native/perl"
     ],
     "patches": [
         "fix_declaration.patch"
     ],
     "build": {
         "env": [
-            "*:HOSTOVERRIDE=$HOST",
-            "aarch64-apple-ios-simulator:HOSTOVERRIDE=aarch64-apple-ios",
-            "*:config_opts=--prefix=$PREFIX --host=$HOSTOVERRIDE",
-            "*:config_opts=$config_opts --disable-shared",
-            "*:config_opts=$config_opts --enable-static",
-            "*:config_opts=$config_opts --disable-doc",
-            "*:config_opts=$config_opts --disable-scripts",
-            "*:config_opts=$config_opts --disable-xz",
-            "*:config_opts=$config_opts --disable-xzdec",
-            "*:config_opts=$config_opts --disable-lzmadec",
-            "*:config_opts=$config_opts --disable-lzmainfo",
-            "*:config_opts=$config_opts --disable-lzma-links"
+            "*:*:HOSTOVERRIDE=$HOST",
+            "*:aarch64-apple-ios-simulator:HOSTOVERRIDE=aarch64-apple-ios",
+            "*:*:config_opts=--prefix=$PREFIX --host=$HOSTOVERRIDE",
+            "*:*:config_opts=$config_opts --disable-shared",
+            "*:*:config_opts=$config_opts --enable-static",
+            "*:*:config_opts=$config_opts --disable-doc",
+            "*:*:config_opts=$config_opts --disable-scripts",
+            "*:*:config_opts=$config_opts --disable-xz",
+            "*:*:config_opts=$config_opts --disable-xzdec",
+            "*:*:config_opts=$config_opts --disable-lzmadec",
+            "*:*:config_opts=$config_opts --disable-lzmainfo",
+            "*:*:config_opts=$config_opts --disable-lzma-links"
         ],
         "steps": [
-            "*:pwd",
-            "*:./autogen.sh --no-po4a",
-            "*:./configure $config_opts",
-            "*:make -j$NUM_CORES",
-            "*:make DESTDIR=$STAGING_DIR install",
-            "*:rm $STAGING_DIR$PREFIX/lib/*.la"
+            "*:*:pwd",
+            "*:*:./autogen.sh --no-po4a",
+            "*:*:./configure $config_opts",
+            "*:*:make -j$NUM_CORES",
+            "*:*:make DESTDIR=$STAGING_DIR install",
+            "*:*:rm $STAGING_DIR$PREFIX/lib/*.la"
         ]
     }
 }

@@ -10,30 +10,30 @@
         }
     ],
     "dependencies": [
-        "*:native/_",
-        "*:eudev",
-        "*:libusb"
+        "*:*:native/_",
+        "*:*:eudev",
+        "*:*:libusb"
     ],
     "patches": [
         "missing_win_include.patch"
     ],
     "build": {
         "env": [
-            "*:config_opts=--prefix=$PREFIX --host=$HOST --enable-static --disable-shared",
-            "*-linux-gnu:config_opts=$config_opts libudev_CFLAGS=-I$PREFIX/include",
-            "*-linux-gnu:config_opts=$config_opts libusb_CFLAGS=-I$PREFIX/include/libusb-1.0",
-            "*-linux-gnu:config_opts=$config_opts --with-pic",
-            "*:SHOULD_BUILD=echo",
-            "*-linux-gnu:SHOULD_BUILD=",
-            "*-w64-mingw32:SHOULD_BUILD=",
-            "*-apple-darwin:SHOULD_BUILD="
+            "*:*:config_opts=--prefix=$PREFIX --host=$HOST --enable-static --disable-shared",
+            "*:*-linux-gnu:config_opts=$config_opts libudev_CFLAGS=-I$PREFIX/include",
+            "*:*-linux-gnu:config_opts=$config_opts libusb_CFLAGS=-I$PREFIX/include/libusb-1.0",
+            "*:*-linux-gnu:config_opts=$config_opts --with-pic",
+            "*:*:SHOULD_BUILD=echo",
+            "*:*-linux-gnu:SHOULD_BUILD=",
+            "*:*-w64-mingw32:SHOULD_BUILD=",
+            "*:*-apple-darwin:SHOULD_BUILD="
         ],
         "steps": [
-            "*:$SHOULD_BUILD patch -p1 < $PATCH_DIR/hidapi/missing_win_include.patch",
-            "*:$SHOULD_BUILD ./bootstrap",
-            "*:$SHOULD_BUILD ./configure $config_opts libudev_LIBS=\"-L$PREFIX/lib -ludev\" libusb_LIBS=\"-L$PREFIX/lib -lusb-1.0\"",
-            "*:$SHOULD_BUILD make -j$NUM_CORES",
-            "*:$SHOULD_BUILD make -j$NUM_CORES DESTDIR=$STAGING_DIR install"
+            "*:*:$SHOULD_BUILD patch -p1 < $PATCH_DIR/hidapi/missing_win_include.patch",
+            "*:*:$SHOULD_BUILD ./bootstrap",
+            "*:*:$SHOULD_BUILD ./configure $config_opts libudev_LIBS=\"-L$PREFIX/lib -ludev\" libusb_LIBS=\"-L$PREFIX/lib -lusb-1.0\"",
+            "*:*:$SHOULD_BUILD make -j$NUM_CORES",
+            "*:*:$SHOULD_BUILD make -j$NUM_CORES DESTDIR=$STAGING_DIR install"
         ]
     }
 }

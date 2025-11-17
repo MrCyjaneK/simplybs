@@ -10,16 +10,16 @@
         }
     ],
     "dependencies": [
-        "*:native/m4",
-        "*:native/make",
-        "*:native/perl"
+        "*:*:native/m4",
+        "*:*:native/make",
+        "*:*:native/perl"
     ],
     "build": {
         "env": [],
         "steps": [
-            "*:./configure --host=$HOST --prefix=$PREFIX/native",
-            "*:make -j$NUM_CORES",
-            "*:make DESTDIR=$STAGING_DIR install"
+            "*:*:./configure --host=$HOST --prefix=$PREFIX/native",
+            "*:*:make -j$NUM_CORES",
+            "*:*:make DESTDIR=$STAGING_DIR install"
         ]
     }
 }

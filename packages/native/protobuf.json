@@ -10,35 +10,35 @@
         }
     ],
     "dependencies": [
-        "*:native/autoconf",
-        "*:native/automake",
-        "*:native/config",
-        "*:native/m4",
-        "*:native/make",
-        "*:native/perl"
+        "*:*:native/autoconf",
+        "*:*:native/automake",
+        "*:*:native/config",
+        "*:*:native/m4",
+        "*:*:native/make",
+        "*:*:native/perl"
     ],
     "build": {
         "env": [
-            "*:config_opts=--host=$HOST --prefix=$PREFIX/native",
-            "*:config_opts=$config_opts --disable-shared",
-            "*-linux-gnu:config_opts=$config_opts --with-pic",
-            "*-linux-gnu:SHOULD_BUILD=",
-            "*-w64-mingw32:SHOULD_BUILD=",
-            "*-apple-darwin:SHOULD_BUILD="
+            "*:*:config_opts=--host=$HOST --prefix=$PREFIX/native",
+            "*:*:config_opts=$config_opts --disable-shared",
+            "*:*-linux-gnu:config_opts=$config_opts --with-pic",
+            "*:*-linux-gnu:SHOULD_BUILD=",
+            "*:*-w64-mingw32:SHOULD_BUILD=",
+            "*:*-apple-darwin:SHOULD_BUILD="
         ],
         "steps": [
-            "*:$SHOULD_BUILD cp -f $PREFIX/native/share/config/config.guess config.guess",
-            "*:$SHOULD_BUILD cp -f $PREFIX/native/share/config/config.sub config.sub",
-            "*:$SHOULD_BUILD cp -f $PREFIX/native/share/config/config.guess third_party/googletest/googletest/build-aux/config.guess",
-            "*:$SHOULD_BUILD cp -f $PREFIX/native/share/config/config.sub third_party/googletest/googletest/build-aux/config.sub",
-            "*:$SHOULD_BUILD cp -f $PREFIX/native/share/config/config.guess third_party/googletest/googlemock/build-aux/config.guess",
-            "*:$SHOULD_BUILD cp -f $PREFIX/native/share/config/config.sub third_party/googletest/googlemock/build-aux/config.sub",
-            "*:$SHOULD_BUILD aclocal",
-            "*:$SHOULD_BUILD automake --add-missing",
-            "*:$SHOULD_BUILD ./configure $config_opts",
-            "*:$SHOULD_BUILD make -j$NUM_CORES",
-            "*:$SHOULD_BUILD make -j$NUM_CORES DESTDIR=$STAGING_DIR install",
-            "*:$SHOULD_BUILD rm $STAGING_DIR$PREFIX/native/lib/libprotoc.a || true"
+            "*:*:$SHOULD_BUILD cp -f $PREFIX/native/share/config/config.guess config.guess",
+            "*:*:$SHOULD_BUILD cp -f $PREFIX/native/share/config/config.sub config.sub",
+            "*:*:$SHOULD_BUILD cp -f $PREFIX/native/share/config/config.guess third_party/googletest/googletest/build-aux/config.guess",
+            "*:*:$SHOULD_BUILD cp -f $PREFIX/native/share/config/config.sub third_party/googletest/googletest/build-aux/config.sub",
+            "*:*:$SHOULD_BUILD cp -f $PREFIX/native/share/config/config.guess third_party/googletest/googlemock/build-aux/config.guess",
+            "*:*:$SHOULD_BUILD cp -f $PREFIX/native/share/config/config.sub third_party/googletest/googlemock/build-aux/config.sub",
+            "*:*:$SHOULD_BUILD aclocal",
+            "*:*:$SHOULD_BUILD automake --add-missing",
+            "*:*:$SHOULD_BUILD ./configure $config_opts",
+            "*:*:$SHOULD_BUILD make -j$NUM_CORES",
+            "*:*:$SHOULD_BUILD make -j$NUM_CORES DESTDIR=$STAGING_DIR install",
+            "*:*:$SHOULD_BUILD rm $STAGING_DIR$PREFIX/native/lib/libprotoc.a || true"
         ]
     }
 }

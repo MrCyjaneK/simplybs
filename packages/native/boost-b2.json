@@ -11,9 +11,9 @@
     ],
     "build": {
         "steps": [
-            "*:./bootstrap.sh",
-            "*:mkdir -p $STAGING_DIR$PREFIX/native/bin",
-            "*:cp b2 $STAGING_DIR$PREFIX/native/bin/"
+            "*:*:./bootstrap.sh",
+            "*:*:mkdir -p $STAGING_DIR$PREFIX/native/bin",
+            "*:*:cp b2 $STAGING_DIR$PREFIX/native/bin/"
         ]
     }
 }

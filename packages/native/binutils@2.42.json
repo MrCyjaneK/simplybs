@@ -10,36 +10,36 @@
         }
     ],
     "dependencies": [
-        "*:native/bison",
-        "*:native/libiconv",
-        "*:native/make",
-        "*:native/perl",
-        "*:native/pkgconf",
-        "*:native/texinfo",
-        "*:native/zlib"
+        "*:*:native/bison",
+        "*:*:native/libiconv",
+        "*:*:native/make",
+        "*:*:native/perl",
+        "*:*:native/pkgconf",
+        "*:*:native/texinfo",
+        "*:*:native/zlib"
     ],
     "build": {
         "env": [
-            "x86_64-linux-gnu:TOOL_TARGET=x86_64-linux-gnu",
-            "aarch64-linux-gnu:TOOL_TARGET=aarch64-linux-gnu",
-            "x86_64-linux-musl:TOOL_TARGET=x86_64-linux-musl",
-            "x86_64-w64-mingw32:TOOL_TARGET=x86_64-w64-mingw32",
-            "*:config_opts=--prefix=$PREFIX/native",
-            "*:config_opts=$config_opts --disable-nls",
-            "*:config_opts=$config_opts --disable-werror",
-            "*:config_opts=$config_opts --with-system-zlib",
-            "*:config_opts=$config_opts --enable-targets=$TOOL_TARGET",
-            "*:config_opts=$config_opts --target=$TOOL_TARGET",
-            "*:config_opts=$config_opts --libdir=$PREFIX/native/lib/$TOOL_TARGET",
-            "*:config_opts=$config_opts --infodir=$PREFIX/native/share/info/$TOOL_TARGET",
-            "*:CPPFLAGS=-I$PREFIX/native/include",
-            "*:LDFLAGS=-L$PREFIX/native/lib"
+            "*:x86_64-linux-gnu:TOOL_TARGET=x86_64-linux-gnu",
+            "*:aarch64-linux-gnu:TOOL_TARGET=aarch64-linux-gnu",
+            "*:x86_64-linux-musl:TOOL_TARGET=x86_64-linux-musl",
+            "*:x86_64-w64-mingw32:TOOL_TARGET=x86_64-w64-mingw32",
+            "*:*:config_opts=--prefix=$PREFIX/native",
+            "*:*:config_opts=$config_opts --disable-nls",
+            "*:*:config_opts=$config_opts --disable-werror",
+            "*:*:config_opts=$config_opts --with-system-zlib",
+            "*:*:config_opts=$config_opts --enable-targets=$TOOL_TARGET",
+            "*:*:config_opts=$config_opts --target=$TOOL_TARGET",
+            "*:*:config_opts=$config_opts --libdir=$PREFIX/native/lib/$TOOL_TARGET",
+            "*:*:config_opts=$config_opts --infodir=$PREFIX/native/share/info/$TOOL_TARGET",
+            "*:*:CPPFLAGS=-I$PREFIX/native/include",
+            "*:*:LDFLAGS=-L$PREFIX/native/lib"
         ],
         "steps": [
-            "*:mkdir -p build",
-            "*:cd build && ../configure $config_opts",
-            "*:cd build && make -j$NUM_CORES",
-            "*:cd build && make install DESTDIR=$STAGING_DIR"
+            "*:*:mkdir -p build",
+            "*:*:cd build && ../configure $config_opts",
+            "*:*:cd build && make -j$NUM_CORES",
+            "*:*:cd build && make install DESTDIR=$STAGING_DIR"
         ]
     }
 }

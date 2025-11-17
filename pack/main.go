@@ -8,10 +8,10 @@ import (
 	"runtime"
 	"strings"
 
-	"github.com/gobwas/glob"
 	"github.com/mrcyjanek/simplybs/builder"
 	"github.com/mrcyjanek/simplybs/crash"
 	"github.com/mrcyjanek/simplybs/host"
+	"github.com/mrcyjanek/simplybs/utils/ifstring"
 )
 
 type Download struct {
@@ -321,15 +321,12 @@ func collectDependenciesByLevel(pkgName string, host string) [][]string {
 
 			for _, dep := range pkg.Dependencies {
 				var actualDep string
-				if strings.Contains(dep, ":") {
-					prefix := strings.Split(dep, ":")[0]
-					g := glob.MustCompile(prefix)
-					if !g.Match(host) {
-						continue
-					}
-					actualDep = dep[strings.Index(dep, ":")+1:]
-				} else {
-					actualDep = dep
+				is := ifstring.ParseIfString(dep)
+				if !is.HostGlob().Match(host) {
+					continue
+				}
+				if !is.BuilderGlob().Match(builder.GetName()) {
+					continue
 				}
 
 				if !visited[actualDep] {

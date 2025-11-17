@@ -10,22 +10,22 @@
         }
     ],
     "dependencies": [
-        "*:native/libiconv",
-        "*:native/make",
-        "*:native/sed",
-        "*:native/unistring"
+        "*:*:native/libiconv",
+        "*:*:native/make",
+        "*:*:native/sed",
+        "*:*:native/unistring"
     ],
     "build": {
         "env": [
-            "*:config_opts=--prefix=$PREFIX/native",
-            "*:config_opts=$config_opts --with-libiconv-prefix=$PREFIX/native",
-            "*:config_opts=$config_opts --with-libunistring-prefix=$PREFIX/native",
-            "*:LIBS=-lunistring"
+            "*:*:config_opts=--prefix=$PREFIX/native",
+            "*:*:config_opts=$config_opts --with-libiconv-prefix=$PREFIX/native",
+            "*:*:config_opts=$config_opts --with-libunistring-prefix=$PREFIX/native",
+            "*:*:LIBS=-lunistring"
         ],
         "steps": [
-            "*:./configure $config_opts",
-            "*:make -j$NUM_CORES",
-            "*:make DESTDIR=$STAGING_DIR install"
+            "*:*:./configure $config_opts",
+            "*:*:make -j$NUM_CORES",
+            "*:*:make DESTDIR=$STAGING_DIR install"
         ]
     }
 }

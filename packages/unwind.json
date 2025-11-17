@@ -10,25 +10,25 @@
         }
     ],
     "dependencies": [
-        "*:native/_",
-        "*:native/config",
-        "*:native/gettext"
+        "*:*:native/_",
+        "*:*:native/config",
+        "*:*:native/gettext"
     ],
     "patches": [
         "fix_obj_order.patch"
     ],
     "build": {
         "env": [
-            "*-linux-gnu:config_opts=--host=$HOST --prefix=$PREFIX",
-            "*-linux-gnu:config_opts=$config_opts --disable-shared --enable-static --disable-tests --disable-documentation"
+            "*:*-linux-gnu:config_opts=--host=$HOST --prefix=$PREFIX",
+            "*:*-linux-gnu:config_opts=$config_opts --disable-shared --enable-static --disable-tests --disable-documentation"
         ],
         "steps": [
-            "*:cp -f $PREFIX/native/share/config/config.guess config/config.guess",
-            "*:cp -f $PREFIX/native/share/config/config.sub config/config.sub",
-            "*-linux-gnu:patch -p0 < $PATCH_DIR/unwind/fix_obj_order.patch",
-            "*-linux-gnu:./configure $config_opts",
-            "*-linux-gnu:make -j$NUM_CORES",
-            "*-linux-gnu:make -j$NUM_CORES DESTDIR=$STAGING_DIR install"
+            "*:*:cp -f $PREFIX/native/share/config/config.guess config/config.guess",
+            "*:*:cp -f $PREFIX/native/share/config/config.sub config/config.sub",
+            "*:*-linux-gnu:patch -p0 < $PATCH_DIR/unwind/fix_obj_order.patch",
+            "*:*-linux-gnu:./configure $config_opts",
+            "*:*-linux-gnu:make -j$NUM_CORES",
+            "*:*-linux-gnu:make -j$NUM_CORES DESTDIR=$STAGING_DIR install"
         ]
     }
 }

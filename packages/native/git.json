@@ -10,18 +10,22 @@
         }
     ],
     "dependencies": [
-        "*:native/curl",
-        "*:native/expat",
-        "*:native/gettext",
-        "*:native/make",
-        "*:native/openssl",
-        "*:native/zlib"
+        "*:*:native/curl",
+        "*:*:native/expat",
+        "*:*:native/gettext",
+        "*:*:native/make",
+        "*:*:native/openssl",
+        "*:*:native/zlib"
     ],
     "build": {
         "env": [],
         "steps": [
-            "*:make -j$NUM_CORES",
-            "*:make DESTDIR=$STAGING_DIR$PREFIX/native install"
+            "*:*:make -j$NUM_CORES",
+            "*:*:make DESTDIR=$STAGING_DIR$PREFIX/native install",
+            "*:*:mkdir -p $STAGING_DIR$HOME",
+            "*:*:echo '[user]' >> $STAGING_DIR$HOME/.gitconfig",
+            "*:*:echo '\tsimplybs' >> $STAGING_DIR$HOME/.gitconfig",
+            "*:*:echo '\tsimplybs@mrcyjanek.net' >> $STAGING_DIR$HOME/.gitconfig"
         ]
     }
 }

@@ -10,13 +10,13 @@
         }
     ],
     "dependencies": [
-        "*:native/_"
+        "*:*:native/_"
     ],
     "build": {
         "steps": [
-            "*:make prefix=$PREFIX -j$NUM_CORES",
-            "*:make prefix=$PREFIX DESTDIR=$STAGING_DIR install",
-            "x86_64-linux-gnu:mv $STAGING_DIR$PREFIX/lib64 $STAGING_DIR$PREFIX/lib"
+            "*:*:make prefix=$PREFIX -j$NUM_CORES",
+            "*:*:make prefix=$PREFIX DESTDIR=$STAGING_DIR install",
+            "*:x86_64-linux-gnu:mv $STAGING_DIR$PREFIX/lib64 $STAGING_DIR$PREFIX/lib"
         ]
     }
 }

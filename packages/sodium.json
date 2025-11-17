@@ -10,8 +10,8 @@
         }
     ],
     "dependencies": [
-        "*:native/_",
-        "*:native/config"
+        "*:*:native/_",
+        "*:*:native/config"
     ],
     "patches": [
         "disable-glibc-getrandom-getentropy.patch",
@@ -19,21 +19,21 @@
     ],
     "build": {
         "env": [
-            "*-android*:ANDROID_NDK_ROOT=$PREFIX/native",
-            "*-android*:CC=clang",
-            "*-android*:AR=ar",
-            "*-android*:RANLIB=ranlib",
-            "*:config_opts=--host=$HOST --prefix=$PREFIX",
-            "*:config_opts=$config_opts --enable-static --disable-shared --with-pic"
+            "*:*-android*:ANDROID_NDK_ROOT=$PREFIX/native",
+            "*:*-android*:CC=clang",
+            "*:*-android*:AR=ar",
+            "*:*-android*:RANLIB=ranlib",
+            "*:*:config_opts=--host=$HOST --prefix=$PREFIX",
+            "*:*:config_opts=$config_opts --enable-static --disable-shared --with-pic"
         ],
         "steps": [
-            "*:cp -f $PREFIX/native/share/config/config.guess build-aux/",
-            "*:cp -f $PREFIX/native/share/config/config.sub build-aux/",
-            "*:patch -p1 < $PATCH_DIR/sodium/disable-glibc-getrandom-getentropy.patch",
-            "*:patch -p1 < $PATCH_DIR/sodium/fix-whitespace.patch",
-            "*:./configure $config_opts",
-            "*:make -j$NUM_CORES",
-            "*:make DESTDIR=$STAGING_DIR install"
+            "*:*:cp -f $PREFIX/native/share/config/config.guess build-aux/",
+            "*:*:cp -f $PREFIX/native/share/config/config.sub build-aux/",
+            "*:*:patch -p1 < $PATCH_DIR/sodium/disable-glibc-getrandom-getentropy.patch",
+            "*:*:patch -p1 < $PATCH_DIR/sodium/fix-whitespace.patch",
+            "*:*:./configure $config_opts",
+            "*:*:make -j$NUM_CORES",
+            "*:*:make DESTDIR=$STAGING_DIR install"
         ]
     }
 }

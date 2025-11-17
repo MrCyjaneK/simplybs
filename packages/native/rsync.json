@@ -10,21 +10,21 @@
         }
     ],
     "dependencies": [
-        "*:native/make",
-        "*:native/python@3.11.13"
+        "*:*:native/make",
+        "*:*:native/python@3.11"
     ],
     "build": {
         "env": [
-            "*:config_opts=--prefix=$PREFIX/native",
-            "*:config_opts=$config_opts --disable-xxhash",
-            "*:config_opts=$config_opts --disable-openssl",
-            "*:config_opts=$config_opts --disable-zstd",
-            "*:config_opts=$config_opts --disable-lz4"
+            "*:*:config_opts=--prefix=$PREFIX/native",
+            "*:*:config_opts=$config_opts --disable-xxhash",
+            "*:*:config_opts=$config_opts --disable-openssl",
+            "*:*:config_opts=$config_opts --disable-zstd",
+            "*:*:config_opts=$config_opts --disable-lz4"
         ],
         "steps": [
-            "*:./configure $config_opts",
-            "*:make -j$NUM_CORES",
-            "*:make DESTDIR=$STAGING_DIR install"
+            "*:*:./configure $config_opts",
+            "*:*:make -j$NUM_CORES",
+            "*:*:make DESTDIR=$STAGING_DIR install"
         ]
     }
 }

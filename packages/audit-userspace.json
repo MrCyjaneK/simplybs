@@ -10,24 +10,30 @@
         }
     ],
     "dependencies": [
-        "*-linux-gnu:native/_"
+        "*:*-linux-gnu:native/_",
+        "*:*-linux-gnu:native/autoconf",
+        "*:*-linux-gnu:native/automake",
+        "*:*-linux-gnu:native/libtool",
+        "*:*-linux-gnu:native/m4",
+        "*:*-linux-gnu:native/make",
+        "*:*-linux-gnu:native/perl"
     ],
     "build": {
         "env": [
-            "*-linux-gnu:config_opts=--prefix=$PREFIX --host=$HOST --disable-shared --enable-static",
-            "*-linux-gnu:config_opts=$config_opts --with-python3=no",
-            "*-linux-gnu:config_opts=$config_opts --enable-gssapi-krb5=no",
-            "arm*:config_opts=$config_opts --with-arm=no",
-            "aarch64-*:config_opts=$config_opts --with-aarch64=no",
-            "*-linux-gnu:config_opts=$config_opts --with-libcap-ng=no",
-            "*-linux-gnu:config_opts=$config_opts --with-io_uring=no",
-            "*-linux-gnu:config_opts=$config_opts --disable-zos-remote"
+            "*:*-linux-gnu:config_opts=--prefix=$PREFIX --host=$HOST --disable-shared --enable-static",
+            "*:*-linux-gnu:config_opts=$config_opts --with-python3=no",
+            "*:*-linux-gnu:config_opts=$config_opts --enable-gssapi-krb5=no",
+            "*:arm*:config_opts=$config_opts --with-arm=no",
+            "*:aarch64-*:config_opts=$config_opts --with-aarch64=no",
+            "*:*-linux-gnu:config_opts=$config_opts --with-libcap-ng=no",
+            "*:*-linux-gnu:config_opts=$config_opts --with-io_uring=no",
+            "*:*-linux-gnu:config_opts=$config_opts --disable-zos-remote"
         ],
         "steps": [
-            "*-linux-gnu:autoreconf -f --install",
-            "*-linux-gnu:./configure $config_opts",
-            "*-linux-gnu:make -j$NUM_CORES",
-            "*-linux-gnu:make install DESTDIR=$STAGING_DIR"
+            "*:*-linux-gnu:autoreconf -f --install",
+            "*:*-linux-gnu:./configure $config_opts",
+            "*:*-linux-gnu:make -j$NUM_CORES",
+            "*:*-linux-gnu:make install DESTDIR=$STAGING_DIR"
         ]
     }
 }

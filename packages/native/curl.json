@@ -10,18 +10,18 @@
         }
     ],
     "dependencies": [
-        "*:native/libpsl",
-        "*:native/make",
-        "*:native/openssl"
+        "*:*:native/libpsl",
+        "*:*:native/make",
+        "*:*:native/openssl"
     ],
     "build": {
         "env": [
-            "*:config_opts=--with-openssl"
+            "*:*:config_opts=--with-openssl"
         ],
         "steps": [
-            "*:./configure $config_opts --prefix=$PREFIX/native",
-            "*:make -j$NUM_CORES",
-            "*:make DESTDIR=$STAGING_DIR install"
+            "*:*:./configure $config_opts --prefix=$PREFIX/native",
+            "*:*:make -j$NUM_CORES",
+            "*:*:make DESTDIR=$STAGING_DIR install"
         ]
     }
 }

@@ -10,21 +10,21 @@
         }
     ],
     "dependencies": [
-        "*:native/_",
-        "*:ncurses"
+        "*:*:native/_",
+        "*:*:ncurses"
     ],
     "build": {
         "env": [
-            "*:config_opts=--host=$HOST --prefix=$PREFIX --exec-prefix=$PREFIX",
-            "*:config_opts=$config_opts --disable-shared --with-curses --disable-debug-mode",
-            "*:SHOULD_BUILD=echo",
-            "*-linux-*:SHOULD_BUILD=",
-            "*-apple-darwin:SHOULD_BUILD="
+            "*:*:config_opts=--host=$HOST --prefix=$PREFIX --exec-prefix=$PREFIX",
+            "*:*:config_opts=$config_opts --disable-shared --with-curses --disable-debug-mode",
+            "*:*:SHOULD_BUILD=echo",
+            "*:*-linux-*:SHOULD_BUILD=",
+            "*:*-apple-darwin:SHOULD_BUILD="
         ],
         "steps": [
-            "*:$SHOULD_BUILD ./configure $config_opts",
-            "*:$SHOULD_BUILD make -j$NUM_CORES $build_opts",
-            "*:$SHOULD_BUILD make -j$NUM_CORES install DESTDIR=$STAGING_DIR prefix=$PREFIX exec-prefix=$PREFIX"
+            "*:*:$SHOULD_BUILD ./configure $config_opts",
+            "*:*:$SHOULD_BUILD make -j$NUM_CORES $build_opts",
+            "*:*:$SHOULD_BUILD make -j$NUM_CORES install DESTDIR=$STAGING_DIR prefix=$PREFIX exec-prefix=$PREFIX"
         ]
     }
 }

@@ -10,23 +10,23 @@
         }
     ],
     "dependencies": [
-        "*:native/_"
+        "*:*:native/_"
     ],
     "build": {
         "env": [
-            "*:LIBTOOL=$PREFIX/native/bin/libtool",
-            "armv7a-linux-androideabi:CFLAGS=$CFLAGS -DLIBC_NO_FSEEKO",
-            "armv7a-linux-androideabi:CXXFLAGS=$CXXFLAGS -DLIBC_NO_FSEEKO",
-            "*-linux-*:TARGET_SYSTEM=Linux",
-            "*-apple-*:TARGET_SYSTEM=Darwin",
-            "*-mingw32:TARGET_SYSTEM=Windows",
-            "*:UNAME_TARGET_SYSTEM=$TARGET_SYSTEM",
-            "*:OS=$TARGET_SYSTEM"
+            "*:*:LIBTOOL=$PREFIX/native/bin/libtool",
+            "*:armv7a-linux-androideabi:CFLAGS=$CFLAGS -DLIBC_NO_FSEEKO",
+            "*:armv7a-linux-androideabi:CXXFLAGS=$CXXFLAGS -DLIBC_NO_FSEEKO",
+            "*:*-linux-*:TARGET_SYSTEM=Linux",
+            "*:*-apple-*:TARGET_SYSTEM=Darwin",
+            "*:*-mingw32:TARGET_SYSTEM=Windows",
+            "*:*:UNAME_TARGET_SYSTEM=$TARGET_SYSTEM",
+            "*:*:OS=$TARGET_SYSTEM"
         ],
         "steps": [
-            "*:make -j$NUM_CORES",
-            "*:mkdir -p $STAGING_DIR$PREFIX/lib",
-            "*:cp ./lib/libzstd.a $STAGING_DIR$PREFIX/lib/libzstd.a"
+            "*:*:make -j$NUM_CORES",
+            "*:*:mkdir -p $STAGING_DIR$PREFIX/lib",
+            "*:*:cp ./lib/libzstd.a $STAGING_DIR$PREFIX/lib/libzstd.a"
         ]
     }
 }

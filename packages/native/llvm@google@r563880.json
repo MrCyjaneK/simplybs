@@ -10,33 +10,33 @@
         }
     ],
     "dependencies": [
-        "*-android*:native/cmake",
-        "*-android*:native/ninja",
-        "*-android*:native/python@3.11.13"
+        "*:*-android*:native/cmake",
+        "*:*-android*:native/ninja",
+        "*:*-android*:native/python@3.11"
     ],
     "build": {
         "env": [
-            "*-android*:config_opts=-DCMAKE_BUILD_TYPE=Release",
-            "*-android*:config_opts=$config_opts -DCMAKE_INSTALL_PREFIX=$PREFIX",
-            "*-android*:config_opts=$config_opts -DLLVM_ENABLE_PROJECTS='clang;lld;libc;openmp;pstl'",
-            "*-android*:config_opts=$config_opts -DLLVM_ENABLE_RUNTIMES='compiler-rt'",
-            "aarch64-linux-android:config_opts=$config_opts -DLLVM_TARGETS_TO_BUILD='AArch64' -DLLVM_DEFAULT_TARGET_TRIPLE='aarch64-linux-android' -DCOMPILER_RT_TARGET_TRIPLE='aarch64-linux-android'",
-            "x86_64-linux-android:config_opts=$config_opts -DLLVM_TARGETS_TO_BUILD='X86' -DLLVM_DEFAULT_TARGET_TRIPLE='x86_64-linux-android' -DCOMPILER_RT_TARGET_TRIPLE='x86_64-linux-android'",
-            "armv7a-linux-androideabi:config_opts=$config_opts -DLLVM_TARGETS_TO_BUILD='ARM' -DLLVM_DEFAULT_TARGET_TRIPLE='armv7a-linux-androideabi' -DCOMPILER_RT_TARGET_TRIPLE='armv7a-linux-androideabi'",
-            "*-android*:config_opts=$config_opts -DLLVM_ENABLE_BINDINGS=OFF",
-            "*-android*:config_opts=$config_opts -DCOMPILER_RT_BAREMETAL_BUILD=ON",
-            "*-android*:config_opts=$config_opts -DCOMPILER_RT_DEFAULT_TARGET_ONLY=ON",
-            "*-android*:config_opts=$config_opts -DCOMPILER_RT_BUILD_SANITIZERS=OFF",
-            "*-android*:config_opts=$config_opts -DCOMPILER_RT_BUILD_XRAY=OFF",
-            "*-android*:config_opts=$config_opts -DCOMPILER_RT_BUILD_LIBFUZZER=OFF",
-            "*-android*:config_opts=$config_opts -DCOMPILER_RT_BUILD_PROFILE=OFF",
-            "*-android*:config_opts=$config_opts -DCOMPILER_RT_BUILD_BUILTINS=ON",
-            "*-android*:config_opts=$config_opts -DCLANG_ENABLE_BOOTSTRAP=ON"
+            "*:*-android*:config_opts=-DCMAKE_BUILD_TYPE=Release",
+            "*:*-android*:config_opts=$config_opts -DCMAKE_INSTALL_PREFIX=$PREFIX",
+            "*:*-android*:config_opts=$config_opts -DLLVM_ENABLE_PROJECTS='clang;lld;libc;openmp;pstl'",
+            "*:*-android*:config_opts=$config_opts -DLLVM_ENABLE_RUNTIMES='compiler-rt'",
+            "*:aarch64-linux-android:config_opts=$config_opts -DLLVM_TARGETS_TO_BUILD='AArch64' -DLLVM_DEFAULT_TARGET_TRIPLE='aarch64-linux-android' -DCOMPILER_RT_TARGET_TRIPLE='aarch64-linux-android'",
+            "*:x86_64-linux-android:config_opts=$config_opts -DLLVM_TARGETS_TO_BUILD='X86' -DLLVM_DEFAULT_TARGET_TRIPLE='x86_64-linux-android' -DCOMPILER_RT_TARGET_TRIPLE='x86_64-linux-android'",
+            "*:armv7a-linux-androideabi:config_opts=$config_opts -DLLVM_TARGETS_TO_BUILD='ARM' -DLLVM_DEFAULT_TARGET_TRIPLE='armv7a-linux-androideabi' -DCOMPILER_RT_TARGET_TRIPLE='armv7a-linux-androideabi'",
+            "*:*-android*:config_opts=$config_opts -DLLVM_ENABLE_BINDINGS=OFF",
+            "*:*-android*:config_opts=$config_opts -DCOMPILER_RT_BAREMETAL_BUILD=ON",
+            "*:*-android*:config_opts=$config_opts -DCOMPILER_RT_DEFAULT_TARGET_ONLY=ON",
+            "*:*-android*:config_opts=$config_opts -DCOMPILER_RT_BUILD_SANITIZERS=OFF",
+            "*:*-android*:config_opts=$config_opts -DCOMPILER_RT_BUILD_XRAY=OFF",
+            "*:*-android*:config_opts=$config_opts -DCOMPILER_RT_BUILD_LIBFUZZER=OFF",
+            "*:*-android*:config_opts=$config_opts -DCOMPILER_RT_BUILD_PROFILE=OFF",
+            "*:*-android*:config_opts=$config_opts -DCOMPILER_RT_BUILD_BUILTINS=ON",
+            "*:*-android*:config_opts=$config_opts -DCLANG_ENABLE_BOOTSTRAP=ON"
         ],
         "steps": [
-            "*-android*:cmake -S llvm -B build -G Ninja $config_opts",
-            "*-android*:cd build && ninja -j $NUM_CORES",
-            "*-android*:cd build && DESTDIR=$STAGING_DIR ninja install"
+            "*:*-android*:cmake -S llvm -B build -G Ninja $config_opts",
+            "*:*-android*:cd build && ninja -j $NUM_CORES",
+            "*:*-android*:cd build && DESTDIR=$STAGING_DIR ninja install"
         ]
     }
 }

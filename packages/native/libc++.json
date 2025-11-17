@@ -10,25 +10,25 @@
         }
     ],
     "dependencies": [
-        "*:native/cmake",
-        "*:native/ninja"
+        "*:*:native/cmake",
+        "*:*:native/ninja"
     ],
     "build": {
         "env": [
-            "*:config_opts=-DLLVM_ENABLE_RUNTIMES='libunwind;libcxx;libcxxabi'",
-            "*:config_opts=$config_opts -DCMAKE_BUILD_TYPE=Release",
-            "*:config_opts=$config_opts -DLIBCXX_ENABLE_SHARED=OFF",
-            "*:config_opts=$config_opts -DLIBCXX_ENABLE_STATIC=ON",
-            "*:config_opts=$config_opts -DLIBCXX_INCLUDE_TESTS=OFF",
-            "*:config_opts=$config_opts -DCMAKE_INSTALL_PREFIX=$PREFIX/native"
+            "*:*:config_opts=-DLLVM_ENABLE_RUNTIMES='libunwind;libcxx;libcxxabi'",
+            "*:*:config_opts=$config_opts -DCMAKE_BUILD_TYPE=Release",
+            "*:*:config_opts=$config_opts -DLIBCXX_ENABLE_SHARED=OFF",
+            "*:*:config_opts=$config_opts -DLIBCXX_ENABLE_STATIC=ON",
+            "*:*:config_opts=$config_opts -DLIBCXX_INCLUDE_TESTS=OFF",
+            "*:*:config_opts=$config_opts -DCMAKE_INSTALL_PREFIX=$PREFIX/native"
         ],
         "steps": [
-            "*:mkdir build && cd build",
-            "*:cd build && cmake -G Ninja ../runtimes $config_opts",
-            "*:cd build && ninja unwind cxx cxxabi",
-            "*:cd build && DESTDIR=$STAGING_DIR ninja install-unwind",
-            "*:cd build && DESTDIR=$STAGING_DIR ninja install-cxx",
-            "*:cd build && DESTDIR=$STAGING_DIR ninja install-cxxabi"
+            "*:*:mkdir build && cd build",
+            "*:*:cd build && cmake -G Ninja ../runtimes $config_opts",
+            "*:*:cd build && ninja unwind cxx cxxabi",
+            "*:*:cd build && DESTDIR=$STAGING_DIR ninja install-unwind",
+            "*:*:cd build && DESTDIR=$STAGING_DIR ninja install-cxx",
+            "*:*:cd build && DESTDIR=$STAGING_DIR ninja install-cxxabi"
         ]
     }
 }
