@@ -6,8 +6,8 @@ var HostBuilder = Builder{
 	GlobalEnv: []string{
 		"*:*:HOST=aarch64-linux-gnu",
 		"*:*:TARGET=aarch64-linux-gnu",
-		"*:*:CC=aarch64-linux-gnu-gcc",
-		"*:*:CXX=aarch64-linux-gnu-g++",
+		"*:*:CC=clang",
+		"*:*:CXX=clang++",
 		"*:*:AR=ar",
 		"*:*:RANLIB=ranlib",
 		"*:*:STRIP=strip",
