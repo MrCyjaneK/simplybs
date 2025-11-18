@@ -11,6 +11,10 @@
     ],
     "dependencies": [
         "*:*:native/_",
+        "*:*:native/autoconf",
+        "*:*:native/automake",
+        "*:*:native/m4",
+        "*:*:native/perl",
         "*:*:libevent",
         "*:*:openssl",
         "*:*:xz",

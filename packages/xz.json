@@ -11,6 +11,10 @@
     ],
     "dependencies": [
         "*:*:native/_",
+        "*:*:native/autoconf",
+        "*:*:native/automake",
+        "*:*:native/gettext",
+        "*:*:native/libtool",
         "*:*:native/m4",
         "*:*:native/make",
         "*:*:native/perl"

@@ -11,6 +11,8 @@
     ],
     "dependencies": [
         "*:*:native/_",
+        "*:*:native/cmake",
+        "*:*:native/cmake-toolchain",
         "*:*:libevent",
         "*:*:openssl",
         "*:*:tor",

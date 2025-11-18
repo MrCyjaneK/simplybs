@@ -48,7 +48,7 @@ type PackageWithBuilds struct {
 }
 
 var bootstrapPackages = []string{
-	"*:*:native/bootstrap/strip-nondeterminism",
+	// "*:*:native/bootstrap/strip-nondeterminism",
 }
 
 func FindPackage(name string) (*Package, error) {

@@ -164,6 +164,8 @@ func (p *Package) GetEnv(h *host.Host) map[string]string {
 			"*:*:CXX_FOR_BUILD=" + builder.HostBuilder.GetCXX(),
 			"*:*:CFLAGS=$CFLAGS -I" + h.GetEnvPath() + "/include",
 			"*:*:CFLAGS=$CFLAGS -I" + h.GetEnvPath() + "/usr/include",
+			"*:*:CXXFLAGS=$CXXFLAGS -I" + h.GetEnvPath() + "/include",
+			"*:*:CXXFLAGS=$CXXFLAGS -I" + h.GetEnvPath() + "/usr/include",
 			"*:*:LDFLAGS=$LDFLAGS -L" + h.GetEnvPath() + "/lib",
 			"*:*:LDFLAGS=$LDFLAGS -L" + h.GetEnvPath() + "/usr/lib",
 			"*:*:LD_LIBRARY_PATH=" + h.GetEnvPath() + "/native/lib",

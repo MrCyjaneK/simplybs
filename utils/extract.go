@@ -124,8 +124,8 @@ func extractTar(tr *tar.Reader, destPath, commonPrefix string) error {
 			}
 			dirMode |= 0700
 
-			if err := os.MkdirAll(target, dirMode); err != nil {
-				panic(err)
+			if err := os.MkdirAll(target, dirMode); err != nil && !os.IsExist(err) {
+				log.Fatalln(err)
 				return err
 			}
 
@@ -133,8 +133,8 @@ func extractTar(tr *tar.Reader, destPath, commonPrefix string) error {
 				log.Printf("Warning: Failed to set timestamps for directory %s: %v", target, err)
 			}
 		case tar.TypeReg:
-			if err := os.MkdirAll(filepath.Dir(target), 0755); err != nil {
-				panic(err)
+			if err := os.MkdirAll(filepath.Dir(target), 0755); err != nil && !os.IsExist(err) {
+				log.Fatalln(err)
 				return err
 			}
 
@@ -426,19 +426,8 @@ func CreateTarGz(sourcePath, archivePath string) error {
 		}
 
 		if info.Mode().IsRegular() {
-			var filePath string
-			var cleanup func()
+			var filePath = path
 
-			if strings.HasSuffix(strings.ToLower(relPath), ".a") {
-				// TODO: repack static libraries
-				filePath = path
-				cleanup = func() {}
-			} else {
-				filePath = path
-				cleanup = func() {}
-			}
-
-			defer cleanup()
 			if err := writeFileToTar(tw, header, filePath); err != nil {
 				return err
 			}

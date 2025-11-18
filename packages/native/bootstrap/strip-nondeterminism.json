@@ -1,9 +1,0 @@
-{
-    "package": "native/bootstrap/strip-nondeterminism",
-    "version": "0.0.0",
-    "type": "native",
-    "build": {
-        "env": [],
-        "steps": []
-    }
-}

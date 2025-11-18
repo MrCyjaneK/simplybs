@@ -2,6 +2,20 @@
     "package": "native/android_ndk",
     "version": "r28c",
     "type": "native",
+    "download": [
+        {
+            "kind": "blob",
+            "path": "android-ndk-r28c-darwin.zip",
+            "sha256": "0d4599e8bbf1a1668a0d51a541729b2246360f350018a2081d0b302dbb594f2a",
+            "url": "https://dl.google.com/android/repository/android-ndk-r28c-darwin.zip"
+        },
+        {
+            "kind": "blob",
+            "path": "android-ndk-r28c-linux.zip",
+            "sha256": "dfb20d396df28ca02a8c708314b814a4d961dc9074f9a161932746f815aa552f",
+            "url": "https://dl.google.com/android/repository/android-ndk-r28c-linux.zip"
+        }
+    ],
     "dependencies": [
         "*:*:native/p7zip",
         "*:*:native/python@3.11"
@@ -19,11 +33,8 @@
             "*:*-android*:API_LEVEL=21"
         ],
         "steps": [
-            "*:*-android*:if [ $(uname) = 'Darwin' ]; then curl -o android-ndk-r28c-darwin.zip https://dl.google.com/android/repository/android-ndk-r28c-darwin.zip; else true; fi",
-            "*:*-android*:if [ $(uname) = 'Darwin' ]; then echo '0d4599e8bbf1a1668a0d51a541729b2246360f350018a2081d0b302dbb594f2a  android-ndk-r28c-darwin.zip' | shasum -a 256 -c -; else true; fi",
-            "*:*-android*:if [ $(uname) = 'Linux' ]; then curl -o android-ndk-r28c-linux.zip https://dl.google.com/android/repository/android-ndk-r28c-linux.zip; else true; fi",
-            "*:*-android*:if [ $(uname) = 'Linux' ]; then echo 'dfb20d396df28ca02a8c708314b814a4d961dc9074f9a161932746f815aa552f android-ndk-r28c-linux.zip' | sha256sum -c -; else true; fi",
-            "*:*-android*:7z x $PWD/android-ndk-r28c-*.zip",
+            "darwin_*:*-android*:7z x $PWD/android-ndk-r28c-darwin.zip",
+            "linux_*:*-android*:7z x $PWD/android-ndk-r28c-linux.zip",
             "*:*-android*:android-ndk-r28c/build/tools/make_standalone_toolchain.py --api $API_LEVEL --install-dir $PWD/toolchain --stl=libc++ $config_opts",
             "*:*-android*:mkdir -p $STAGING_DIR$PREFIX/native",
             "*:*-android*:mv $PWD/toolchain/* $STAGING_DIR$PREFIX/native",
@@ -36,8 +47,15 @@
             "*:aarch64-linux-android:cp $STAGING_DIR$PREFIX/native/sysroot/usr/lib/aarch64-linux-android/*.a $STAGING_DIR$PREFIX/lib",
             "*:x86_64-linux-android:cp $STAGING_DIR$PREFIX/native/sysroot/usr/lib/x86_64-linux-android/*.a $STAGING_DIR$PREFIX/lib",
             "*:armv7a-linux-androideabi:cp $STAGING_DIR$PREFIX/native/sysroot/usr/lib/arm-linux-androideabi/*.a $STAGING_DIR$PREFIX/lib",
-            "*:*-android*:mkdir -p $STAGING_DIR$PREFIX/usr/lib",
-            "*:*-android*:ln -s ../lib $STAGING_DIR$PREFIX/usr/lib"
+            "*:aarch64-linux-android:cp $STAGING_DIR$PREFIX/native/sysroot/usr/lib/aarch64-linux-android/$API_LEVEL/*.so $STAGING_DIR$PREFIX/lib",
+            "*:x86_64-linux-android:cp $STAGING_DIR$PREFIX/native/sysroot/usr/lib/x86_64-linux-android/$API_LEVEL/*.so $STAGING_DIR$PREFIX/lib",
+            "*:armv7a-linux-androideabi:cp $STAGING_DIR$PREFIX/native/sysroot/usr/lib/arm-linux-androideabi/$API_LEVEL/*.so $STAGING_DIR$PREFIX/lib",
+            "*:*-android:cp -r $STAGING_DIR$PREFIX/native/sysroot/usr/include $STAGING_DIR$PREFIX/include",
+            "*:aarch64-linux-android:cp -r $STAGING_DIR$PREFIX/native/sysroot/usr/include/aarch64-linux-android/* $STAGING_DIR$PREFIX/include",
+            "*:x86_64-linux-android:cp -r $STAGING_DIR$PREFIX/native/sysroot/usr/include/x86_64-linux-android/* $STAGING_DIR$PREFIX/include",
+            "*:armv7a-linux-androideabi:cp -r $STAGING_DIR$PREFIX/native/sysroot/usr/include/arm-linux-androideabi/* $STAGING_DIR$PREFIX/include",
+            "*:*-android:rm -rf $STAGING_DIR$PREFIX/native/python3",
+            "*:*-android*:python3 $PATCH_DIR/android_ndk/symlink_same.py $STAGING_DIR$PREFIX"
         ]
     }
 }
