@@ -48,7 +48,7 @@ func (h *Host) GetEnvPath() string {
 		return os.Getenv("SIMPLYBS_ENV_DIR")
 	}
 	dir := DataDirRoot()
-	return filepath.Join(dir, "env")
+	return filepath.Join(dir, "env", h.Triplet)
 }
 
 var SupportedHosts = map[string]*Host{

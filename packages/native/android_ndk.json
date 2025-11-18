@@ -50,10 +50,6 @@
             "*:aarch64-linux-android:cp $STAGING_DIR$PREFIX/native/sysroot/usr/lib/aarch64-linux-android/$API_LEVEL/*.so $STAGING_DIR$PREFIX/lib",
             "*:x86_64-linux-android:cp $STAGING_DIR$PREFIX/native/sysroot/usr/lib/x86_64-linux-android/$API_LEVEL/*.so $STAGING_DIR$PREFIX/lib",
             "*:armv7a-linux-androideabi:cp $STAGING_DIR$PREFIX/native/sysroot/usr/lib/arm-linux-androideabi/$API_LEVEL/*.so $STAGING_DIR$PREFIX/lib",
-            "*:*-android:cp -r $STAGING_DIR$PREFIX/native/sysroot/usr/include $STAGING_DIR$PREFIX/include",
-            "*:aarch64-linux-android:cp -r $STAGING_DIR$PREFIX/native/sysroot/usr/include/aarch64-linux-android/* $STAGING_DIR$PREFIX/include",
-            "*:x86_64-linux-android:cp -r $STAGING_DIR$PREFIX/native/sysroot/usr/include/x86_64-linux-android/* $STAGING_DIR$PREFIX/include",
-            "*:armv7a-linux-androideabi:cp -r $STAGING_DIR$PREFIX/native/sysroot/usr/include/arm-linux-androideabi/* $STAGING_DIR$PREFIX/include",
             "*:*-android:rm -rf $STAGING_DIR$PREFIX/native/python3",
             "*:*-android*:python3 $PATCH_DIR/android_ndk/symlink_same.py $STAGING_DIR$PREFIX"
         ]
