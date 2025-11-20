@@ -10,7 +10,8 @@
         }
     ],
     "dependencies": [
-        "*:*:native/make"
+        "*:*:native/make",
+        "*:*:native/unistring"
     ],
     "build": {
         "env": [],
