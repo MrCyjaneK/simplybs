@@ -5,6 +5,7 @@
     "dependencies": [
         "*:*-android*:native/android_ndk",
         "*:*-apple-darwin:native/cctools-port",
+        "*:*-apple-darwin:native/libtapi",
         "*:*-apple-darwin:native/osx-cross",
         "*:*-linux-*:native/bash",
         "*:*-linux-gnu:native/ct-tools",
