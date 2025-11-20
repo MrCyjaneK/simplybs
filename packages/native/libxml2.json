@@ -12,7 +12,7 @@
     "dependencies": [
         "*:*:native/make",
         "*:*:native/pkgconf",
-        "*:*:native/python@3.11"
+        "*:*:native/python@3.14"
     ],
     "build": {
         "env": [],
