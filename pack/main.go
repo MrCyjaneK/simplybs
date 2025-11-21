@@ -74,7 +74,6 @@ func FindPackage(name string) (*Package, error) {
 
 func PrintPackage(pkgName string, host string) {
 	depsByLevel := collectDependenciesByLevel(pkgName, host)
-
 	userPkg, err := FindPackage(pkgName)
 	crash.Handle(err)
 	fmt.Printf("0: %s (version: %s)\n", pkgName, userPkg.Version)
@@ -85,7 +84,7 @@ func PrintPackage(pkgName string, host string) {
 			continue
 		}
 
-		for i := 0; i < len(deps); i++ {
+		for i := range deps {
 			for j := i + 1; j < len(deps); j++ {
 				if deps[i] > deps[j] {
 					deps[i], deps[j] = deps[j], deps[i]
@@ -309,10 +308,8 @@ func collectDependenciesByLevel(pkgName string, host string) [][]string {
 	currentLevel := []string{pkgName}
 	visited[pkgName] = true
 	levels = append(levels, []string{})
-
 	for len(currentLevel) > 0 {
 		nextLevel := []string{}
-
 		for _, currentPkg := range currentLevel {
 			pkg, err := FindPackage(currentPkg)
 			if err != nil {
@@ -320,7 +317,6 @@ func collectDependenciesByLevel(pkgName string, host string) [][]string {
 			}
 
 			for _, dep := range pkg.Dependencies {
-				var actualDep string
 				is := ifstring.ParseIfString(dep)
 				if !is.HostGlob().Match(host) {
 					continue
@@ -329,9 +325,9 @@ func collectDependenciesByLevel(pkgName string, host string) [][]string {
 					continue
 				}
 
-				if !visited[actualDep] {
-					visited[actualDep] = true
-					nextLevel = append(nextLevel, actualDep)
+				if !visited[is.Content] {
+					visited[is.Content] = true
+					nextLevel = append(nextLevel, is.Content)
 				}
 			}
 		}
