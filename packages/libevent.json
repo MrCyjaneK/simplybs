@@ -32,7 +32,6 @@
             "*:*:config_opts=$config_opts --with-pic",
             "*:*:config_opts=$config_opts --disable-samples",
             "*:*:CFLAGS=$CFLAGS -fPIC",
-            "*:*-linux-android:CFLAGS=$CFLAGS -xc",
             "*:*:CXXFLAGS=$CXXFLAGS -fPIC"
         ],
         "steps": [

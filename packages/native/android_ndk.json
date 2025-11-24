@@ -51,6 +51,7 @@
             "*:x86_64-linux-android:cp $STAGING_DIR$PREFIX/native/sysroot/usr/lib/x86_64-linux-android/$API_LEVEL/*.so $STAGING_DIR$PREFIX/lib",
             "*:armv7a-linux-androideabi:cp $STAGING_DIR$PREFIX/native/sysroot/usr/lib/arm-linux-androideabi/$API_LEVEL/*.so $STAGING_DIR$PREFIX/lib",
             "*:*-android:rm -rf $STAGING_DIR$PREFIX/native/python3",
+            "*:*:cd $STAGING_DIR$PREFIX/native/bin && rm clang190++ && ln -s clang190 clang190++",
             "*:*-android*:python3 $PATCH_DIR/android_ndk/symlink_same.py $STAGING_DIR$PREFIX"
         ]
     }
