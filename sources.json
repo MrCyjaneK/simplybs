@@ -863,6 +863,11 @@
                 "55ea777e8d567e5e86ffac917c28815ac54cc341"
             ]
         },
+        "https://github.com/ip7z/7zip.git": {
+            "refs": [
+                "5e96a8279489832924056b1fa82f29d5837c9469"
+            ]
+        },
         "https://github.com/libffi/libffi.git": {
             "refs": [
                 "e2eda0cf72a0598b44278cc91860ea402273fa29"

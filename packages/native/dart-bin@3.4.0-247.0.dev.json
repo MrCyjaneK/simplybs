@@ -23,13 +23,13 @@
         }
     ],
     "dependencies": [
-        "*:*:native/p7zip"
+        "*:*:native/7zip"
     ],
     "build": {
         "env": [],
         "steps": [
             "*:*:mkdir build",
-            "*:*:cd build && 7z x ../dartsdk-${BUILDER_GOOS}_${BUILDER_GOARCH}.zip",
+            "*:*:cd build && 7zz x ../dartsdk-${BUILDER_GOOS}_${BUILDER_GOARCH}.zip",
             "*:*:mkdir -p $STAGING_DIR$PREFIX/native",
             "*:*:mv build/dart-sdk/lib $STAGING_DIR$PREFIX/native",
             "*:*:mv build/dart-sdk/include $STAGING_DIR$PREFIX/native",
