@@ -16,7 +16,8 @@
     "build": {
         "env": [
             "*:*:config_opts=--prefix=$PREFIX/native",
-            "*:*:config_opts=$config_opts --disable-shared --enable-static"
+            "*:*:config_opts=$config_opts --disable-shared",
+            "*:*:config_opts=$config_opts --enable-static"
         ],
         "steps": [
             "*:*:./configure $config_opts",

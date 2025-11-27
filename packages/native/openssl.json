@@ -1,7 +1,7 @@
 {
     "package": "openssl",
     "version": "3.5.1",
-    "type": "host",
+    "type": "native",
     "download": [
         {
             "kind": "tar.gz",
@@ -10,15 +10,12 @@
         }
     ],
     "dependencies": [
-        "*:*:native/_"
+        "*:*:native/make",
+        "*:*:native/perl"
     ],
     "build": {
         "env": [
-            "*:*-android*:ANDROID_NDK_ROOT=$PREFIX/native",
-            "*:*-android*:CC=clang",
-            "*:*-android*:AR=ar",
-            "*:*-android*:RANLIB=ranlib",
-            "*:*:config_opts=--prefix=$PREFIX --openssldir=$PREFIX/etc/openssl --libdir=$PREFIX/lib",
+            "*:*:config_opts=--prefix=$PREFIX/native --openssldir=$PREFIX/native/etc/openssl --libdir=$PREFIX/native/lib",
             "*:*:config_opts=$config_opts no-capieng",
             "*:*:config_opts=$config_opts no-dso",
             "*:*:config_opts=$config_opts no-dtls1",
@@ -37,23 +34,16 @@
             "*:*:config_opts=$config_opts no-weak-ssl-ciphers",
             "*:*:config_opts=$config_opts no-zlib",
             "*:*:config_opts=$config_opts no-zlib-dynamic",
-            "*:*linux*:config_opts=$config_opts -fPIC -Wa,--noexecstack",
-            "*:x86_64-linux*:config_opts=$config_opts linux-x86_64",
-            "*:i686-linux*:config_opts=$config_opts linux-generic32",
-            "*:arm-linux*:config_opts=$config_opts linux-generic32",
-            "*:aarch64-linux-gnu:config_opts=$config_opts linux-generic64",
-            "*:armv7a-linux-androideabi:config_opts=$config_opts --static android-arm",
-            "*:aarch64-linux-android:config_opts=$config_opts --static android-arm64",
-            "*:aarch64-apple-darwin:config_opts=$config_opts darwin64-arm64-cc",
-            "*:aarch64-apple-ios*:config_opts=$config_opts darwin64-arm64-cc",
-            "*:x86_64-apple-darwin:config_opts=$config_opts darwin64-x86_64-cc",
-            "*:x86_64-w64-mingw32:config_opts=$config_opts mingw64",
-            "*:i686-w64-mingw32:config_opts=$config_opts mingw"
+            "linux_*:*:config_opts=$config_opts -fPIC -Wa,--noexecstack",
+            "linux_amd64:*:config_opts=$config_opts linux-x86_64",
+            "linux_arm64:*:config_opts=$config_opts linux-generic64",
+            "darwin_arm64:*:config_opts=$config_opts darwin64-arm64-cc",
+            "darwin_amd64:*:config_opts=$config_opts darwin64-x86_64-cc",
+            "windows_amd64:*:config_opts=$config_opts mingw64"
         ],
         "steps": [
             "*:*:sed -i.bak 's/#define DATE \"built on: \\$date\"/#define DATE \"built on: Jan  1 1970 00:00:01\"/' util/mkbuildinf.pl",
             "*:*:sed -i.bak 's|crypto ssl apps util tools fuzz providers doc|crypto ssl util tools providers|' build.info",
-            "*:armv7a-linux-androideabi:sed -i.bak s/arm-linux-androideabi/armv7a-linux-androideabi/g ./Configurations/15-android.conf",
             "*:*:./Configure $config_opts",
             "*:*:make -j$NUM_CORES build_libs",
             "*:*:make -j$NUM_CORES DESTDIR=$STAGING_DIR install_sw"

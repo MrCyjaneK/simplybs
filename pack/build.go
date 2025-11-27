@@ -5,9 +5,12 @@ import (
 	"log"
 	"os"
 	"os/exec"
+	"path"
 	"path/filepath"
+	"strings"
 
 	"github.com/mrcyjanek/simplybs/builder"
+	"github.com/mrcyjanek/simplybs/crash"
 	"github.com/mrcyjanek/simplybs/host"
 	"github.com/mrcyjanek/simplybs/utils"
 	"github.com/mrcyjanek/simplybs/utils/ifstring"
@@ -168,6 +171,8 @@ func (p *Package) buildPackageInternal(h *host.Host, buildDependencies bool) {
 			cmd.Env = append(cmd.Env, k+"="+v)
 		}
 
+		writeDotEnv(path.Join(buildPath, "_source_me"), cmd.Env)
+
 		log.Printf("Executing step: %s", step)
 		cmd.Stderr = os.Stderr
 		cmd.Stdout = os.Stdout
@@ -191,6 +196,51 @@ func (p *Package) buildPackageInternal(h *host.Host, buildDependencies bool) {
 	}
 
 	log.Printf("Package built successfully: %s", builtArchivePath)
+}
+
+func writeDotEnv(path string, env []string) {
+	f, err := os.Create(path)
+	if err != nil {
+		crash.Handle(err)
+	}
+	defer f.Close()
+
+	var b strings.Builder
+	b.WriteString("#!/bin/bash\n")
+
+	for _, kv := range env {
+		if kv == "" {
+			continue
+		}
+
+		parts := strings.SplitN(kv, "=", 2)
+		key := parts[0]
+		val := ""
+		if len(parts) > 1 {
+			val = parts[1]
+		}
+
+		escapedVal := shellEscape(val)
+
+		b.WriteString(fmt.Sprintf("export %s=%s\n", key, escapedVal))
+	}
+
+	f.WriteString(b.String())
+}
+func shellEscape(value string) string {
+	if value == "" {
+		return "\"\""
+	}
+
+	replacer := strings.NewReplacer(
+		`\`, `\\`,
+		`"`, `\"`,
+		"`", "\\`",
+		`$`, `\$`,
+	)
+	escaped := replacer.Replace(value)
+
+	return "\"" + escaped + "\""
 }
 
 func (p *Package) StartShell(h *host.Host) {
@@ -267,6 +317,7 @@ func (p *Package) StartShell(h *host.Host) {
 	for k, v := range env {
 		cmd.Env = append(cmd.Env, k+"="+v)
 	}
+	writeDotEnv(path.Join(buildPath, "_source_me"), cmd.Env)
 
 	err := cmd.Run()
 	if err != nil {

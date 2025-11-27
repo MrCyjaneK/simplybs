@@ -151,9 +151,7 @@ func (p *Package) GetEnv(h *host.Host) map[string]string {
 	if p.Type == "native" {
 		env = utils.AppendEnv(env, []string{
 			"*:*:CFLAGS=$CFLAGS -I" + h.GetEnvPath() + "/native/include",
-			"*:*:CFLAGS=$CFLAGS -I" + h.GetEnvPath() + "/native/usr/include",
 			"*:*:LDFLAGS=$LDFLAGS -L" + h.GetEnvPath() + "/native/lib",
-			"*:*:LDFLAGS=$LDFLAGS -L" + h.GetEnvPath() + "/native/usr/lib",
 			"*:*:LD_LIBRARY_PATH=$LD_LIBRARY_PATH:" + h.GetEnvPath() + "/native/lib",
 			"*:*:PKG_CONFIG_PATH=$PKG_CONFIG_PATH:" + h.GetEnvPath() + "/native/lib/pkgconfig",
 			"*:*:LIBRARY_PATH=$LIBRARY_PATH:" + h.GetEnvPath() + "/native/lib",
@@ -167,12 +165,9 @@ func (p *Package) GetEnv(h *host.Host) map[string]string {
 			"*:*:CXXFLAGS=$CXXFLAGS -I" + h.GetEnvPath() + "/include",
 			"*:*:CXXFLAGS=$CXXFLAGS -I" + h.GetEnvPath() + "/usr/include",
 			"*:*:LDFLAGS=$LDFLAGS -L" + h.GetEnvPath() + "/lib",
-			"*:*:LDFLAGS=$LDFLAGS -L" + h.GetEnvPath() + "/usr/lib",
 			"*:*:LD_LIBRARY_PATH=" + h.GetEnvPath() + "/native/lib",
 			"*:*:PKG_CONFIG_PATH=$PKG_CONFIG_PATH:" + h.GetEnvPath() + "/lib/pkgconfig",
-			"*:*:PKG_CONFIG_PATH=$PKG_CONFIG_PATH:" + h.GetEnvPath() + "/usr/lib/pkgconfig",
 			"*:*:LIBRARY_PATH=$LIBRARY_PATH:" + h.GetEnvPath() + "/lib",
-			"*:*:LIBRARY_PATH=$LIBRARY_PATH:" + h.GetEnvPath() + "/usr/lib",
 		}, h)
 	}
 	if p.Type != "native" {

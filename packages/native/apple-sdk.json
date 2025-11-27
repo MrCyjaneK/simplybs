@@ -1,12 +1,12 @@
 {
-    "package": "native/apple-sdk-macos",
+    "package": "native/apple-sdk",
     "version": "master@f873f53",
     "type": "native",
     "download": [
         {
-            "kind": "tar.gz",
-            "sha256": "7ff7657a435e709dfc81e79965bf2d0544d71bea26432991db8837b797290c28",
-            "url": "https://github.com/tpoechtrager/osxcross/archive/f873f534c6cdb0776e457af8c7513da1e02abe59.tar.gz"
+            "kind": "git",
+            "sha256": "a3e46b026467f0e37ff3c79a015f6c9331190180",
+            "url": "https://github.com/MrCyjaneK/osxcross.git"
         },
         {
             "kind": "blob",
@@ -36,25 +36,34 @@
     ],
     "build": {
         "env": [
+            "*:*-apple-*:SKIP_BUILD_XAR=yes",
+            "*:*-apple-*:SKIP_GIT=yes",
+            "*:*-apple-*:SKIP_BUILD_PBXZ=yes",
             "*:*-apple-*:JOBS=$NUM_CORES",
             "*:*-apple-*:PORTABLE=1",
             "*:*-apple-*:TARGET_DIR=$PREFIX/native/",
             "*:aarch64-apple-*:ENABLE_ARCHS=arm64",
             "*:x86_64-apple-*:ENABLE_ARCHS=x86_64",
             "*:*-apple-*:UNATTENDED=1",
-            "*:*-apple-*:SDK_VERSION=26.0",
-            "*:*-apple-*:COMPRESSLEVEL=9 -e"
+            "*:*-apple-*:SDK_VERSION=26.1",
+            "*:*-apple-*:COMPRESSLEVEL=9 -e",
+            "*:*-apple-darwin:SDKNAME=MacOSX",
+            "*:*-apple-ios:SDKNAME=iPhoneOS",
+            "*:*-apple-ios-simulator:SDKNAME=iPhoneSimulator",
+            "*:*-apple-watchos:SDKNAME=WatchOS",
+            "*:*-apple-watchos-simulator:SDKNAME=WatchSimulator",
+            "*:*-apple-tvos:SDKNAME=AppleTVOS",
+            "*:*-apple-tvos-simulator:SDKNAME=AppleTVSimulator",
+            "*:*-apple-xros:SDKNAME=XROS",
+            "*:*-apple-xros-simulator:SDKNAME=XRSimulator",
+            "*:*-apple-driverkit:SDKNAME=DriverKit"
         ],
         "steps": [
             "*:*-apple-*:sed -i.bak 's/$TARGET_DIR\\/bin\\///g' tools/gen_sdk_package_pbzx.sh",
             "*:*-apple-*:sed -i.bak 's/$TARGET_DIR\\/SDK\\/tools\\/bin\\///g' tools/gen_sdk_package_pbzx.sh",
-            "*:*-apple-*:sed -i.bak 's/build_xar/echo build_xar/g' tools/gen_sdk_package_pbzx.sh",
-            "*:*-apple-*:sed -i.bak 's/build_pbxz/echo build_pbxz/g' tools/gen_sdk_package_pbzx.sh",
-            "*:*-apple-*:sed -i.bak 's/git /echo git /g' tools/tools.sh",
-            "*:*-apple-*:sed -i.bak '8,11d' tools/gen_sdk_package_pbzx.sh",
-            "*:*-apple-*:./tools/gen_sdk_package_pbzx.sh ./Xcode_*.xip",
-            "*:*-apple-*:mkdir -p $STAGING_DIR$PREFIX/native/share",
-            "*:*-apple-*:mv MacOSX26.sdk.tar.xz $STAGING_DIR$PREFIX/native/share"
+            "*:*-apple-*:bash -x ./tools/gen_sdk_package_pbzx.sh ./Xcode_*.xip",
+            "*:*-apple-*:mkdir -p $STAGING_DIR$PREFIX/native/share/xcode-sdk",
+            "*:*-apple-*:mv *.sdk.tar.xz $STAGING_DIR$PREFIX/native/share/xcode-sdk"
         ]
     }
 }

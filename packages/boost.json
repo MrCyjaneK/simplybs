@@ -47,9 +47,9 @@
             "*:*-ios-simulator*:toolset2=~iphone",
             "*:*:config_libraries=system,filesystem,thread,timer,date_time,chrono,regex,serialization,atomic,program_options,locale,log",
             "*:*:CXXFLAGS=-fPIC -std=c++17",
-            "*:*-darwin*:LDFLAGS=-L$PREFIX/lib -L$SDK_PATH/usr/lib",
-            "*:*-ios*:LDFLAGS=-L$PREFIX/lib -L$SDK_PATH/usr/lib",
-            "*:*-ios-simulator*:LDFLAGS=-L$PREFIX/lib -L$SDK_PATH/usr/lib",
+            "*:*-darwin*:LDFLAGS=-L$PREFIX/lib",
+            "*:*-ios*:LDFLAGS=-L$PREFIX/lib",
+            "*:*-ios-simulator*:LDFLAGS=-L$PREFIX/lib",
             "*:*-apple-*:AR=libtool",
             "*:*-linux-*:ARFLAGS=rcs"
         ],

@@ -10,7 +10,9 @@
         }
     ],
     "dependencies": [
-        "*:*:native/_"
+        "*:*:native/_",
+        "*:*:native/make",
+        "*:*:native/perl"
     ],
     "build": {
         "env": [
