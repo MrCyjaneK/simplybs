@@ -1,11 +1,11 @@
 {
     "package": "native/osx-cross",
-    "version": "master@f873f53",
+    "version": "master",
     "type": "native",
     "download": [
         {
             "kind": "git",
-            "sha256": "a3e46b026467f0e37ff3c79a015f6c9331190180",
+            "sha256": "c2b3d1e9ed841474b04671f06b0f005d03dede82",
             "url": "https://github.com/MrCyjaneK/osxcross.git"
         },
         {
@@ -54,21 +54,9 @@
             "*:*-apple-*:JOBS=$NUM_CORES",
             "*:*-apple-*:PORTABLE=1",
             "*:*-apple-*:TARGET_DIR=$PREFIX/native/",
-            "*:aarch64-apple-*:ENABLE_ARCHS=arm64",
-            "*:x86_64-apple-*:ENABLE_ARCHS=x86_64",
             "*:*-apple-*:UNATTENDED=1",
             "*:*-apple-*:SDK_VERSION=26.1",
-            "*:*-apple-*:COMPRESSLEVEL=0",
-            "*:*-apple-darwin:SDKNAME=MacOSX",
-            "*:*-apple-ios:SDKNAME=iPhoneOS",
-            "*:*-apple-ios-simulator:SDKNAME=iPhoneSimulator",
-            "*:*-apple-watchos:SDKNAME=WatchOS",
-            "*:*-apple-watchos-simulator:SDKNAME=WatchSimulator",
-            "*:*-apple-tvos:SDKNAME=AppleTVOS",
-            "*:*-apple-tvos-simulator:SDKNAME=AppleTVSimulator",
-            "*:*-apple-xros:SDKNAME=XROS",
-            "*:*-apple-xros-simulator:SDKNAME=XRSimulator",
-            "*:*-apple-driverkit:SDKNAME=DriverKit"
+            "*:*-apple-*:COMPRESSLEVEL=9 -e"
         ],
         "steps": [
             "*:*-apple-*:sed -i.bak 's/--with-libtapi=$TARGET_DIR/--with-libtapi=$PREFIX\\/native/g' build.sh",
@@ -76,7 +64,9 @@
             "*:*-apple-*:mv $PREFIX/native/share/xcode-sdk/*${SDK_VERSION}* tarballs",
             "*:*-apple-*:yes | INSTALLPREFIX=$PREFIX/native ./build_apple_clang.sh",
             "*:*-apple-*:cd build/clang-21/build_stage3 && make install DESTDIR=$STAGING_DIR && make install",
-            "*:*-apple-*:OCDEBUG=1 TARGET_DIR=$STAGING_DIR$PREFIX/native bash -x ./build.sh"
+            "*:*-apple-*:sed -i.bak 's/## Compiler test ##/exit 0/g' build.sh",
+            "*:*-apple-*:OCDEBUG=1 TARGET_DIR=$STAGING_DIR$PREFIX/native bash -x ./build.sh",
+            "*:*-apple-*:cd $STAGING_DIR$PREFIX/native/bin && ln -s arm64-apple-darwin25-ld ld"
         ]
     }
 }

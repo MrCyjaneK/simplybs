@@ -23,7 +23,7 @@
             "*:*:config_opts=$config_opts --disable-test-modules",
             "*:*:config_opts=$config_opts --enable-static",
             "*:*:config_opts=$config_opts --enable-optimizations",
-            "*:*:LIBS=-lintl -liconv"
+            "darwin_*:*:LIBS=-lintl -liconv"
         ],
         "steps": [
             "*:*:sed -i.bak '/^#ifndef DATE/i\\\n\\/* Deterministic date and time.  *\\/\\\n#define DATE \"Jan  1 1970\"\\\n#define TIME \"00:00:01\"\\\n' Modules/getbuildinfo.c",
