@@ -56,7 +56,7 @@
             "*:*-apple-*:TARGET_DIR=$PREFIX/native/",
             "*:*-apple-*:UNATTENDED=1",
             "*:*-apple-*:SDK_VERSION=26.1",
-            "*:*-apple-*:COMPRESSLEVEL=9 -e"
+            "*:*-apple-*:COMPRESSLEVEL=6"
         ],
         "steps": [
             "*:*-apple-*:sed -i.bak 's/--with-libtapi=$TARGET_DIR/--with-libtapi=$PREFIX\\/native/g' build.sh",

@@ -46,7 +46,7 @@
             "*:x86_64-apple-*:ENABLE_ARCHS=x86_64",
             "*:*-apple-*:UNATTENDED=1",
             "*:*-apple-*:SDK_VERSION=26.1",
-            "*:*-apple-*:COMPRESSLEVEL=9 -e",
+            "*:*-apple-*:COMPRESSLEVEL=6",
             "*:*-apple-darwin:SDKNAME=MacOSX",
             "*:*-apple-ios:SDKNAME=iPhoneOS",
             "*:*-apple-ios-simulator:SDKNAME=iPhoneSimulator",
