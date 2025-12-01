@@ -6,6 +6,7 @@
         "*:*-android*:native/android_ndk",
         "*:*-apple-*:native/cctools-port",
         "*:*-apple-*:native/libtapi",
+        "*:*-apple-*:native/libxml2",
         "*:*-apple-*:native/osx-cross",
         "*:*-apple-*:native/xar",
         "*:*-linux-*:native/bash",

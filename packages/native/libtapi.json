@@ -16,7 +16,6 @@
     ],
     "build": {
         "env": [
-            "*:*:config_opts=--prefix=$PREFIX/native --disable-shared",
             "*:*:INSTALLPREFIX=$PREFIX/native"
         ],
         "steps": [

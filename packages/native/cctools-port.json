@@ -10,29 +10,32 @@
         }
     ],
     "dependencies": [
-        "*:*-apple-darwin:native/bzip2",
-        "*:*-apple-darwin:native/libtapi",
-        "*:*-apple-darwin:native/make",
-        "*:*-apple-darwin:native/openssl",
-        "*:*-apple-darwin:native/xar",
-        "*:*-apple-darwin:native/xz",
-        "*:*-apple-darwin:native/zlib"
+        "*:*-apple-*:native/bzip2",
+        "*:*-apple-*:native/libtapi",
+        "*:*-apple-*:native/make",
+        "*:*-apple-*:native/openssl",
+        "*:*-apple-*:native/xar",
+        "*:*-apple-*:native/xz",
+        "*:*-apple-*:native/zlib"
     ],
     "build": {
         "env": [
-            "*:*-apple-darwin:config_opts=--prefix=$PREFIX/native",
-            "*:aarch64-apple-darwin:config_opts=$config_opts --target=arm64-apple-darwin25",
-            "*:x86_64-apple-darwin:config_opts=$config_opts --target=x86_64-apple-darwin25",
-            "*:*-apple-darwin:config_opts=$config_opts --with-libtapi=$PREFIX/native",
-            "*:*-apple-darwin:config_opts=$config_opts --with-libxar=$PREFIX/native",
-            "*:*-apple-darwin:CC=clang",
-            "*:*-apple-darwin:CXX=clang++"
+            "*:*-apple-*:config_opts=--prefix=$PREFIX/native",
+            "*:aarch64-apple-darwin:BUILD_TARGET=aarch64-apple-darwin",
+            "*:x86_64-apple-darwin:BUILD_TARGET=x86_64-apple-darwin",
+            "*:aarch64-apple-ios*:BUILD_TARGET=aarch64-apple-ios",
+            "*:*-apple*:config_opts=$config_opts --target=$BUILD_TARGET",
+            "*:*-apple-*:config_opts=$config_opts --with-libtapi=$PREFIX/native",
+            "*:*-apple-*:config_opts=$config_opts --with-libxar=$PREFIX/native",
+            "*:*-apple-*:CC=clang",
+            "*:*-apple-*:CXX=clang++"
         ],
         "steps": [
-            "*:*-apple-darwin:sed -i.bak '3182d' cctools/configure",
-            "*:*-apple-darwin:cd cctools && ./configure $config_opts",
-            "*:*-apple-darwin:cd cctools && make -j$NUM_CORES",
-            "*:*-apple-darwin:cd cctools && DESTDIR=$STAGING_DIR make -j$NUM_CORES install"
+            "*:*-apple-*:sed -i.bak '3182d' cctools/configure",
+            "*:*-apple-*:cd cctools && ./configure $config_opts",
+            "*:*-apple-*:cd cctools && make -j$NUM_CORES",
+            "*:*-apple-*:cd cctools && DESTDIR=$STAGING_DIR make -j$NUM_CORES install",
+            "*:*-apple-*:cd $STAGING_DIR$PREFIX/native/bin; for f in *-*; do ln -s \"$f\" \"${f##*-}\"; done"
         ]
     }
 }

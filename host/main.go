@@ -89,7 +89,7 @@ var SupportedHosts = map[string]*Host{
 			"*:*:RANLIB=llvm-ranlib",
 			"*:*:AR=llvm-ar",
 			"*:*:LIBTOOL=llvm-libtool-darwin",
-			"*:*:LDFLAGS=-lc++ -lc++abi -fuse-ld=$PREFIX/native/bin/ld",
+			"*:*:LDFLAGS=-lc++ -lc++abi",
 		},
 	},
 	"aarch64-apple-ios": {
@@ -110,6 +110,7 @@ var SupportedHosts = map[string]*Host{
 			"*:*:AR=ar",
 			"*:*:LIBTOOL=libtool",
 			"*:*:LDFLAGS=-lc++ -lc++abi",
+			"*:*:LD=lld",
 		},
 	},
 	"aarch64-apple-ios-simulator": {

@@ -24,7 +24,6 @@
     "dependencies": [
         "*:*-apple-*:native/apple-sdk",
         "*:*-apple-*:native/bzip2",
-        "*:*-apple-*:native/cctools-port",
         "*:*-apple-*:native/cmake",
         "*:*-apple-*:native/cpio",
         "*:*-apple-*:native/gettext",
@@ -65,8 +64,7 @@
             "*:*-apple-*:yes | INSTALLPREFIX=$PREFIX/native ./build_apple_clang.sh",
             "*:*-apple-*:cd build/clang-21/build_stage3 && make install DESTDIR=$STAGING_DIR && make install",
             "*:*-apple-*:sed -i.bak 's/## Compiler test ##/exit 0/g' build.sh",
-            "*:*-apple-*:OCDEBUG=1 TARGET_DIR=$STAGING_DIR$PREFIX/native bash -x ./build.sh",
-            "*:*-apple-*:cd $STAGING_DIR$PREFIX/native/bin && ln -s arm64-apple-darwin25-ld ld"
+            "*:*-apple-*:OCDEBUG=1 TARGET_DIR=$STAGING_DIR$PREFIX/native bash -x ./build.sh"
         ]
     }
 }
