@@ -15,6 +15,7 @@ import (
 	"github.com/mrcyjanek/simplybs/crash"
 	"github.com/mrcyjanek/simplybs/host"
 	"github.com/mrcyjanek/simplybs/utils"
+	downloadpkg "github.com/mrcyjanek/simplybs/utils/download"
 	"github.com/mrcyjanek/simplybs/utils/ifstring"
 )
 
@@ -103,14 +104,14 @@ func (p *Package) ShortName(h *host.Host) string {
 
 func (p *Package) GenerateSourceBuildPath(download *Download) string {
 	if download.Kind == "git" {
-		urlPath, err := utils.URLToPath(download.URL)
+		urlPath, err := downloadpkg.URLToPath(download.URL)
 		crash.Handle(err)
 		urlPath = strings.TrimSuffix(urlPath, ".git")
 		name := urlPath + ".bundle"
 		return filepath.Join(host.DataDirRoot(), "source", name)
 	}
 
-	urlPath, err := utils.URLToPath(download.URL)
+	urlPath, err := downloadpkg.URLToPath(download.URL)
 	if err != nil {
 		return filepath.Join(host.DataDirRoot(), "source", filepath.Base(download.URL))
 	}

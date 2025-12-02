@@ -9,6 +9,8 @@ import (
 	"os/exec"
 	"path/filepath"
 	"strings"
+
+	"github.com/mrcyjanek/simplybs/utils/download"
 )
 
 func verifyBundleHasRef(bundlePath string, refs []string) bool {
@@ -38,7 +40,7 @@ func verifyBundleHasRef(bundlePath string, refs []string) bool {
 }
 
 func downloadBundleFromMirrors(bundlePath, originalURL string, refs []string) error {
-	urlPath, err := URLToPath(originalURL)
+	urlPath, err := download.URLToPath(originalURL)
 	if err != nil {
 		return fmt.Errorf("failed to convert URL to path: %w", err)
 	}
@@ -46,7 +48,7 @@ func downloadBundleFromMirrors(bundlePath, originalURL string, refs []string) er
 	bundleFilename := filepath.Base(bundlePath)
 	mirrorPath := filepath.Join(filepath.Dir(urlPath), bundleFilename)
 
-	mirrors := GetMirrors()
+	mirrors := download.GetMirrors()
 	for _, mirror := range mirrors {
 		mirrorURL := mirror + mirrorPath
 		log.Printf("Trying to download bundle from mirror: %s", mirrorURL)
@@ -269,7 +271,7 @@ func getRepoURLFromBundlePath(bundlePath string) (string, error) {
 
 	// Try to match against known repositories
 	for url := range sources.Repositories {
-		urlPath, err := URLToPath(url)
+		urlPath, err := download.URLToPath(url)
 		if err != nil {
 			continue
 		}

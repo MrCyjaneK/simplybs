@@ -13,6 +13,7 @@ import (
 	"github.com/mrcyjanek/simplybs/crash"
 	"github.com/mrcyjanek/simplybs/host"
 	"github.com/mrcyjanek/simplybs/utils"
+	downloadpkg "github.com/mrcyjanek/simplybs/utils/download"
 	"github.com/mrcyjanek/simplybs/utils/ifstring"
 )
 
@@ -51,7 +52,7 @@ func (p *Package) DownloadSource(download *Download) {
 		if download.Kind == "git" {
 			err = utils.DownloadGit(p.Package, sourcePath, download.URL)
 		} else {
-			err = utils.DownloadFile(p.Package, sourcePath, download.URL, download.Sha256, false)
+			err = downloadpkg.DownloadFile(p.Package, sourcePath, download.URL, download.Sha256, false)
 		}
 		if err != nil {
 			log.Fatalf("Failed to download source: %v", err)

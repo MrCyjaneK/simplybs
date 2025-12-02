@@ -35,7 +35,8 @@
             "*:*:config_opts=$config_opts --disable-xzdec",
             "*:*:config_opts=$config_opts --disable-lzmadec",
             "*:*:config_opts=$config_opts --disable-lzmainfo",
-            "*:*:config_opts=$config_opts --disable-lzma-links"
+            "*:*:config_opts=$config_opts --disable-lzma-links",
+            "*:*:SKIP_WERROR_CHECK=yes"
         ],
         "steps": [
             "*:*:pwd",

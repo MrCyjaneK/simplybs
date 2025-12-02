@@ -1,4 +1,4 @@
-package utils
+package download
 
 import (
 	"crypto/sha256"
@@ -119,52 +119,121 @@ func DownloadFile(packageName, path, url, expectedSha256 string, isMirror bool) 
 
 	os.MkdirAll(filepath.Dir(path), 0755)
 
-	resp, err := http.Get(url)
+	maxRetries := 15
+	for attempt := 0; attempt <= maxRetries; attempt++ {
+		if attempt > 0 {
+			log.Printf("Retry attempt %d/%d for %s", attempt, maxRetries, url)
+			time.Sleep(5 * time.Second)
+		}
+
+		bytesReceived, err := downloadWithResume(path, url, expectedSha256)
+		if err != nil {
+			// If no data was received on first try, give up immediately
+			if bytesReceived == 0 && attempt == 0 {
+				return fmt.Errorf("no data received from server: %v", err)
+			}
+			if attempt == maxRetries {
+				return fmt.Errorf("failed after %d retries: %v", maxRetries, err)
+			}
+			log.Printf("Download failed: %v", err)
+			continue
+		}
+
+		log.Printf("Successfully downloaded and verified %s", path)
+		return nil
+	}
+
+	return fmt.Errorf("download failed after all retries")
+}
+
+func downloadWithResume(path, url, expectedSha256 string) (int64, error) {
+	var fileSize int64
+	var out *os.File
+	var err error
+
+	// Check if partial file exists
+	if info, err := os.Stat(path); err == nil {
+		fileSize = info.Size()
+		out, err = os.OpenFile(path, os.O_APPEND|os.O_WRONLY, 0644)
+		if err != nil {
+			return 0, fmt.Errorf("failed to open file for append: %v", err)
+		}
+	} else {
+		out, err = os.Create(path)
+		if err != nil {
+			return 0, fmt.Errorf("failed to create file: %v", err)
+		}
+	}
+	defer out.Close()
+
+	// Create request with Range header for resume
+	req, err := http.NewRequest("GET", url, nil)
 	if err != nil {
-		return fmt.Errorf("failed to download file from %s: %v", url, err)
+		return 0, fmt.Errorf("failed to create request: %v", err)
+	}
+
+	if fileSize > 0 {
+		req.Header.Set("Range", fmt.Sprintf("bytes=%d-", fileSize))
+		log.Printf("Resuming download from byte %d", fileSize)
+	}
+
+	client := &http.Client{}
+	resp, err := client.Do(req)
+	if err != nil {
+		return 0, fmt.Errorf("failed to download file: %v", err)
 	}
 	defer resp.Body.Close()
 
-	if resp.StatusCode != http.StatusOK {
-		return fmt.Errorf("failed to download file: HTTP %d %s", resp.StatusCode, resp.Status)
+	// Accept both 200 (full content) and 206 (partial content)
+	if resp.StatusCode != http.StatusOK && resp.StatusCode != http.StatusPartialContent {
+		return 0, fmt.Errorf("HTTP %d %s", resp.StatusCode, resp.Status)
+	}
+
+	// If server doesn't support resume (200 instead of 206), start over
+	if resp.StatusCode == http.StatusOK && fileSize > 0 {
+		out.Close()
+		out, err = os.Create(path)
+		if err != nil {
+			return 0, fmt.Errorf("failed to recreate file: %v", err)
+		}
+		fileSize = 0
+		log.Printf("Server doesn't support resume, starting from beginning")
 	}
 
 	var totalSize int64
 	if contentLength := resp.Header.Get("Content-Length"); contentLength != "" {
 		if size, err := strconv.ParseInt(contentLength, 10, 64); err == nil {
-			totalSize = size
+			totalSize = fileSize + size
 		}
 	}
 
-	out, err := os.Create(path)
-	if err != nil {
-		return fmt.Errorf("failed to create file %s: %v", path, err)
-	}
-	defer out.Close()
-
-	hasher := sha256.New()
-
-	filename := path
-	if idx := strings.LastIndex(path, "/"); idx >= 0 {
-		filename = path[idx+1:]
-	}
-
+	filename := filepath.Base(path)
 	progressWriter := NewProgressWriter(out, totalSize, filename)
-	multiWriter := io.MultiWriter(progressWriter, hasher)
 
-	_, err = io.Copy(multiWriter, resp.Body)
+	bytesRead, err := io.Copy(progressWriter, resp.Body)
 	if err != nil {
-		return fmt.Errorf("failed to write file %s: %v", path, err)
+		return bytesRead, fmt.Errorf("failed to write file: %v", err)
 	}
 
 	progressWriter.finish()
 
+	// Verify hash only if download is complete
+	file, err := os.Open(path)
+	if err != nil {
+		return bytesRead, fmt.Errorf("failed to open file for verification: %v", err)
+	}
+	defer file.Close()
+
+	hasher := sha256.New()
+	if _, err := io.Copy(hasher, file); err != nil {
+		return bytesRead, fmt.Errorf("failed to calculate hash: %v", err)
+	}
+
 	actualHash := hex.EncodeToString(hasher.Sum(nil))
 	if actualHash != expectedSha256 {
 		os.Remove(path)
-		return fmt.Errorf("SHA256 hash mismatch for %s: expected %s, got %s", path, expectedSha256, actualHash)
+		return bytesRead, fmt.Errorf("SHA256 hash mismatch: expected %s, got %s", expectedSha256, actualHash)
 	}
 
-	log.Printf("Successfully downloaded and verified %s", path)
-	return nil
+	return bytesRead, nil
 }
