@@ -22,7 +22,6 @@
             "*:*:config_opts=--prefix=$PREFIX/native",
             "*:*:config_opts=$config_opts --disable-test-modules",
             "*:*:config_opts=$config_opts --enable-static",
-            "*:*:config_opts=$config_opts --enable-optimizations",
             "darwin_*:*:LIBS=-lintl -liconv"
         ],
         "steps": [
