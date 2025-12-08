@@ -45,7 +45,7 @@ func DataDir() string {
 
 func (h *Host) GetEnvPath() string {
 	if os.Getenv("SIMPLYBS_ENV_DIR") != "" {
-		return os.Getenv("SIMPLYBS_ENV_DIR")
+		return filepath.Join(os.Getenv("SIMPLYBS_ENV_DIR"), h.Triplet)
 	}
 	dir := DataDirRoot()
 	return filepath.Join(dir, "env", h.Triplet)
