@@ -40,6 +40,7 @@
             "*:*:config_opts=$config_opts --enable-static-tor",
             "*:*:config_opts=$config_opts --disable-lzma",
             "*:*:config_opts=$config_opts --disable-zstd",
+            "*:*:config_opts=$config_opts --disable-systemd",
             "*:*:config_opts=$config_opts --with-openssl-dir=$PREFIX/lib",
             "*:*:config_opts=$config_opts --with-libevent-dir=$PREFIX/lib",
             "*:*:config_opts=$config_opts --with-zlib-dir=$PREFIX/lib",
