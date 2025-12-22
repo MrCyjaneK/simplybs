@@ -114,7 +114,8 @@ func ScanBuiltFiles(packageName string, packageVersion string) []BuiltFile {
 
 	for _, builder := range builder.Builders {
 		for _, target := range targets {
-			buildOutputDir := filepath.Join(buildlibDir, builder, "built", target, packageName)
+			safePackageName := strings.ReplaceAll(packageName, "/", "@")
+			buildOutputDir := filepath.Join(buildlibDir, builder, "built", target, safePackageName)
 			buildOutputDir = filepath.Dir(buildOutputDir)
 
 			if _, err := os.Stat(buildOutputDir); os.IsNotExist(err) {

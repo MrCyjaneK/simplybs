@@ -122,7 +122,8 @@ func (p *Package) GenerateBuildPath(h *host.Host, kind string) string {
 	if kind == "source" {
 		log.Fatalf("Source build path is not supported")
 	}
-	return filepath.Join(host.DataDir(), kind, h.Triplet, p.ShortName(h))
+	safeName := strings.ReplaceAll(p.ShortName(h), "/", "@")
+	return filepath.Join(host.DataDir(), kind, h.Triplet, safeName)
 }
 
 func getNumCores() int {
