@@ -11,11 +11,14 @@ import (
 
 	"github.com/mrcyjanek/simplybs/builder"
 	"github.com/mrcyjanek/simplybs/crash"
+	"github.com/mrcyjanek/simplybs/deb"
 	"github.com/mrcyjanek/simplybs/host"
 	"github.com/mrcyjanek/simplybs/utils"
 	downloadpkg "github.com/mrcyjanek/simplybs/utils/download"
 	"github.com/mrcyjanek/simplybs/utils/ifstring"
 )
+
+var CreateDebPackages = true
 
 func (p *Package) EnsureBuilt(h *host.Host, buildDependencies bool) {
 	buildPath := p.GenerateBuildPath(h, "built") + ".info.txt"
@@ -197,6 +200,31 @@ func (p *Package) buildPackageInternal(h *host.Host, buildDependencies bool) {
 	}
 
 	log.Printf("Package built successfully: %s", builtArchivePath)
+
+	if CreateDebPackages && !strings.HasPrefix(p.Package, "native/") {
+		debPath := p.GenerateBuildPath(h, "deb") + ".deb"
+		os.MkdirAll(filepath.Dir(debPath), 0755)
+
+		packageName := p.Package
+		hash := p.GeneratePackageInfoShortHash(h)
+		debVersion := fmt.Sprintf("%s-%s", p.Version, hash)
+
+		sources := make([]deb.SourceInfo, 0, len(p.Download))
+		for _, dl := range p.Download {
+			if dl.Kind != "none" {
+				sources = append(sources, deb.SourceInfo{
+					Kind: dl.Kind,
+					URL:  dl.URL,
+				})
+			}
+		}
+
+		log.Printf("Converting to .deb: %s", debPath)
+		err = deb.ConvertTarGzToDebWithSources(builtArchivePath, debPath, packageName, debVersion, sources, h)
+		if err != nil {
+			log.Fatalln("Failed to convert to .deb: %v", err)
+		}
+	}
 }
 
 func writeDotEnv(path string, env []string) {
