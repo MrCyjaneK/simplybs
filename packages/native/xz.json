@@ -1,5 +1,5 @@
 {
-    "package": "xz",
+    "package": "native/xz",
     "version": "5.8.1",
     "type": "native",
     "download": [

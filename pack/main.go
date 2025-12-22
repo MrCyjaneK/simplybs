@@ -192,6 +192,7 @@ func Cleanup() {
 				currentBuildID := pkg.GeneratePackageInfoShortHash(host.SupportedHosts[target])
 
 				currentFileName := fmt.Sprintf("%s-%s-%s", pkg.Package, pkg.Version, currentBuildID)
+				currentFileName = strings.ReplaceAll(currentFileName, "/", "@")
 				archPath := filepath.Join(builder, "built", target, currentFileName+".tar.gz")
 				infoPath := filepath.Join(builder, "built", target, currentFileName+".info.txt")
 

@@ -1,5 +1,5 @@
 {
-    "package": "openssl",
+    "package": "native/openssl",
     "version": "3.5.1",
     "type": "native",
     "download": [
