@@ -1,0 +1,29 @@
+{
+    "package": "unistring",
+    "version": "1.4.1",
+    "type": "host",
+    "download": [
+        {
+            "kind": "tar.gz",
+            "sha256": "12542ad7619470efd95a623174dcd4b364f2483caf708c6bee837cb53a54cb9d",
+            "url": "http://ftpmirror.gnu.org/gnu/libunistring/libunistring-1.4.1.tar.gz"
+        }
+    ],
+    "dependencies": [
+        "*:*:native/_",
+        "*:*:native/make",
+        "*:*:native/sed"
+    ],
+    "build": {
+        "env": [
+            "*:*:config_opts=--prefix=$PREFIX",
+            "*:*:config_opts=$config_opts --disable-shared",
+            "*:*:config_opts=$config_opts --enable-static"
+        ],
+        "steps": [
+            "*:*:./configure $config_opts",
+            "*:*:make -j$NUM_CORES",
+            "*:*:make DESTDIR=$STAGING_DIR install"
+        ]
+    }
+}

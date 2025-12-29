@@ -30,16 +30,9 @@
             "*:*:config_opts=$config_opts --disable-shared",
             "*:*:config_opts=$config_opts --enable-static",
             "*:*:config_opts=$config_opts --disable-doc",
-            "*:*:config_opts=$config_opts --disable-scripts",
-            "*:*:config_opts=$config_opts --disable-xz",
-            "*:*:config_opts=$config_opts --disable-xzdec",
-            "*:*:config_opts=$config_opts --disable-lzmadec",
-            "*:*:config_opts=$config_opts --disable-lzmainfo",
-            "*:*:config_opts=$config_opts --disable-lzma-links",
             "*:*:SKIP_WERROR_CHECK=yes"
         ],
         "steps": [
-            "*:*:pwd",
             "*:*:./autogen.sh --no-po4a",
             "*:*:./configure $config_opts",
             "*:*:make -j$NUM_CORES",

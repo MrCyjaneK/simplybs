@@ -838,9 +838,19 @@
                 "38d2fe11b9df521727fcca23c9dac086ce8378d3"
             ]
         },
+        "https://git.dpkg.org/git/dpkg/dpkg.git": {
+            "refs": [
+                "f3ad53337eaee92cbeb1a7c73e98d552c3a8186f"
+            ]
+        },
         "https://git.kernel.org/pub/scm/libs/libcap/libcap.git": {
             "refs": [
                 "413789501269f0f258a6716c6fa3edae178ba4a3"
+            ]
+        },
+        "https://github.com/Cyan4973/xxHash.git": {
+            "refs": [
+                "66979328cf3f15cecdc61ea58c9f81e6071f8983"
             ]
         },
         "https://github.com/MrCyjaneK/cmake-toolchain.git": {
@@ -868,9 +878,19 @@
                 "55ea777e8d567e5e86ffac917c28815ac54cc341"
             ]
         },
+        "https://github.com/guillemj/libmd.git": {
+            "refs": [
+                "d5b8e853989a73f8fff9dc4e00dccd0b691b84f9"
+            ]
+        },
         "https://github.com/ip7z/7zip.git": {
             "refs": [
                 "5e96a8279489832924056b1fa82f29d5837c9469"
+            ]
+        },
+        "https://github.com/julian-klode/triehash.git": {
+            "refs": [
+                "e0bd5e08395bcd5ae105ad279d8d3ba67e8b738b"
             ]
         },
         "https://github.com/libffi/libffi.git": {
@@ -886,6 +906,11 @@
         "https://github.com/llvm/llvm-project": {
             "refs": [
                 "450f52eec88f728c89a9efd667dbeaf2dad93826"
+            ]
+        },
+        "https://github.com/lz4/lz4.git": {
+            "refs": [
+                "ebb370ca83af193212df4dcbadcc5d87bc0de2f0"
             ]
         },
         "https://github.com/mesonbuild/meson.git": {
@@ -906,6 +931,11 @@
         "https://github.com/tpoechtrager/cctools-port.git": {
             "refs": [
                 "6e31355ca5babc708681bd906eaaef86c3ac93be"
+            ]
+        },
+        "https://github.com/tpoechtrager/xar.git": {
+            "refs": [
+                "5fa4675419cfec60ac19a9c7f7c2d0e7c831a497"
             ]
         },
         "https://gitlab.gnome.org/GNOME/glib.git": {
@@ -953,6 +983,11 @@
         "https://pagure.io/xmlto.git": {
             "refs": [
                 "13a831d76467c88f9e79f9804e2471137ec05331"
+            ]
+        },
+        "https://salsa.debian.org/apt-team/apt.git": {
+            "refs": [
+                "6b128124271e94bdb0f4e7850d9286170d712b04"
             ]
         },
         "https://salsa.debian.org/sanvila/unzip.git": {

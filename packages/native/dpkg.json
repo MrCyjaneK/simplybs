@@ -1,0 +1,37 @@
+{
+    "package": "native/dpkg",
+    "version": "1.23.3",
+    "type": "native",
+    "download": [
+        {
+            "kind": "git",
+            "sha256": "f3ad53337eaee92cbeb1a7c73e98d552c3a8186f",
+            "url": "https://git.dpkg.org/git/dpkg/dpkg.git"
+        }
+    ],
+    "dependencies": [
+        "*:*:native/autoconf",
+        "*:*:native/automake",
+        "*:*:native/gettext",
+        "*:*:native/libmd",
+        "*:*:native/libtool",
+        "*:*:native/m4",
+        "*:*:native/make",
+        "*:*:native/patch",
+        "*:*:native/perl",
+        "*:*:native/pkgconf",
+        "*:*:native/tar"
+    ],
+    "build": {
+        "env": [
+            "*:*:config_opts=--host=$HOST --prefix=$PREFIX/native",
+            "*:*:PERL_LIBDIR=$PREFIX/native/lib/perl5/site_perl/5.42.0"
+        ],
+        "steps": [
+            "*:*:autoreconf --force --install",
+            "*:*:./configure $config_opts",
+            "*:*:make -j$NUM_CORES",
+            "*:*:make install DESTDIR=$STAGING_DIR"
+        ]
+    }
+}

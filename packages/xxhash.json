@@ -1,0 +1,29 @@
+{
+    "package": "xxhash",
+    "version": "v0.8.3-dev",
+    "type": "host",
+    "download": [
+        {
+            "kind": "git",
+            "sha256": "66979328cf3f15cecdc61ea58c9f81e6071f8983",
+            "url": "https://github.com/Cyan4973/xxHash.git"
+        }
+    ],
+    "dependencies": [
+        "*:*:native/_",
+        "*:*:native/cmake",
+        "*:*:native/cmake-toolchain",
+        "*:*:native/make"
+    ],
+    "build": {
+        "env": [
+            "*:*:config_opts=-DCMAKE_TOOLCHAIN_FILE=$PREFIX/native/toolchain.cmake",
+            "*:*:config_opts=$config_opts -DCMAKE_INSTALL_PREFIX=$PREFIX"
+        ],
+        "steps": [
+            "*:*:cmake -S build/cmake -B cmake_build $config_opts",
+            "*:*:cd cmake_build && make -j$NUM_CORES",
+            "*:*:cd cmake_build && make DESTDIR=$STAGING_DIR install"
+        ]
+    }
+}

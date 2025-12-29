@@ -10,7 +10,9 @@
         }
     ],
     "dependencies": [
-        "*:*:native/_"
+        "*:*:native/_",
+        "*:*:native/cmake",
+        "*:*:native/cmake-toolchain"
     ],
     "build": {
         "env": [

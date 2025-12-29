@@ -11,8 +11,8 @@
     ],
     "dependencies": [
         "*:*:native/7zip",
-        "darwin_arm64:*:native/go-bin@1.25",
-        "*:*:native/sed"
+        "*:*:native/sed",
+        "darwin_arm64:*:native/go-bin@1.25"
     ],
     "build": {
         "env": [

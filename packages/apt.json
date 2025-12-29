@@ -1,0 +1,42 @@
+{
+    "package": "apt",
+    "version": "2.86.0",
+    "type": "host",
+    "download": [
+        {
+            "kind": "git",
+            "sha256": "6b128124271e94bdb0f4e7850d9286170d712b04",
+            "url": "https://salsa.debian.org/apt-team/apt.git"
+        }
+    ],
+    "dependencies": [
+        "*:*:native/_",
+        "*:*:native/cmake",
+        "*:*:native/cmake-toolchain",
+        "*:*:native/dpkg",
+        "*:*:native/make",
+        "*:*:native/perl",
+        "*:*:native/pkgconf",
+        "*:*:native/triehash",
+        "*:*:berkeleydb@5",
+        "*:*:gettext",
+        "*:*:gtest",
+        "*:*:lz4",
+        "*:*:openssl",
+        "*:*:xxhash",
+        "*:*:xz",
+        "*:*:zlib"
+    ],
+    "build": {
+        "env": [
+            "*:*:config_opts=-DCMAKE_TOOLCHAIN_FILE=$PREFIX/native/toolchain.cmake",
+            "*:*:config_opts=$config_opts -DCMAKE_INSTALL_PREFIX=$PREFIX",
+            "*:*:config_opts=$config_opts -DWITH_DOC=NO"
+        ],
+        "steps": [
+            "*:*:mkdir build",
+            "*:*:cd build && cmake $config_opts ..",
+            "*:*:cd build && make install DESTDIR=$STAGING_DIR"
+        ]
+    }
+}
