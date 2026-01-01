@@ -25,7 +25,7 @@ func main() {
 	argVersion := flag.Bool("v", false, "Show version")
 	argShell := flag.Bool("shell", false, "Extract source and start shell with build environment")
 	argCleanup := flag.Bool("cleanup", false, "Remove everything except current built archives")
-	argDeb := flag.Bool("deb", true, "Create .deb packages")
+	argDeb := flag.Bool("deb", false, "Create .deb packages")
 	flag.Parse()
 	if *argVersion {
 		fmt.Println("simplybs version 0.0.0")
