@@ -1,12 +1,12 @@
 {
     "package": "native/crosstool-ng",
-    "version": "1.28.0",
+    "version": "1.28.0-dirty",
     "type": "native",
     "download": [
         {
-            "kind": "tar.xz",
-            "sha256": "5750e29a2bda5cd8d67900592576b1670a1987a4dcd5e4f6beae09138a1f5699",
-            "url": "http://crosstool-ng.org/download/crosstool-ng/crosstool-ng-1.28.0.tar.xz"
+            "kind": "git",
+            "sha256": "a3fef85781d3cda0b27388916f3287826aeec177",
+            "url": "https://github.com/crosstool-ng/crosstool-ng"
         }
     ],
     "dependencies": [

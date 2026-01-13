@@ -41,9 +41,9 @@
         },
         {
             "kind": "blob",
-            "path": ".build/tarballs/glibc-2.38.tar.xz",
-            "sha256": "fb82998998b2b29965467bc1b69d152e9c307d2cf301c9eafb4555b770ef3fd2",
-            "url": "http://ftpmirror.gnu.org/gnu/glibc/glibc-2.38.tar.xz"
+            "path": ".build/tarballs/glibc-2.42.tar.xz",
+            "sha256": "d1775e32e4628e64ef930f435b67bb63af7599acb6be2b335b9f19f16509f17f",
+            "url": "http://ftpmirror.gnu.org/gnu/glibc/glibc-2.42.tar.xz"
         },
         {
             "kind": "blob",
@@ -161,7 +161,6 @@
             "*:{*-linux-gnu,*-linux-musl,*-w64-mingw32}:echo 'CT_CC_GCC_SYSTEM_ZLIB=y' >> .config",
             "*:{*-linux-gnu,*-linux-musl,*-w64-mingw32}:echo 'CT_DEBUG_CT_SAVE_STEPS=y' >> .config",
             "*:{*-linux-gnu,*-linux-musl,*-w64-mingw32}:sed -i.bak 's/CT_GDB_CROSS=y/CT_GDB_CROSS=n/g' .config",
-            "*:{*-linux-gnu,*-linux-musl,*-w64-mingw32}:sed -i.bak 's/CT_GLIBC_VERSION=\"2.42\"/CT_GLIBC_VERSION=\"2.38\"/g' .config",
             "*:{*-linux-gnu,*-linux-musl,*-w64-mingw32}:sed -i.bak 's/CT_GDB_GDBSERVER=y/CT_GDB_GDBSERVER=n/g' .config",
             "*:{*-linux-gnu,*-linux-musl,*-w64-mingw32}:echo 'CT_GDB=n' >> .config",
             "*:{*-linux-gnu,*-linux-musl,*-w64-mingw32}:echo 'CT_GDB_NATIVE=n' >> .config",
