@@ -34,7 +34,7 @@
             "*:*:mkdir -p $STAGING_DIR$PREFIX/native/bin",
             "*:*:cp -a build/*/stage3/lib $STAGING_DIR$PREFIX/native/",
             "*:*:cp -a build/*/stage3/bin/rustc $STAGING_DIR$PREFIX/native/bin",
-            "*:*:cp -a build/*/stage3-tools-bin/cargo $STAGING_DIR$PREFIX/native/bin"
+            "*:*:cp -a build/*/stage2-tools-bin/cargo $STAGING_DIR$PREFIX/native/bin"
         ]
     }
 }

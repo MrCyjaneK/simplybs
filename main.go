@@ -25,7 +25,6 @@ func main() {
 	argVersion := flag.Bool("v", false, "Show version")
 	argShell := flag.Bool("shell", false, "Extract source and start shell with build environment")
 	argCleanup := flag.Bool("cleanup", false, "Remove everything except current built archives")
-	argDeb := flag.Bool("deb", false, "Create .deb packages")
 	flag.Parse()
 	if *argVersion {
 		fmt.Println("simplybs version 0.0.0")
@@ -66,11 +65,11 @@ func main() {
 		if host == nil {
 			crash.Handle(fmt.Errorf("host %s not supported", h))
 		}
-		buildForHost(host, packageNames, *argList, *argExtract, *argBuild, *argShell, *argDeb)
+		buildForHost(host, packageNames, *argList, *argExtract, *argBuild, *argShell)
 	}
 }
 
-func buildForHost(host *host.Host, packageNames []*pack.Package, list bool, extract bool, build bool, shell bool, createDeb bool) {
+func buildForHost(host *host.Host, packageNames []*pack.Package, list bool, extract bool, build bool, shell bool) {
 	if list {
 		for _, pkg := range packageNames {
 			pack.PrintPackage(pkg.Package, host.Triplet)
@@ -85,7 +84,6 @@ func buildForHost(host *host.Host, packageNames []*pack.Package, list bool, extr
 	}
 
 	if build {
-		pack.CreateDebPackages = createDeb
 		for _, pkg := range packageNames {
 			pkg.EnsureBuilt(host, true)
 		}

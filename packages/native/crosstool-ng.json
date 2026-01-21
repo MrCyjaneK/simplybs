@@ -5,7 +5,7 @@
     "download": [
         {
             "kind": "git",
-            "sha256": "a3fef85781d3cda0b27388916f3287826aeec177",
+            "sha256": "620b909cd0713f68084378b63cf61b5232757b90",
             "url": "https://github.com/crosstool-ng/crosstool-ng"
         }
     ],

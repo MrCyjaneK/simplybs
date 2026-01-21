@@ -122,7 +122,7 @@ func (p *Package) GenerateBuildPath(h *host.Host, kind string) string {
 	if kind == "source" {
 		log.Fatalf("Source build path is not supported")
 	}
-	safeName := strings.ReplaceAll(p.ShortName(h), "/", "@")
+	safeName := strings.ReplaceAll(p.ShortName(h), "/", "_")
 	return filepath.Join(host.DataDir(), kind, h.Triplet, safeName)
 }
 

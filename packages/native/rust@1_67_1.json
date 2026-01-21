@@ -37,7 +37,7 @@
             "*:*:echo '[llvm]' >> config.toml",
             "*:*:echo 'ninja = false' >> config.toml",
             "*:*:echo 'download-ci-llvm = false' >> config.toml",
-            "*:*:env -i PATH=$PATH python3 ./x.py build --stage 3 --verbose -j $NUM_CORES",
+            "*:*:PATH=$PATH python3 ./x.py build --stage 3 --verbose -j $NUM_CORES",
             "*:*:mkdir -p $STAGING_DIR$PREFIX/native/bin",
             "*:*:cp -a build/*/stage3/lib $STAGING_DIR$PREFIX/native/",
             "*:*:cp -a build/*/stage3/bin/rustc $STAGING_DIR$PREFIX/native/bin",

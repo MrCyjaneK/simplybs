@@ -10,7 +10,12 @@
         }
     ],
     "dependencies": [
-        "*:*-linux-gnu:native/_"
+        "*:*-linux-gnu:native/_",
+        "*:*-linux-gnu:native/autoconf",
+        "*:*-linux-gnu:native/automake",
+        "*:*-linux-gnu:native/libtool",
+        "*:*-linux-gnu:native/m4",
+        "*:*-linux-gnu:native/perl"
     ],
     "build": {
         "steps": [

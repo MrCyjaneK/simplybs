@@ -843,11 +843,6 @@
                 "f3ad53337eaee92cbeb1a7c73e98d552c3a8186f"
             ]
         },
-        "https://git.kernel.org/pub/scm/libs/libcap/libcap.git": {
-            "refs": [
-                "413789501269f0f258a6716c6fa3edae178ba4a3"
-            ]
-        },
         "https://github.com/Cyan4973/xxHash.git": {
             "refs": [
                 "66979328cf3f15cecdc61ea58c9f81e6071f8983"
@@ -868,11 +863,6 @@
                 "b7a785a538a31ab0cf5baf62d936e3e41182e0b7"
             ]
         },
-        "https://github.com/SELinuxProject/selinux": {
-            "refs": [
-                "919e9e64cc4b20f5a1e4df1e38cce1bfe15aff09"
-            ]
-        },
         "https://github.com/besser82/libxcrypt": {
             "refs": [
                 "55ea777e8d567e5e86ffac917c28815ac54cc341"
@@ -880,7 +870,7 @@
         },
         "https://github.com/crosstool-ng/crosstool-ng": {
             "refs": [
-                "a3fef85781d3cda0b27388916f3287826aeec177"
+                "620b909cd0713f68084378b63cf61b5232757b90"
             ]
         },
         "https://github.com/guillemj/libmd.git": {
@@ -901,11 +891,6 @@
         "https://github.com/libffi/libffi.git": {
             "refs": [
                 "e2eda0cf72a0598b44278cc91860ea402273fa29"
-            ]
-        },
-        "https://github.com/linux-audit/audit-userspace": {
-            "refs": [
-                "4db9c700b0c8b24a8113bc00d98101228e7d0212"
             ]
         },
         "https://github.com/llvm/llvm-project": {
@@ -943,21 +928,6 @@
                 "5fa4675419cfec60ac19a9c7f7c2d0e7c831a497"
             ]
         },
-        "https://gitlab.gnome.org/GNOME/glib.git": {
-            "refs": [
-                "e33be08bda99f453e497064e9e021d6306bbeb7d"
-            ]
-        },
-        "https://gitlab.gnome.org/GNOME/gvdb": {
-            "refs": [
-                "2b42fc75f09dbe1cd1057580b5782b08f2dcb400"
-            ]
-        },
-        "https://gitlab.gnome.org/GNOME/sysprof": {
-            "refs": [
-                "02e50efa49885a5a20a84a8cd7feda10ae7e7e98"
-            ]
-        },
         "https://gn.googlesource.com/gn.git": {
             "refs": [
                 "07d3c6f4dc290fae5ca6152ebcb37d6815c411ab"
@@ -988,11 +958,6 @@
         "https://pagure.io/xmlto.git": {
             "refs": [
                 "13a831d76467c88f9e79f9804e2471137ec05331"
-            ]
-        },
-        "https://salsa.debian.org/apt-team/apt.git": {
-            "refs": [
-                "6b128124271e94bdb0f4e7850d9286170d712b04"
             ]
         },
         "https://salsa.debian.org/sanvila/unzip.git": {

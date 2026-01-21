@@ -15,7 +15,10 @@
     ],
     "build": {
         "steps": [
-            "*:*:sed -i.bak 's/-Wall/-Wall -fPIC/' Makefile",
+            "*:*:sed -i.bak 's|^CC=.*|CC ?= $CC|' Makefile",
+            "*:*:sed -i.bak 's|^AR=.*|AR ?= $AR|' Makefile",
+            "*:*:sed -i.bak 's|^RANLIB=.*|RANLIB ?= $RANLIB|' Makefile",
+            "*:*:sed -i.bak 's|^CFLAGS=.*|CFLAGS ?= $CFLAGS $BIGFILES|' Makefile",
             "*:*:make -j$NUM_CORES",
             "*:*:make install PREFIX=$STAGING_DIR$PREFIX"
         ]

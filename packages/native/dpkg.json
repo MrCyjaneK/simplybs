@@ -28,7 +28,8 @@
             "*:*:PERL_LIBDIR=$PREFIX/native/lib/perl5/site_perl/5.42.0"
         ],
         "steps": [
-            "*:*:autoreconf --force --install",
+            "*:*:git tag -a 1.23.3 -m 'Release 1.23.3'",
+            "*:*:./autogen",
             "*:*:./configure $config_opts",
             "*:*:make -j$NUM_CORES",
             "*:*:make install DESTDIR=$STAGING_DIR"

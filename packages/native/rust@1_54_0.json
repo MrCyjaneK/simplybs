@@ -24,24 +24,27 @@
     ],
     "build": {
         "env": [
-            "*:*:PARLEVEL=$NUM_CORES"
+            "*:*:PARLEVEL=$NUM_CORES",
+            "linux_arm64:*:RUSTC_TARGET=aarch64-unknown-linux-gnu"
         ],
         "steps": [
             "*:*:patch -p1 < $PATCH_DIR/rust/codegen_c.cpp.patch",
             "darwin_arm64:*:sed -i.bak 's/STD_ENV_ARCH=[a-zA-Z0-9_]*/STD_ENV_ARCH=aarch64/' script-overrides/stable-1.54.0-macos/build_std.txt",
-            "linux_arm64:*:sed -i.bak 's/STD_ENV_ARCH=[a-zA-Z0-9_]*/STD_ENV_ARCH=arm64/' script-overrides/stable-1.54.0-linux/build_std.txt",
+            "linux_arm64:*:sed -i.bak 's/STD_ENV_ARCH=[a-zA-Z0-9_]*/STD_ENV_ARCH=aarch64/' script-overrides/stable-1.54.0-linux/build_std.txt",
+            "*:*:rm script-overrides/stable-1.54.0-*/*.bak",
             "*:*:sed -i.bak 's/^make$/make $@/' build-1.54.0.sh",
             "darwin_arm64:*:sed -i.bak 's/^[[:space:]]*RUSTC_TARGET ?= x86_64-apple-darwin/RUSTC_TARGET ?= aarch64-apple-darwin/' run_rustc/Makefile",
             "linux_arm64:*:sed -i.bak 's/^[[:space:]]*RUSTC_TARGET ?= x86_64-unknown-linux-gnu/RUSTC_TARGET ?= aarch64-unknown-linux-gnu/' run_rustc/Makefile",
+            "linux_arm64:*:sed -i.bak 's/^[[:space:]]*RUSTC_TARGET ?= x86_64-unknown-linux-gnu/RUSTC_TARGET ?= aarch64-unknown-linux-gnu/' ./minicargo.mk",
             "*:*:echo >> build-1.54.0.sh",
             "*:*:echo make -C run_rustc >> build-1.54.0.sh",
             "*:*:env -i CXXFLAGS_EXTRA=\"$CFLAGS\" LINKFLAGS_EXTRA=\"$LDFLAGS\" PATH=$PATH PARLEVEL=$NUM_CORES ./build-1.54.0.sh -j$NUM_CORES",
-            "*:none:# FIXME bad dylib paths embedded in the rustc binary, forcing install_name_tool dark magic",
             "*:*:mkdir -p $STAGING_DIR$PREFIX/native/bin",
             "*:*:mkdir -p $STAGING_DIR$PREFIX/native/lib",
             "*:*:cp -a run_rustc/output-1.54.0/prefix/bin/* $STAGING_DIR$PREFIX/native/bin",
             "linux_*:*:cp -a run_rustc/output-1.54.0/prefix/lib/rustlib/*/lib/*.so $STAGING_DIR$PREFIX/native/lib",
             "*:*:cp -a run_rustc/output-1.54.0/prefix/lib/* $STAGING_DIR$PREFIX/native/lib",
+            "*:none:# FIXME bad dylib paths embedded in the rustc binary, forcing install_name_tool dark magic",
             "darwin_*:*:install_name_tool -change $PWD/run_rustc/output-1.54.0/build-rustc/aarch64-apple-darwin/release/deps/librustc_driver.dylib @loader_path/../lib/rustlib/aarch64-apple-darwin/lib/librustc_driver.dylib $STAGING_DIR$PREFIX/native/bin/rustc_binary",
             "darwin_*:*:install_name_tool -change $PWD/run_rustc/output-1.54.0/build-std2/aarch64-apple-darwin/release/deps/libstd.dylib @loader_path/../lib/rustlib/aarch64-apple-darwin/lib/libstd.dylib $STAGING_DIR$PREFIX/native/bin/rustc_binary",
             "darwin_*:*:install_name_tool -change $PWD/run_rustc/output-1.54.0/build-std2/aarch64-apple-darwin/release/deps/libstd.dylib @loader_path/libstd.dylib $STAGING_DIR$PREFIX/native/lib/rustlib/aarch64-apple-darwin/lib/librustc_driver.dylib"
