@@ -4,110 +4,115 @@
     "type": "native",
     "download": [
         {
+            "kind": "git",
+            "sha256": "2683c3d252b2337e7b045ba5add47c9d05436b98",
+            "url": "https://github.com/MrCyjaneK/ct-ng-configs.git"
+        },
+        {
             "kind": "blob",
-            "path": ".build/tarballs/binutils-2.45.tar.xz",
+            "path": "work/.build/tarballs/binutils-2.45.tar.xz",
             "sha256": "c50c0e7f9cb188980e2cc97e4537626b1672441815587f1eab69d2a1bfbef5d2",
             "url": "https://ftpmirror.gnu.org/gnu/binutils/binutils-2.45.tar.xz"
         },
         {
             "kind": "blob",
-            "path": ".build/tarballs/VERSION_2_5_21.tar.gz",
+            "path": "work/.build/tarballs/VERSION_2_5_21.tar.gz",
             "sha256": "470aa72e7018f0beadb5fbe3c932a62ba1b0594c29158a744c614bfa42133e59",
             "url": "https://github.com/johnsonjh/duma/archive/refs/tags/VERSION_2_5_21.tar.gz"
         },
         {
             "kind": "blob",
-            "path": ".build/tarballs/expat-2.7.1.tar.xz",
+            "path": "work/.build/tarballs/expat-2.7.1.tar.xz",
             "sha256": "354552544b8f99012e5062f7d570ec77f14b412a3ff5c7d8d0dae62c0d217c30",
             "url": "http://github.com/libexpat/libexpat/releases/download/R_2_7_1/expat-2.7.1.tar.xz"
         },
         {
             "kind": "blob",
-            "path": ".build/tarballs/gcc-15.2.0.tar.xz",
+            "path": "work/.build/tarballs/gcc-15.2.0.tar.xz",
             "sha256": "438fd996826b0c82485a29da03a72d71d6e3541a83ec702df4271f6fe025d24e",
             "url": "http://ftpmirror.gnu.org/gnu/gcc/gcc-15.2.0/gcc-15.2.0.tar.xz"
         },
         {
             "kind": "blob",
-            "path": ".build/tarballs/gdb-16.3.tar.xz",
+            "path": "work/.build/tarballs/gdb-16.3.tar.xz",
             "sha256": "bcfcd095528a987917acf9fff3f1672181694926cc18d609c99d0042c00224c5",
             "url": "http://ftpmirror.gnu.org/gnu/gdb/gdb-16.3.tar.xz"
         },
         {
             "kind": "blob",
-            "path": ".build/tarballs/gettext-0.26.tar.xz",
+            "path": "work/.build/tarballs/gettext-0.26.tar.xz",
             "sha256": "d1fb86e260cfe7da6031f94d2e44c0da55903dbae0a2fa0fae78c91ae1b56f00",
             "url": "http://ftpmirror.gnu.org/gnu/gettext/gettext-0.26.tar.xz"
         },
         {
             "kind": "blob",
-            "path": ".build/tarballs/glibc-2.42.tar.xz",
+            "path": "work/.build/tarballs/glibc-2.42.tar.xz",
             "sha256": "d1775e32e4628e64ef930f435b67bb63af7599acb6be2b335b9f19f16509f17f",
             "url": "http://ftpmirror.gnu.org/gnu/glibc/glibc-2.42.tar.xz"
         },
         {
             "kind": "blob",
-            "path": ".build/tarballs/gmp-6.3.0.tar.xz",
+            "path": "work/.build/tarballs/gmp-6.3.0.tar.xz",
             "sha256": "a3c2b80201b89e68616f4ad30bc66aee4927c3ce50e33929ca819d5c43538898",
             "url": "http://ftpmirror.gnu.org/gnu/gmp/gmp-6.3.0.tar.xz"
         },
         {
             "kind": "blob",
-            "path": ".build/tarballs/isl-0.27.tar.xz",
+            "path": "work/.build/tarballs/isl-0.27.tar.xz",
             "sha256": "6d8babb59e7b672e8cb7870e874f3f7b813b6e00e6af3f8b04f7579965643d5c",
             "url": "https://libisl.sourceforge.io/isl-0.27.tar.xz"
         },
         {
             "kind": "blob",
-            "path": ".build/tarballs/libiconv-1.18.tar.gz",
+            "path": "work/.build/tarballs/libiconv-1.18.tar.gz",
             "sha256": "3b08f5f4f9b4eb82f151a7040bfd6fe6c6fb922efe4b1659c66ea933276965e8",
             "url": "https://ftpmirror.gnu.org/gnu/libiconv/libiconv-1.18.tar.gz"
         },
         {
             "kind": "blob",
-            "path": ".build/tarballs/linux-6.16.tar.xz",
+            "path": "work/.build/tarballs/linux-6.16.tar.xz",
             "sha256": "1a4be2fe6b5246aa4ac8987a8a4af34c42a8dd7d08b46ab48516bcc1befbcd83",
             "url": "https://www.kernel.org/pub/linux/kernel/v6.x/linux-6.16.tar.xz"
         },
         {
             "kind": "blob",
-            "path": ".build/tarballs/mingw-w64-v13.0.0.tar.bz2",
+            "path": "work/.build/tarballs/mingw-w64-v13.0.0.tar.bz2",
             "sha256": "5afe822af5c4edbf67daaf45eec61d538f49eef6b19524de64897c6b95828caf",
             "url": "https://downloads.sourceforge.net/project/mingw-w64/mingw-w64/mingw-w64-release/mingw-w64-v13.0.0.tar.bz2"
         },
         {
             "kind": "blob",
-            "path": ".build/tarballs/musl-1.2.5.tar.gz",
+            "path": "work/.build/tarballs/musl-1.2.5.tar.gz",
             "sha256": "a9a118bbe84d8764da0ea0d28b3ab3fae8477fc7e4085d90102b8596fc7c75e4",
             "url": "https://www.musl-libc.org/releases/musl-1.2.5.tar.gz"
         },
         {
             "kind": "blob",
-            "path": ".build/tarballs/mpc-1.3.1.tar.gz",
+            "path": "work/.build/tarballs/mpc-1.3.1.tar.gz",
             "sha256": "ab642492f5cf882b74aa0cb730cd410a81edcdbec895183ce930e706c1c759b8",
             "url": "http://ftpmirror.gnu.org/gnu/mpc/mpc-1.3.1.tar.gz"
         },
         {
             "kind": "blob",
-            "path": ".build/tarballs/mpfr-4.2.2.tar.xz",
+            "path": "work/.build/tarballs/mpfr-4.2.2.tar.xz",
             "sha256": "b67ba0383ef7e8a8563734e2e889ef5ec3c3b898a01d00fa0a6869ad81c6ce01",
             "url": "http://ftpmirror.gnu.org/gnu/mpfr/mpfr-4.2.2.tar.xz"
         },
         {
             "kind": "blob",
-            "path": ".build/tarballs/ncurses-6.5.tar.gz",
+            "path": "work/.build/tarballs/ncurses-6.5.tar.gz",
             "sha256": "136d91bc269a9a5785e5f9e980bc76ab57428f604ce3e5a5a90cebc767971cc6",
             "url": "http://ftpmirror.gnu.org/gnu/ncurses/ncurses-6.5.tar.gz"
         },
         {
             "kind": "blob",
-            "path": ".build/tarballs/zlib-1.3.1.tar.xz",
+            "path": "work/.build/tarballs/zlib-1.3.1.tar.xz",
             "sha256": "38ef96b8dfe510d42707d9c781877914792541133e1870841463bfa73f883e32",
             "url": "http://www.zlib.net/zlib-1.3.1.tar.xz"
         },
         {
             "kind": "blob",
-            "path": ".build/tarballs/zstd-1.5.7.tar.gz",
+            "path": "work/.build/tarballs/zstd-1.5.7.tar.gz",
             "sha256": "eb33e51f49a15e023950cd7825ca74a4a2b43db8354825ac24fc1b7ee09e6fa3",
             "url": "https://github.com/facebook/zstd/releases/download/v1.5.7/zstd-1.5.7.tar.gz"
         }
@@ -148,77 +153,11 @@
             "*:x86_64-w64-mingw32:TOOL_TARGET_ALT=x86_64-w64-mingw32"
         ],
         "steps": [
-            "*:{*-linux-gnu,*-linux-musl,*-w64-mingw32}:ct-ng $TOOL_TARGET",
-            "*:{*-linux-gnu,*-linux-musl,*-w64-mingw32}:echo 'CT_EXPERIMENTAL=y' >> .config",
-            "*:{*-linux-gnu,*-linux-musl,*-w64-mingw32}:echo 'CT_FORBID_DOWNLOAD=y' >> .config",
-            "*:{*-linux-gnu,*-linux-musl,*-w64-mingw32}:echo 'CT_CC_LANG_CXX=y' >> .config",
-            "*:none:echo 'CT_CC_LANG_FORTRAN=y' >> .config",
-            "*:none:echo 'CT_CC_LANG_D=y' >> .config",
-            "*:none:echo 'CT_CC_LANG_OBJC=y' >> .config",
-            "*:none:echo 'CT_CC_LANG_OBJCXX=y' >> .config",
-            "*:none:echo 'CT_CC_LANG_GOLANG=y' >> .config",
-            "*:{*-linux-gnu,*-linux-musl,*-w64-mingw32}:echo 'CT_BINUTILS_EXTRA_CONFIG_ARRAY=\"--with-system-zlib\"' >> .config",
-            "*:{*-linux-gnu,*-linux-musl,*-w64-mingw32}:echo 'CT_CC_GCC_SYSTEM_ZLIB=y' >> .config",
-            "*:{*-linux-gnu,*-linux-musl,*-w64-mingw32}:echo 'CT_DEBUG_CT_SAVE_STEPS=y' >> .config",
-            "*:{*-linux-gnu,*-linux-musl,*-w64-mingw32}:sed -i.bak 's/CT_GDB_CROSS=y/CT_GDB_CROSS=n/g' .config",
-            "*:{*-linux-gnu,*-linux-musl,*-w64-mingw32}:sed -i.bak 's/CT_GDB_GDBSERVER=y/CT_GDB_GDBSERVER=n/g' .config",
-            "*:{*-linux-gnu,*-linux-musl,*-w64-mingw32}:echo 'CT_GDB=n' >> .config",
-            "*:{*-linux-gnu,*-linux-musl,*-w64-mingw32}:echo 'CT_GDB_NATIVE=n' >> .config",
-            "*:{*-linux-gnu,*-linux-musl,*-w64-mingw32}:echo 'CT_PREFIX_DIR_RO=n' >> .config",
-            "*:{*-linux-gnu,*-linux-musl,*-w64-mingw32}:echo 'CT_MULTILIB=y' >> .config",
-            "*:{*-linux-gnu,*-linux-musl,*-w64-mingw32}:ln -s $TOOL_TARGET_ALT-objcopy $PREFIX/native/bin/objcopy",
-            "*:{*-linux-gnu,*-linux-musl,*-w64-mingw32}:ln -s $TOOL_TARGET_ALT-readelf $PREFIX/native/bin/readelf",
-            "*:x86_64-w64-mingw32:ln -s $TOOL_TARGET_ALT-ar $PREFIX/native/bin/ar",
-            "*:x86_64-w64-mingw32:ln -s $TOOL_TARGET_ALT-ranlib $PREFIX/native/bin/ranlib",
-            "*:{*-linux-gnu,*-linux-musl,*-w64-mingw32}:unset LD_LIBRARY_PATH LIBRARY_PATH CC CXX CFLAGS; ct-ng build",
-            "*:{*-linux-gnu,*-linux-musl,*-w64-mingw32}:mkdir -p $STAGING_DIR$PREFIX/native",
-            "*:{*-linux-gnu,*-linux-musl,*-w64-mingw32}:cp -a $HOME/x-tools/$TOOL_TARGET/bin $STAGING_DIR$PREFIX/native",
-            "*:{*-linux-gnu,*-linux-musl,*-w64-mingw32}:cp -a $HOME/x-tools/$TOOL_TARGET/include $STAGING_DIR$PREFIX/native",
-            "*:{*-linux-gnu,*-linux-musl,*-w64-mingw32}:cp -a $HOME/x-tools/$TOOL_TARGET/lib $STAGING_DIR$PREFIX/native",
-            "*:{*-linux-gnu,*-linux-musl,*-w64-mingw32}:cp -a $HOME/x-tools/$TOOL_TARGET/libexec $STAGING_DIR$PREFIX/native",
-            "*:{*-linux-gnu,*-linux-musl,*-w64-mingw32}:cp -a $HOME/x-tools/$TOOL_TARGET/share $STAGING_DIR$PREFIX/native",
-            "*:{*-linux-gnu,*-linux-musl,*-w64-mingw32}:cp -a $HOME/x-tools/$TOOL_TARGET/*/sysroot/etc $STAGING_DIR$PREFIX/",
-            "*:{*-linux-gnu,*-linux-musl,*-w64-mingw32}:cp -a $HOME/x-tools/$TOOL_TARGET/*/sysroot/lib $STAGING_DIR$PREFIX/",
-            "*:{*-linux-gnu,*-linux-musl,*-w64-mingw32}:cp -a $HOME/x-tools/$TOOL_TARGET/*/sysroot/lib64 $STAGING_DIR$PREFIX/",
-            "*:{*-linux-gnu,*-linux-musl,*-w64-mingw32}:cp -a $HOME/x-tools/$TOOL_TARGET/*/sysroot/sbin $STAGING_DIR$PREFIX/",
-            "*:{*-linux-gnu,*-linux-musl,*-w64-mingw32}:cp -a $HOME/x-tools/$TOOL_TARGET/*/sysroot/usr $STAGING_DIR$PREFIX/",
-            "*:{*-linux-gnu,*-linux-musl,*-w64-mingw32}:mkdir -p $STAGING_DIR$PREFIX/include",
-            "*:{*-linux-gnu,*-linux-musl,*-w64-mingw32}:cp -a $HOME/x-tools/$TOOL_TARGET/$TOOL_TARGET/include/c++/15.2.0/* $STAGING_DIR$PREFIX/include",
-            "*:x86_64-linux-gnu:cp -a $STAGING_DIR$PREFIX/include/x86_64-multilib-linux-gnu/. $STAGING_DIR$PREFIX/include",
-            "*:aarch64-linux-gnu:cp -a $STAGING_DIR$PREFIX/include/aarch64-unknown-linux-gnu/. $STAGING_DIR$PREFIX/include",
-            "*:{*-linux-gnu,*-linux-musl,*-w64-mingw32}:ln -s $TOOL_TARGET-addr2line $STAGING_DIR$PREFIX/native/bin/addr2line",
-            "*:{*-linux-gnu,*-linux-musl,*-w64-mingw32}:ln -s $TOOL_TARGET-ar $STAGING_DIR$PREFIX/native/bin/ar",
-            "*:{*-linux-gnu,*-linux-musl,*-w64-mingw32}:ln -s $TOOL_TARGET-as $STAGING_DIR$PREFIX/native/bin/as",
-            "*:{*-linux-gnu,*-linux-musl,*-w64-mingw32}:ln -s $TOOL_TARGET-c++ $STAGING_DIR$PREFIX/native/bin/c++",
-            "*:{*-linux-gnu,*-linux-musl,*-w64-mingw32}:ln -s $TOOL_TARGET-c++filt $STAGING_DIR$PREFIX/native/bin/c++filt",
-            "*:{*-linux-gnu,*-linux-musl,*-w64-mingw32}:ln -s $TOOL_TARGET-cc $STAGING_DIR$PREFIX/native/bin/cc",
-            "*:{*-linux-gnu,*-linux-musl,*-w64-mingw32}:ln -s $TOOL_TARGET-cpp $STAGING_DIR$PREFIX/native/bin/cpp",
-            "*:{*-linux-gnu,*-linux-musl,*-w64-mingw32}:ln -s $TOOL_TARGET-elfedit $STAGING_DIR$PREFIX/native/bin/elfedit",
-            "*:{*-linux-gnu,*-linux-musl,*-w64-mingw32}:ln -s $TOOL_TARGET-g++ $STAGING_DIR$PREFIX/native/bin/g++",
-            "*:{*-linux-gnu,*-linux-musl,*-w64-mingw32}:ln -s $TOOL_TARGET-gcc $STAGING_DIR$PREFIX/native/bin/gcc",
-            "*:{*-linux-gnu,*-linux-musl,*-w64-mingw32}:ln -s $TOOL_TARGET-gcc-15.2.0 $STAGING_DIR$PREFIX/native/bin/gcc-15.2.0",
-            "*:{*-linux-gnu,*-linux-musl,*-w64-mingw32}:ln -s $TOOL_TARGET-gcc-ar $STAGING_DIR$PREFIX/native/bin/gcc-ar",
-            "*:{*-linux-gnu,*-linux-musl,*-w64-mingw32}:ln -s $TOOL_TARGET-gcc-nm $STAGING_DIR$PREFIX/native/bin/gcc-nm",
-            "*:{*-linux-gnu,*-linux-musl,*-w64-mingw32}:ln -s $TOOL_TARGET-gcc-ranlib $STAGING_DIR$PREFIX/native/bin/gcc-ranlib",
-            "*:{*-linux-gnu,*-linux-musl,*-w64-mingw32}:ln -s $TOOL_TARGET-gccgo $STAGING_DIR$PREFIX/native/bin/gccgo",
-            "*:{*-linux-gnu,*-linux-musl,*-w64-mingw32}:ln -s $TOOL_TARGET-gcov $STAGING_DIR$PREFIX/native/bin/gcov",
-            "*:{*-linux-gnu,*-linux-musl,*-w64-mingw32}:ln -s $TOOL_TARGET-gcov-dump $STAGING_DIR$PREFIX/native/bin/gcov-dump",
-            "*:{*-linux-gnu,*-linux-musl,*-w64-mingw32}:ln -s $TOOL_TARGET-gcov-tool $STAGING_DIR$PREFIX/native/bin/gcov-tool",
-            "*:{*-linux-gnu,*-linux-musl,*-w64-mingw32}:ln -s $TOOL_TARGET-gfortran $STAGING_DIR$PREFIX/native/bin/gfortran",
-            "*:{*-linux-gnu,*-linux-musl,*-w64-mingw32}:ln -s $TOOL_TARGET-gprof $STAGING_DIR$PREFIX/native/bin/gprof",
-            "*:{*-linux-gnu,*-linux-musl,*-w64-mingw32}:ln -s $TOOL_TARGET-ld $STAGING_DIR$PREFIX/native/bin/ld",
-            "*:{*-linux-gnu,*-linux-musl,*-w64-mingw32}:ln -s $TOOL_TARGET-ld.bfd $STAGING_DIR$PREFIX/native/bin/ld.bfd",
-            "*:{*-linux-gnu,*-linux-musl,*-w64-mingw32}:ln -s $TOOL_TARGET-ldd $STAGING_DIR$PREFIX/native/bin/ldd",
-            "*:{*-linux-gnu,*-linux-musl,*-w64-mingw32}:ln -s $TOOL_TARGET-lto-dump $STAGING_DIR$PREFIX/native/bin/lto-dump",
-            "*:{*-linux-gnu,*-linux-musl,*-w64-mingw32}:ln -s $TOOL_TARGET-nm $STAGING_DIR$PREFIX/native/bin/nm",
-            "*:{*-linux-gnu,*-linux-musl,*-w64-mingw32}:ln -s $TOOL_TARGET-objcopy $STAGING_DIR$PREFIX/native/bin/objcopy",
-            "*:{*-linux-gnu,*-linux-musl,*-w64-mingw32}:ln -s $TOOL_TARGET-objdump $STAGING_DIR$PREFIX/native/bin/objdump",
-            "*:{*-linux-gnu,*-linux-musl,*-w64-mingw32}:ln -s $TOOL_TARGET-populate $STAGING_DIR$PREFIX/native/bin/populate",
-            "*:{*-linux-gnu,*-linux-musl,*-w64-mingw32}:ln -s $TOOL_TARGET-ranlib $STAGING_DIR$PREFIX/native/bin/ranlib",
-            "*:{*-linux-gnu,*-linux-musl,*-w64-mingw32}:ln -s $TOOL_TARGET-readelf $STAGING_DIR$PREFIX/native/bin/readelf",
-            "*:{*-linux-gnu,*-linux-musl,*-w64-mingw32}:ln -s $TOOL_TARGET-size $STAGING_DIR$PREFIX/native/bin/size",
-            "*:{*-linux-gnu,*-linux-musl,*-w64-mingw32}:ln -s $TOOL_TARGET-strings $STAGING_DIR$PREFIX/native/bin/strings",
-            "*:{*-linux-gnu,*-linux-musl,*-w64-mingw32}:ln -s $TOOL_TARGET-strip $STAGING_DIR$PREFIX/native/bin/strip"
+            "*:{*-linux-gnu}:unset LIBRARY_PATH CFLAGS CC CXX; PREFIX=$(realpath $STAGING_DIR$PREFIX) ./run.sh $TARGET",
+            "*:{*-linux-gnu}:mv $STAGING_DIR/$PREFIX/aarch64-linux-gnu/aarch64-linux-gnu/* $STAGING_DIR/$PREFIX",
+            "*:{*-linux-gnu}:rm -rf $STAGING_DIR/$PREFIX/aarch64-linux-gnu/aarch64-linux-gnu",
+            "*:{*-linux-gnu}:mkdir -p $STAGING_DIR/$PREFIX/native",
+            "*:{*-linux-gnu}:mv $STAGING_DIR/$PREFIX/aarch64-linux-gnu/* $STAGING_DIR/$PREFIX/native"
         ]
     }
 }

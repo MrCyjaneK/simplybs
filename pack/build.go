@@ -166,7 +166,7 @@ func (p *Package) buildPackageInternal(h *host.Host, buildDependencies bool) {
 			"STAGING_DIR=" + stagingPath,
 			"HOST=" + h.Triplet,
 			"PREFIX=" + h.GetEnvPath(),
-			"PATH=" + h.GetEnvPath() + "/native/bin:" + env["PATH"] + ":" + pathEnv,
+			"PATH=" + h.GetEnvPath() + "/native/bin:" + env["PATH"] + ":" + pathEnv + ":" + h.GetEnvPath() + "/bin",
 		}...)
 		for k, v := range env {
 			cmd.Env = append(cmd.Env, k+"="+v)

@@ -853,6 +853,11 @@
                 "c4e7b0e5f437121d1b9c05bc5c43dac75371d799"
             ]
         },
+        "https://github.com/MrCyjaneK/ct-ng-configs.git": {
+            "refs": [
+                "2683c3d252b2337e7b045ba5add47c9d05436b98"
+            ]
+        },
         "https://github.com/MrCyjaneK/osxcross.git": {
             "refs": [
                 "643bea6efcfd54769eaaa645dae5037dd7148c94"
