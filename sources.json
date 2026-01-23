@@ -848,6 +848,11 @@
                 "66979328cf3f15cecdc61ea58c9f81e6071f8983"
             ]
         },
+        "https://github.com/MrCyjaneK/7zz_unzip.git": {
+            "refs": [
+                "f802bc7b20bf0626d765ff3fe0ef0adb3fd93b26"
+            ]
+        },
         "https://github.com/MrCyjaneK/cmake-toolchain.git": {
             "refs": [
                 "c4e7b0e5f437121d1b9c05bc5c43dac75371d799"
@@ -855,7 +860,7 @@
         },
         "https://github.com/MrCyjaneK/ct-ng-configs.git": {
             "refs": [
-                "2683c3d252b2337e7b045ba5add47c9d05436b98"
+                "8e58852806fae75368c61b271c37b8564dbaa943"
             ]
         },
         "https://github.com/MrCyjaneK/osxcross.git": {
@@ -963,11 +968,6 @@
         "https://pagure.io/xmlto.git": {
             "refs": [
                 "13a831d76467c88f9e79f9804e2471137ec05331"
-            ]
-        },
-        "https://salsa.debian.org/sanvila/unzip.git": {
-            "refs": [
-                "e811196e79092a387e6ff0b345780710acfab1c4"
             ]
         }
     }

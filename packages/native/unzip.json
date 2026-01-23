@@ -1,12 +1,12 @@
 {
     "package": "native/unzip",
-    "version": "6.0-29-debian",
+    "version": "1.0.0",
     "type": "native",
     "download": [
         {
             "kind": "git",
-            "sha256": "e811196e79092a387e6ff0b345780710acfab1c4",
-            "url": "https://salsa.debian.org/sanvila/unzip.git"
+            "sha256": "f802bc7b20bf0626d765ff3fe0ef0adb3fd93b26",
+            "url": "https://github.com/MrCyjaneK/7zz_unzip.git"
         }
     ],
     "dependencies": [
@@ -16,10 +16,8 @@
     ],
     "build": {
         "steps": [
-            "*:*:sed -i '1i #include <time.h>' ./unzpriv.h",
-            "*:*:make -f unix/Makefile D_USE_BZ2=-DUSE_BZIP2 L_BZ2=-lbz2 CC=\"$CC\" LF2=\"$LDFLAGS\" CF=\"$CFLAGS $CPPFLAGS -I.\" unzips",
-            "*:*:make -f unix/Makefile install prefix=$STAGING_DIR$PREFIX/native",
-            "*:*:cd $STAGING_DIR$PREFIX/native/bin && rm -f zipinfo && ln unzip zipinfo"
+            "*:*:mkdir -p $STAGING_DIR$PREFIX/native/bin",
+            "*:*:$CC main.c -o $STAGING_DIR$PREFIX/native/bin/unzip"
         ]
     }
 }
