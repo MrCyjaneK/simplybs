@@ -13,6 +13,7 @@
         "*:*:native/curl",
         "*:*:native/expat",
         "*:*:native/gettext",
+        "*:*:native/libiconv",
         "*:*:native/make",
         "*:*:native/openssl",
         "*:*:native/zlib"
