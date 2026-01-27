@@ -157,7 +157,11 @@
             "*:{*-linux-gnu}:mv $STAGING_DIR/$PREFIX/aarch64-linux-gnu/aarch64-linux-gnu/* $STAGING_DIR/$PREFIX",
             "*:{*-linux-gnu}:rm -rf $STAGING_DIR/$PREFIX/aarch64-linux-gnu/aarch64-linux-gnu",
             "*:{*-linux-gnu}:mkdir -p $STAGING_DIR/$PREFIX/native",
-            "*:{*-linux-gnu}:mv $STAGING_DIR/$PREFIX/aarch64-linux-gnu/* $STAGING_DIR/$PREFIX/native"
+            "*:{*-linux-gnu}:mv $STAGING_DIR/$PREFIX/aarch64-linux-gnu/* $STAGING_DIR/$PREFIX/native",
+            "*:x86_64-linux-gnu:cd $STAGING_DIR/$PREFIX/native/bin && for f in x86_64-linux-gnu-*; do ln -sf $f ${x86_64-linux-gnu-}; done",
+            "*:aarch64-linux-gnu:cd $STAGING_DIR/$PREFIX/native/bin && for f in aarch64-linux-gnu-*; do ln -sf $f ${f#aarch64-linux-gnu-}; done",
+            "*:x86_64-linux-musl:cd $STAGING_DIR/$PREFIX/native/bin && for f in x86_64-linux-musl-*; do ln -sf $f ${f#x86_64-linux-musl-}; done",
+            "*:x86_64-w64-mingw32:cd $STAGING_DIR/$PREFIX/native/bin && for f in x86_64-w64-mingw32-*; do ln -sf $f ${f#x86_64-w64-mingw32-}; done"
         ]
     }
 }
