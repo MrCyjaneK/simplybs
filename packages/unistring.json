@@ -17,6 +17,7 @@
     "build": {
         "env": [
             "*:*:config_opts=--prefix=$PREFIX",
+            "*:*:config_opts=$config_opts --host=$HOST",
             "*:*:config_opts=$config_opts --disable-shared",
             "*:*:config_opts=$config_opts --enable-static"
         ],

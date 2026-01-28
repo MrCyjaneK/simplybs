@@ -21,7 +21,7 @@
             "*:aarch64-apple-ios-simulator:BUILD_HOST=aarch64-apple-ios"
         ],
         "steps": [
-            "*:*:./configure --host=$BUILD_HOST --prefix=$PREFIX --disable-shared --without-docbook --without-tests --without-examples --enable-option-checking --without-xmlwf --with-pic",
+            "*:*:./configure --host=$HOST --prefix=$PREFIX --disable-shared --without-docbook --without-tests --without-examples --enable-option-checking --without-xmlwf --with-pic",
             "*:*:make -j$NUM_CORES",
             "*:*:make DESTDIR=$STAGING_DIR install"
         ]

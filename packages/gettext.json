@@ -1,5 +1,5 @@
 {
-    "package": "native/gettext",
+    "package": "gettext",
     "version": "0.26",
     "type": "host",
     "download": [
@@ -19,6 +19,7 @@
     "build": {
         "env": [
             "*:*:config_opts=--prefix=$PREFIX",
+            "*:*:config_opts=$config_opts --host=$HOST",
             "*:*:config_opts=$config_opts --with-libiconv-prefix=$PREFIX",
             "*:*:config_opts=$config_opts --with-libunistring-prefix=$PREFIX",
             "*:*:config_opts=$config_opts --disable-shared",

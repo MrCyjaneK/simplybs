@@ -19,7 +19,7 @@
             "*:*:sed -i.bak 's|^AR=.*|AR ?= $AR|' Makefile",
             "*:*:sed -i.bak 's|^RANLIB=.*|RANLIB ?= $RANLIB|' Makefile",
             "*:*:sed -i.bak 's|^CFLAGS=.*|CFLAGS ?= $CFLAGS $BIGFILES|' Makefile",
-            "*:*:make -j$NUM_CORES",
+            "*:*:make libbz2.a bzip2 bzip2recover -j$NUM_CORES",
             "*:*:make install PREFIX=$STAGING_DIR$PREFIX"
         ]
     }

@@ -10,7 +10,13 @@
         }
     ],
     "dependencies": [
-        "*:*:native/_"
+        "*:*:native/_",
+        "*:*:native/autoconf",
+        "*:*:native/automake",
+        "*:*:native/make",
+        "*:*:native/libtool",
+        "*:*:native/m4",
+        "*:*:native/perl"
     ],
     "build": {
         "env": [
