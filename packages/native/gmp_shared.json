@@ -1,5 +1,5 @@
 {
-    "package": "native/gmp",
+    "package": "native/gmp_shared",
     "version": "6.3.0",
     "type": "native",
     "download": [
@@ -17,8 +17,8 @@
     "build": {
         "env": [
             "*:*:config_opts=--prefix=$PREFIX/native",
-            "*:*:config_opts=$config_opts --disable-shared",
-            "*:*:config_opts=$config_opts --enable-static"
+            "*:*:config_opts=$config_opts --enable-shared",
+            "*:*:config_opts=$config_opts --disable-static"
         ],
         "steps": [
             "*:*:./configure $config_opts",

@@ -16,10 +16,14 @@
     "build": {
         "env": [
             "*:*:CFLAGS=$CFLAGS -fPIC",
-            "*:*:LDFLAGS=$LDFLAGS -fPIC"
+            "*:*:LDFLAGS=$LDFLAGS -fPIC",
+            "*:*:config_opts=--prefix=$PREFIX/native",
+            "*:*:config_opts=$config_opts --with-pic",
+            "*:*:config_opts=$config_opts --enable-shared",
+            "*:*:config_opts=$config_opts --enable-static"
         ],
         "steps": [
-            "*:*:./configure --prefix=$PREFIX/native --with-pic",
+            "*:*:./configure  $config_opts",
             "*:*:make -j$NUM_CORES",
             "*:*:make DESTDIR=$STAGING_DIR install"
         ]

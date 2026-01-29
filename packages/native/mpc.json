@@ -10,7 +10,7 @@
         }
     ],
     "dependencies": [
-        "*:*:native/gmp",
+        "*:*:native/gmp_static",
         "*:*:native/make",
         "*:*:native/mpfr"
     ],

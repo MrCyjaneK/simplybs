@@ -20,18 +20,13 @@
     ],
     "build": {
         "env": [
-            "*:x86_64-linux-gnu:TOOL_TARGET=x86_64-linux-gnu",
-            "*:aarch64-linux-gnu:TOOL_TARGET=aarch64-linux-gnu",
-            "*:x86_64-linux-musl:TOOL_TARGET=x86_64-linux-musl",
-            "*:x86_64-w64-mingw32:TOOL_TARGET=x86_64-w64-mingw32",
             "*:*:config_opts=--prefix=$PREFIX/native",
             "*:*:config_opts=$config_opts --disable-nls",
             "*:*:config_opts=$config_opts --disable-werror",
             "*:*:config_opts=$config_opts --with-system-zlib",
-            "*:*:config_opts=$config_opts --enable-targets=$TOOL_TARGET",
-            "*:*:config_opts=$config_opts --target=$TOOL_TARGET",
-            "*:*:config_opts=$config_opts --libdir=$PREFIX/native/lib/$TOOL_TARGET",
-            "*:*:config_opts=$config_opts --infodir=$PREFIX/native/share/info/$TOOL_TARGET",
+            "*:*:config_opts=$config_opts --enable-targets=all",
+            "*:*:config_opts=$config_opts --libdir=$PREFIX/native/lib",
+            "*:*:config_opts=$config_opts --infodir=$PREFIX/native/share/info",
             "*:*:CPPFLAGS=-I$PREFIX/native/include",
             "*:*:LDFLAGS=-L$PREFIX/native/lib"
         ],

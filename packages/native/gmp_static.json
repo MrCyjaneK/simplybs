@@ -1,17 +1,18 @@
 {
-    "package": "native/mpfr",
-    "version": "4.2.2",
+    "package": "native/gmp_static",
+    "version": "6.3.0",
     "type": "native",
     "download": [
         {
             "kind": "tar.xz",
-            "sha256": "b67ba0383ef7e8a8563734e2e889ef5ec3c3b898a01d00fa0a6869ad81c6ce01",
-            "url": "http://www.mpfr.org/mpfr-current/mpfr-4.2.2.tar.xz"
+            "sha256": "a3c2b80201b89e68616f4ad30bc66aee4927c3ce50e33929ca819d5c43538898",
+            "url": "http://ftpmirror.gnu.org/gnu/gmp/gmp-6.3.0.tar.xz"
         }
     ],
     "dependencies": [
-        "*:*:native/gmp_static",
-        "*:*:native/make"
+        "*:*:native/m4",
+        "*:*:native/make",
+        "*:*:native/perl"
     ],
     "build": {
         "env": [
@@ -22,6 +23,7 @@
         "steps": [
             "*:*:./configure $config_opts",
             "*:*:make -j$NUM_CORES",
+            "*:*:make check",
             "*:*:make DESTDIR=$STAGING_DIR install"
         ]
     }
