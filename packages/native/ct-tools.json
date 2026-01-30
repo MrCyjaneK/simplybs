@@ -5,7 +5,7 @@
     "download": [
         {
             "kind": "git",
-            "sha256": "d6e741a7507f31c5e6e49218a6eb8ff7f2fe2077",
+            "sha256": "50bad5461d320d2ed46f9d672d722b4e668822b4",
             "url": "https://github.com/MrCyjaneK/ct-ng-configs.git"
         },
         {
@@ -121,7 +121,7 @@
         "*:{*-linux-gnu,*-linux-musl,*-w64-mingw32}:native/autoconf",
         "*:{*-linux-gnu,*-linux-musl,*-w64-mingw32}:native/automake",
         "*:{*-linux-gnu,*-linux-musl,*-w64-mingw32}:native/bash",
-        "*:{*-linux-gnu,*-linux-musl,*-w64-mingw32}:native/binutils@2.42",
+        "*:{*-linux-gnu,*-linux-musl,*-w64-mingw32}:native/binutils@2.45",
         "*:{*-linux-gnu,*-linux-musl,*-w64-mingw32}:native/bison",
         "*:{*-linux-gnu,*-linux-musl,*-w64-mingw32}:native/bzip2",
         "*:{*-linux-gnu,*-linux-musl,*-w64-mingw32}:native/coreutils",
@@ -149,13 +149,10 @@
             "*:x86_64-linux-gnu:TOOL_TARGET=x86_64-linux-gnu",
             "*:aarch64-linux-gnu:TOOL_TARGET=aarch64-linux-gnu",
             "*:x86_64-linux-musl:TOOL_TARGET=x86_64-linux-musl",
-            "*:x86_64-w64-mingw32:TOOL_TARGET=x86_64-w64-mingw32",
-            "*:*:INSTALL=$PREFIX/native/bin/install",
-            "*:*:AR=$PREFIX/native/bin/ar"
+            "*:x86_64-w64-mingw32:TOOL_TARGET=x86_64-w64-mingw32"
         ],
         "steps": [
-            "*:{*-linux-gnu,*-w64-mingw32}:sed -i.bak 's|CT_GMP_EXTRA_CFLAGS=.*|CT_GMP_EXTRA_CFLAGS=\"-std=gnu17 '$PREFIX/native/lib'\"|' platforms/x86_64-w64-mingw32/.config",
-            "*:{*-linux-gnu,*-w64-mingw32}:PREFIX=$(realpath $STAGING_DIR$PREFIX) ./run.sh $TOOL_TARGET",
+            "*:{*-linux-gnu,*-w64-mingw32}:env -i PATH=$PATH PREFIX=$(realpath $STAGING_DIR$PREFIX) ./run.sh $TOOL_TARGET",
             "*:{*-linux-gnu,*-w64-mingw32}:mv $STAGING_DIR/$PREFIX/$TOOL_TARGET/$TOOL_TARGET/* $STAGING_DIR/$PREFIX",
             "*:{*-linux-gnu,*-w64-mingw32}:rm -rf $STAGING_DIR/$PREFIX/$TOOL_TARGET/$TOOL_TARGET",
             "*:{*-linux-gnu,*-w64-mingw32}:mkdir -p $STAGING_DIR/$PREFIX/native",
