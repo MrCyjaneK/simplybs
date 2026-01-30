@@ -21,7 +21,7 @@
     "build": {
         "env": [],
         "steps": [
-            "*:*:make -j$NUM_CORES EXTLIBS='-liconv -lz'",
+            "*:*:make -j$NUM_CORES EXTLIBS='-liconv -lz -lgettextpo -lintl'",
             "*:*:make DESTDIR=$STAGING_DIR$PREFIX/native install",
             "*:*:mkdir -p $STAGING_DIR$HOME",
             "*:*:echo '[user]' >> $STAGING_DIR$HOME/.gitconfig",
