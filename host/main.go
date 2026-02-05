@@ -74,7 +74,7 @@ var SupportedHosts = map[string]*Host{
 			"*:*:AR=llvm-ar",
 			"*:*:NM=llvm-nm",
 			"*:*:LIBTOOL=llvm-libtool-darwin",
-			"*:*:LDFLAGS=-lc++ -lc++abi",
+			"*:*:LDFLAGS=-L$PREFIX/lib -lc++ -lc++abi",
 		},
 	},
 	"x86_64-apple-darwin": {
@@ -99,7 +99,7 @@ var SupportedHosts = map[string]*Host{
 			"*:*:STRIP=strip",
 			"*:*:NM=nm",
 			"*:*:LIBTOOL=llvm-libtool-darwin",
-			"*:*:LDFLAGS=-lc++ -lc++abi",
+			"*:*:LDFLAGS=-L$PREFIX/lib -lc++ -lc++abi",
 		},
 	},
 	"aarch64-apple-ios": {

@@ -173,7 +173,7 @@ func extractTar(tr *tar.Reader, destPath, commonPrefix string) error {
 				log.Printf("Warning: Failed to create symbolic link %s -> %s: %v", target, header.Linkname, err)
 			} else {
 				if err := os.Chtimes(target, header.AccessTime, header.ModTime); err != nil {
-					log.Printf("Warning: Failed to set timestamps for symlink %s: %v", target, err)
+					// log.Printf("Warning: Failed to set timestamps for symlink %s: %v", target, err)
 				}
 			}
 		}
