@@ -23,7 +23,11 @@
             "*:*:config_opts=--host=$BUILD_HOST --prefix=$PREFIX --disable-nls --enable-static --disable-shared",
             "*:*:config_opts=$config_opts --disable-malloca",
             "*:*:config_opts=$config_opts",
-            "*:*linux:config_opts=$config_opts --with-pic"
+            "*:*linux:config_opts=$config_opts --with-pic",
+            "*:*:CC=$CC $CFLAGS",
+            "*:*:CXX=$CXX $CXXFLAGS",
+            "*:*:RC=$RC $RCFLAGS",
+            "*:*:WINDRES=$RC"
         ],
         "steps": [
             "*:*:cp -f $PREFIX/native/share/config/config.guess build-aux/",
