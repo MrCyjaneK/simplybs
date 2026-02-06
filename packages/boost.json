@@ -11,13 +11,13 @@
     ],
     "dependencies": [
         "*:*:native/_",
-        "*:*:native/cmake",
-        "*:*:xz",
         "*:*:native/boost-b2",
+        "*:*:native/cmake",
         "*:*:native/python@3.14",
         "*:*:libiconv",
-        "*:*:zstd",
-        "*:*:openssl"
+        "*:*:openssl",
+        "*:*:xz",
+        "*:*:zstd"
     ],
     "patches": [
         "fix_io_control_hpp.patch"

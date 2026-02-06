@@ -11,8 +11,8 @@
     ],
     "build": {
         "env": [
-          "*:*:config_libraries=system,filesystem,thread,timer,date_time,chrono,regex,serialization,atomic,program_options,log",
-          "*:*-w64-*:config_libraries=system,filesystem,thread,timer,date_time,chrono,regex,serialization,atomic,program_options,locale,log"
+            "*:*:config_libraries=system,filesystem,thread,timer,date_time,chrono,regex,serialization,atomic,program_options,log",
+            "*:*-w64-*:config_libraries=system,filesystem,thread,timer,date_time,chrono,regex,serialization,atomic,program_options,locale,log"
         ],
         "steps": [
             "*:*:./bootstrap.sh --without-icu --with-libraries=$config_libraries",

@@ -11,6 +11,11 @@
     ],
     "dependencies": [
         "*:*:native/_",
+        "*:*:native/autoconf",
+        "*:*:native/automake",
+        "*:*:native/m4",
+        "*:*:native/make",
+        "*:*:native/perl",
         "*:*:expat",
         "*:*:openssl"
     ],
