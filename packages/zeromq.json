@@ -10,7 +10,8 @@
         }
     ],
     "dependencies": [
-        "*:*:native/_"
+        "*:*:native/_",
+        "*:*:native/make"
     ],
     "patches": [
         "fix_declaration.patch"
@@ -20,15 +21,15 @@
             "*:aarch64-apple-ios*:HOST=aarch64-apple-darwin",
             "*:*:config_opts=--prefix=$PREFIX --host=$HOST --without-documentation --disable-shared --without-libsodium --disable-curve",
             "*:*-linux-gnu:config_opts=$config_opts --with-pic",
-            "*:*:cxxflags=-std=c++11"
+            "*:*:cxxflags=$CXXFLAGS -std=c++17"
         ],
         "steps": [
             "*:*:patch -p1 < $PATCH_DIR/zeromq/fix_declaration.patch",
             "*:*:./configure $config_opts",
             "*:*:make -j$NUM_CORES src/libzmq.la",
-            "*:*:make -j$NUM_CORES DESTDIR=$STAGING_DIR install-pkgconfigDATA VERBOSE=1",
-            "*:*:make -j$NUM_CORES DESTDIR=$STAGING_DIR install-libLTLIBRARIES VERBOSE=1",
-            "*:*:make -j$NUM_CORES DESTDIR=$STAGING_DIR install-includeHEADERS VERBOSE=1"
+            "*:*:make -j1 DESTDIR=$STAGING_DIR install-pkgconfigDATA VERBOSE=1",
+            "*:*:make -j1 DESTDIR=$STAGING_DIR install-libLTLIBRARIES VERBOSE=1",
+            "*:*:make -j1 DESTDIR=$STAGING_DIR install-includeHEADERS VERBOSE=1"
         ]
     }
 }
