@@ -11,7 +11,8 @@
     ],
     "dependencies": [
         "*:*:native/_",
-        "*:*:native/config"
+        "*:*:native/config",
+        "*:*:native/make"
     ],
     "patches": [
         "disable-glibc-getrandom-getentropy.patch",
@@ -20,9 +21,6 @@
     "build": {
         "env": [
             "*:*-android*:ANDROID_NDK_ROOT=$PREFIX/native",
-            "*:*-android*:CC=clang",
-            "*:*-android*:AR=ar",
-            "*:*-android*:RANLIB=ranlib",
             "*:*:config_opts=--host=$HOST --prefix=$PREFIX",
             "*:*:config_opts=$config_opts --enable-static --disable-shared --with-pic"
         ],
