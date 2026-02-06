@@ -61,7 +61,7 @@ var SupportedHosts = map[string]*Host{
 			"*:*:CMAKE_SYSTEM_NAME=Darwin",
 			"*:*:SDK_VERSION=26.1",
 			"*:*:SDK_PATH=$PREFIX/native/SDK/MacOSX$SDK_VERSION.sdk",
-			"*:*:OSX_MIN_VERSION=10.16",
+			"*:*:OSX_MIN_VERSION=13.0",
 			"*:*:LD64_VERSION=609",
 			"*:*:CC_target=arm64-apple-darwin",
 			"*:*:CC=aarch64-apple-darwin-clang -mmacosx-version-min=$OSX_MIN_VERSION -isysroot $SDK_PATH -I$PREFIX/include",
