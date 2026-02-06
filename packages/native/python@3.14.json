@@ -1,5 +1,5 @@
 {
-    "package": "native/python@3.11",
+    "package": "native/python@3.14",
     "version": "3.14.0",
     "type": "native",
     "download": [

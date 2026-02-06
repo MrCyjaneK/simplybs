@@ -35,8 +35,8 @@
             "*:aarch64-linux-android:config_opts=$config_opts address-model=64 threadapi=pthread runtime-link=static target-os=$target_os binary-format=elf abi=aapcs",
             "*:armv7-linux-androideabi:config_opts=$config_opts address-model=32 architecture=arm threadapi=pthread runtime-link=static target-os=$target_os binary-format=elf abi=aapcs",
             "*:x86_64-apple-darwin:config_opts=$config_opts address-model=64 architecture=x86",
-            "*:aarch64-apple-ios:config_opts=$config_opts --toolset=darwin-iphone runtime-link=static",
-            "*:aarch64-apple-ios-simulator:config_opts=$config_opts --toolset=darwin-iphone runtime-link=static",
+            "*:aarch64-apple-ios:config_opts=$config_opts address-model=64 threadapi=pthread architecture=arm --toolset=darwin-iphone runtime-link=shared --without-process",
+            "*:aarch64-apple-ios-simulator:config_opts=$config_opts address-model=64 threadapi=pthread architecture=arm --toolset=darwin-iphone runtime-link=shared --without-process",
             "*:x86_64-w64-mingw32:config_opts=$config_opts target-os=$target_os binary-format=pe threadapi=win32 runtime-link=static address-model=64 architecture=x86",
             "*:i686-w64-mingw32:config_opts=$config_opts target-os=$target_os binary-format=pe threadapi=win32 runtime-link=static address-model=32 architecture=x86",
             "*:i686-linux-gnu:config_opts=$config_opts address-model=32 architecture=x86 threadapi=pthread runtime-link=static",
@@ -55,7 +55,7 @@
             "*:*:WINDRES=$RC $RCFLAGS",
             "none:*-apple-darwin:config_opts=$config_opts define=BOOST_LOG_WITHOUT_SYSLOG",
             "none:*-apple-darwin:config_opts=$config_opts define=BOOST_LOG_WITHOUT_IPC",
-            "*:*-apple-darwin:config_opts=$config_opts define=_DARWIN_C_SOURCE"
+            "*:*-apple-*:config_opts=$config_opts define=_DARWIN_C_SOURCE"
         ],
         "steps": [
             "*:*:echo \"using $toolset : $toolset2 : $CXX $CXXFLAGS : <CXXFLAGS>\"$CXXFLAGS\" <linkflags>\"$LDFLAGS\" <archiver>\"$AR\" <arflags>\"$ARFLAGS\" <striper>\"$STRIP\" <ranlib>\"$RANLIB\" <rc>\"$WINDRES\" <target-os>\"$target_os\" : ;\" > user-config.jam",
