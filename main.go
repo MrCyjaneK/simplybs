@@ -78,12 +78,6 @@ func buildForHost(host *host.Host, packageNames []*pack.Package, list bool, extr
 		return
 	}
 
-	if extract {
-		for _, pkg := range packageNames {
-			pkg.ExtractEnv(host, host.GetEnvPath())
-		}
-	}
-
 	if build {
 		for _, pkg := range packageNames {
 			pkg.EnsureBuilt(host, true)

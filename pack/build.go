@@ -39,6 +39,12 @@ func (p *Package) ExtractEnv(host *host.Host, envPath string) {
 	if err != nil {
 		log.Panicf("Failed to extract archive %s: %v", archive, err)
 	}
+	env := p.GetEnv(host)
+	newEnv := []string{}
+	for k, v := range env {
+		newEnv = append(newEnv, k+"="+v)
+	}
+	writeDotEnv(envPath+"/_source_me", newEnv)
 }
 
 func (p *Package) DownloadSource(download *Download) {
