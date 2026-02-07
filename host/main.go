@@ -250,7 +250,7 @@ var SupportedHosts = map[string]*Host{
 			"*:*:STRIP=aarch64-linux-gnu-strip",
 			"*:*:READELF=aarch64-linux-gnu-readelf",
 			"*:*:LD=aarch64-linux-gnu-ld",
-			"*:*:LDFLAGS=aarch64-linux-gnu-ld",
+			"*:*:LDFLAGS=",
 			"*:*:NM=aarch64-linux-gnu-nm",
 		},
 	},
