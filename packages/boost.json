@@ -48,7 +48,6 @@
             "*:*-android*:toolset=gcc",
             "*:*mingw32*:toolset=gcc",
             "*:*-ios*:toolset2=iphone",
-            "*:*-ios-simulator*:toolset2=~iphone",
             "*:*:CXXFLAGS=$CXXFLAGS -fPIC",
             "*:*-apple-*:AR=libtool",
             "*:{*-linux-*,*-w64-*}:ARFLAGS=rcs",
