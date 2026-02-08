@@ -193,8 +193,15 @@ func Cleanup() {
 
 				currentFileName := fmt.Sprintf("%s-%s-%s", pkg.Package, pkg.Version, currentBuildID)
 				currentFileName = strings.ReplaceAll(currentFileName, "/", "_")
+
 				archPath := filepath.Join(builder, "built", target, currentFileName+".tar.gz")
 				infoPath := filepath.Join(builder, "built", target, currentFileName+".info.txt")
+
+				if pkg.Type == "native" {
+					archPath = filepath.Join(builder, "built", currentFileName+".tar.gz")
+					infoPath = filepath.Join(builder, "built", currentFileName+".info.txt")
+
+				}
 
 				keepFiles[archPath] = true
 				keepFiles[infoPath] = true

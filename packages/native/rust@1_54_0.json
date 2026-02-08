@@ -31,7 +31,7 @@
             "*:*:patch -p1 < $PATCH_DIR/rust/codegen_c.cpp.patch",
             "darwin_arm64:*:sed -i.bak 's/STD_ENV_ARCH=[a-zA-Z0-9_]*/STD_ENV_ARCH=aarch64/' script-overrides/stable-1.54.0-macos/build_std.txt",
             "linux_arm64:*:sed -i.bak 's/STD_ENV_ARCH=[a-zA-Z0-9_]*/STD_ENV_ARCH=aarch64/' script-overrides/stable-1.54.0-linux/build_std.txt",
-            "*:*:rm script-overrides/stable-1.54.0-*/*.bak",
+            "*:*:rm script-overrides/stable-1.54.0-*/*.bak || true",
             "*:*:sed -i.bak 's/^make$/make $@/' build-1.54.0.sh",
             "darwin_arm64:*:sed -i.bak 's/^[[:space:]]*RUSTC_TARGET ?= x86_64-apple-darwin/RUSTC_TARGET ?= aarch64-apple-darwin/' run_rustc/Makefile",
             "linux_arm64:*:sed -i.bak 's/^[[:space:]]*RUSTC_TARGET ?= x86_64-unknown-linux-gnu/RUSTC_TARGET ?= aarch64-unknown-linux-gnu/' run_rustc/Makefile",
