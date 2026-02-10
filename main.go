@@ -4,6 +4,8 @@ import (
 	"flag"
 	"fmt"
 	"log"
+	"os"
+	"path/filepath"
 	"strings"
 
 	"github.com/mrcyjanek/simplybs/cmd/lint"
@@ -86,7 +88,12 @@ func buildForHost(host *host.Host, packageNames []*pack.Package, list bool, extr
 	if extract {
 		for _, pkg := range packageNames {
 			log.Printf("Extracting env for package: %s", pkg.Package)
-			pkg.ExtractEnv(host, host.GetEnvPath())
+			append := os.Getenv("SIMPLYBS_ENV_DIR_APPEND")
+			if append != "" {
+				pkg.ExtractEnv(host, filepath.Join(host.GetEnvPath(), append))
+			} else {
+				pkg.ExtractEnv(host, host.GetEnvPath())
+			}
 		}
 	}
 
