@@ -5,7 +5,7 @@
     "download": [
         {
             "kind": "git",
-            "sha256": "0d1b14468187636f5a23d4adb4f3e5830570bd49",
+            "sha256": "ea17212e41970b9f602fb30898b5a4013a1fb7af",
             "url": "https://github.com/MrCyjaneK/osxcross.git"
         },
         {
