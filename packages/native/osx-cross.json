@@ -37,6 +37,7 @@
         "*:*-apple-*:native/perl",
         "*:*-apple-*:native/pkgconf",
         "*:*-apple-*:native/python@3.11",
+        "*:*-apple-*:native/unzip",
         "*:*-apple-*:native/xar",
         "*:*-apple-*:native/xz"
     ],
