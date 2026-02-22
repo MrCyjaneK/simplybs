@@ -25,6 +25,7 @@
         "*:*:native/m4",
         "*:*:native/make",
         "*:*:native/ncurses",
+        "*:*:native/patch",
         "*:*:native/perl",
         "*:*:native/python@3.11",
         "*:*:native/rsync",
