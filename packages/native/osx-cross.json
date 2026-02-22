@@ -22,6 +22,7 @@
         }
     ],
     "dependencies": [
+        "*:*-apple-*:native/7zip",
         "*:*-apple-*:native/apple-sdk",
         "*:*-apple-*:native/bzip2",
         "*:*-apple-*:native/cmake",
