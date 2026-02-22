@@ -136,6 +136,7 @@
         "*:{*-linux-gnu,*-linux-musl,*-w64-mingw32}:native/llvm-objcopy",
         "*:{*-linux-gnu,*-linux-musl,*-w64-mingw32}:native/m4",
         "*:{*-linux-gnu,*-linux-musl,*-w64-mingw32}:native/make",
+        "*:{*-linux-gnu,*-linux-musl,*-w64-mingw32}:native/patch",
         "*:{*-linux-gnu,*-linux-musl,*-w64-mingw32}:native/perl",
         "*:{*-linux-gnu,*-linux-musl,*-w64-mingw32}:native/python@3.11",
         "*:{*-linux-gnu,*-linux-musl,*-w64-mingw32}:native/rsync",

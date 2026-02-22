@@ -44,8 +44,6 @@
         ],
         "steps": [
             "*:*:./bootstrap",
-            "none:*:ln -s $TOOL_TARGET-objcopy $PREFIX/native/bin/objcopy",
-            "none:*:ln -s $TOOL_TARGET-readelf $PREFIX/native/bin/readelf",
             "*:*:./configure --prefix=$PREFIX/native",
             "*:*:make -j$NUM_CORES",
             "*:*:make install DESTDIR=$STAGING_DIR"
