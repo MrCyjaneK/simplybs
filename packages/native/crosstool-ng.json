@@ -13,7 +13,7 @@
         "*:*:native/autoconf",
         "*:*:native/automake",
         "*:*:native/bash",
-        "*:*:native/binutils@2.42",
+        "*:*:native/binutils@2.45",
         "*:*:native/bison",
         "*:*:native/bzip2",
         "*:*:native/file",
