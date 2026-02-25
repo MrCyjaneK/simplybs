@@ -11,11 +11,13 @@
     ],
     "dependencies": [
         "*:*:native/_",
+        "*:*:native/bash",
         "*:*:native/autoconf",
         "*:*:native/automake",
         "*:*:native/m4",
         "*:*:native/make",
         "*:*:native/perl",
+        "*:*:native/libtool",
         "*:*:expat",
         "*:*:openssl"
     ],
@@ -33,16 +35,14 @@
             "*:*-w64-*:config_opts=$config_opts --enable-static-exe --sysconfdir=/etc --prefix=$PREFIX --target=$PREFIX",
             "*:x86_64-apple-darwin:config_opts=$config_opts ac_cv_func_SHA384_Init=yes",
             "*:*-linux-android*:config_opts=$config_opts ac_cv_type_pthread_spinlock_t=no",
-            "*:*-w64-mingw32:build_opts=$build_opts LDFLAGS=\"$LDFLAGS -lpthread\"",
-            "*:*-w64-mingw32:CFLAGS=$CFLAGS -D_WIN32_WINNT=0x600",
             "*:*:config_opts=$config_opts ac_cv_func_getentropy=no"
         ],
         "steps": [
             "*:*:patch -p1 < $PATCH_DIR/unbound/disable-glibc-reallocarray.patch",
             "*:*:autoconf",
             "*:*:./configure $config_opts",
-            "*:*:make -j$NUM_CORES $build_opts",
-            "*:*:make -j$NUM_CORES DESTDIR=$STAGING_DIR install"
+            "*:*:make -j1 $build_opts V=1",
+            "*:*:make -j1 DESTDIR=$STAGING_DIR install"
         ]
     }
 }
