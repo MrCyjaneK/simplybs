@@ -11,7 +11,8 @@
     ],
     "dependencies": [
         "*:*:native/_",
-        "*:*:native/make"
+        "*:*:native/make",
+        "*:*:native/patch"
     ],
     "patches": [
         "fix_declaration.patch"
