@@ -17,6 +17,7 @@
         "*:*:native/libtool",
         "*:*:native/m4",
         "*:*:native/make",
+        "*:*:native/patch",
         "*:*:native/perl",
         "*:*:expat",
         "*:*:openssl"
