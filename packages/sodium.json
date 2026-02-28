@@ -12,7 +12,8 @@
     "dependencies": [
         "*:*:native/_",
         "*:*:native/config",
-        "*:*:native/make"
+        "*:*:native/make",
+        "*:*:native/patch"
     ],
     "patches": [
         "disable-glibc-getrandom-getentropy.patch",
