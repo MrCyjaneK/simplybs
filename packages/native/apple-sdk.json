@@ -41,7 +41,7 @@
             "*:*-apple-*:SKIP_BUILD_PBXZ=yes",
             "*:*-apple-*:JOBS=$NUM_CORES",
             "*:*-apple-*:PORTABLE=1",
-            "*:*-apple-*:TARGET_DIR=$PREFIX/native/",
+            "*:*-apple-*:TARGET_DIR=$NATIVEPREFIX/",
             "*:aarch64-apple-*:ENABLE_ARCHS=arm64",
             "*:x86_64-apple-*:ENABLE_ARCHS=x86_64",
             "*:*-apple-*:UNATTENDED=1",
@@ -62,8 +62,8 @@
             "*:*-apple-*:sed -i.bak 's/$TARGET_DIR\\/bin\\///g' tools/gen_sdk_package_pbzx.sh",
             "*:*-apple-*:sed -i.bak 's/$TARGET_DIR\\/SDK\\/tools\\/bin\\///g' tools/gen_sdk_package_pbzx.sh",
             "*:*-apple-*:bash -x ./tools/gen_sdk_package_pbzx.sh ./Xcode_*.xip",
-            "*:*-apple-*:mkdir -p $STAGING_DIR$PREFIX/native/share/xcode-sdk",
-            "*:*-apple-*:mv *.sdk.tar.xz $STAGING_DIR$PREFIX/native/share/xcode-sdk"
+            "*:*-apple-*:mkdir -p $STAGING_DIR$NATIVEPREFIX/share/xcode-sdk",
+            "*:*-apple-*:mv *.sdk.tar.xz $STAGING_DIR$NATIVEPREFIX/share/xcode-sdk"
         ]
     }
 }

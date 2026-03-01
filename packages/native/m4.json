@@ -15,7 +15,7 @@
     "build": {
         "env": [],
         "steps": [
-            "*:*:./configure --prefix=$PREFIX/native --disable-nls",
+            "*:*:./configure --prefix=$NATIVEPREFIX --disable-nls",
             "*:*:sed -i.bak 's/^run.*automake.*/exit 0/' build-aux/missing",
             "*:*:make -j$NUM_CORES",
             "*:*:make DESTDIR=$STAGING_DIR install"

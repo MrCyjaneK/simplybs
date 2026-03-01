@@ -23,8 +23,8 @@
             "*:*-linux-gnu:config_opts=$config_opts --disable-shared --enable-static --disable-tests --disable-documentation"
         ],
         "steps": [
-            "*:*:cp -f $PREFIX/native/share/config/config.guess config/config.guess",
-            "*:*:cp -f $PREFIX/native/share/config/config.sub config/config.sub",
+            "*:*:cp -f $NATIVEPREFIX/share/config/config.guess config/config.guess",
+            "*:*:cp -f $NATIVEPREFIX/share/config/config.sub config/config.sub",
             "*:*-linux-gnu:patch -p0 < $PATCH_DIR/unwind/fix_obj_order.patch",
             "*:*-linux-gnu:./configure $config_opts",
             "*:*-linux-gnu:make -j$NUM_CORES",

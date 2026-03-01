@@ -17,8 +17,8 @@
     "build": {
         "env": [],
         "steps": [
-            "*:*:mkdir -p $STAGING_DIR$PREFIX/native/bin",
-            "*:*:$CC -O2 -Wall -I $PREFIX/native/include -L $PREFIX/native/lib pbzx.c -o $STAGING_DIR$PREFIX/native/bin/pbzx -llzma -lxar -Wl,-rpath,$PREFIX/native/lib"
+            "*:*:mkdir -p $STAGING_DIR$NATIVEPREFIX/bin",
+            "*:*:$CC -O2 -Wall -I $NATIVEPREFIX/include -L $NATIVEPREFIX/lib pbzx.c -o $STAGING_DIR$NATIVEPREFIX/bin/pbzx -llzma -lxar -Wl,-rpath,$NATIVEPREFIX/lib"
         ]
     }
 }

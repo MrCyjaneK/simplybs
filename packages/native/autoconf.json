@@ -17,7 +17,7 @@
     "build": {
         "env": [],
         "steps": [
-            "*:*:./configure --host=$HOST --prefix=$PREFIX/native",
+            "*:*:./configure --host=$HOST --prefix=$NATIVEPREFIX",
             "*:*:make -j$NUM_CORES",
             "*:*:make DESTDIR=$STAGING_DIR install"
         ]

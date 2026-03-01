@@ -16,7 +16,7 @@
     ],
     "build": {
         "env": [
-            "*:*:INSTALLPREFIX=$PREFIX/native"
+            "*:*:INSTALLPREFIX=$NATIVEPREFIX"
         ],
         "steps": [
             "*:*:./build.sh",

@@ -20,8 +20,8 @@
             "*:*:git tag -a initial-commit -m '0.0.0' 95374957437b818e9addc26c83340b27a1b38202",
             "*:*:python3 build/gen.py",
             "*:*:ninja -C out",
-            "*:*:mkdir -p $STAGING_DIR$PREFIX/native/bin",
-            "*:*:cp out/gn $STAGING_DIR$PREFIX/native/bin/gn"
+            "*:*:mkdir -p $STAGING_DIR$NATIVEPREFIX/bin",
+            "*:*:cp out/gn $STAGING_DIR$NATIVEPREFIX/bin/gn"
         ]
     }
 }

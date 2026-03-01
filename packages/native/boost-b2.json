@@ -16,8 +16,8 @@
         ],
         "steps": [
             "*:*:./bootstrap.sh --without-icu --with-libraries=$config_libraries",
-            "*:*:mkdir -p $STAGING_DIR$PREFIX/native/bin",
-            "*:*:cp b2 $STAGING_DIR$PREFIX/native/bin/"
+            "*:*:mkdir -p $STAGING_DIR$NATIVEPREFIX/bin",
+            "*:*:cp b2 $STAGING_DIR$NATIVEPREFIX/bin/"
         ]
     }
 }

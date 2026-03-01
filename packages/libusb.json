@@ -26,8 +26,8 @@
             "*:*-apple-darwin:SHOULD_BUILD="
         ],
         "steps": [
-            "*:*:cp -f $PREFIX/native/share/config/config.guess config.guess",
-            "*:*:cp -f $PREFIX/native/share/config/config.sub config.sub",
+            "*:*:cp -f $NATIVEPREFIX/share/config/config.guess config.guess",
+            "*:*:cp -f $NATIVEPREFIX/share/config/config.sub config.sub",
             "*:*:$SHOULD_BUILD ./configure $config_opts",
             "*:*:$SHOULD_BUILD make -j$NUM_CORES",
             "*:*:$SHOULD_BUILD make -j$NUM_CORES DESTDIR=$STAGING_DIR install",

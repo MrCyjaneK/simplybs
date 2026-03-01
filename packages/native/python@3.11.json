@@ -19,7 +19,7 @@
     ],
     "build": {
         "env": [
-            "*:*:config_opts=--prefix=$PREFIX/native",
+            "*:*:config_opts=--prefix=$NATIVEPREFIX",
             "*:*:config_opts=$config_opts --disable-test-modules",
             "*:*:config_opts=$config_opts --enable-static",
             "darwin_*:*:LIBS=-lintl -liconv"
@@ -29,7 +29,7 @@
             "*:*:./configure $config_opts",
             "*:*:make -j$NUM_CORES",
             "*:*:make DESTDIR=$STAGING_DIR install",
-            "*:*:cd $STAGING_DIR$PREFIX/native/bin && ln -s python3 python"
+            "*:*:cd $STAGING_DIR$NATIVEPREFIX/bin && ln -s python3 python"
         ]
     }
 }

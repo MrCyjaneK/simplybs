@@ -17,7 +17,7 @@
         "steps": [
             "*:*:sed -i.bak 's/-Wall/-Wall -fPIC/' Makefile",
             "*:*:make -j$NUM_CORES",
-            "*:*:make install PREFIX=$STAGING_DIR$PREFIX/native"
+            "*:*:make install PREFIX=$STAGING_DIR$NATIVEPREFIX"
         ]
     }
 }

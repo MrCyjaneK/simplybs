@@ -20,10 +20,14 @@
             "*:none:B_=All packages included as dependencies (other than bootstrap packages) are copied over to staging dir"
         ],
         "steps": [
+            "*:*:mkdir -p $STAGING_DIR$NATIVEPREFIX",
+            "*:*:rm -rf $STAGING_DIR$NATIVEPREFIX",
+            "*:*:cp -a $NATIVEPREFIX $STAGING_DIR$NATIVEPREFIX",
+            "*:*:rm -rf $STAGING_DIR$NATIVEPREFIX/bootstrap",
             "*:*:mkdir -p $STAGING_DIR$PREFIX",
             "*:*:rm -rf $STAGING_DIR$PREFIX",
             "*:*:cp -a $PREFIX $STAGING_DIR$PREFIX",
-            "*:*:rm -rf $STAGING_DIR$PREFIX/native/bootstrap",
+            "*:*:rm -rf $STAGING_DIR$PREFIX/bootstrap",
             "*:*:mkdir -p $STAGING_DIR$HOME",
             "*:*:touch $STAGING_DIR$HOME/.zshrc"
         ]

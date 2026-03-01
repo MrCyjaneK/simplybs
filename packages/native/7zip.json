@@ -23,11 +23,11 @@
             "darwin_arm64:*:cd CPP/7zip/Bundles/Alone2 && make -f ../../cmpl_mac_arm64.mak -j$NUM_CORES",
             "darwin_amd64:*:cd CPP/7zip/Bundles/Alone2 && make -f ../../cmpl_mac_x64.mak -j$NUM_CORES",
             "linux_*:*:cd CPP/7zip/Bundles/Alone2 && make -f ../../cmpl_clang.mak -j$NUM_CORES",
-            "*:*:mkdir -p $STAGING_DIR$PREFIX/native/bin",
-            "*:*:mkdir -p $STAGING_DIR$PREFIX/native/lib",
-            "*:*:cp ./CPP/7zip/Bundles/Alone2/b/*/7zz $STAGING_DIR$PREFIX/native/bin/7zz",
-            "darwin_*:*:cp ./CPP/7zip/Bundles/Format7zF/b/*/7z.so $STAGING_DIR$PREFIX/native/bin/7z.dylib",
-            "linux_:*:cp ./CPP/7zip/Bundles/Format7zF/b/*/7z.so $STAGING_DIR$PREFIX/native/bin/7z.so"
+            "*:*:mkdir -p $STAGING_DIR$NATIVEPREFIX/bin",
+            "*:*:mkdir -p $STAGING_DIR$NATIVEPREFIX/lib",
+            "*:*:cp ./CPP/7zip/Bundles/Alone2/b/*/7zz $STAGING_DIR$NATIVEPREFIX/bin/7zz",
+            "darwin_*:*:cp ./CPP/7zip/Bundles/Format7zF/b/*/7z.so $STAGING_DIR$NATIVEPREFIX/bin/7z.dylib",
+            "linux_:*:cp ./CPP/7zip/Bundles/Format7zF/b/*/7z.so $STAGING_DIR$NATIVEPREFIX/bin/7z.so"
         ]
     }
 }

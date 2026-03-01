@@ -20,13 +20,13 @@
     ],
     "build": {
         "env": [
-            "*:*-apple-*:config_opts=--prefix=$PREFIX/native",
+            "*:*-apple-*:config_opts=--prefix=$NATIVEPREFIX",
             "*:aarch64-apple-darwin:BUILD_TARGET=aarch64-apple-darwin",
             "*:x86_64-apple-darwin:BUILD_TARGET=x86_64-apple-darwin",
             "*:aarch64-apple-ios*:BUILD_TARGET=aarch64-apple-ios",
             "*:*-apple*:config_opts=$config_opts --target=$BUILD_TARGET",
-            "*:*-apple-*:config_opts=$config_opts --with-libtapi=$PREFIX/native",
-            "*:*-apple-*:config_opts=$config_opts --with-libxar=$PREFIX/native",
+            "*:*-apple-*:config_opts=$config_opts --with-libtapi=$NATIVEPREFIX",
+            "*:*-apple-*:config_opts=$config_opts --with-libxar=$NATIVEPREFIX",
             "*:*-apple-*:CC=clang",
             "*:*-apple-*:CXX=clang++"
         ],
@@ -35,7 +35,7 @@
             "*:*-apple-*:cd cctools && ./configure $config_opts",
             "*:*-apple-*:cd cctools && make -j$NUM_CORES",
             "*:*-apple-*:cd cctools && DESTDIR=$STAGING_DIR make -j$NUM_CORES install",
-            "*:*-apple-*:cd $STAGING_DIR$PREFIX/native/bin; for f in *-*; do ln -s \"$f\" \"${f##*-}\"; done"
+            "*:*-apple-*:cd $STAGING_DIR$NATIVEPREFIX/bin; for f in *-*; do ln -s \"$f\" \"${f##*-}\"; done"
         ]
     }
 }

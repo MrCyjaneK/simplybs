@@ -16,8 +16,8 @@
         "env": [],
         "steps": [
             "*:*:python3 ./packaging/create_zipapp.py --outfile meson.pyz --interpreter \"$(which python3)\" .",
-            "*:*:mkdir -p $STAGING_DIR$PREFIX/native/bin/",
-            "*:*:mv meson.pyz $STAGING_DIR$PREFIX/native/bin/meson"
+            "*:*:mkdir -p $STAGING_DIR$NATIVEPREFIX/bin/",
+            "*:*:mv meson.pyz $STAGING_DIR$NATIVEPREFIX/bin/meson"
         ]
     }
 }

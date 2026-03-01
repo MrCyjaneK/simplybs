@@ -24,8 +24,8 @@
     ],
     "build": {
         "env": [
-            "*:*:config_opts=--host=$HOST --prefix=$PREFIX/native",
-            "*:*:PERL_LIBDIR=$PREFIX/native/lib/perl5/site_perl/5.42.0"
+            "*:*:config_opts=--host=$HOST --prefix=$NATIVEPREFIX",
+            "*:*:PERL_LIBDIR=$NATIVEPREFIX/lib/perl5/site_perl/5.42.0"
         ],
         "steps": [
             "*:*:git tag -a 1.23.3 -m 'Release 1.23.3'",

@@ -20,15 +20,15 @@
     ],
     "build": {
         "env": [
-            "*:*:config_opts=--prefix=$PREFIX/native",
+            "*:*:config_opts=--prefix=$NATIVEPREFIX",
             "*:*:config_opts=$config_opts --disable-nls",
             "*:*:config_opts=$config_opts --disable-werror",
             "*:*:config_opts=$config_opts --with-system-zlib",
             "*:*:config_opts=$config_opts --enable-targets=all",
-            "*:*:config_opts=$config_opts --libdir=$PREFIX/native/lib",
-            "*:*:config_opts=$config_opts --infodir=$PREFIX/native/share/info",
-            "*:*:CPPFLAGS=-I$PREFIX/native/include",
-            "*:*:LDFLAGS=-L$PREFIX/native/lib"
+            "*:*:config_opts=$config_opts --libdir=$NATIVEPREFIX/lib",
+            "*:*:config_opts=$config_opts --infodir=$NATIVEPREFIX/share/info",
+            "*:*:CPPFLAGS=-I$NATIVEPREFIX/include",
+            "*:*:LDFLAGS=-L$NATIVEPREFIX/lib"
         ],
         "steps": [
             "*:*:mkdir -p build",

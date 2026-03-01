@@ -30,8 +30,8 @@
             "*:*:WINDRES=$RC"
         ],
         "steps": [
-            "*:*:cp -f $PREFIX/native/share/config/config.guess build-aux/",
-            "*:*:cp -f $PREFIX/native/share/config/config.sub build-aux/",
+            "*:*:cp -f $NATIVEPREFIX/share/config/config.guess build-aux/",
+            "*:*:cp -f $NATIVEPREFIX/share/config/config.sub build-aux/",
             "*:*:sed -i.bak 's|#include <stdckdint.h>|#include \"stdckdint.in.h\"|' ./srclib/malloca.c",
             "*:*:./configure $config_opts",
             "*:*:make -j$NUM_CORES",

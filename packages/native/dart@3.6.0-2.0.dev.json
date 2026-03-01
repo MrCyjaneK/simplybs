@@ -534,7 +534,7 @@
             "*:*:ln -s $(which ninja) buildtools/ninja/ninja",
             "*:*:mkdir -p buildtools/mac-arm64/clang/bin",
             "*:*:mkdir -p buildtools/mac-arm64/clang/lib",
-            "*:*:ln -s $PREFIX/native/lib/libc++.a buildtools/mac-arm64/clang/lib/libc++.a",
+            "*:*:ln -s $NATIVEPREFIX/lib/libc++.a buildtools/mac-arm64/clang/lib/libc++.a",
             "*:*:ln -s $(which clang) buildtools/mac-arm64/clang/bin/clang",
             "*:*:ln -s $(which clang++) buildtools/mac-arm64/clang/bin/clang++",
             "*:*:ln -s $(which llvm-ar) buildtools/mac-arm64/clang/bin/llvm-ar",
@@ -550,11 +550,11 @@
             "*:*:echo 'no devtools :(' > third_party/devtools/web/index.html",
             "*:*:sed -i.bak 's/-std=c++14/-std=c++17/g' ./third_party/boringssl/BUILD.gn",
             "*:*:python3 ./tools/build.py --mode=product create_sdk",
-            "*:*:mkdir -p $STAGING_DIR$PREFIX/native",
-            "*:*:cp -a $(find . -name dart-sdk | grep -v 'tools/sdks/dart-sdk')/bin $STAGING_DIR$PREFIX/native/",
-            "*:*:cp -a $(find . -name dart-sdk | grep -v 'tools/sdks/dart-sdk')/include $STAGING_DIR$PREFIX/native/",
-            "*:*:cp -a $(find . -name dart-sdk | grep -v 'tools/sdks/dart-sdk')/lib $STAGING_DIR$PREFIX/native/",
-            "*:*:$STAGING_DIR$PREFIX/native/bin/dart --version"
+            "*:*:mkdir -p $STAGING_DIR$NATIVEPREFIX",
+            "*:*:cp -a $(find . -name dart-sdk | grep -v 'tools/sdks/dart-sdk')/bin $STAGING_DIR$NATIVEPREFIX/",
+            "*:*:cp -a $(find . -name dart-sdk | grep -v 'tools/sdks/dart-sdk')/include $STAGING_DIR$NATIVEPREFIX/",
+            "*:*:cp -a $(find . -name dart-sdk | grep -v 'tools/sdks/dart-sdk')/lib $STAGING_DIR$NATIVEPREFIX/",
+            "*:*:$STAGING_DIR$NATIVEPREFIX/bin/dart --version"
         ]
     }
 }

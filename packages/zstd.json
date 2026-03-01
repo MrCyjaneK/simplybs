@@ -14,7 +14,7 @@
     ],
     "build": {
         "env": [
-            "*:*:LIBTOOL=$PREFIX/native/bin/libtool",
+            "*:*:LIBTOOL=$NATIVEPREFIX/bin/libtool",
             "*:armv7a-linux-androideabi:CFLAGS=$CFLAGS -DLIBC_NO_FSEEKO",
             "*:armv7a-linux-androideabi:CXXFLAGS=$CXXFLAGS -DLIBC_NO_FSEEKO",
             "*:*-linux-*:TARGET_SYSTEM=Linux",

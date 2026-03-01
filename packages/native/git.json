@@ -23,7 +23,7 @@
         "steps": [
             "linux_*:*:make -j$NUM_CORES EXTLIBS='-liconv -lz -lgettextpo'",
             "darwin_*:*:make -j$NUM_CORES EXTLIBS='-liconv -lz -lgettextpo -lintl'",
-            "*:*:make DESTDIR=$STAGING_DIR$PREFIX/native install",
+            "*:*:make DESTDIR=$STAGING_DIR$NATIVEPREFIX install",
             "*:*:mkdir -p $STAGING_DIR$HOME",
             "*:*:echo '[user]' >> $STAGING_DIR$HOME/.gitconfig",
             "*:*:echo '\tname = simplybs' >> $STAGING_DIR$HOME/.gitconfig",

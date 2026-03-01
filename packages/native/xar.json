@@ -20,13 +20,13 @@
         "env": [
             "*:*:CFLAGS=$CFLAGS -w",
             "*:*:config_opts=--with-bzip2",
-            "*:*:config_opts=$config_opts --with-lzma=$PREFIX/native"
+            "*:*:config_opts=$config_opts --with-lzma=$NATIVEPREFIX"
         ],
         "steps": [
-            "*:*:cd xar && ./configure --prefix=$PREFIX/native",
+            "*:*:cd xar && ./configure --prefix=$NATIVEPREFIX",
             "*:*:cd xar && make -j$NUM_CORES",
             "*:*:cd xar && make DESTDIR=$STAGING_DIR install",
-            "*:*:mkdir -p $STAGING_DIR$PREFIX/native/include"
+            "*:*:mkdir -p $STAGING_DIR$NATIVEPREFIX/include"
         ]
     }
 }

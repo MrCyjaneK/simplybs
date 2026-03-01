@@ -141,25 +141,30 @@ func (p *Package) GetEnv(h *host.Host) map[string]string {
 	getwd, err := os.Getwd()
 	crash.Handle(err)
 	stagingPath := p.GenerateBuildPath(h, "staging")
+	home := h.GetEnvPath() + "/home/user"
+	if p.Type == "native" {
+		home = h.GetNativeEnvPath() + "/home/user"
+	}
 	env := map[string]string{
-		"PATH":        h.GetEnvPath() + "/native/bin:" + utils.GetHostPath(),
-		"HOST":        h.Triplet,
-		"PREFIX":      h.GetEnvPath(),
-		"HOME":        h.GetEnvPath() + "/home/user",
-		"HOST_PREFIX": h.GetEnvPath(),
-		"NUM_CORES":   strconv.Itoa(getNumCores()),
-		"PATCH_DIR":   filepath.Join(getwd, "patches"),
-		"STAGING_DIR": stagingPath,
+		"PATH":         h.GetNativeEnvPath() + "/bin:" + utils.GetHostPath(),
+		"HOST":         h.Triplet,
+		"PREFIX":       h.GetEnvPath(),
+		"NATIVEPREFIX": h.GetNativeEnvPath(),
+		"HOME":         home,
+		"HOST_PREFIX":  h.GetEnvPath(),
+		"NUM_CORES":    strconv.Itoa(getNumCores()),
+		"PATCH_DIR":    filepath.Join(getwd, "patches"),
+		"STAGING_DIR":  stagingPath,
 	}
 
 	env = utils.AppendEnv(env, builder.HostBuilder.GlobalEnv, h)
 	if p.Type == "native" {
 		env = utils.AppendEnv(env, []string{
-			"*:*:CFLAGS=$CFLAGS -I" + h.GetEnvPath() + "/native/include",
-			"*:*:LDFLAGS=$LDFLAGS -L" + h.GetEnvPath() + "/native/lib",
-			"*:*:LD_LIBRARY_PATH=$LD_LIBRARY_PATH:" + h.GetEnvPath() + "/native/lib",
-			"*:*:PKG_CONFIG_PATH=$PKG_CONFIG_PATH:" + h.GetEnvPath() + "/native/lib/pkgconfig",
-			"*:*:LIBRARY_PATH=$LIBRARY_PATH:" + h.GetEnvPath() + "/native/lib",
+			"*:*:CFLAGS=$CFLAGS -I" + h.GetNativeEnvPath() + "/include",
+			"*:*:LDFLAGS=$LDFLAGS -L" + h.GetNativeEnvPath() + "/lib",
+			"*:*:LD_LIBRARY_PATH=$LD_LIBRARY_PATH:" + h.GetNativeEnvPath() + "/lib",
+			"*:*:PKG_CONFIG_PATH=$PKG_CONFIG_PATH:" + h.GetNativeEnvPath() + "/lib/pkgconfig",
+			"*:*:LIBRARY_PATH=$LIBRARY_PATH:" + h.GetNativeEnvPath() + "/lib",
 		}, h)
 	} else {
 		env = utils.AppendEnv(env, []string{
@@ -170,7 +175,7 @@ func (p *Package) GetEnv(h *host.Host) map[string]string {
 			"*:*:CXXFLAGS=$CXXFLAGS -I" + h.GetEnvPath() + "/include",
 			"*:*:CXXFLAGS=$CXXFLAGS -I" + h.GetEnvPath() + "/usr/include",
 			"*:*:LDFLAGS=$LDFLAGS -L" + h.GetEnvPath() + "/lib",
-			"*:*:LD_LIBRARY_PATH=" + h.GetEnvPath() + "/native/lib",
+			"*:*:LD_LIBRARY_PATH=" + h.GetNativeEnvPath() + "/lib",
 			"*:*:PKG_CONFIG_PATH=$PKG_CONFIG_PATH:" + h.GetEnvPath() + "/lib/pkgconfig",
 			"*:*:LIBRARY_PATH=$LIBRARY_PATH:" + h.GetEnvPath() + "/lib",
 		}, h)

@@ -16,9 +16,9 @@
     "build": {
         "env": [],
         "steps": [
-            "*:*:mkdir -p $STAGING_DIR$PREFIX/native/bin",
+            "*:*:mkdir -p $STAGING_DIR$NATIVEPREFIX/bin",
             "*:*:sed -i.bak '1s|^#!/usr/bin/perl -w|#!'\"$PREFIX\"'/native/bin/perl|' triehash.pl",
-            "*:*:cp triehash.pl $STAGING_DIR$PREFIX/native/bin/triehash"
+            "*:*:cp triehash.pl $STAGING_DIR$NATIVEPREFIX/bin/triehash"
         ]
     }
 }

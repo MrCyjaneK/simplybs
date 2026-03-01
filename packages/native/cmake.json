@@ -15,11 +15,11 @@
     ],
     "build": {
         "env": [
-            "*:*:OPENSSL_ROOT_DIR=$PREFIX/native"
+            "*:*:OPENSSL_ROOT_DIR=$NATIVEPREFIX"
         ],
         "steps": [
             "*:*:./bootstrap --parallel=$NUM_CORES",
-            "*:*:./configure --prefix=$PREFIX/native",
+            "*:*:./configure --prefix=$NATIVEPREFIX",
             "*:*:make -j$NUM_CORES",
             "*:*:make DESTDIR=$STAGING_DIR install"
         ]

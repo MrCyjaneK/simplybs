@@ -21,7 +21,7 @@
     ],
     "build": {
         "env": [
-            "*:*:config_opts=--host=$HOST --prefix=$PREFIX/native"
+            "*:*:config_opts=--host=$HOST --prefix=$NATIVEPREFIX"
         ],
         "steps": [
             "*:*:autoreconf --force --install",

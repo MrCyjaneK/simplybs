@@ -33,7 +33,7 @@
         "env": [
             "*:*:config_opts=-DCMAKE_BUILD_TYPE=Release",
             "*:*-android*:config_opts=$config_opts -DCMAKE_BUILD_TYPE=Release",
-            "*:*-android*:config_opts=$config_opts -DCMAKE_INSTALL_PREFIX=$PREFIX/native/llvm@google@19.0.1",
+            "*:*-android*:config_opts=$config_opts -DCMAKE_INSTALL_PREFIX=$NATIVEPREFIX/llvm@google@19.0.1",
             "*:*-android*:config_opts=$config_opts -DLLVM_ENABLE_PROJECTS='clang;lld;libc;openmp;pstl'",
             "*:*-android*:config_opts=$config_opts -DLLVM_ENABLE_BINDINGS=OFF",
             "*:*-android*:config_opts=$config_opts -DCLANG_ENABLE_BOOTSTRAP=ON",

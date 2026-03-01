@@ -67,7 +67,7 @@ func FindPackage(name string) (*Package, error) {
 		for _, pkgName := range bootstrapPackages {
 			pkg.Dependencies = append(pkg.Dependencies, pkgName)
 		}
-		// pkg.Build.Steps = append(pkg.Build.Steps, "*:$PREFIX/native/bootstrap/bin/perl $PREFIX/native/bootstrap/bin/strip-nondeterminism-recursive --directory $STAGING_DIR")
+		// pkg.Build.Steps = append(pkg.Build.Steps, "*:$NATIVEPREFIX/bootstrap/bin/perl $NATIVEPREFIX/bootstrap/bin/strip-nondeterminism-recursive --directory $STAGING_DIR")
 	}
 	return &pkg, nil
 }
@@ -195,15 +195,17 @@ func Cleanup() {
 				currentFileName = strings.ReplaceAll(currentFileName, "/", "_")
 
 				archPath := filepath.Join(builder, "built", target, currentFileName+".tar.gz")
+				archNativePath := filepath.Join(builder, "built", target, currentFileName+"_native.tar.gz")
 				infoPath := filepath.Join(builder, "built", target, currentFileName+".info.txt")
 
 				if pkg.Type == "native" {
 					archPath = filepath.Join(builder, "built", currentFileName+".tar.gz")
+					archNativePath = filepath.Join(builder, "built", target, currentFileName+"_native.tar.gz")
 					infoPath = filepath.Join(builder, "built", currentFileName+".info.txt")
-
 				}
 
 				keepFiles[archPath] = true
+				keepFiles[archNativePath] = true
 				keepFiles[infoPath] = true
 			}
 		}

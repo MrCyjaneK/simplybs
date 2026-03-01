@@ -21,7 +21,7 @@
         ],
         "steps": [
             "*:*:./bootstrap",
-            "*:*:./configure --prefix=$PREFIX/native --disable-doc",
+            "*:*:./configure --prefix=$NATIVEPREFIX --disable-doc",
             "*:*:make -j$NUM_CORES V=1",
             "*:*:make install DESTDIR=$STAGING_DIR "
         ]

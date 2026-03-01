@@ -15,7 +15,7 @@
     "build": {
         "env": [],
         "steps": [
-            "*:*:./configure --prefix=$PREFIX/native",
+            "*:*:./configure --prefix=$NATIVEPREFIX",
             "*:*:make -j$NUM_CORES V=1",
             "*:*:make install DESTDIR=$STAGING_DIR"
         ]

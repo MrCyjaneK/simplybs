@@ -21,7 +21,7 @@
             "*:*:LDFLAGS=$LDFLAGS -fPIC"
         ],
         "steps": [
-            "*:*:./configure --prefix=$PREFIX/native --disable-shared --without-docbook --without-tests --without-examples --enable-option-checking --without-xmlwf --with-pic",
+            "*:*:./configure --prefix=$NATIVEPREFIX --disable-shared --without-docbook --without-tests --without-examples --enable-option-checking --without-xmlwf --with-pic",
             "*:*:make -j$NUM_CORES",
             "*:*:make DESTDIR=$STAGING_DIR install"
         ]

@@ -30,10 +30,10 @@
         "steps": [
             "*:*:mkdir build",
             "*:*:cd build && 7zz x ../dartsdk-${BUILDER_GOOS}_${BUILDER_GOARCH}.zip",
-            "*:*:mkdir -p $STAGING_DIR$PREFIX/native",
-            "*:*:mv build/dart-sdk/lib $STAGING_DIR$PREFIX/native",
-            "*:*:mv build/dart-sdk/include $STAGING_DIR$PREFIX/native",
-            "*:*:mv build/dart-sdk/bin $STAGING_DIR$PREFIX/native"
+            "*:*:mkdir -p $STAGING_DIR$NATIVEPREFIX",
+            "*:*:mv build/dart-sdk/lib $STAGING_DIR$NATIVEPREFIX",
+            "*:*:mv build/dart-sdk/include $STAGING_DIR$NATIVEPREFIX",
+            "*:*:mv build/dart-sdk/bin $STAGING_DIR$NATIVEPREFIX"
         ]
     }
 }

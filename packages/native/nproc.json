@@ -12,9 +12,9 @@
     "build": {
         "env": [],
         "steps": [
-            "*:*:mkdir -p $STAGING_DIR$PREFIX/native/bin",
-            "*:*:cp nproc.sh $STAGING_DIR$PREFIX/native/bin/nproc",
-            "*:*:chmod +x $STAGING_DIR$PREFIX/native/bin/nproc"
+            "*:*:mkdir -p $STAGING_DIR$NATIVEPREFIX/bin",
+            "*:*:cp nproc.sh $STAGING_DIR$NATIVEPREFIX/bin/nproc",
+            "*:*:chmod +x $STAGING_DIR$NATIVEPREFIX/bin/nproc"
         ]
     }
 }

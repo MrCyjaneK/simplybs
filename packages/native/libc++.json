@@ -20,7 +20,7 @@
             "*:*:config_opts=$config_opts -DLIBCXX_ENABLE_SHARED=OFF",
             "*:*:config_opts=$config_opts -DLIBCXX_ENABLE_STATIC=ON",
             "*:*:config_opts=$config_opts -DLIBCXX_INCLUDE_TESTS=OFF",
-            "*:*:config_opts=$config_opts -DCMAKE_INSTALL_PREFIX=$PREFIX/native"
+            "*:*:config_opts=$config_opts -DCMAKE_INSTALL_PREFIX=$NATIVEPREFIX"
         ],
         "steps": [
             "*:*:mkdir build && cd build",

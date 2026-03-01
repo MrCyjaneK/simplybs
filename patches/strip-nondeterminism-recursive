@@ -1,4 +1,4 @@
-#!$PREFIX/native/bootstrap/bin/perl
+#!$NATIVEPREFIX/bootstrap/bin/perl
 use strict;
 use warnings;
 use autodie;
@@ -63,9 +63,9 @@ exit($error_count > 0 ? 1 : 0);
 
 sub process_file {
     my $file = $File::Find::name;
-    
+
     return unless -f $file;
-    
+
     my $has_archive_extension = 0;
     for my $ext (@ARCHIVE_EXTENSIONS) {
         if ($file =~ /\Q$ext\E$/i) {
@@ -73,27 +73,27 @@ sub process_file {
             last;
         }
     }
-    
+
     return unless $has_archive_extension;
-    
+
     $processed_count++;
-    
+
     if ($verbose) {
         print "Processing: $file\n";
     }
-    
+
     if ($dry_run) {
         print "DRY RUN: Would process $file\n";
         $success_count++;
         return;
     }
-    
+
     eval {
         process_archive_file($file);
         $success_count++;
         print "Successfully processed: $file\n" if $verbose;
     };
-    
+
     if ($@) {
         $error_count++;
         warn "Failed to process '$file': $@\n";
@@ -102,22 +102,22 @@ sub process_file {
 
 sub process_archive_file {
     my $file = shift;
-    
+
     my $stat = stat($file) or die "Cannot stat file '$file': $!\n";
     my $original_perms = $stat->mode;
-    
+
     my $current_perms = $stat->mode;
     unless ($current_perms & 0200) {
         chmod($current_perms | 0200, $file) or die "Cannot make file writable '$file': $!\n";
     }
-    
+
     my $cmd = "$PERL_CMD $STRIP_NONDETERMINISM_CMD -T 1 --normalizers +all " . quotemeta($file);
-    
+
     my $exit_code = system($cmd);
     my $strip_result = $exit_code >> 8;
-    
+
     chmod($original_perms, $file) or warn "Warning: Could not restore permissions for '$file': $!\n";
-    
+
     if ($strip_result != 0) {
         die "strip-nondeterminism failed with exit code $strip_result";
     }
@@ -169,8 +169,8 @@ Specify the directory to search (default: current directory).
 
 The prefix path where strip-nondeterminism and perl are located.
 Expected paths:
-- strip-nondeterminism: $PREFIX/native/bootstrap/bin/strip-nondeterminism
-- perl: $PREFIX/native/bootstrap/bin/perl
+- strip-nondeterminism: $NATIVEPREFIX/bootstrap/bin/strip-nondeterminism
+- perl: $NATIVEPREFIX/bootstrap/bin/perl
 
 =back
 

@@ -14,7 +14,7 @@
     ],
     "build": {
         "env": [
-            "*:*:config_opts=--host=$HOST --prefix=$PREFIX/native",
+            "*:*:config_opts=--host=$HOST --prefix=$NATIVEPREFIX",
             "*:*:config_opts=$config_opts --disable-shared",
             "*:*:config_opts=$config_opts --with-build-cc=gcc",
             "*:*:config_opts=$config_opts --without-debug",

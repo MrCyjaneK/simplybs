@@ -25,7 +25,7 @@
         "env": [
             "*:*:HOSTOVERRIDE=$HOST",
             "*:aarch64-apple-ios-simulator:HOSTOVERRIDE=aarch64-apple-ios",
-            "*:*:config_opts=--prefix=$PREFIX/native --host=$HOSTOVERRIDE",
+            "*:*:config_opts=--prefix=$NATIVEPREFIX --host=$HOSTOVERRIDE",
             "*:*:config_opts=$config_opts --disable-shared",
             "*:*:config_opts=$config_opts --enable-static",
             "*:*:config_opts=$config_opts --disable-doc",
@@ -37,7 +37,7 @@
             "*:*:./configure $config_opts",
             "*:*:make -j$NUM_CORES",
             "*:*:make DESTDIR=$STAGING_DIR install",
-            "*:*:rm $STAGING_DIR$PREFIX/native/lib/*.la"
+            "*:*:rm $STAGING_DIR$NATIVEPREFIX/lib/*.la"
         ]
     }
 }

@@ -33,9 +33,14 @@ func (p *Package) EnsureBuilt(h *host.Host, buildDependencies bool) {
 	p.BuildPackage(h, true)
 }
 
-func (p *Package) ExtractEnv(host *host.Host, envPath string) {
+func (p *Package) ExtractEnv(host *host.Host, envPath string, envNativePath string) {
 	archive := p.GenerateBuildPath(host, "built") + ".tar.gz"
+	archiveNative := p.GenerateBuildPath(host, "built") + "_native.tar.gz"
 	err := utils.ExtractTarGz(archive, envPath)
+	if err != nil {
+		log.Panicf("Failed to extract archive %s: %v", archive, err)
+	}
+	err = utils.ExtractTarGz(archiveNative, envNativePath)
 	if err != nil {
 		log.Panicf("Failed to extract archive %s: %v", archive, err)
 	}
@@ -131,9 +136,15 @@ func (p *Package) buildPackageInternal(h *host.Host, buildDependencies bool) {
 			os.RemoveAll(filepath.Join(envPath, entry.Name()))
 		}
 	}
+	nativeEnvPath := h.GetNativeEnvPath()
+	if entries, err := os.ReadDir(nativeEnvPath); err == nil {
+		for _, entry := range entries {
+			os.RemoveAll(filepath.Join(nativeEnvPath, entry.Name()))
+		}
+	}
 	os.MkdirAll(envPath, 0755)
 	for _, dep := range deps {
-		dep.ExtractEnv(h, envPath)
+		dep.ExtractEnv(h, envPath, nativeEnvPath)
 	}
 	buildPath := p.GenerateBuildPath(h, "work")
 	stagingPath := p.GenerateBuildPath(h, "staging")
@@ -141,12 +152,15 @@ func (p *Package) buildPackageInternal(h *host.Host, buildDependencies bool) {
 	os.RemoveAll(stagingPath)
 	os.MkdirAll(buildPath, 0755)
 	os.MkdirAll(stagingPath, 0755)
-	defer os.RemoveAll(buildPath)
-	defer os.RemoveAll(stagingPath)
+	// defer os.RemoveAll(buildPath)
+	// defer os.RemoveAll(stagingPath)
 
 	p.ExtractSource(h, buildPath)
 
-	infoPath := filepath.Join(stagingPath, h.GetEnvPath(), "share", "buildlib", p.ShortName(h)+".txt")
+	infoPath := filepath.Join(stagingPath, h.GetEnvPath(), ".buildlib", p.ShortName(h)+".txt")
+	if p.Type == "native" {
+		infoPath = filepath.Join(stagingPath, h.GetNativeEnvPath(), ".buildlib", p.ShortName(h)+".txt")
+	}
 	os.MkdirAll(filepath.Dir(infoPath), 0755)
 	err := os.WriteFile(infoPath, []byte(p.GeneratePackageInfo(h)), 0644)
 	if err != nil {
@@ -172,7 +186,8 @@ func (p *Package) buildPackageInternal(h *host.Host, buildDependencies bool) {
 			"STAGING_DIR=" + stagingPath,
 			"HOST=" + h.Triplet,
 			"PREFIX=" + h.GetEnvPath(),
-			"PATH=" + h.GetEnvPath() + "/native/bin:" + env["PATH"] + ":" + pathEnv + ":" + h.GetEnvPath() + "/bin",
+			"NATIVEPREFIX=" + h.GetNativeEnvPath(),
+			"PATH=" + h.GetNativeEnvPath() + "/bin:" + env["PATH"] + ":" + pathEnv + ":" + h.GetEnvPath() + "/bin",
 		}...)
 		for k, v := range env {
 			cmd.Env = append(cmd.Env, k+"="+v)
@@ -190,7 +205,15 @@ func (p *Package) buildPackageInternal(h *host.Host, buildDependencies bool) {
 	}
 
 	builtArchivePath := p.GenerateBuildPath(h, "built") + ".tar.gz"
+	builtNativeArchivePath := p.GenerateBuildPath(h, "built") + "_native.tar.gz"
 	os.MkdirAll(filepath.Dir(builtArchivePath), 0755)
+	os.MkdirAll(filepath.Dir(builtNativeArchivePath), 0755)
+	os.MkdirAll(filepath.Join(stagingPath, h.GetNativeEnvPath()), 0755)
+	os.MkdirAll(filepath.Join(stagingPath, h.GetEnvPath()), 0755)
+	err = utils.CreateTarGz(filepath.Join(stagingPath, h.GetNativeEnvPath()), builtNativeArchivePath)
+	if err != nil {
+		log.Fatalf("Failed to create archive %s: %v", builtArchivePath, err)
+	}
 	err = utils.CreateTarGz(filepath.Join(stagingPath, h.GetEnvPath()), builtArchivePath)
 	if err != nil {
 		log.Fatalf("Failed to create archive %s: %v", builtArchivePath, err)
@@ -271,7 +294,7 @@ func (p *Package) StartShell(h *host.Host) {
 		if err != nil {
 			log.Fatalf("Package %s not found in build", depName)
 		}
-		dep.ExtractEnv(h, h.GetEnvPath())
+		dep.ExtractEnv(h, h.GetEnvPath(), h.GetNativeEnvPath())
 	}
 	p.ExtractSource(h, buildPath)
 
@@ -317,7 +340,8 @@ func (p *Package) StartShell(h *host.Host) {
 	cmd.Env = append(cmd.Env, []string{
 		"HOST=" + h.Triplet,
 		"PREFIX=" + h.GetEnvPath(),
-		"PATH=" + h.GetEnvPath() + "/native/bin:" + env["PATH"] + ":" + pathEnv,
+		"NATIVEPREFIX=" + h.GetNativeEnvPath(),
+		"PATH=" + h.GetNativeEnvPath() + "//bin:" + env["PATH"] + ":" + pathEnv,
 		"TERM=" + os.Getenv("TERM"),
 	}...)
 

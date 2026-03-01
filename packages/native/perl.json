@@ -16,7 +16,7 @@
         "env": [],
         "steps": [
             "*:*:sed -i.bak '/^#ifndef PERL_BUILD_DATE$/,/^#endif$/{/^#ifndef PERL_BUILD_DATE$/!d; s/.*/\\#define PERL_BUILD_DATE \"Jan  1 1970 00:00:01\"/;}' perl.c",
-            "*:*:./Configure -des -Dprefix=$PREFIX/native -Duseithreads -Dall_static",
+            "*:*:./Configure -des -Dprefix=$NATIVEPREFIX -Duseithreads -Dall_static",
             "*:*:make -j$NUM_CORES",
             "*:*:make DESTDIR=$STAGING_DIR install"
         ]

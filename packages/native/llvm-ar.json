@@ -20,8 +20,8 @@
             "*:*:mkdir build && cd build",
             "*:*:cd build && cmake -G Ninja -DLLVM_ENABLE_PROJECTS='llvm' -DCMAKE_BUILD_TYPE=Release ../llvm",
             "*:*:cd build && ninja llvm-ar",
-            "*:*:mkdir -p $STAGING_DIR$PREFIX/native/bin/",
-            "*:*:cp build/bin/llvm-ar $STAGING_DIR$PREFIX/native/bin/llvm-ar"
+            "*:*:mkdir -p $STAGING_DIR$NATIVEPREFIX/bin/",
+            "*:*:cp build/bin/llvm-ar $STAGING_DIR$NATIVEPREFIX/bin/llvm-ar"
         ]
     }
 }

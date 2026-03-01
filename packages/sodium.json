@@ -21,13 +21,13 @@
     ],
     "build": {
         "env": [
-            "*:*-android*:ANDROID_NDK_ROOT=$PREFIX/native",
+            "*:*-android*:ANDROID_NDK_ROOT=$NATIVEPREFIX",
             "*:*:config_opts=--host=$HOST --prefix=$PREFIX",
             "*:*:config_opts=$config_opts --enable-static --disable-shared --with-pic"
         ],
         "steps": [
-            "*:*:cp -f $PREFIX/native/share/config/config.guess build-aux/",
-            "*:*:cp -f $PREFIX/native/share/config/config.sub build-aux/",
+            "*:*:cp -f $NATIVEPREFIX/share/config/config.guess build-aux/",
+            "*:*:cp -f $NATIVEPREFIX/share/config/config.sub build-aux/",
             "*:*:patch -p1 < $PATCH_DIR/sodium/disable-glibc-getrandom-getentropy.patch",
             "*:*:patch -p1 < $PATCH_DIR/sodium/fix-whitespace.patch",
             "*:*:./configure $config_opts",

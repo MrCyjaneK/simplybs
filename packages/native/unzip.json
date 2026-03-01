@@ -16,8 +16,8 @@
     ],
     "build": {
         "steps": [
-            "*:*:mkdir -p $STAGING_DIR$PREFIX/native/bin",
-            "*:*:$CC main.c -o $STAGING_DIR$PREFIX/native/bin/unzip"
+            "*:*:mkdir -p $STAGING_DIR$NATIVEPREFIX/bin",
+            "*:*:$CC main.c -o $STAGING_DIR$NATIVEPREFIX/bin/unzip"
         ]
     }
 }

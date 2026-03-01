@@ -17,7 +17,7 @@
         "env": [
             "*:*:CFLAGS=$CFLAGS -fPIC",
             "*:*:LDFLAGS=$LDFLAGS -fPIC",
-            "*:*:config_opts=--prefix=$PREFIX/native",
+            "*:*:config_opts=--prefix=$NATIVEPREFIX",
             "*:*:config_opts=$config_opts --with-pic",
             "*:*:config_opts=$config_opts --enable-shared",
             "*:*:config_opts=$config_opts --enable-static"

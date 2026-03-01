@@ -44,7 +44,7 @@
         ],
         "steps": [
             "*:*:./bootstrap",
-            "*:*:./configure --prefix=$PREFIX/native",
+            "*:*:./configure --prefix=$NATIVEPREFIX",
             "*:*:make -j$NUM_CORES",
             "*:*:make install DESTDIR=$STAGING_DIR"
         ]

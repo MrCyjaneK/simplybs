@@ -34,11 +34,11 @@
             "*:*:7zz x ./go-${BUILDER_GOOS}_${BUILDER_GOARCH}.tar.gz",
             "*:*:mkdir build",
             "*:*:cd build && 7zz x ../go-${BUILDER_GOOS}_${BUILDER_GOARCH}.tar",
-            "*:*:mkdir -p $STAGING_DIR$PREFIX/native/bin",
-            "*:*:mv build/go $STAGING_DIR$PREFIX/native/go$GO_VERSION",
-            "*:*:cat $PATCH_DIR/go_wrapper.sh | sed \"s/@GO_VERSION@/$GO_VERSION/g\" > $STAGING_DIR$PREFIX/native/bin/go$GO_VERSION",
-            "*:*:chmod +x $STAGING_DIR$PREFIX/native/bin/go$GO_VERSION",
-            "*:*:cp $STAGING_DIR$PREFIX/native/bin/go$GO_VERSION $STAGING_DIR$PREFIX/native/bin/go"
+            "*:*:mkdir -p $STAGING_DIR$NATIVEPREFIX/bin",
+            "*:*:mv build/go $STAGING_DIR$NATIVEPREFIX/go$GO_VERSION",
+            "*:*:cat $PATCH_DIR/go_wrapper.sh | sed \"s/@GO_VERSION@/$GO_VERSION/g\" > $STAGING_DIR$NATIVEPREFIX/bin/go$GO_VERSION",
+            "*:*:chmod +x $STAGING_DIR$NATIVEPREFIX/bin/go$GO_VERSION",
+            "*:*:cp $STAGING_DIR$NATIVEPREFIX/bin/go$GO_VERSION $STAGING_DIR$NATIVEPREFIX/bin/go"
         ]
     }
 }

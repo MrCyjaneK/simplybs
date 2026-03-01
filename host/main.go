@@ -43,6 +43,14 @@ func DataDir() string {
 	return filepath.Join(DataDirRoot(), runtime.GOOS+"_"+runtime.GOARCH)
 }
 
+func (h *Host) GetNativeEnvPath() string {
+	if os.Getenv("SIMPLYBS_NATIVE_ENV_DIR") != "" {
+		return filepath.Join(os.Getenv("SIMPLYBS_NATIVE_ENV_DIR"))
+	}
+	dir := h.GetEnvPath()
+	return filepath.Join(dir, "native")
+}
+
 func (h *Host) GetEnvPath() string {
 	if os.Getenv("SIMPLYBS_ENV_DIR") != "" {
 		return filepath.Join(os.Getenv("SIMPLYBS_ENV_DIR"))
@@ -60,7 +68,7 @@ var SupportedHosts = map[string]*Host{
 			"*:*:ARCH=aarch64",
 			"*:*:CMAKE_SYSTEM_NAME=Darwin",
 			"*:*:SDK_VERSION=26.1",
-			"*:*:SDK_PATH=$PREFIX/native/SDK/MacOSX$SDK_VERSION.sdk",
+			"*:*:SDK_PATH=$NATIVEPREFIX/SDK/MacOSX$SDK_VERSION.sdk",
 			"*:*:OSX_MIN_VERSION=13.0",
 			"*:*:LD64_VERSION=609",
 			"*:*:CC_target=arm64-apple-darwin",
@@ -85,7 +93,7 @@ var SupportedHosts = map[string]*Host{
 			"*:*:ARCH=x86_64",
 			"*:*:CMAKE_SYSTEM_NAME=Darwin",
 			"*:*:SDK_VERSION=26.1",
-			"*:*:SDK_PATH=$PREFIX/native/SDK/MacOSX$SDK_VERSION.sdk",
+			"*:*:SDK_PATH=$NATIVEPREFIX/SDK/MacOSX$SDK_VERSION.sdk",
 			"*:*:OSX_MIN_VERSION=10.16",
 			"*:*:LD64_VERSION=609",
 			"*:*:CC_target=x86_64-apple-darwin",
@@ -112,7 +120,7 @@ var SupportedHosts = map[string]*Host{
 			"*:*:IOS_MIN_VERSION=12",
 			"*:*:LD64_VERSION=609",
 			"*:*:SDK_VERSION=26.1",
-			"*:*:SDK_PATH=$PREFIX/native/SDK/iPhoneOS$SDK_VERSION.sdk",
+			"*:*:SDK_PATH=$NATIVEPREFIX/SDK/iPhoneOS$SDK_VERSION.sdk",
 			"*:*:CC_target=aarch64-apple-ios",
 			"*:*:CC=aarch64-apple-ios-clang -target $CC_target -mios-version-min=$IOS_MIN_VERSION -isysroot $SDK_PATH -I$PREFIX/include",
 			"*:*:CXX=aarch64-apple-ios-clang++ -target $CC_target -mios-version-min=$IOS_MIN_VERSION -isysroot $SDK_PATH -I$PREFIX/include",
@@ -138,7 +146,7 @@ var SupportedHosts = map[string]*Host{
 			"*:*:IOS_MIN_VERSION=12",
 			"*:*:LD64_VERSION=609",
 			"*:*:SDK_VERSION=26.1",
-			"*:*:SDK_PATH=$PREFIX/native/SDK/iPhoneSimulator$SDK_VERSION.sdk",
+			"*:*:SDK_PATH=$NATIVEPREFIX/SDK/iPhoneSimulator$SDK_VERSION.sdk",
 			"*:*:CC_target=aarch64-apple-ios-simulator",
 			"*:*:CC=aarch64-apple-ios-simulator-clang -target $CC_target -mios-version-min=$IOS_MIN_VERSION -isysroot $SDK_PATH -I$PREFIX/include",
 			"*:*:CXX=aarch64-apple-ios-simulator-clang++ -target $CC_target -mios-version-min=$IOS_MIN_VERSION -isysroot $SDK_PATH -I$PREFIX/include",
@@ -273,7 +281,7 @@ var SupportedHosts = map[string]*Host{
 			"*:*:NM=llvm-nm",
 			"*:*:AS=llvm-as",
 			"*:*:LIBTOOL=libtool",
-			"*:*:ANDROID_NDK_HOME=$PREFIX/native/",
+			"*:*:ANDROID_NDK_HOME=$NATIVEPREFIX/",
 			"*:*:LDFLAGS=$LDFLAGS -lc -lc++_static -lc++abi -lm -llog",
 		},
 	},
@@ -296,7 +304,7 @@ var SupportedHosts = map[string]*Host{
 			"*:*:STRIP=llvm-strip",
 			"*:*:AS=llvm-as",
 			"*:*:LIBTOOL=libtool",
-			"*:*:ANDROID_NDK_HOME=$PREFIX/native/",
+			"*:*:ANDROID_NDK_HOME=$NATIVEPREFIX/",
 			"*:*:LDFLAGS=$LDFLAGS -lc -lc++_static -lc++abi -lm -llog"},
 	},
 	"armv7a-linux-androideabi": {
@@ -318,7 +326,7 @@ var SupportedHosts = map[string]*Host{
 			"*:*:STRIP=llvm-strip",
 			"*:*:AS=llvm-as",
 			"*:*:LIBTOOL=libtool",
-			"*:*:ANDROID_NDK_HOME=$PREFIX/native/",
+			"*:*:ANDROID_NDK_HOME=$NATIVEPREFIX/",
 			"*:*:LDFLAGS=$LDFLAGS -lc -lc++_static -lc++abi -lm -llog"},
 	},
 }

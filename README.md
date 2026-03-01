@@ -58,7 +58,7 @@ All package definitions live inside of this repo (this is going to change soon *
       // same logic as in dependencies applies, most variables are available during this phase (like $PREFIX or $HOST)
       "*:CFLAGS=$CFLAGS -fPIC",
       "*:config_opts=--prefix=$PREFIX --static",
-      "*:LIBTOOL=$PREFIX/native/bin/libtool",
+      "*:LIBTOOL=$NATIVEPREFIX/bin/libtool",
       "*:CROSS_PREFIX=$HOST-"
     ],
     "steps": [

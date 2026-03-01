@@ -54,7 +54,7 @@
             "*:*-apple-*:SKIP_CCTOOLS_BUILD=yes",
             "*:*-apple-*:JOBS=$NUM_CORES",
             "*:*-apple-*:PORTABLE=1",
-            "*:*-apple-*:TARGET_DIR=$PREFIX/native/",
+            "*:*-apple-*:TARGET_DIR=$NATIVEPREFIX/",
             "*:*-apple-*:UNATTENDED=1",
             "*:*-apple-*:SDK_VERSION=26.1",
             "*:*-apple-*:COMPRESSLEVEL=6"
@@ -62,11 +62,11 @@
         "steps": [
             "*:*-apple-*:sed -i.bak 's/--with-libtapi=$TARGET_DIR/--with-libtapi=$PREFIX\\/native/g' build.sh",
             "*:*-apple-*:sed -i.bak 's/--with-libxar=$TARGET_DIR/--with-libxar=$PREFIX\\/native/g' build.sh",
-            "*:*-apple-*:mv $PREFIX/native/share/xcode-sdk/*${SDK_VERSION}* tarballs",
-            "*:*-apple-*:yes | INSTALLPREFIX=$PREFIX/native ./build_apple_clang.sh",
+            "*:*-apple-*:mv $NATIVEPREFIX/share/xcode-sdk/*${SDK_VERSION}* tarballs",
+            "*:*-apple-*:yes | INSTALLPREFIX=$NATIVEPREFIX ./build_apple_clang.sh",
             "*:*-apple-*:cd build/clang-21/build_stage3 && make install DESTDIR=$STAGING_DIR && make install",
             "*:*-apple-*:sed -i.bak 's/## Compiler test ##/exit 0/g' build.sh",
-            "*:*-apple-*:OCDEBUG=1 TARGET_DIR=$STAGING_DIR$PREFIX/native bash -x ./build.sh"
+            "*:*-apple-*:OCDEBUG=1 TARGET_DIR=$STAGING_DIR$NATIVEPREFIX bash -x ./build.sh"
         ]
     }
 }

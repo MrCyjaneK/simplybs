@@ -16,7 +16,7 @@
     ],
     "build": {
         "env": [
-            "*:*-android*:ANDROID_NDK_ROOT=$PREFIX/native",
+            "*:*-android*:ANDROID_NDK_ROOT=$NATIVEPREFIX",
             "*:*-android*:CC=clang",
             "*:*-android*:AR=ar",
             "*:*-android*:RANLIB=ranlib",

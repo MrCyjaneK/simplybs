@@ -14,7 +14,7 @@
     ],
     "build": {
         "env": [
-            "*:*:config_opts=--prefix=$PREFIX/native"
+            "*:*:config_opts=--prefix=$NATIVEPREFIX"
         ],
         "steps": [
             "*:*:./configure $config_opts",

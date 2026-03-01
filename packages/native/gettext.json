@@ -17,9 +17,9 @@
     ],
     "build": {
         "env": [
-            "*:*:config_opts=--prefix=$PREFIX/native",
-            "*:*:config_opts=$config_opts --with-libiconv-prefix=$PREFIX/native",
-            "*:*:config_opts=$config_opts --with-libunistring-prefix=$PREFIX/native",
+            "*:*:config_opts=--prefix=$NATIVEPREFIX",
+            "*:*:config_opts=$config_opts --with-libiconv-prefix=$NATIVEPREFIX",
+            "*:*:config_opts=$config_opts --with-libunistring-prefix=$NATIVEPREFIX",
             "*:*:config_opts=$config_opts --disable-shared",
             "*:*:config_opts=$config_opts --enable-static",
             "*:*:LIBS=-lunistring"
