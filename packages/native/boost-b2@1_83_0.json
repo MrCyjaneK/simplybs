@@ -1,12 +1,12 @@
 {
-    "package": "native/boost-b2",
-    "version": "1_90_0",
+    "package": "native/boost-b2@1_83_0",
+    "version": "1_83_0",
     "type": "native",
     "download": [
         {
             "kind": "tar.bz2",
-            "sha256": "49551aff3b22cbc5c5a9ed3dbc92f0e23ea50a0f7325b0d198b705e8ee3fc305",
-            "url": "http://downloads.sourceforge.net/project/boost/boost/1.90.0/boost_1_90_0.tar.bz2"
+            "sha256": "6478edfe2f3305127cffe8caf73ea0176c53769f4bf1585be237eb30798c3b8e",
+            "url": "http://downloads.sourceforge.net/project/boost/boost/1.83.0/boost_1_83_0.tar.bz2"
         }
     ],
     "build": {

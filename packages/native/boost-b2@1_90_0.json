@@ -1,0 +1,23 @@
+{
+    "package": "native/boost-b2@1_90_0",
+    "version": "1_90_0",
+    "type": "native",
+    "download": [
+        {
+            "kind": "tar.bz2",
+            "sha256": "49551aff3b22cbc5c5a9ed3dbc92f0e23ea50a0f7325b0d198b705e8ee3fc305",
+            "url": "http://downloads.sourceforge.net/project/boost/boost/1.90.0/boost_1_90_0.tar.bz2"
+        }
+    ],
+    "build": {
+        "env": [
+            "*:*:config_libraries=system,filesystem,thread,timer,date_time,chrono,regex,serialization,atomic,program_options,log",
+            "*:*-w64-*:config_libraries=system,filesystem,thread,timer,date_time,chrono,regex,serialization,atomic,program_options,locale,log"
+        ],
+        "steps": [
+            "*:*:./bootstrap.sh --without-icu --with-libraries=$config_libraries",
+            "*:*:mkdir -p $STAGING_DIR$NATIVEPREFIX/bin",
+            "*:*:cp b2 $STAGING_DIR$NATIVEPREFIX/bin/"
+        ]
+    }
+}

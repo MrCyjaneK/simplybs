@@ -1,5 +1,5 @@
 {
-    "package": "boost",
+    "package": "boost@1_90_0",
     "version": "1_90_0",
     "type": "host",
     "download": [
@@ -11,7 +11,7 @@
     ],
     "dependencies": [
         "*:*:native/_",
-        "*:*:native/boost-b2",
+        "*:*:native/boost-b2@1_90_0",
         "*:*:native/cmake",
         "*:*:native/python@3.14",
         "*:*:libiconv",
