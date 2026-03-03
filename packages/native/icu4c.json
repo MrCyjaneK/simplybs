@@ -1,0 +1,33 @@
+{
+    "package": "native/icu4c",
+    "version": "55.2",
+    "type": "native",
+    "download": [
+        {
+            "kind": "tar.gz",
+            "sha256": "eda2aa9f9c787748a2e2d310590720ca8bcc6252adf6b4cfb03b65bef9d66759",
+            "url": "http://github.com/unicode-org/icu/releases/download/release-55-2/icu4c-55_2-src.tgz"
+        }
+    ],
+    "dependencies": [
+        "*:*-w64-mingw32:native/make"
+    ],
+    "patches": [
+        "icu-001-dont-build-static-dynamic-twice.patch"
+    ],
+    "build": {
+        "env": [
+            "linux_*:*:ICU_PLATFORM=Linux/gcc",
+            "darwin_*:*:ICU_PLATFORM=Darwin"
+        ],
+        "steps": [
+            "*:*-w64-mingw32:patch -p1 < $PATCH_DIR/icu4c/icu-001-dont-build-static-dynamic-twice.patch",
+            "*:*-w64-mingw32:mkdir -p $NATIVEPREFIX/share/",
+            "*:*-w64-mingw32:cp -av . $NATIVEPREFIX/share/icu4c_55.2",
+            "*:*-w64-mingw32:WD=$PWD && unset HOST TARGET && cd $NATIVEPREFIX/share/icu4c_55.2 && sh $WD/source/runConfigureICU $ICU_PLATFORM --prefix=$NATIVEPREFIX/share/icu4c_55.2",
+            "*:*-w64-mingw32:unset HOST TARGET && cd $NATIVEPREFIX/share/icu4c_55.2 && make -j$NUM_CORES",
+            "*:*-w64-mingw32:mkdir -p $STAGING_DIR$NATIVEPREFIX/share",
+            "*:*-w64-mingw32:cp -av $NATIVEPREFIX/share/icu4c_55.2 $STAGING_DIR$NATIVEPREFIX/share/"
+        ]
+    }
+}

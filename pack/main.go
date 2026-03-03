@@ -1,6 +1,7 @@
 package pack
 
 import (
+	"maps"
 	"encoding/json"
 	"fmt"
 	"os"
@@ -210,6 +211,15 @@ func Cleanup() {
 			}
 		}
 
+		var keepFilesCopy = make(map[string]bool)
+		maps.Copy(keepFilesCopy, keepFiles)
+		for k, _ := range keepFilesCopy {
+			if k[len(k)-len(".tar.gz"):] == ".tar.gz" {
+				keepFiles[k[:len(k)-len(".tar.gz")]+"_native.tar.gz"] = true
+			} 
+		}
+		
+		
 		for _, download := range pkg.Download {
 			sourcePath := pkg.GenerateSourceBuildPath(download)
 			relPath, err := filepath.Rel(buildlibDir, sourcePath)
