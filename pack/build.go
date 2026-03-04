@@ -49,6 +49,7 @@ func (p *Package) ExtractEnv(host *host.Host, envPath string, envNativePath stri
 	for k, v := range env {
 		newEnv = append(newEnv, k+"="+v)
 	}
+	os.MkdirAll(envPath, 0750)
 	writeDotEnv(envPath+"/_source_me", newEnv)
 }
 
