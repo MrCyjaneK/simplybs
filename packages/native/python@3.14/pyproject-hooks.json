@@ -1,0 +1,22 @@
+{
+    "package": "native/python@3.14/pyproject-hooks",
+    "version": "1.2.0",
+    "type": "native",
+    "download": [
+        {
+            "kind": "git",
+            "sha256": "4b7c6d113fb89b755d762a88712c8a6873cddd47",
+            "url": "https://github.com/pypa/pyproject-hooks"
+        }
+    ],
+    "dependencies": [
+        "*:*:native/python@3.14",
+        "*:*:native/python@3.14/flit-core"
+    ],
+    "build": {
+        "env": [],
+        "steps": [
+            "*:*:pip3 install --root $STAGING_DIR --prefix $NATIVEPREFIX --no-deps --no-build-isolation --no-index --disable-pip-version-check ."
+        ]
+    }
+}

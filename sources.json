@@ -888,6 +888,11 @@
                 "d5b8e853989a73f8fff9dc4e00dccd0b691b84f9"
             ]
         },
+        "https://github.com/hukkin/tomli": {
+            "refs": [
+                "a678e6fdeffa89bd28e4ecc148b926a4e1bbbc7b"
+            ]
+        },
         "https://github.com/ip7z/7zip.git": {
             "refs": [
                 "5e96a8279489832924056b1fa82f29d5837c9469"
@@ -921,6 +926,31 @@
         "https://github.com/nodejs/node.git": {
             "refs": [
                 "1da054d99bb16d35c54d759f36ccc125b90070bd"
+            ]
+        },
+        "https://github.com/pypa/build.git": {
+            "refs": [
+                "54f238d1664124e06a68c6c22fd5b1418fa5feb2"
+            ]
+        },
+        "https://github.com/pypa/flit.git": {
+            "refs": [
+                "92c9486a543c4db266e3908bffc984060b8466af"
+            ]
+        },
+        "https://github.com/pypa/installer.git": {
+            "refs": [
+                "b1d39180f8548820d09ce992dfadff0a42242c48"
+            ]
+        },
+        "https://github.com/pypa/packaging": {
+            "refs": [
+                "3b77a26f5a27473ad3b08194d773f325d018a2d0"
+            ]
+        },
+        "https://github.com/pypa/pyproject-hooks": {
+            "refs": [
+                "4b7c6d113fb89b755d762a88712c8a6873cddd47"
             ]
         },
         "https://github.com/tpoechtrager/apple-libtapi.git": {

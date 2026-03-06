@@ -12,7 +12,8 @@
     "dependencies": [
         "*:*:native/git",
         "*:*:native/ninja",
-        "*:*:native/python@3.11"
+        "*:*:native/python@3.11",
+        "*:*:native/pkgconf"
     ],
     "build": {
         "env": [],

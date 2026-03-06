@@ -1,0 +1,31 @@
+{
+    "package": "native/glib2",
+    "version": "2.86",
+    "type": "native",
+    "download": [
+        {
+            "kind": "tar.xz",
+            "sha256": "d4e2b5d791d5015ffd8c6971ad8e975a0a55c1a14926cdb25cf843ff00682260",
+            "url": "https://download.gnome.org/sources/glib/2.86/glib-2.86.4.tar.xz"
+        }
+    ],
+    "dependencies": [
+        "*:*:native/bison",
+        "*:*:native/gettext",
+        "*:*:native/meson",
+        "*:*:native/libiconv",
+        "*:*:native/pkgconf",
+        "*:*:native/ninja",
+        "*:*:native/python@3.14",
+        "*:*:native/flex",
+        "*:*:native/pcre2"
+    ],
+    "build": {
+        "env": [],
+        "steps": [
+            "*:*:meson setup _build --prefix=$NATIVEPREFIX",
+            "*:*:meson compile -C _build",
+            "*:*:DESTDIR=$STAGING_DIR meson install -C _build"
+        ]
+    }
+}
