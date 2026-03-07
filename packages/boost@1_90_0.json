@@ -33,7 +33,7 @@
             "*:aarch64-apple-darwin:config_opts=$config_opts address-model=64 threadapi=pthread architecture=arm --toolset=darwin runtime-link=shared",
             "*:x86_64-linux-android:config_opts=$config_opts address-model=64 threadapi=pthread runtime-link=static target-os=$target_os binary-format=elf abi=aapcs",
             "*:aarch64-linux-android:config_opts=$config_opts address-model=64 threadapi=pthread runtime-link=static target-os=$target_os binary-format=elf abi=aapcs",
-            "*:armv7-linux-androideabi:config_opts=$config_opts address-model=32 architecture=arm threadapi=pthread runtime-link=static target-os=$target_os binary-format=elf abi=aapcs",
+            "*:armv7a-linux-androideabi:config_opts=$config_opts address-model=32 architecture=arm threadapi=pthread runtime-link=static target-os=$target_os binary-format=elf abi=aapcs",
             "*:x86_64-apple-darwin:config_opts=$config_opts address-model=64 architecture=x86",
             "*:aarch64-apple-ios:config_opts=$config_opts address-model=64 architecture=arm --toolset=darwin-iphone link=static runtime-link=static --without-process",
             "*:aarch64-apple-ios-simulator:config_opts=$config_opts address-model=64 architecture=arm --toolset=darwin-iphone link=static runtime-link=static --without-process",
