@@ -28,7 +28,7 @@
             "*:*:echo '[user]' >> $STAGING_DIR$HOME/.gitconfig",
             "*:*:echo '\tname = simplybs' >> $STAGING_DIR$HOME/.gitconfig",
             "*:*:echo '\temail = simplybs@mrcyjanek.net' >> $STAGING_DIR$HOME/.gitconfig",
-            "*:*:python3 $PATCH_DIR/android_ndk/symlink_same.py $STAGING_DIR$PREFIX"
+            "*:*:python3 $PATCH_DIR/android_ndk/symlink_same.py $STAGING_DIR$NATIVEPREFIX"
         ]
     }
 }
