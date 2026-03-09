@@ -1,0 +1,63 @@
+name: Build Android with from-source NDK
+
+on:
+  push:
+    branches: [cyjan-wip-experiments]
+  pull_request:
+    branches: [cyjan-wip-experiments]
+  workflow_dispatch:
+
+jobs:
+  build-android:
+    name: Build ${{ matrix.target }}
+    runs-on: ubuntu-22.04
+    timeout-minutes: 120
+    strategy:
+      fail-fast: false
+      matrix:
+        target: [aarch64-linux-android, armv7a-linux-androideabi, x86_64-linux-android]
+
+    steps:
+      - name: Checkout simplybs
+        uses: actions/checkout@v4
+
+      - name: Install dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y build-essential python3 cmake make \
+            autoconf automake libtool pkg-config gperf
+
+      - name: Setup Go
+        uses: actions/setup-go@v5
+        with:
+          go-version: '1.24'
+
+      - name: Build simplybs
+        run: go build -o simplybs .
+
+      - name: Cache simplybs build artifacts
+        uses: actions/cache@v4
+        with:
+          path: .buildlib
+          key: simplybs-${{ matrix.target }}-${{ hashFiles('packages/**') }}
+          restore-keys: |
+            simplybs-${{ matrix.target }}-
+
+      - name: Build openssl for ${{ matrix.target }}
+        run: ./simplybs -host ${{ matrix.target }} -package openssl -build
+
+      - name: Build remaining Android dependencies
+        run: |
+          for pkg in sodium zeromq unbound boost@1_83_0; do
+            echo "--- Building $pkg ---"
+            ./simplybs -host ${{ matrix.target }} -package $pkg -build
+          done
+
+      - name: Summary
+        run: |
+          echo "=== Build complete for ${{ matrix.target }} ==="
+          echo "Built packages:"
+          find .buildlib -name "*.tar.gz" -path "*/built/*" | sort
+          echo ""
+          echo "Environment libs:"
+          ls .buildlib/env/lib/ 2>/dev/null | head -20 || echo "No env/lib"
