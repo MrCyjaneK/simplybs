@@ -3,6 +3,7 @@ name: Build Android with from-source NDK
 on:
   push:
     branches: [cyjan-wip-experiments]
+    tags: ['v*']
   pull_request:
     branches: [cyjan-wip-experiments]
   workflow_dispatch:
@@ -53,6 +54,16 @@ jobs:
             ./simplybs -host ${{ matrix.target }} -package $pkg -build
           done
 
+      - name: Package built libraries
+        run: |
+          tar czf simplybs-${{ matrix.target }}.tar.gz -C .buildlib/env .
+
+      - name: Upload build artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: simplybs-${{ matrix.target }}
+          path: simplybs-${{ matrix.target }}.tar.gz
+
       - name: Summary
         run: |
           echo "=== Build complete for ${{ matrix.target }} ==="
@@ -61,3 +72,35 @@ jobs:
           echo ""
           echo "Environment libs:"
           ls .buildlib/env/lib/ 2>/dev/null | head -20 || echo "No env/lib"
+
+  release:
+    name: Create Release
+    needs: build-android
+    runs-on: ubuntu-22.04
+    if: startsWith(github.ref, 'refs/tags/v')
+    permissions:
+      contents: write
+
+    steps:
+      - name: Download all artifacts
+        uses: actions/download-artifact@v4
+        with:
+          path: artifacts
+
+      - name: Create Release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ github.ref_name }}
+          name: Android Dependencies ${{ github.ref_name }}
+          body: |
+            Prebuilt Android dependencies built by simplybs.
+
+            **Targets:**
+            - `aarch64-linux-android`
+            - `armv7a-linux-androideabi`
+            - `x86_64-linux-android`
+
+            **Packages:** openssl, sodium, zeromq, unbound, boost
+
+            Built from commit ${{ github.sha }}
+          files: artifacts/**/*.tar.gz
