@@ -1,58 +1,38 @@
 {
     "package": "native/android_ndk",
-    "version": "r28c",
+    "version": "monero-ndk-1.0.1",
     "type": "native",
     "download": [
         {
-            "kind": "blob",
-            "path": "android-ndk-r28c-darwin.zip",
-            "sha256": "0d4599e8bbf1a1668a0d51a541729b2246360f350018a2081d0b302dbb594f2a",
-            "url": "https://dl.google.com/android/repository/android-ndk-r28c-darwin.zip"
-        },
-        {
-            "kind": "blob",
-            "path": "android-ndk-r28c-linux.zip",
-            "sha256": "dfb20d396df28ca02a8c708314b814a4d961dc9074f9a161932746f815aa552f",
-            "url": "https://dl.google.com/android/repository/android-ndk-r28c-linux.zip"
+            "kind": "git",
+            "sha256": "f0894a6c06fc53542ab5505088f0a2feb5f14f4d",
+            "url": "https://github.com/justxd22/monero-ndk"
         }
     ],
     "dependencies": [
-        "*:*-android*:native/7zip",
         "*:*-android*:native/_/_",
+        "*:*-android*:native/make",
+        "*:*-android*:native/cmake",
+        "*:*-android*:native/ninja",
         "*:*-android*:native/python@3.11"
     ],
     "build": {
         "env": [
-            "*:aarch64-linux-android:config_opts=--arch arm",
-            "*:x86_64-linux-android:config_opts=--arch x86_64",
-            "*:armv7a-linux-androideabi:config_opts=--arch arm64",
-            "*:i686-linux-android:config_opts=--arch x86",
-            "*:aarch64-linux-android:BUILDLIB_HOST=aarch64-linux-android",
-            "*:x86_64-linux-android:BUILDLIB_HOST=x86_64-linux-android",
-            "*:armv7a-linux-androideabi:BUILDLIB_HOST=armv7a-linux-androideabi",
-            "*:i686-linux-android:BUILDLIB_HOST=i686-linux-android",
+            "*:aarch64-linux-android:SYSROOT_TRIPLE=aarch64-linux-android",
+            "*:x86_64-linux-android:SYSROOT_TRIPLE=x86_64-linux-android",
+            "*:armv7a-linux-androideabi:SYSROOT_TRIPLE=arm-linux-androideabi",
             "*:*-android*:API_LEVEL=21"
         ],
         "steps": [
-            "darwin_*:*-android*:7zz x $PWD/android-ndk-r28c-darwin.zip -snld || true",
-            "linux_*:*-android*:7zz x $PWD/android-ndk-r28c-linux.zip -snld || true",
-            "*:*-android*:android-ndk-r28c/build/tools/make_standalone_toolchain.py --api $API_LEVEL --install-dir $PWD/toolchain --stl=libc++ $config_opts",
+            "*:*-android*:make fetch",
+            "*:*-android*:make all",
             "*:*-android*:mkdir -p $STAGING_DIR$NATIVEPREFIX",
-            "*:*-android*:mv $PWD/toolchain/* $STAGING_DIR$NATIVEPREFIX",
-            "*:*-android*:cp $STAGING_DIR$NATIVEPREFIX/bin/llvm-ar $STAGING_DIR$NATIVEPREFIX/bin/$BUILDLIB_HOST-ar",
-            "*:*-android*:cp $STAGING_DIR$NATIVEPREFIX/bin/$BUILDLIB_HOST$API_LEVEL-clang $STAGING_DIR$NATIVEPREFIX/bin/$BUILDLIB_HOST-clang",
-            "*:*-android*:cp $STAGING_DIR$NATIVEPREFIX/bin/$BUILDLIB_HOST$API_LEVEL-clang++ $STAGING_DIR$NATIVEPREFIX/bin/$BUILDLIB_HOST-clang++",
-            "*:*-android*:cp $STAGING_DIR$NATIVEPREFIX/bin/llvm-ranlib $STAGING_DIR$NATIVEPREFIX/bin/$BUILDLIB_HOST-ranlib",
-            "*:*-android*:cp $STAGING_DIR$NATIVEPREFIX/bin/llvm-ar $STAGING_DIR$NATIVEPREFIX/bin/$BUILDLIB_HOST-ar",
+            "*:*-android*:cp -a output/bin output/sysroot output/lib output/AndroidVersion.txt $STAGING_DIR$NATIVEPREFIX/",
+            "*:*-android*:cd $STAGING_DIR$NATIVEPREFIX/bin && rm -f arm-linux-androideabi-ar && ln -s llvm-ar arm-linux-androideabi-ar",
+            "*:*-android*:cd $STAGING_DIR$NATIVEPREFIX/bin && rm -f arm-linux-androideabi-ranlib && ln -s llvm-ranlib arm-linux-androideabi-ranlib",
             "*:*-android*:mkdir -p $STAGING_DIR$PREFIX/lib",
-            "*:aarch64-linux-android:cp $STAGING_DIR$NATIVEPREFIX/sysroot/usr/lib/aarch64-linux-android/*.a $STAGING_DIR$PREFIX/lib",
-            "*:x86_64-linux-android:cp $STAGING_DIR$NATIVEPREFIX/sysroot/usr/lib/x86_64-linux-android/*.a $STAGING_DIR$PREFIX/lib",
-            "*:armv7a-linux-androideabi:cp $STAGING_DIR$NATIVEPREFIX/sysroot/usr/lib/arm-linux-androideabi/*.a $STAGING_DIR$PREFIX/lib",
-            "*:aarch64-linux-android:cp $STAGING_DIR$NATIVEPREFIX/sysroot/usr/lib/aarch64-linux-android/$API_LEVEL/*.so $STAGING_DIR$PREFIX/lib",
-            "*:x86_64-linux-android:cp $STAGING_DIR$NATIVEPREFIX/sysroot/usr/lib/x86_64-linux-android/$API_LEVEL/*.so $STAGING_DIR$PREFIX/lib",
-            "*:armv7a-linux-androideabi:cp $STAGING_DIR$NATIVEPREFIX/sysroot/usr/lib/arm-linux-androideabi/$API_LEVEL/*.so $STAGING_DIR$PREFIX/lib",
-            "*:*-android:rm -rf $STAGING_DIR$NATIVEPREFIX/python3",
-            "*:*-android*:cd $STAGING_DIR$NATIVEPREFIX/bin && rm clang190++ && ln -s clang190 clang190++",
+            "*:*-android*:cp $STAGING_DIR$NATIVEPREFIX/sysroot/usr/lib/$SYSROOT_TRIPLE/*.a $STAGING_DIR$PREFIX/lib",
+            "*:*-android*:cp $STAGING_DIR$NATIVEPREFIX/sysroot/usr/lib/$SYSROOT_TRIPLE/$API_LEVEL/*.so $STAGING_DIR$PREFIX/lib",
             "*:*-android*:python3 $PATCH_DIR/android_ndk/symlink_same.py $STAGING_DIR$PREFIX"
         ]
     }
