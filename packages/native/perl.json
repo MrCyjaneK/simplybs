@@ -1,12 +1,12 @@
 {
     "package": "native/perl",
-    "version": "5.42.0",
+    "version": "5.42.1",
     "type": "native",
     "download": [
         {
             "kind": "tar.gz",
-            "sha256": "e093ef184d7f9a1b9797e2465296f55510adb6dab8842b0c3ed53329663096dc",
-            "url": "http://www.cpan.org/src/5.0/perl-5.42.0.tar.gz"
+            "sha256": "6f84e6dc8cce97181d1c6aeeb552c13775c91ded3c6c73743c9211af87b16bf8",
+            "url": "http://www.cpan.org/src/5.0/perl-5.42.1.tar.gz"
         }
     ],
     "dependencies": [
@@ -15,6 +15,7 @@
     "build": {
         "env": [],
         "steps": [
+            "*:*:mkdir -p $STAGING_DIR$NATIVEPREFIX/lib $NATIVEPREFIX/lib",
             "*:*:sed -i.bak '/^#ifndef PERL_BUILD_DATE$/,/^#endif$/{/^#ifndef PERL_BUILD_DATE$/!d; s/.*/\\#define PERL_BUILD_DATE \"Jan  1 1970 00:00:01\"/;}' perl.c",
             "*:*:./Configure -des -Dprefix=$NATIVEPREFIX -Duseithreads -Dall_static",
             "*:*:make -j$NUM_CORES",
