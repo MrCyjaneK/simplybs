@@ -1,0 +1,41 @@
+{
+    "package": "sqlite3",
+    "version": "3510100",
+    "type": "host",
+    "download": [
+        {
+            "kind": "tar.gz",
+            "sha256": "4f2445cd70479724d32ad015ec7fd37fbb6f6130013bd4bfbc80c32beb42b7e0",
+            "url": "https://www.sqlite.org/2025/sqlite-autoconf-3510100.tar.gz"
+        }
+    ],
+    "dependencies": [
+        "*:*:native/_",
+        "*:*:native/make"
+    ],
+    "build": {
+        "env": [
+            "*:*:CFLAGS=$CFLAGS -fPIC -O2 -DSQLITE_ENABLE_COLUMN_METADATA -DSQLITE_ENABLE_FTS5 -DSQLITE_ENABLE_JSON1 -DSQLITE_ENABLE_RTREE -DSQLITE_THREADSAFE=1",
+            "*:*:CPPFLAGS=$CPPFLAGS -I$PREFIX/include",
+            "*:*:LDFLAGS=$LDFLAGS -L$PREFIX/lib",
+            "*:*:config_opts=--disable-shared --enable-static --enable-threadsafe --prefix=$PREFIX",
+            "*:*-apple-darwin:config_opts=$config_opts --host=$HOST",
+            "*:*-android*:config_opts=$config_opts --host=$HOST",
+            "*:*-linux-gnu*:config_opts=$config_opts --host=$HOST",
+            "*:*-mingw*:config_opts=$config_opts --host=$HOST",
+            "*:*-apple-ios*:config_opts=$config_opts --host=$HOST --build=x86_64-apple-darwin --disable-load-extension",
+            "*:*:CC=$CC",
+            "*:*:CXX=$CXX",
+            "*:*:AR=$AR",
+            "*:*:RANLIB=$RANLIB"
+        ],
+        "steps": [
+            "*:*:./configure $config_opts",
+            "*:*-android*:make CC=\"$HOST$ANDROID_API-clang\" CXX=\"$HOST$ANDROID_API-clang++\" AR=\"$HOST-ar\" RANLIB=\"$HOST-ranlib\" -j$NUM_CORES",
+            "*:*-mingw*:make CC=\"$HOST-gcc\" AR=\"$HOST-ar\" RANLIB=\"$HOST-ranlib\" -j$NUM_CORES",
+            "*:*-apple-ios*:make CC=\"xcrun --sdk iphoneos clang\" CXX=\"xcrun --sdk iphoneos clang++\" AR=\"xcrun --sdk iphoneos ar\" RANLIB=\"xcrun --sdk iphoneos ranlib\" -j$NUM_CORES",
+            "*:*-linux-gnu*:make -j$NUM_CORES",
+            "*:*:make DESTDIR=$STAGING_DIR install"
+        ]
+    }
+}
