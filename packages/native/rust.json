@@ -1,39 +1,35 @@
 {
-    "package": "native/rust@1_68_2",
-    "version": "1.68.2",
+    "package": "native/rust",
+    "version": "1.94.0",
     "type": "native",
     "download": [
         {
             "kind": "tar.gz",
-            "sha256": "93339c23f7cd4d0c45db58e18b4c6e16d6070f4277aad9d2492d23294bf32e96",
-            "url": "http://static.rust-lang.org/dist/rustc-1.68.2-src.tar.gz"
+            "sha256": "b83f921cd3f321ff614f9c06a8b870d89299fc02888b48a5549683a36823474c",
+            "url": "http://static.rust-lang.org/dist/rustc-1.94.0-src.tar.gz"
         }
     ],
     "dependencies": [
         "*:*:native/cmake",
         "*:*:native/make",
+        "*:*:native/ninja",
         "*:*:native/openssl",
-        "*:*:native/patch",
         "*:*:native/pkgconf",
         "*:*:native/python@3.11",
-        "*:*:native/rust@1_67_1"
+        "*:*:native/rust@1_93_0"
     ],
     "build": {
         "env": [],
         "steps": [
-            "*:*:patch -p1 < $PATCH_DIR/rust/1_60_0/assembly.h.patch",
-            "*:*:patch -p1 < $PATCH_DIR/rust/Signals.h.patch",
             "*:*:echo '[build]' > config.toml",
             "*:*:echo 'full-bootstrap = true' >> config.toml",
             "*:*:echo 'vendor = true' >> config.toml",
             "*:*:echo 'extended = true' >> config.toml",
-            "*:*:echo 'tools = [\"cargo\"]' >> config.toml",
             "*:*:echo rustc = \\\"$NATIVEPREFIX/bin/rustc\\\" >> config.toml",
-            "*:*:echo cargo = \\\"$NATIVEPREFIX/bin/cargo\\\" >> config.toml",
             "*:*:echo '[llvm]' >> config.toml",
-            "*:*:echo 'ninja = false' >> config.toml",
+            "*:*:echo 'ninja = true' >> config.toml",
             "*:*:echo 'download-ci-llvm = false' >> config.toml",
-            "*:*:python3 ./x.py build --stage 3 --verbose -j $NUM_CORES",
+            "*:*:env -u ARFLAGS python3 ./x.py build --stage 3 --verbose -j $NUM_CORES",
             "*:*:mkdir -p $STAGING_DIR$NATIVEPREFIX/bin",
             "*:*:cp -a build/*/stage3/lib $STAGING_DIR$NATIVEPREFIX/",
             "*:*:cp -a build/*/stage3/bin/rustc $STAGING_DIR$NATIVEPREFIX/bin",

@@ -11,14 +11,14 @@
     ],
     "dependencies": [
         "*:*:native/bison",
-        "*:*:native/gettext",
-        "*:*:native/meson",
-        "*:*:native/libiconv",
-        "*:*:native/pkgconf",
-        "*:*:native/ninja",
-        "*:*:native/python@3.14",
         "*:*:native/flex",
-        "*:*:native/pcre2"
+        "*:*:native/gettext",
+        "*:*:native/libiconv",
+        "*:*:native/meson",
+        "*:*:native/ninja",
+        "*:*:native/pcre2",
+        "*:*:native/pkgconf",
+        "*:*:native/python@3.14"
     ],
     "build": {
         "env": [],

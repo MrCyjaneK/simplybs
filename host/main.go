@@ -65,6 +65,7 @@ var SupportedHosts = map[string]*Host{
 		Env: []string{
 			"*:*:HOST=aarch64-apple-darwin",
 			"*:*:TARGET=aarch64-apple-darwin",
+			"*:*:RUST_TRIPLET=aarch64-apple-darwin",
 			"*:*:ARCH=aarch64",
 			"*:*:CMAKE_SYSTEM_NAME=Darwin",
 			"*:*:SDK_VERSION=26.1",
@@ -90,6 +91,7 @@ var SupportedHosts = map[string]*Host{
 		Env: []string{
 			"*:*:HOST=x86_64-apple-darwin",
 			"*:*:TARGET=x86_64-apple-darwin",
+			"*:*:RUST_TRIPLET=x86_64-apple-darwin",
 			"*:*:ARCH=x86_64",
 			"*:*:CMAKE_SYSTEM_NAME=Darwin",
 			"*:*:SDK_VERSION=26.1",
@@ -115,6 +117,7 @@ var SupportedHosts = map[string]*Host{
 		Env: []string{
 			"*:*:HOST=aarch64-apple-ios",
 			"*:*:TARGET=aarch64-apple-ios",
+			"*:*:RUST_TRIPLET=aarch64-apple-ios",
 			"*:*:ARCH=aarch64",
 			"*:*:CMAKE_SYSTEM_NAME=iOS",
 			"*:*:IOS_MIN_VERSION=12",
@@ -141,6 +144,7 @@ var SupportedHosts = map[string]*Host{
 		Env: []string{
 			"*:*:HOST=aarch64-apple-ios-simulator",
 			"*:*:TARGET=aarch64-apple-ios-simulator",
+			"*:*:RUST_TRIPLET=aarch64-apple-ios-sim",
 			"*:*:ARCH=aarch64",
 			"*:*:CMAKE_SYSTEM_NAME=iOS",
 			"*:*:IOS_MIN_VERSION=12",
@@ -187,6 +191,7 @@ var SupportedHosts = map[string]*Host{
 		Env: []string{
 			"*:*:HOST=x86_64-w64-mingw32",
 			"*:*:TARGET=x86_64-w64-mingw32",
+			"*:*:RUST_TRIPLET=x86_64-pc-windows-gnu",
 			"*:*:ARCH=x86_64",
 			"*:*:CMAKE_SYSTEM_NAME=Windows",
 			"*:*:CC_target=x86_64-w64-mingw32",
@@ -215,6 +220,7 @@ var SupportedHosts = map[string]*Host{
 		Env: []string{
 			"*:*:HOST=x86_64-linux-gnu",
 			"*:*:TARGET=x86_64-linux-gnu",
+			"*:*:RUST_TRIPLET=x86_64-unknown-linux-gnu",
 			"*:*:ARCH=x86_64",
 			"*:*:CMAKE_SYSTEM_NAME=Linux",
 			"*:*:CC_target=x86_64-linux-gnu",
@@ -241,6 +247,7 @@ var SupportedHosts = map[string]*Host{
 		Env: []string{
 			"*:*:HOST=aarch64-linux-gnu",
 			"*:*:TARGET=aarch64-linux-gnu",
+			"*:*:RUST_TRIPLET=aarch64-unknown-linux-gnu",
 			"*:*:ARCH=aarch64",
 			"*:*:CMAKE_SYSTEM_NAME=Linux",
 			"*:*:CC_target=aarch64-linux-gnu",
@@ -267,6 +274,7 @@ var SupportedHosts = map[string]*Host{
 		Env: []string{
 			"*:*:HOST=aarch64-linux-android",
 			"*:*:TARGET=aarch64-linux-android",
+			"*:*:RUST_TRIPLET=aarch64-linux-android",
 			"*:*:ARCH=aarch64",
 			"*:*:CMAKE_SYSTEM_NAME=Android",
 			"*:*:CC_target=aarch64-linux-android",
@@ -282,7 +290,7 @@ var SupportedHosts = map[string]*Host{
 			"*:*:AS=llvm-as",
 			"*:*:LIBTOOL=libtool",
 			"*:*:ANDROID_NDK_HOME=$NATIVEPREFIX/",
-			"*:*:LDFLAGS=$LDFLAGS -lc -lc++_static -lc++abi -lm -llog",
+			"*:*:LDFLAGS=$LDFLAGS -lc -lc++abi -lm",
 		},
 	},
 	"x86_64-linux-android": {
@@ -290,6 +298,7 @@ var SupportedHosts = map[string]*Host{
 		Env: []string{
 			"*:*:HOST=x86_64-linux-android",
 			"*:*:TARGET=x86_64-linux-android",
+			"*:*:RUST_TRIPLET=x86_64-linux-android",
 			"*:*:ARCH=x86_64",
 			"*:*:CMAKE_SYSTEM_NAME=Android",
 			"*:*:CC_target=x86_64-linux-android",
@@ -305,13 +314,14 @@ var SupportedHosts = map[string]*Host{
 			"*:*:AS=llvm-as",
 			"*:*:LIBTOOL=libtool",
 			"*:*:ANDROID_NDK_HOME=$NATIVEPREFIX/",
-			"*:*:LDFLAGS=$LDFLAGS -lc -lc++_static -lc++abi -lm -llog"},
+			"*:*:LDFLAGS=$LDFLAGS -lc -lc++abi -lm"},
 	},
 	"armv7a-linux-androideabi": {
 		Triplet: "armv7a-linux-androideabi",
 		Env: []string{
 			"*:*:HOST=armv7a-linux-androideabi",
 			"*:*:TARGET=armv7a-linux-androideabi",
+			"*:*:RUST_TRIPLET=armv7-linux-androideabi",
 			"*:*:ARCH=armv7a",
 			"*:*:CMAKE_SYSTEM_NAME=Android",
 			"*:*:CC_target=armv7a-linux-androideabi",
@@ -327,7 +337,7 @@ var SupportedHosts = map[string]*Host{
 			"*:*:AS=llvm-as",
 			"*:*:LIBTOOL=libtool",
 			"*:*:ANDROID_NDK_HOME=$NATIVEPREFIX/",
-			"*:*:LDFLAGS=$LDFLAGS -lc -lc++_static -lc++abi -lm -llog"},
+			"*:*:LDFLAGS=$LDFLAGS -lc -lc++abi -lm"},
 	},
 }
 

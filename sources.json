@@ -5,6 +5,11 @@
                 "4fc570f91d9d8d843ab32d2198a5c064538d8ffd"
             ]
         },
+        "http://github.com/thepowersgang/mrustc.git": {
+            "refs": [
+                "9f5ff518a49038d7ae51dadd1658231b61f7dced"
+            ]
+        },
         "http://gitlab.torproject.org/tpo/core/tor.git": {
             "refs": [
                 "106dcfa18c1a9539cb97337e57954ff89685840e"
@@ -923,24 +928,19 @@
                 "751b09390996163348612f0b106114256305ee40"
             ]
         },
+        "https://github.com/meta-rust/rust-hello-world.git": {
+            "refs": [
+                "e0fa23f1a3cb1eb1407165bd2fc36d2f6e6ad728"
+            ]
+        },
         "https://github.com/nodejs/node.git": {
             "refs": [
                 "1da054d99bb16d35c54d759f36ccc125b90070bd"
             ]
         },
-        "https://github.com/pypa/build.git": {
-            "refs": [
-                "54f238d1664124e06a68c6c22fd5b1418fa5feb2"
-            ]
-        },
         "https://github.com/pypa/flit.git": {
             "refs": [
                 "92c9486a543c4db266e3908bffc984060b8466af"
-            ]
-        },
-        "https://github.com/pypa/installer.git": {
-            "refs": [
-                "b1d39180f8548820d09ce992dfadff0a42242c48"
             ]
         },
         "https://github.com/pypa/packaging": {

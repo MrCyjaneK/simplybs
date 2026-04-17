@@ -10,14 +10,14 @@
         }
     ],
     "dependencies": [
+        "*:*:native/glib2",
         "*:*:native/make",
-        "*:*:native/python@3.14",
-        "*:*:native/python@3.14/tomli",
         "*:*:native/ninja",
+        "*:*:native/pcre2",
         "*:*:native/perl",
         "*:*:native/pkgconf",
-        "*:*:native/pcre2",
-        "*:*:native/glib2",
+        "*:*:native/python@3.14",
+        "*:*:native/python@3.14/tomli",
         "*:*:native/sed"
     ],
     "build": {

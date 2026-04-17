@@ -1,0 +1,24 @@
+{
+    "package": "rust-hello-world",
+    "version": "0.0.0",
+    "type": "host",
+    "download": [
+        {
+            "kind": "git",
+            "sha256": "e0fa23f1a3cb1eb1407165bd2fc36d2f6e6ad728",
+            "url": "https://github.com/meta-rust/rust-hello-world.git"
+        }
+    ],
+    "dependencies": [
+        "*:*:native/_",
+        "*:*:native/rust",
+        "*:*:rust_std"
+    ],
+    "build": {
+        "steps": [
+            "*:*:cargo build --target $RUST_TRIPLET",
+            "*:*:$SHOULD_BUILD make -j$NUM_CORES $build_opts",
+            "*:*:$SHOULD_BUILD make -j$NUM_CORES install DESTDIR=$STAGING_DIR prefix=$PREFIX exec-prefix=$PREFIX"
+        ]
+    }
+}

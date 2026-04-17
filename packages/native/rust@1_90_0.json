@@ -12,24 +12,16 @@
     "dependencies": [
         "*:*:native/cmake",
         "*:*:native/make",
+        "*:*:native/ninja",
         "*:*:native/openssl",
         "*:*:native/pkgconf",
         "*:*:native/python@3.11",
-        "*:*:native/rust@1_89_0"
+        "*:*:native/rust@1_90_0-mrustc"
     ],
     "build": {
         "env": [],
         "steps": [
             "*:*:echo '[build]' > config.toml",
-            "*:aarch64-apple-darwin:echo 'target = [\"aarch64-apple-darwin\"]' >> config.toml",
-            "*:x86_64-apple-darwin:echo 'target = [\"x86_64-apple-darwin\"]' >> config.toml",
-            "*:aarch64-apple-ios:echo 'target = [\"aarch64-apple-ios\"]' >> config.toml",
-            "*:aarch64-apple-ios-simulator:echo 'target = [\"aarch64-apple-ios-sim\"]' >> config.toml",
-            "*:x86_64-linux-gnu:echo 'target = [\"x86_64-unknown-linux-gnu\"]' >> config.toml",
-            "*:aarch64-linux-gnu:echo 'target = [\"aarch64-unknown-linux-gnu\"]' >> config.toml",
-            "*:aarch64-linux-android:echo 'target = [\"aarch64-linux-android\"]' >> config.toml",
-            "*:x86_64-linux-android:echo 'target = [\"x86_64-linux-android\"]' >> config.toml",
-            "*:armv7a-linux-androideabi:echo 'target = [\"armv7-linux-androideabi\"]' >> config.toml",
             "*:*:echo 'full-bootstrap = true' >> config.toml",
             "*:*:echo 'vendor = true' >> config.toml",
             "*:*:echo 'extended = true' >> config.toml",
@@ -37,7 +29,7 @@
             "*:*:echo rustc = \\\"$NATIVEPREFIX/bin/rustc\\\" >> config.toml",
             "*:*:echo cargo = \\\"$NATIVEPREFIX/bin/cargo\\\" >> config.toml",
             "*:*:echo '[llvm]' >> config.toml",
-            "*:*:echo 'ninja = false' >> config.toml",
+            "*:*:echo 'ninja = true' >> config.toml",
             "*:*:echo 'download-ci-llvm = false' >> config.toml",
             "*:*:env -u ARFLAGS python3 ./x.py build --stage 3 --verbose -j $NUM_CORES",
             "*:*:mkdir -p $STAGING_DIR$NATIVEPREFIX/bin",

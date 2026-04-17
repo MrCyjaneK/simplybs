@@ -10,10 +10,10 @@
         }
     ],
     "dependencies": [
-        "*:*:native/make",
         "*:*:native/autoconf",
         "*:*:native/automake",
         "*:*:native/libtool",
+        "*:*:native/make",
         "*:*:native/perl",
         "*:*:native/pkgconf"
     ],
