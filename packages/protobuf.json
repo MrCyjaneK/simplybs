@@ -10,7 +10,14 @@
         }
     ],
     "dependencies": [
-        "*:*:native/_"
+        "*:*:native/_",
+        "*:*:native/protobuf",
+        "*:*:native/autoconf",
+        "*:*:native/automake",
+        "*:*:native/config",
+        "*:*:native/m4",
+        "*:*:native/make",
+        "*:*:native/perl"
     ],
     "patches": [
         "visibility.patch"
@@ -20,24 +27,20 @@
             "*:*:CXXFLAGS=$CXXFLAGS -std=c++11",
             "*:*:config_opts=--host=$HOST --prefix=$PREFIX",
             "*:*:config_opts=$config_opts --disable-shared --with-protoc=$NATIVEPREFIX/bin/protoc",
-            "*:*-linux-gnu:config_opts=$config_opts --with-pic",
-            "*:*:SHOULD_BUILD=echo",
-            "*:*-linux-gnu:SHOULD_BUILD=",
-            "*:*-w64-mingw32:SHOULD_BUILD=",
-            "*:*-apple-darwin:SHOULD_BUILD="
+            "*:*-linux-gnu:config_opts=$config_opts --with-pic"
         ],
         "steps": [
-            "*:*:$SHOULD_BUILD cp -f $NATIVEPREFIX/share/config/config.guess config.guess",
-            "*:*:$SHOULD_BUILD cp -f $NATIVEPREFIX/share/config/config.sub config.sub",
-            "*:*:$SHOULD_BUILD cp -f $NATIVEPREFIX/share/config/config.guess third_party/googletest/googletest/build-aux/config.guess",
-            "*:*:$SHOULD_BUILD cp -f $NATIVEPREFIX/share/config/config.sub third_party/googletest/googletest/build-aux/config.sub",
-            "*:*:$SHOULD_BUILD cp -f $NATIVEPREFIX/share/config/config.guess third_party/googletest/googlemock/build-aux/config.guess",
-            "*:*:$SHOULD_BUILD cp -f $NATIVEPREFIX/share/config/config.sub third_party/googletest/googlemock/build-aux/config.sub",
-            "*:*:$SHOULD_BUILD patch -p0 < $PATCH_DIR/protobuf/visibility.patch",
-            "*:*:$SHOULD_BUILD ./configure $config_opts",
-            "*:*:$SHOULD_BUILD make -j$NUM_CORES -C src libprotobuf.la",
-            "*:*:$SHOULD_BUILD make -j$NUM_CORES -C src DESTDIR=$STAGING_DIR install-libLTLIBRARIES install-nobase_includeHEADERS",
-            "*:*:$SHOULD_BUILD make -j$NUM_CORES DESTDIR=$STAGING_DIR install-pkgconfigDATA"
+            "*:*:cp -f $NATIVEPREFIX/share/config/config.guess config.guess",
+            "*:*:cp -f $NATIVEPREFIX/share/config/config.sub config.sub",
+            "*:*:cp -f $NATIVEPREFIX/share/config/config.guess third_party/googletest/googletest/build-aux/config.guess",
+            "*:*:cp -f $NATIVEPREFIX/share/config/config.sub third_party/googletest/googletest/build-aux/config.sub",
+            "*:*:cp -f $NATIVEPREFIX/share/config/config.guess third_party/googletest/googlemock/build-aux/config.guess",
+            "*:*:cp -f $NATIVEPREFIX/share/config/config.sub third_party/googletest/googlemock/build-aux/config.sub",
+            "*:*:patch -p0 < $PATCH_DIR/protobuf/visibility.patch",
+            "*:*:./configure $config_opts",
+            "*:*:make -j$NUM_CORES -C src libprotobuf.la",
+            "*:*:make -j$NUM_CORES -C src DESTDIR=$STAGING_DIR install-libLTLIBRARIES install-nobase_includeHEADERS",
+            "*:*:make -j$NUM_CORES DESTDIR=$STAGING_DIR install-pkgconfigDATA"
         ]
     }
 }
