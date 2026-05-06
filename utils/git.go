@@ -15,7 +15,7 @@ import (
 
 func verifyBundleHasRef(bundlePath string, refs []string) bool {
 	tempVerifyDir := bundlePath + ".verify.tmp"
-	defer os.RemoveAll(tempVerifyDir)
+	defer RemoveAll(tempVerifyDir)
 
 	os.MkdirAll(tempVerifyDir, 0755)
 
@@ -103,7 +103,7 @@ func createBundleFromRepo(bundlePath, url string, refs []string) error {
 	log.Printf("Creating bundle from repository %s with %d refs", url, len(refs))
 
 	tempDir := bundlePath + ".clone.tmp"
-	defer os.RemoveAll(tempDir)
+	defer RemoveAll(tempDir)
 
 	log.Printf("Cloning repository from %s", url)
 	cloneCmd := exec.Command("git", "clone", url, tempDir)
@@ -220,7 +220,7 @@ func ExtractGitCloneBundle(bundlePath, destPath, ref string) error {
 			// Try to get the repo URL from the bundle path and re-create it
 			if i == 1 { // fetch step failed
 				log.Printf("Bundle does not contain ref %s, attempting to re-create bundle with updated refs", ref)
-				os.RemoveAll(destPath) // Clean up failed extraction
+				RemoveAll(destPath) // Clean up failed extraction
 
 				// Get the repository URL from sources.json by finding which repo this bundle belongs to
 				url, err := getRepoURLFromBundlePath(bundlePath)

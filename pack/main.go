@@ -1,9 +1,9 @@
 package pack
 
 import (
-	"maps"
 	"encoding/json"
 	"fmt"
+	"maps"
 	"os"
 	"path/filepath"
 	"runtime"
@@ -12,6 +12,7 @@ import (
 	"github.com/mrcyjanek/simplybs/builder"
 	"github.com/mrcyjanek/simplybs/crash"
 	"github.com/mrcyjanek/simplybs/host"
+	"github.com/mrcyjanek/simplybs/utils"
 	"github.com/mrcyjanek/simplybs/utils/ifstring"
 )
 
@@ -216,10 +217,9 @@ func Cleanup() {
 		for k, _ := range keepFilesCopy {
 			if k[len(k)-len(".tar.gz"):] == ".tar.gz" {
 				keepFiles[k[:len(k)-len(".tar.gz")]+"_native.tar.gz"] = true
-			} 
+			}
 		}
-		
-		
+
 		for _, download := range pkg.Download {
 			sourcePath := pkg.GenerateSourceBuildPath(download)
 			relPath, err := filepath.Rel(buildlibDir, sourcePath)
@@ -274,7 +274,7 @@ func Cleanup() {
 		for _, dir := range []string{workDir, stagingDir, envDir} {
 			if _, err := os.Stat(dir); !os.IsNotExist(err) {
 				fmt.Printf("Removing directory: %s\n", filepath.Base(dir))
-				os.RemoveAll(dir)
+				utils.RemoveAll(dir)
 			}
 		}
 	}

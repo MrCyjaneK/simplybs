@@ -134,13 +134,13 @@ func (p *Package) buildPackageInternal(h *host.Host, buildDependencies bool) {
 	envPath := h.GetEnvPath()
 	if entries, err := os.ReadDir(envPath); err == nil {
 		for _, entry := range entries {
-			os.RemoveAll(filepath.Join(envPath, entry.Name()))
+			utils.RemoveAll(filepath.Join(envPath, entry.Name()))
 		}
 	}
 	nativeEnvPath := h.GetNativeEnvPath()
 	if entries, err := os.ReadDir(nativeEnvPath); err == nil {
 		for _, entry := range entries {
-			os.RemoveAll(filepath.Join(nativeEnvPath, entry.Name()))
+			utils.RemoveAll(filepath.Join(nativeEnvPath, entry.Name()))
 		}
 	}
 	os.MkdirAll(envPath, 0755)
@@ -149,8 +149,8 @@ func (p *Package) buildPackageInternal(h *host.Host, buildDependencies bool) {
 	}
 	buildPath := p.GenerateBuildPath(h, "work")
 	stagingPath := p.GenerateBuildPath(h, "staging")
-	os.RemoveAll(buildPath)
-	os.RemoveAll(stagingPath)
+	utils.RemoveAll(buildPath)
+	utils.RemoveAll(stagingPath)
 	os.MkdirAll(buildPath, 0755)
 	os.MkdirAll(stagingPath, 0755)
 	// defer os.RemoveAll(buildPath)
@@ -278,7 +278,7 @@ func (p *Package) StartShell(h *host.Host) {
 	log.Printf("Starting shell for package: %s for host %s", p.Package, h.Triplet)
 
 	buildPath := p.GenerateBuildPath(h, "work")
-	os.RemoveAll(buildPath)
+	utils.RemoveAll(buildPath)
 	os.MkdirAll(buildPath, 0755)
 
 	log.Printf("Extracting source for package: %s", p.Package)
