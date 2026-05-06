@@ -36,7 +36,6 @@
             "*:*:cp -f $NATIVEPREFIX/share/config/config.sub third_party/googletest/googletest/build-aux/config.sub",
             "*:*:cp -f $NATIVEPREFIX/share/config/config.guess third_party/googletest/googlemock/build-aux/config.guess",
             "*:*:cp -f $NATIVEPREFIX/share/config/config.sub third_party/googletest/googlemock/build-aux/config.sub",
-            "*:*:patch -p0 < $PATCH_DIR/protobuf/visibility.patch",
             "*:*:./configure $config_opts",
             "*:*:make -j$NUM_CORES -C src libprotobuf.la",
             "*:*:make -j$NUM_CORES -C src DESTDIR=$STAGING_DIR install-libLTLIBRARIES install-nobase_includeHEADERS",
