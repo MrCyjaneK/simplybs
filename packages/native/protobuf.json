@@ -21,24 +21,21 @@
         "env": [
             "*:*:config_opts=--host=$HOST --prefix=$NATIVEPREFIX",
             "*:*:config_opts=$config_opts --disable-shared",
-            "*:*-linux-gnu:config_opts=$config_opts --with-pic",
-            "*:*-linux-gnu:SHOULD_BUILD=",
-            "*:*-w64-mingw32:SHOULD_BUILD=",
-            "*:*-apple-darwin:SHOULD_BUILD="
+            "*:*-linux-gnu:config_opts=$config_opts --with-pic"
         ],
         "steps": [
-            "*:*:$SHOULD_BUILD cp -f $NATIVEPREFIX/share/config/config.guess config.guess",
-            "*:*:$SHOULD_BUILD cp -f $NATIVEPREFIX/share/config/config.sub config.sub",
-            "*:*:$SHOULD_BUILD cp -f $NATIVEPREFIX/share/config/config.guess third_party/googletest/googletest/build-aux/config.guess",
-            "*:*:$SHOULD_BUILD cp -f $NATIVEPREFIX/share/config/config.sub third_party/googletest/googletest/build-aux/config.sub",
-            "*:*:$SHOULD_BUILD cp -f $NATIVEPREFIX/share/config/config.guess third_party/googletest/googlemock/build-aux/config.guess",
-            "*:*:$SHOULD_BUILD cp -f $NATIVEPREFIX/share/config/config.sub third_party/googletest/googlemock/build-aux/config.sub",
-            "*:*:$SHOULD_BUILD aclocal",
-            "*:*:$SHOULD_BUILD automake --add-missing",
-            "*:*:$SHOULD_BUILD ./configure $config_opts",
-            "*:*:$SHOULD_BUILD make -j$NUM_CORES",
-            "*:*:$SHOULD_BUILD make -j$NUM_CORES DESTDIR=$STAGING_DIR install",
-            "*:*:$SHOULD_BUILD rm $STAGING_DIR$NATIVEPREFIX/lib/libprotoc.a || true"
+            "*:*:cp -f $NATIVEPREFIX/share/config/config.guess config.guess",
+            "*:*:cp -f $NATIVEPREFIX/share/config/config.sub config.sub",
+            "*:*:cp -f $NATIVEPREFIX/share/config/config.guess third_party/googletest/googletest/build-aux/config.guess",
+            "*:*:cp -f $NATIVEPREFIX/share/config/config.sub third_party/googletest/googletest/build-aux/config.sub",
+            "*:*:cp -f $NATIVEPREFIX/share/config/config.guess third_party/googletest/googlemock/build-aux/config.guess",
+            "*:*:cp -f $NATIVEPREFIX/share/config/config.sub third_party/googletest/googlemock/build-aux/config.sub",
+            "*:*:aclocal",
+            "*:*:automake --add-missing",
+            "*:*:./configure $config_opts",
+            "*:*:make -j$NUM_CORES",
+            "*:*:make -j$NUM_CORES DESTDIR=$STAGING_DIR install",
+            "*:*:rm $STAGING_DIR$NATIVEPREFIX/lib/libprotoc.a || true"
         ]
     }
 }
