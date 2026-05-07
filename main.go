@@ -13,7 +13,7 @@ import (
 )
 
 func main() {
-	log.SetFlags(log.LstdFlags | log.Lshortfile)
+	log.SetFlags(log.Lshortfile)
 	argList := flag.Bool("list", false, "List all supported hosts (value is depth)")
 	argHost := flag.String("host", "", "The host to build for")
 	argPkg := flag.String("package", "", "The package(s) to build (comma-separated)")

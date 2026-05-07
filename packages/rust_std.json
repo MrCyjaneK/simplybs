@@ -10,14 +10,14 @@
         }
     ],
     "dependencies": [
+        "*:*-linux-android*:native/android_ndk",
         "*:*:native/cmake",
         "*:*:native/make",
         "*:*:native/ninja",
         "*:*:native/openssl",
         "*:*:native/pkgconf",
         "*:*:native/python@3.11",
-        "*:*:native/rust",
-        "*:*-linux-android*:native/android_ndk"
+        "*:*:native/rust"
     ],
     "build": {
         "env": [],

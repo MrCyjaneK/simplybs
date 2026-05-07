@@ -11,13 +11,13 @@
     ],
     "dependencies": [
         "*:*:native/_",
-        "*:*:native/protobuf",
         "*:*:native/autoconf",
         "*:*:native/automake",
         "*:*:native/config",
         "*:*:native/m4",
         "*:*:native/make",
-        "*:*:native/perl"
+        "*:*:native/perl",
+        "*:*:native/protobuf"
     ],
     "patches": [
         "visibility.patch"

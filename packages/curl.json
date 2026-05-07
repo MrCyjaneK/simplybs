@@ -12,19 +12,16 @@
     "dependencies": [
         "*:*:native/_",
         "*:*:native/make",
+        "*:*:native/pkgconf",
         "*:*:openssl",
         "*:*:zlib"
     ],
     "build": {
         "env": [
-            "*:*:config_opts=--with-openssl --with-zlib --without-libpsl --disable-shared --enable-static --host=$HOST --prefix=$PREFIX"
-            ,
-            "*:*-linux-gnu*:config_opts=--with-openssl=$PREFIX --with-zlib=$PREFIX --without-libpsl --disable-shared --enable-static --host=$HOST --prefix=$PREFIX",
-            "*:*-linux-gnu*:PKG_CONFIG=/bin/false",
-            "*:*-linux-gnu*:LIBS=$LIBS -ldl -lpthread",
-            "*:*-mingw*:config_opts=--with-openssl=$PREFIX --with-zlib=$PREFIX --without-libpsl --disable-shared --enable-static --disable-ldap --host=$HOST --prefix=$PREFIX",
-            "*:*-mingw*:PKG_CONFIG=/bin/false",
-            "*:*-mingw*:LIBS=$LIBS -lcrypt32 -lbcrypt -lws2_32 -lgdi32 -liphlpapi"
+            "*:*:config_opts=--with-openssl --with-zlib --without-libpsl --disable-shared --enable-static --enable-static --disable-ldap --host=$HOST --prefix=$PREFIX",
+            "none:*-linux-gnu*:LIBS=$LIBS -ldl -lpthread",
+            "none:*-mingw*:LIBS=$LIBS -lcrypt32 -lbcrypt -lws2_32 -lgdi32 -liphlpapi",
+            "*:*-mingw*:LIBS=$LIBS -lssl"
         ],
         "steps": [
             "*:*:./configure $config_opts",

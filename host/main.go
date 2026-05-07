@@ -211,7 +211,7 @@ var SupportedHosts = map[string]*Host{
 			"*:*:STRIP=x86_64-w64-mingw32-strip",
 			"*:*:READELF=x86_64-w64-mingw32-readelf",
 			"*:*:LD=x86_64-w64-mingw32-ld",
-			"*:*:LDFLAGS=",
+			"*:*:LDFLAGS=-L$PREFIX/lib",
 			"*:*:NM=x86_64-w64-mingw32-nm",
 		},
 	},
