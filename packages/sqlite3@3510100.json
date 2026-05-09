@@ -18,7 +18,10 @@
             "*:*:CFLAGS=$CFLAGS -fPIC -O2 -DSQLITE_ENABLE_COLUMN_METADATA -DSQLITE_ENABLE_FTS5 -DSQLITE_ENABLE_JSON1 -DSQLITE_ENABLE_RTREE -DSQLITE_THREADSAFE=1",
             "*:*:CPPFLAGS=$CPPFLAGS -I$PREFIX/include",
             "*:*:LDFLAGS=$LDFLAGS -L$PREFIX/lib",
-            "*:*:config_opts=--disable-shared --enable-static --enable-threadsafe --prefix=$PREFIX --host=$HOST"
+            "*:*:BUILD_HOST=$HOST",
+            "*:aarch64-apple-ios-simulator:BUILD_HOST=aarch64-apple-ios",
+            "*:*:config_opts=--disable-shared --enable-static --enable-threadsafe --prefix=$PREFIX --host=$BUILD_HOST",
+            "*:*android*:CXXFLAGS=$CXXFLAGS -D_GNU_SOURCE"
         ],
         "steps": [
             "*:*:./configure $config_opts",

@@ -4,15 +4,19 @@
     "type": "host",
     "download": [
         {
-            "kind": "tar.gz",
-            "sha256": "6653ef5910f17954861fe72332e68b03ca6e4d9c7160eb3a8de5a5a913bfab43",
-            "url": "http://github.com/zeromq/libzmq/releases/download/v4.3.5/zeromq-4.3.5.tar.gz"
+            "kind": "git",
+            "sha256": "b946c18f676760387276cd095bbdd8c0e18c09bf",
+            "url": "http://github.com/zeromq/libzmq.git"
         }
     ],
     "dependencies": [
         "*:*:native/_",
         "*:*:native/make",
-        "*:*:native/patch"
+        "*:*:native/patch",
+        "*:*:native/autoconf",
+        "*:*:native/automake",
+        "*:*:native/libtool",
+        "*:*:native/m4"
     ],
     "patches": [
         "fix_declaration.patch"
@@ -20,11 +24,12 @@
     "build": {
         "env": [
             "*:aarch64-apple-ios*:HOST=aarch64-apple-darwin",
-            "*:*:config_opts=--prefix=$PREFIX --host=$HOST --without-documentation --disable-shared --without-libsodium --disable-curve",
+            "*:*:config_opts=--prefix=$PREFIX --host=$HOST --without-documentation --disable-shared --without-libsodium --disable-curve --disable-libbsd",
             "*:*-linux-gnu:config_opts=$config_opts --with-pic",
             "*:*:cxxflags=$CXXFLAGS -std=c++17"
         ],
         "steps": [
+            "*:*:./autogen.sh",
             "*:*:patch -p1 < $PATCH_DIR/zeromq/fix_declaration.patch",
             "*:*:./configure $config_opts",
             "*:*:make -j$NUM_CORES src/libzmq.la",

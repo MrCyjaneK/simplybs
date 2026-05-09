@@ -18,10 +18,9 @@
     ],
     "build": {
         "env": [
-            "*:*:config_opts=--with-openssl --with-zlib --without-libpsl --disable-shared --enable-static --enable-static --disable-ldap --host=$HOST --prefix=$PREFIX",
-            "none:*-linux-gnu*:LIBS=$LIBS -ldl -lpthread",
-            "none:*-mingw*:LIBS=$LIBS -lcrypt32 -lbcrypt -lws2_32 -lgdi32 -liphlpapi",
-            "*:*-mingw*:LIBS=$LIBS -lssl"
+            "*:*:HOSTOVERRIDE=$HOST",
+            "*:aarch64-apple-ios-simulator:HOSTOVERRIDE=aarch64-apple-ios",
+            "*:*:config_opts=--with-openssl --with-zlib --without-libpsl --disable-shared --enable-static --enable-static --disable-ldap --host=$HOSTOVERRIDE --prefix=$PREFIX"
         ],
         "steps": [
             "*:*:./configure $config_opts",

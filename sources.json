@@ -10,6 +10,11 @@
                 "9f5ff518a49038d7ae51dadd1658231b61f7dced"
             ]
         },
+        "http://github.com/zeromq/libzmq.git": {
+            "refs": [
+                "b946c18f676760387276cd095bbdd8c0e18c09bf"
+            ]
+        },
         "http://gitlab.torproject.org/tpo/core/tor.git": {
             "refs": [
                 "106dcfa18c1a9539cb97337e57954ff89685840e"

@@ -11,14 +11,11 @@
     ],
     "dependencies": [
         "*:*:native/_",
-        "*:*:native/rust",
-        "*:*:rust_std"
+        "*:*:native/rust"
     ],
     "build": {
         "steps": [
-            "*:*:cargo build --target $RUST_TRIPLET",
-            "*:*:$SHOULD_BUILD make -j$NUM_CORES $build_opts",
-            "*:*:$SHOULD_BUILD make -j$NUM_CORES install DESTDIR=$STAGING_DIR prefix=$PREFIX exec-prefix=$PREFIX"
+            "*:*:cargo build --target $RUST_TRIPLET"
         ]
     }
 }
