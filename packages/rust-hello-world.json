@@ -15,7 +15,9 @@
     ],
     "build": {
         "steps": [
-            "*:*:cargo build --target $RUST_TRIPLET"
+            "*:*:cargo build --target $RUST_TRIPLET --release",
+            "*:*:mkdir -p $STAGING_DIR$PREFIX/bin",
+            "*:*:cp ./target/$RUST_TRIPLET/release/rust-hello-world $STAGING_DIR$PREFIX/bin"
         ]
     }
 }
