@@ -18,7 +18,8 @@
         "*:*:native/m4",
         "*:*:native/make",
         "*:*:native/patch",
-        "*:*:native/perl"
+        "*:*:native/perl",
+        "*:*:native/pkgconf"
     ],
     "patches": [
         "fix_declaration.patch"
