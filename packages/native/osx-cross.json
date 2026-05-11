@@ -66,7 +66,8 @@
             "*:*-apple-*:yes | INSTALLPREFIX=$NATIVEPREFIX ./build_apple_clang.sh",
             "*:*-apple-*:cd build/clang-21/build_stage3 && make install DESTDIR=$STAGING_DIR && make install",
             "*:*-apple-*:sed -i.bak 's/## Compiler test ##/exit 0/g' build.sh",
-            "*:*-apple-*:OCDEBUG=1 TARGET_DIR=$STAGING_DIR$NATIVEPREFIX bash -x ./build.sh"
+            "*:*-apple-*:OCDEBUG=1 TARGET_DIR=$STAGING_DIR$NATIVEPREFIX bash -x ./build.sh",
+            "*:*-apple-*:rm $STAGING_DIR$NATIVEPREFIX/bin/*pkg-config"
         ]
     }
 }
