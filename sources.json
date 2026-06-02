@@ -17,7 +17,7 @@
         },
         "http://gitlab.torproject.org/tpo/core/tor.git": {
             "refs": [
-                "106dcfa18c1a9539cb97337e57954ff89685840e"
+                "e170cdcfebd45f6d098e3d811e2b1e1d120df184"
             ]
         },
         "https://android.googlesource.com/platform/bionic": {

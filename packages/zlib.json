@@ -11,7 +11,8 @@
     ],
     "dependencies": [
         "*:*:native/_",
-        "*:*:native/libtool"
+        "*:*:native/libtool",
+        "*:*:native/sed"
     ],
     "build": {
         "env": [
@@ -21,10 +22,10 @@
         ],
         "steps": [
             "*:*:./configure $config_opts",
-            "*:*-android*:sed -i.bak s/^AR=.\\*$/AR=\"llvm-ar\"/ Makefile",
-            "*:*-android*:sed -i.bak s/^ARFLAGS=.\\*$/ARFLAGS=\"rcs\"/ Makefile",
-            "*:*-linux-gnu:sed -i.bak s/^AR=.\\*$/AR=\"$AR\"/ Makefile",
-            "*:*-linux-gnu:sed -i.bak s/^ARFLAGS=.\\*$/ARFLAGS=\"rcs\"/ Makefile",
+            "*:*-android*:sed -i.bak s\\|^AR=.\\*$\\|AR=\"llvm-ar\"\\| Makefile",
+            "*:*-android*:sed -i.bak s\\|^ARFLAGS=.\\*$\\|ARFLAGS=\"rcs\"\\| Makefile",
+            "*:*-linux-gnu:sed -i.bak s\\|^AR=.\\*$\\|AR=\"$AR\"\\| Makefile",
+            "*:*-linux-gnu:sed -i.bak s\\|^ARFLAGS=.\\*$\\|ARFLAGS=\"rcs\"\\| Makefile",
             "*:*:make -j$NUM_CORES",
             "*:*:make DESTDIR=$STAGING_DIR install"
         ]
