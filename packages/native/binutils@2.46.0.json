@@ -26,6 +26,7 @@
             "*:*:config_opts=$config_opts --disable-werror",
             "*:*:config_opts=$config_opts --with-system-zlib",
             "*:*:config_opts=$config_opts --enable-targets=all",
+            "*:*:config_opts=$config_opts --disable-gprofng",
             "*:*:config_opts=$config_opts --libdir=$NATIVEPREFIX/lib",
             "*:*:config_opts=$config_opts --infodir=$NATIVEPREFIX/share/info"
         ],
