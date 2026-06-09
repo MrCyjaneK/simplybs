@@ -13,6 +13,10 @@ import (
 	"github.com/mrcyjanek/simplybs/utils/download"
 )
 
+func BundleHasAllRefs(bundlePath string, refs []string) bool {
+	return verifyBundleHasRef(bundlePath, refs)
+}
+
 func verifyBundleHasRef(bundlePath string, refs []string) bool {
 	tempVerifyDir := bundlePath + ".verify.tmp"
 	defer RemoveAll(tempVerifyDir)
@@ -146,31 +150,34 @@ func createBundleFromRepo(bundlePath, url string, refs []string) error {
 
 func DownloadGit(packageName, bundlePath, url string) error {
 	log.Printf("Downloading %s to bundle %s", url, bundlePath)
+	return EnsureGitBundle(bundlePath, url)
+}
 
+func EnsureGitBundle(bundlePath, url string) error {
 	sources, err := loadSourcesFile()
 	if err != nil {
-		log.Fatalf("Failed to load sources.json: %v, falling back to single ref mode", err)
+		return fmt.Errorf("failed to load sources.json: %w", err)
 	}
 
-	refs, exists := sources.Repositories[url]
+	repoInfo, exists := sources.Repositories[url]
 	if !exists {
-		log.Fatalf("Repository %s not found in sources.json", url)
+		return fmt.Errorf("repository %s not found in sources.json", url)
 	}
 
 	if _, err := os.Stat(bundlePath); err == nil {
-		log.Printf("Bundle already exists, verifying it contains all refs %v", refs.Refs)
-		if verifyBundleHasRef(bundlePath, refs.Refs) {
+		log.Printf("Bundle already exists, verifying it contains all refs %v", repoInfo.Refs)
+		if verifyBundleHasRef(bundlePath, repoInfo.Refs) {
 			log.Printf("Bundle is valid and contains all required refs")
 			return nil
 		}
-		log.Printf("Bundle does not contain all refs %v, removing and re-downloading", refs.Refs)
+		log.Printf("Bundle does not contain all refs %v, removing and re-downloading", repoInfo.Refs)
 		os.Remove(bundlePath)
 	}
 
-	err = downloadBundleFromMirrors(bundlePath, url, refs.Refs)
+	err = downloadBundleFromMirrors(bundlePath, url, repoInfo.Refs)
 	if err != nil {
 		log.Printf("Failed to download from mirrors: %v, creating bundle from original URL", err)
-		return createBundleFromRepo(bundlePath, url, refs.Refs)
+		return createBundleFromRepo(bundlePath, url, repoInfo.Refs)
 	}
 
 	return nil
@@ -178,11 +185,23 @@ func DownloadGit(packageName, bundlePath, url string) error {
 
 type SourcesFile struct {
 	Repositories map[string]RepositoryInfo `json:"repositories"`
+	Downloads    []DownloadEntry           `json:"downloads,omitempty"`
 }
 
 type RepositoryInfo struct {
 	Refs     []string `json:"refs"`
-	Packages []string `json:"packages"`
+	Packages []string `json:"packages,omitempty"`
+}
+
+type DownloadEntry struct {
+	Kind   string `json:"kind"`
+	URL    string `json:"url"`
+	Sha256 string `json:"sha256"`
+	Path   string `json:"path,omitempty"`
+}
+
+func LoadSourcesFile() (*SourcesFile, error) {
+	return loadSourcesFile()
 }
 
 func loadSourcesFile() (*SourcesFile, error) {

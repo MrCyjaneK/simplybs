@@ -52,6 +52,9 @@ func detectCommonPrefix(readerFactory readerFactory) (string, error) {
 
 	if len(firstLevelDirs) == 1 && rootFiles == 0 {
 		for dirName := range firstLevelDirs {
+			if (dirName == "native") {
+				return "", nil
+			}
 			return dirName + "/", nil
 		}
 	}

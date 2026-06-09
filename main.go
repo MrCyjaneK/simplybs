@@ -6,6 +6,7 @@ import (
 	"log"
 	"strings"
 
+	"github.com/mrcyjanek/simplybs/cmd/archive"
 	"github.com/mrcyjanek/simplybs/cmd/lint"
 	"github.com/mrcyjanek/simplybs/crash"
 	"github.com/mrcyjanek/simplybs/host"
@@ -22,6 +23,7 @@ func main() {
 	argDownload := flag.Bool("download", false, "Download package sources")
 	argBuild := flag.Bool("build", false, "Build packages")
 	argLint := flag.Bool("lint", false, "Lint packages")
+	argArchive := flag.Bool("archive", false, "Download all sources from sources.json")
 	argVersion := flag.Bool("v", false, "Show version")
 	argShell := flag.Bool("shell", false, "Extract source and start shell with build environment")
 	argCleanup := flag.Bool("cleanup", false, "Remove everything except current built archives")
@@ -37,6 +39,10 @@ func main() {
 	}
 	if *argLint {
 		lint.Lint()
+		return
+	}
+	if *argArchive {
+		archive.Archive()
 		return
 	}
 

@@ -5,7 +5,7 @@
     "download": [
         {
             "kind": "git",
-            "sha256": "9f5ff518a49038d7ae51dadd1658231b61f7dced",
+            "sha256": "be69c7479a10bdce1b86cb886789d14a143ddf34",
             "url": "http://github.com/thepowersgang/mrustc.git"
         },
         {

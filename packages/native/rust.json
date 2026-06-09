@@ -1,12 +1,12 @@
 {
     "package": "native/rust",
-    "version": "1.94.0",
+    "version": "1.95.0",
     "type": "native",
     "download": [
         {
             "kind": "tar.gz",
-            "sha256": "b83f921cd3f321ff614f9c06a8b870d89299fc02888b48a5549683a36823474c",
-            "url": "http://static.rust-lang.org/dist/rustc-1.94.0-src.tar.gz"
+            "sha256": "ea9b82a83e46967537c3569ce9d6fa16811c043a96e651376c349e70241ca515",
+            "url": "http://static.rust-lang.org/dist/rustc-1.95.0-src.tar.gz"
         }
     ],
     "dependencies": [

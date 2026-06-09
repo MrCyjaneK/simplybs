@@ -13,16 +13,9 @@ import (
 	"github.com/mrcyjanek/simplybs/crash"
 	"github.com/mrcyjanek/simplybs/host"
 	"github.com/mrcyjanek/simplybs/pack"
+	"github.com/mrcyjanek/simplybs/utils"
 	"github.com/mrcyjanek/simplybs/utils/ifstring"
 )
-
-type RepositoryInfo struct {
-	Refs []string `json:"refs"`
-}
-
-type SourcesFile struct {
-	Repositories map[string]RepositoryInfo `json:"repositories"`
-}
 
 type OrderedPackage struct {
 	Package      string                   `json:"package"`
@@ -251,9 +244,10 @@ func dfsCycleDetection(packageName string, graph map[string][]string, color map[
 
 func createSourcesFile() {
 	log.Println("Creating sources.json file...")
-	sources := SourcesFile{
-		Repositories: make(map[string]RepositoryInfo),
-	}
+	sources := utils.NewSourcesFile()
+
+	currentRefs := 0
+	currentDownloads := 0
 
 	pkgs := pack.GetAllPackages()
 	for _, pkg := range pkgs {
@@ -263,60 +257,24 @@ func createSourcesFile() {
 			continue
 		}
 
-		var packageData map[string]interface{}
-		if err := json.Unmarshal(content, &packageData); err != nil {
-			log.Printf("Failed to parse package %s: %v", pkg.Package, err)
-			continue
-		}
-
-		downloads, ok := packageData["download"].([]interface{})
-		if !ok {
-			continue
-		}
-
-		for _, downloadInterface := range downloads {
-			download, ok := downloadInterface.(map[string]interface{})
-			if !ok {
-				continue
-			}
-
-			kind, ok := download["kind"].(string)
-			if !ok || kind != "git" {
-				continue
-			}
-
-			url, ok := download["url"].(string)
-			if !ok {
-				continue
-			}
-
-			sha256, ok := download["sha256"].(string)
-			if !ok || sha256 == "" {
-				continue
-			}
-
-			if repoInfo, exists := sources.Repositories[url]; exists {
-				refExists := false
-				for _, ref := range repoInfo.Refs {
-					if ref == sha256 {
-						refExists = true
-						break
-					}
-				}
-				if !refExists {
-					repoInfo.Refs = append(repoInfo.Refs, sha256)
-				}
-
-				sources.Repositories[url] = repoInfo
-			} else {
-				sources.Repositories[url] = RepositoryInfo{
-					Refs: []string{sha256},
-				}
-			}
-		}
+		beforeRefs := utils.CountGitRefs(sources)
+		beforeDownloads := len(sources.Downloads)
+		utils.MergeDownloadsFromJSON(sources, content)
+		currentRefs += utils.CountGitRefs(sources) - beforeRefs
+		currentDownloads += len(sources.Downloads) - beforeDownloads
 	}
 
-	sourcesJSON, err := json.MarshalIndent(sources, "", "    ")
+	beforeHistoricRefs := utils.CountGitRefs(sources)
+	beforeHistoricDownloads := len(sources.Downloads)
+
+	if err := utils.CollectHistoricDownloads(sources); err != nil {
+		log.Printf("Warning: historic source collection skipped: %v", err)
+	}
+
+	historicRefs := utils.CountGitRefs(sources) - beforeHistoricRefs
+	historicDownloads := len(sources.Downloads) - beforeHistoricDownloads
+
+	sourcesJSON, err := utils.MarshalSourcesFile(sources)
 	if err != nil {
 		log.Fatalf("Failed to marshal sources.json: %v", err)
 	}
@@ -325,5 +283,14 @@ func createSourcesFile() {
 		log.Fatalf("Failed to write sources.json: %v", err)
 	}
 
-	log.Printf("Created sources.json with %d repositories", len(sources.Repositories))
+	log.Printf(
+		"Created sources.json with %d repositories (%d git refs, %d downloads); current packages added %d refs and %d downloads, history added %d refs and %d downloads",
+		len(sources.Repositories),
+		utils.CountGitRefs(sources),
+		len(sources.Downloads),
+		currentRefs,
+		currentDownloads,
+		historicRefs,
+		historicDownloads,
+	)
 }

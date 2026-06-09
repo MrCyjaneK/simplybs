@@ -237,3 +237,30 @@ func downloadWithResume(path, url, expectedSha256 string) (int64, error) {
 
 	return bytesRead, nil
 }
+
+func FileSHA256(path string) (string, error) {
+	file, err := os.Open(path)
+	if err != nil {
+		return "", err
+	}
+	defer file.Close()
+
+	hasher := sha256.New()
+	if _, err := io.Copy(hasher, file); err != nil {
+		return "", err
+	}
+	return hex.EncodeToString(hasher.Sum(nil)), nil
+}
+
+func EnsureDownloadFile(packageName, path, url, expectedSha256 string) error {
+	if actualHash, err := FileSHA256(path); err == nil {
+		if actualHash == expectedSha256 {
+			log.Printf("File already exists with correct hash: %s", path)
+			return nil
+		}
+		log.Printf("File exists but hash mismatch (expected %s, got %s), re-downloading: %s", expectedSha256, actualHash, path)
+		os.Remove(path)
+	}
+
+	return DownloadFile(packageName, path, url, expectedSha256, false)
+}

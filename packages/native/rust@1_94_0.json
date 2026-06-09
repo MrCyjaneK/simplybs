@@ -1,24 +1,22 @@
 {
-    "package": "native/rust@1_90_0",
-    "version": "1.90.0",
+    "package": "native/rust@1_94_0",
+    "version": "1.94.0",
     "type": "native",
     "download": [
         {
             "kind": "tar.gz",
-            "sha256": "799a9f9cba4ed5351e071048bcf6b5560755d9009648def33a407dd4961f9b7e",
-            "url": "http://static.rust-lang.org/dist/rustc-1.90.0-src.tar.gz"
+            "sha256": "b83f921cd3f321ff614f9c06a8b870d89299fc02888b48a5549683a36823474c",
+            "url": "http://static.rust-lang.org/dist/rustc-1.94.0-src.tar.gz"
         }
     ],
     "dependencies": [
-        "*:*:native/_/_",
         "*:*:native/cmake",
         "*:*:native/make",
         "*:*:native/ninja",
         "*:*:native/openssl",
         "*:*:native/pkgconf",
         "*:*:native/python@3.11",
-        "*_amd64:*:native/rust@1_90_0-mrustc",
-        "*_arm64:*:native/rust@1_90_0-bin"
+        "*:*:native/rust@1_93_0"
     ],
     "build": {
         "env": [],
@@ -37,7 +35,7 @@
             "*:*:mkdir -p $STAGING_DIR$NATIVEPREFIX/bin",
             "*:*:cp -a build/*/stage3/lib $STAGING_DIR$NATIVEPREFIX/",
             "*:*:cp -a build/*/stage3/bin/rustc $STAGING_DIR$NATIVEPREFIX/bin",
-            "*:*:cp -a build/*/stage2-tools-bin/cargo $STAGING_DIR$NATIVEPREFIX/bin"
+            "*:*:cp -a build/*/stage3-tools-bin/cargo $STAGING_DIR$NATIVEPREFIX/bin"
         ]
     }
 }
