@@ -4,7 +4,6 @@ import (
 	"encoding/json"
 	"fmt"
 	"log"
-	"net/http"
 	"os"
 	"os/exec"
 	"path/filepath"
@@ -12,10 +11,6 @@ import (
 
 	"github.com/mrcyjanek/simplybs/utils/download"
 )
-
-func BundleHasAllRefs(bundlePath string, refs []string) bool {
-	return verifyBundleHasRef(bundlePath, refs)
-}
 
 func verifyBundleHasRef(bundlePath string, refs []string) bool {
 	tempVerifyDir := bundlePath + ".verify.tmp"
@@ -53,46 +48,30 @@ func downloadBundleFromMirrors(bundlePath, originalURL string, refs []string) er
 	mirrorPath := filepath.Join(filepath.Dir(urlPath), bundleFilename)
 
 	mirrors := download.GetMirrors()
+	tempFile := bundlePath + ".download.tmp"
+	defer os.Remove(tempFile)
+
 	for _, mirror := range mirrors {
+		os.Remove(tempFile)
+
 		mirrorURL := mirror + mirrorPath
 		log.Printf("Trying to download bundle from mirror: %s", mirrorURL)
 
-		resp, err := http.Get(mirrorURL)
-		if err != nil {
+		if err := download.DownloadURLWithRetries(mirrorURL, tempFile); err != nil {
 			log.Printf("Failed to download from mirror %s: %v", mirror, err)
-			continue
-		}
-		defer resp.Body.Close()
-
-		if resp.StatusCode != http.StatusOK {
-			log.Printf("Mirror %s returned HTTP %d", mirror, resp.StatusCode)
-			continue
-		}
-
-		tempFile := bundlePath + ".download.tmp"
-		defer os.Remove(tempFile)
-
-		out, err := os.Create(tempFile)
-		if err != nil {
-			log.Printf("Failed to create temp file: %v", err)
-			continue
-		}
-
-		_, err = out.ReadFrom(resp.Body)
-		out.Close()
-		if err != nil {
-			log.Printf("Failed to download bundle: %v", err)
 			continue
 		}
 
 		if !verifyBundleHasRef(tempFile, refs) {
 			log.Printf("Mirror bundle does not contain all refs %v", refs)
+			os.Remove(tempFile)
 			continue
 		}
 
 		os.MkdirAll(filepath.Dir(bundlePath), 0755)
 		if err := os.Rename(tempFile, bundlePath); err != nil {
 			log.Printf("Failed to move bundle to final location: %v", err)
+			os.Remove(tempFile)
 			continue
 		}
 

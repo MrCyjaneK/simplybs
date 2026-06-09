@@ -56,14 +56,21 @@ func AddDownload(s *SourcesFile, entry DownloadEntry) bool {
 	return true
 }
 
-func MergeDownloadMap(s *SourcesFile, download map[string]interface{}) {
-	kind, _ := download["kind"].(string)
+func downloadMapFields(download map[string]interface{}) (kind, url, sha256 string, ok bool) {
+	kind, _ = download["kind"].(string)
 	if kind == "" || kind == "none" {
+		return "", "", "", false
+	}
+	url, _ = download["url"].(string)
+	sha256, _ = download["sha256"].(string)
+	return kind, url, sha256, true
+}
+
+func MergeDownloadMap(s *SourcesFile, download map[string]interface{}) {
+	kind, url, sha256, ok := downloadMapFields(download)
+	if !ok {
 		return
 	}
-
-	url, _ := download["url"].(string)
-	sha256, _ := download["sha256"].(string)
 
 	if kind == "git" {
 		AddGitRef(s, url, sha256)
@@ -130,10 +137,7 @@ func MarshalSourcesFile(s *SourcesFile) ([]byte, error) {
 	SortSourcesFile(s)
 
 	var buf bytes.Buffer
-	encoder := json.NewEncoder(&buf)
-	encoder.SetEscapeHTML(false)
-	encoder.SetIndent("", "    ")
-	if err := encoder.Encode(s); err != nil {
+	if err := NewIndentedEncoder(&buf).Encode(s); err != nil {
 		return nil, err
 	}
 	return bytes.TrimSuffix(buf.Bytes(), []byte("\n")), nil
@@ -212,12 +216,10 @@ func UniqueDownloads(entries []DownloadEntry) []DownloadEntry {
 }
 
 func DownloadEntryFromMap(download map[string]interface{}) (DownloadEntry, bool) {
-	kind, _ := download["kind"].(string)
-	if kind == "" || kind == "none" || kind == "git" {
+	kind, url, sha256, ok := downloadMapFields(download)
+	if !ok || kind == "git" {
 		return DownloadEntry{}, false
 	}
-	url, _ := download["url"].(string)
-	sha256, _ := download["sha256"].(string)
 	if url == "" || sha256 == "" {
 		return DownloadEntry{}, false
 	}

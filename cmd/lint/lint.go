@@ -104,10 +104,7 @@ func fixFormatting() {
 		}
 
 		var buf bytes.Buffer
-		encoder := json.NewEncoder(&buf)
-		encoder.SetEscapeHTML(false)
-		encoder.SetIndent("", "    ")
-		err = encoder.Encode(ordered)
+		err = utils.NewIndentedEncoder(&buf).Encode(ordered)
 		crash.Handle(err)
 
 		contentNew := bytes.TrimSuffix(buf.Bytes(), []byte("\n"))

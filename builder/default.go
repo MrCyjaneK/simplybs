@@ -1,7 +1,6 @@
 package builder
 
 import (
-	"os/exec"
 	"runtime"
 	"strings"
 
@@ -18,30 +17,20 @@ type Builder struct {
 
 var Builders = []string{"darwin_arm64", "linux_amd64", "linux_arm64"}
 
-func shellOutput(cmd string) string {
-	output, err := exec.Command("bash", "-c", cmd).Output()
-	if err != nil {
-		return "$(" + cmd + ")"
+func (b *Builder) getToolFromEnv(prefix string) string {
+	for _, env := range b.GlobalEnv {
+		is := ifstring.ParseIfString(env)
+		if strings.HasPrefix(is.Content, prefix) {
+			return is.Content[len(prefix):]
+		}
 	}
-	return strings.TrimSpace(string(output))
+	return ""
 }
 
 func (b *Builder) GetCC() string {
-	for _, env := range b.GlobalEnv {
-		is := ifstring.ParseIfString(env)
-		if strings.HasPrefix(is.Content, "CC=") {
-			return is.Content[3:]
-		}
-	}
-	return ""
+	return b.getToolFromEnv("CC=")
 }
 
 func (b *Builder) GetCXX() string {
-	for _, env := range b.GlobalEnv {
-		is := ifstring.ParseIfString(env)
-		if strings.HasPrefix(is.Content, "CXX=") {
-			return is.Content[4:]
-		}
-	}
-	return ""
+	return b.getToolFromEnv("CXX=")
 }

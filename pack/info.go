@@ -18,6 +18,17 @@ import (
 	"github.com/mrcyjanek/simplybs/utils/ifstring"
 )
 
+func (p *Package) prefixPath(h *host.Host) string {
+	if p.Type == "native" {
+		return h.GetNativeEnvPath()
+	}
+	return h.GetEnvPath()
+}
+
+func (p *Package) homePath(h *host.Host) string {
+	return p.prefixPath(h) + "/home/user"
+}
+
 func (p *Package) FilterForHost(h *host.Host) *Package {
 	filtered := &Package{
 		Package:      p.Package,
@@ -26,41 +37,10 @@ func (p *Package) FilterForHost(h *host.Host) *Package {
 		Download:     p.Download,
 		Dependencies: []string{},
 	}
-	filtered.Build.Env = []string{}
-	filtered.Build.Steps = []string{}
-
-	for _, dep := range p.Dependencies {
-		is := ifstring.ParseIfString(dep)
-		if !is.HostGlob().Match(h.Triplet) {
-			continue
-		}
-		if !is.BuilderGlob().Match(builder.GetName()) {
-			continue
-		}
-		filtered.Dependencies = append(filtered.Dependencies, is.Content)
-	}
-
-	for _, env := range p.Build.Env {
-		is := ifstring.ParseIfString(env)
-		if !is.HostGlob().Match(h.Triplet) {
-			continue
-		}
-		if !is.BuilderGlob().Match(builder.GetName()) {
-			continue
-		}
-		filtered.Build.Env = append(filtered.Build.Env, is.Content)
-	}
-
-	for _, step := range p.Build.Steps {
-		is := ifstring.ParseIfString(step)
-		if !is.HostGlob().Match(h.Triplet) {
-			continue
-		}
-		if !is.BuilderGlob().Match(builder.GetName()) {
-			continue
-		}
-		filtered.Build.Steps = append(filtered.Build.Steps, is.Content)
-	}
+	builderName := builder.GetName()
+	filtered.Dependencies = ifstring.FilterContent(p.Dependencies, h.Triplet, builderName)
+	filtered.Build.Env = ifstring.FilterContent(p.Build.Env, h.Triplet, builderName)
+	filtered.Build.Steps = ifstring.FilterContent(p.Build.Steps, h.Triplet, builderName)
 
 	return filtered
 }
@@ -81,11 +61,7 @@ func (p *Package) GeneratePackageInfo(h *host.Host) string {
 	delete(env, "PATH")
 	delete(env, "PREFIX")
 	pkgs["_env"] = env
-	if p.Type == "native" {
-		pkgs["_prefix"] = h.GetNativeEnvPath()
-	} else {
-		pkgs["_prefix"] = h.GetEnvPath()
-	}
+	pkgs["_prefix"] = p.prefixPath(h)
 	info, err := json.MarshalIndent(pkgs, "", "  ")
 	crash.Handle(err)
 	return string(info)
@@ -136,16 +112,12 @@ func (p *Package) GetEnv(h *host.Host) map[string]string {
 	getwd, err := os.Getwd()
 	crash.Handle(err)
 	stagingPath := p.GenerateBuildPath(h, "staging")
-	home := h.GetEnvPath() + "/home/user"
-	if p.Type == "native" {
-		home = h.GetNativeEnvPath() + "/home/user"
-	}
 	env := map[string]string{
 		"PATH":         h.GetNativeEnvPath() + "/bin:" + h.GetNativeEnvPath() + "/_/bin:" + utils.GetHostPath(),
 		"HOST":         h.Triplet,
 		"PREFIX":       h.GetEnvPath(),
 		"NATIVEPREFIX": h.GetNativeEnvPath(),
-		"HOME":         home,
+		"HOME":         p.homePath(h),
 		"HOST_PREFIX":  h.GetEnvPath(),
 		"NUM_CORES":    strconv.Itoa(getNumCores()),
 		"PATCH_DIR":    filepath.Join(getwd, "patches"),

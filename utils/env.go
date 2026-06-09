@@ -28,10 +28,7 @@ func AppendEnv(env map[string]string, newEnv []string, host *host.Host) map[stri
 		if equalIndex == -1 {
 			log.Fatalf("Invalid env var: %s. Vars needs to be in the form of *:KEY=VALUE", envVar)
 		}
-		if !is.HostGlob().Match(host.Triplet) {
-			continue
-		}
-		if !is.BuilderGlob().Match(builder.GetName()) {
+		if !is.Matches(host.Triplet, builder.GetName()) {
 			continue
 		}
 		k := is.Content[:equalIndex]

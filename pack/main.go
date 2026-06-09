@@ -339,10 +339,7 @@ func collectDependenciesByLevel(pkgName string, host string) [][]string {
 
 			for _, dep := range pkg.Dependencies {
 				is := ifstring.ParseIfString(dep)
-				if !is.HostGlob().Match(host) {
-					continue
-				}
-				if !is.BuilderGlob().Match(builder.GetName()) {
+				if !is.Matches(host, builder.GetName()) {
 					continue
 				}
 

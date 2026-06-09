@@ -111,38 +111,42 @@ func (p *Package) BuildPackage(h *host.Host, buildDependencies bool) {
 	p.buildPackageInternal(h, buildDependencies)
 }
 
+func filteredDependencyPackages(deps []string, h *host.Host) []*Package {
+	var pkgs []*Package
+	for _, dep := range deps {
+		is := ifstring.ParseIfString(dep)
+		if !is.Matches(h.Triplet, builder.GetName()) {
+			continue
+		}
+		d, err := FindPackage(is.Content)
+		if err != nil {
+			log.Fatalf("Package %s not found in build", is.Content)
+		}
+		pkgs = append(pkgs, d)
+	}
+	return pkgs
+}
+
+func wipeDirContents(dir string) {
+	if entries, err := os.ReadDir(dir); err == nil {
+		for _, entry := range entries {
+			utils.RemoveAll(filepath.Join(dir, entry.Name()))
+		}
+	}
+}
+
 func (p *Package) buildPackageInternal(h *host.Host, buildDependencies bool) {
 	var deps []*Package
 	if buildDependencies {
-		for _, dep := range p.Dependencies {
-			is := ifstring.ParseIfString(dep)
-			if !is.HostGlob().Match(h.Triplet) {
-				continue
-			}
-			if !is.BuilderGlob().Match(builder.GetName()) {
-				continue
-			}
-			dep = is.Content
-			d, err := FindPackage(dep)
-			if err != nil {
-				log.Fatalf("Package %s not found in build", dep)
-			}
-			deps = append(deps, d)
+		deps = filteredDependencyPackages(p.Dependencies, h)
+		for _, d := range deps {
 			d.EnsureBuilt(h, false)
 		}
 	}
 	envPath := h.GetEnvPath()
-	if entries, err := os.ReadDir(envPath); err == nil {
-		for _, entry := range entries {
-			utils.RemoveAll(filepath.Join(envPath, entry.Name()))
-		}
-	}
+	wipeDirContents(envPath)
 	nativeEnvPath := h.GetNativeEnvPath()
-	if entries, err := os.ReadDir(nativeEnvPath); err == nil {
-		for _, entry := range entries {
-			utils.RemoveAll(filepath.Join(nativeEnvPath, entry.Name()))
-		}
-	}
+	wipeDirContents(nativeEnvPath)
 	os.MkdirAll(envPath, 0755)
 	for _, dep := range deps {
 		dep.ExtractEnv(h, envPath, nativeEnvPath)
@@ -153,31 +157,20 @@ func (p *Package) buildPackageInternal(h *host.Host, buildDependencies bool) {
 	utils.RemoveAll(stagingPath)
 	os.MkdirAll(buildPath, 0755)
 	os.MkdirAll(stagingPath, 0755)
-	// defer os.RemoveAll(buildPath)
-	// defer os.RemoveAll(stagingPath)
+	defer utils.RemoveAll(buildPath)
+	defer utils.RemoveAll(stagingPath)
 
 	p.ExtractSource(h, buildPath)
 
-	infoPath := filepath.Join(stagingPath, h.GetEnvPath(), ".buildlib", p.ShortName(h)+".txt")
-	if p.Type == "native" {
-		infoPath = filepath.Join(stagingPath, h.GetNativeEnvPath(), ".buildlib", p.ShortName(h)+".txt")
-	}
+	infoPath := filepath.Join(stagingPath, p.prefixPath(h), ".buildlib", p.ShortName(h)+".txt")
 	os.MkdirAll(filepath.Dir(infoPath), 0755)
 	err := os.WriteFile(infoPath, []byte(p.GeneratePackageInfo(h)), 0644)
 	if err != nil {
 		log.Fatalf("Failed to write build info %s: %v", infoPath, err)
 	}
 
-	for _, step := range p.Build.Steps {
-		is := ifstring.ParseIfString(step)
-		if !is.HostGlob().Match(h.Triplet) {
-			continue
-		}
-		if !is.BuilderGlob().Match(builder.GetName()) {
-			continue
-		}
-		step = is.Content
-
+	builderName := builder.GetName()
+	for _, step := range ifstring.FilterContent(p.Build.Steps, h.Triplet, builderName) {
 		cmd := exec.Command("sh", "-c", step)
 		cmd.Dir = buildPath
 		pathEnv := utils.GetHostPath()
@@ -282,19 +275,7 @@ func (p *Package) StartShell(h *host.Host) {
 	os.MkdirAll(buildPath, 0755)
 
 	log.Printf("Extracting source for package: %s", p.Package)
-	for _, depName := range p.Dependencies {
-		is := ifstring.ParseIfString(depName)
-		if !is.HostGlob().Match(h.Triplet) {
-			continue
-		}
-		if !is.BuilderGlob().Match(builder.GetName()) {
-			continue
-		}
-		depName = is.Content
-		dep, err := FindPackage(depName)
-		if err != nil {
-			log.Fatalf("Package %s not found in build", depName)
-		}
+	for _, dep := range filteredDependencyPackages(p.Dependencies, h) {
 		dep.ExtractEnv(h, h.GetEnvPath(), h.GetNativeEnvPath())
 	}
 	p.ExtractSource(h, buildPath)
@@ -307,26 +288,19 @@ func (p *Package) StartShell(h *host.Host) {
 		userShell = "/bin/sh"
 	}
 	fmt.Print("\n\n")
-	for _, step := range p.Build.Steps {
-		is := ifstring.ParseIfString(step)
-		if !is.HostGlob().Match(h.Triplet) {
-			continue
-		}
-		if !is.BuilderGlob().Match(builder.GetName()) {
-			continue
-		}
-		step = is.Content
+	builderName := builder.GetName()
+	for _, step := range ifstring.FilterContent(p.Build.Steps, h.Triplet, builderName) {
 		fmt.Printf("%s;\n", utils.ExpandEnvFromMap(step, env))
 	}
 	fmt.Print("\n\n")
 
 	for _, step := range p.Build.Steps {
 		is := ifstring.ParseIfString(step)
-		if !(is.HostGlob().Match(h.Triplet) && is.BuilderGlob().Match(builder.GetName())) {
+		if !is.Matches(h.Triplet, builderName) {
 			log.Printf("[no match] %s", utils.ExpandEnvFromMap(step, env))
 			continue
 		}
-		log.Printf("   [match] %s", utils.ExpandEnvFromMap(step, env))
+		log.Printf("   [match] %s", utils.ExpandEnvFromMap(is.Content, env))
 	}
 	fmt.Print("\n\n")
 	log.Printf("Starting %s in %s with build environment for %s", userShell, buildPath, h.Triplet)

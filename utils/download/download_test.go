@@ -36,7 +36,7 @@ func TestEnsureDownloadFileRejectsInvalidHash(t *testing.T) {
 		t.Fatal("expected download error for invalid hash and unreachable URL")
 	}
 
-	if _, statErr := os.Stat(path); statErr != nil {
+	if _, statErr := os.Stat(path); statErr == nil {
 		t.Fatal("expected stale file to be removed before re-download attempt")
 	}
 }

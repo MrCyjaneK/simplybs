@@ -241,17 +241,13 @@ func createXzTarReader(archivePath string) (*tar.Reader, func(), error) {
 	return tr, cleanup, nil
 }
 
-func ExtractTarGz(archivePath, destPath string) error {
+func extractTarArchive(archivePath, destPath, logLabel string, readerFactory func() (*tar.Reader, func(), error)) error {
 	if _, err := os.Stat(archivePath); os.IsNotExist(err) {
 		log.Printf("Archive not found: %s", archivePath)
 		return err
 	}
 
-	log.Printf("Extracting archive: %s into %s", archivePath, destPath)
-
-	readerFactory := func() (*tar.Reader, func(), error) {
-		return createGzipTarReader(archivePath)
-	}
+	log.Printf("%s: %s into %s", logLabel, archivePath, destPath)
 
 	commonPrefix, err := detectCommonPrefix(readerFactory)
 	if err != nil {
@@ -273,74 +269,24 @@ func ExtractTarGz(archivePath, destPath string) error {
 	}
 
 	return nil
+}
+
+func ExtractTarGz(archivePath, destPath string) error {
+	return extractTarArchive(archivePath, destPath, "Extracting archive", func() (*tar.Reader, func(), error) {
+		return createGzipTarReader(archivePath)
+	})
 }
 
 func ExtractTarBz2(archivePath, destPath string) error {
-	if _, err := os.Stat(archivePath); os.IsNotExist(err) {
-		log.Printf("Archive not found: %s", archivePath)
-		return err
-	}
-
-	log.Printf("Extracting bz2 archive: %s into %s", archivePath, destPath)
-
-	readerFactory := func() (*tar.Reader, func(), error) {
+	return extractTarArchive(archivePath, destPath, "Extracting bz2 archive", func() (*tar.Reader, func(), error) {
 		return createBzip2TarReader(archivePath)
-	}
-
-	commonPrefix, err := detectCommonPrefix(readerFactory)
-	if err != nil {
-		return err
-	}
-
-	tr, cleanup, err := readerFactory()
-	if err != nil {
-		return err
-	}
-	defer cleanup()
-
-	if err := extractTar(tr, destPath, commonPrefix); err != nil {
-		return err
-	}
-
-	if commonPrefix != "" {
-		log.Printf("Stripped common directory prefix: %s", commonPrefix)
-	}
-
-	return nil
+	})
 }
 
 func ExtractTarXz(archivePath, destPath string) error {
-	if _, err := os.Stat(archivePath); os.IsNotExist(err) {
-		log.Printf("Archive not found: %s", archivePath)
-		return err
-	}
-
-	log.Printf("Extracting xz archive: %s into %s", archivePath, destPath)
-
-	readerFactory := func() (*tar.Reader, func(), error) {
+	return extractTarArchive(archivePath, destPath, "Extracting xz archive", func() (*tar.Reader, func(), error) {
 		return createXzTarReader(archivePath)
-	}
-
-	commonPrefix, err := detectCommonPrefix(readerFactory)
-	if err != nil {
-		return err
-	}
-
-	tr, cleanup, err := readerFactory()
-	if err != nil {
-		return err
-	}
-	defer cleanup()
-
-	if err := extractTar(tr, destPath, commonPrefix); err != nil {
-		return err
-	}
-
-	if commonPrefix != "" {
-		log.Printf("Stripped common directory prefix: %s", commonPrefix)
-	}
-
-	return nil
+	})
 }
 
 func writeFileToTar(tw *tar.Writer, header *tar.Header, filePath string) error {

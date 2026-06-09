@@ -20,6 +20,22 @@ func (is *IfString) HostGlob() glob.Glob {
 	return glob.MustCompile(is.Host)
 }
 
+func (is *IfString) Matches(hostTriplet, builderName string) bool {
+	return is.HostGlob().Match(hostTriplet) && is.BuilderGlob().Match(builderName)
+}
+
+func FilterContent(items []string, hostTriplet, builderName string) []string {
+	filtered := make([]string, 0, len(items))
+	for _, item := range items {
+		is := ParseIfString(item)
+		if !is.Matches(hostTriplet, builderName) {
+			continue
+		}
+		filtered = append(filtered, is.Content)
+	}
+	return filtered
+}
+
 func ParseIfString(str string) *IfString {
 	is := &IfString{}
 	is.Builder = strings.Split(str, ":")[0]

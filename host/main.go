@@ -2,10 +2,8 @@ package host
 
 import (
 	"os"
-	"os/exec"
 	"path/filepath"
 	"runtime"
-	"strings"
 
 	"github.com/mrcyjanek/simplybs/crash"
 )
@@ -323,12 +321,4 @@ var SupportedHosts = map[string]*Host{
 			"*:*:ANDROID_NDK_HOME=$NATIVEPREFIX/",
 			"*:*:LDFLAGS=$LDFLAGS -lc -lc++abi -lm"},
 	},
-}
-
-func shellOutput(cmd string) string {
-	output, err := exec.Command("bash", "-c", cmd).Output()
-	if err != nil {
-		return "$(" + cmd + ")"
-	}
-	return strings.TrimSpace(string(output))
 }

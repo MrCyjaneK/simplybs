@@ -16,7 +16,7 @@ func RemoveAll(path string) error {
 	})
 
 	if err := os.RemoveAll(path); err != nil {
-		log.Fatalf("removeAll %s: %w", path, err)
+		log.Fatalf("removeAll %s: %v", path, err)
 	}
 	return nil
 }
