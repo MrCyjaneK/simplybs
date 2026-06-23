@@ -1,28 +1,31 @@
 {
     "package": "native/7zip",
-    "version": "25.01",
+    "version": "26.01",
     "type": "native",
     "download": [
         {
             "kind": "git",
-            "sha256": "5e96a8279489832924056b1fa82f29d5837c9469",
+            "sha256": "8c63d71ff886bda90c86db28466287f977374237",
             "url": "https://github.com/ip7z/7zip.git"
         }
     ],
     "dependencies": [
+        "*:*:native/_/_",
         "*:*:native/make",
-        "*:*:native/sed"
+        "*:*:native/sed",
+        "*:*:native/diffutils"
     ],
     "build": {
         "env": [],
         "steps": [
             "*:*:sed -i.bak 's/-Werror //g' CPP/7zip/7zip_gcc.mak",
-            "darwin_arm64:*:cd CPP/7zip/Bundles/Format7zF && make -f ../../cmpl_mac_arm64.mak -j$NUM_CORES",
-            "darwin_amd64:*:cd CPP/7zip/Bundles/Format7zF && make -f ../../cmpl_mac_x64.mak -j$NUM_CORES",
-            "linux_*:*:cd CPP/7zip/Bundles/Format7zF && make -f ../../cmpl_clang.mak -j$NUM_CORES",
-            "darwin_arm64:*:cd CPP/7zip/Bundles/Alone2 && make -f ../../cmpl_mac_arm64.mak -j$NUM_CORES",
-            "darwin_amd64:*:cd CPP/7zip/Bundles/Alone2 && make -f ../../cmpl_mac_x64.mak -j$NUM_CORES",
-            "linux_*:*:cd CPP/7zip/Bundles/Alone2 && make -f ../../cmpl_clang.mak -j$NUM_CORES",
+            "darwin_*:*:sed -i.bak 's/LIB2 = -lpthread -ldl/LIB2 = -lpthread -ldl -lc++ -lc++abi/' CPP/7zip/7zip_gcc.mak",
+            "darwin_arm64:*:cd CPP/7zip/Bundles/Format7zF && make -f ../../cmpl_mac_arm64.mak CC=\"$CC\" CXX=\"$CXX\" -j$NUM_CORES",
+            "darwin_amd64:*:cd CPP/7zip/Bundles/Format7zF && make -f ../../cmpl_mac_x64.mak CC=\"$CC\" CXX=\"$CXX\" -j$NUM_CORES",
+            "linux_*:*:cd CPP/7zip/Bundles/Format7zF && make -f ../../cmpl_clang.mak CC=\"$CC\" CXX=\"$CXX\" -j$NUM_CORES",
+            "darwin_arm64:*:cd CPP/7zip/Bundles/Alone2 && make -f ../../cmpl_mac_arm64.mak CC=\"$CC\" CXX=\"$CXX\" -j$NUM_CORES",
+            "darwin_amd64:*:cd CPP/7zip/Bundles/Alone2 && make -f ../../cmpl_mac_x64.mak CC=\"$CC\" CXX=\"$CXX\" -j$NUM_CORES",
+            "linux_*:*:cd CPP/7zip/Bundles/Alone2 && make -f ../../cmpl_clang.mak CC=\"$CC\" CXX=\"$CXX\" -j$NUM_CORES",
             "*:*:mkdir -p $STAGING_DIR$NATIVEPREFIX/bin",
             "*:*:mkdir -p $STAGING_DIR$NATIVEPREFIX/lib",
             "*:*:cp ./CPP/7zip/Bundles/Alone2/b/*/7zz $STAGING_DIR$NATIVEPREFIX/bin/7zz",

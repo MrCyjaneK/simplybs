@@ -10,6 +10,7 @@
         }
     ],
     "dependencies": [
+        "*:*:native/_/_",
         "*:*:native/autoconf",
         "*:*:native/automake",
         "*:*:native/gettext",

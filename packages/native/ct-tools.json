@@ -118,6 +118,7 @@
         }
     ],
     "dependencies": [
+        "*:*:native/_/_",
         "*:{*-linux-gnu,*-linux-musl,*-w64-mingw32}:native/autoconf",
         "*:{*-linux-gnu,*-linux-musl,*-w64-mingw32}:native/automake",
         "*:{*-linux-gnu,*-linux-musl,*-w64-mingw32}:native/bash",

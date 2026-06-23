@@ -10,6 +10,7 @@
         }
     ],
     "dependencies": [
+        "*:*-android*:native/_/_",
         "*:*-android*:native/cmake",
         "*:*-android*:native/ninja",
         "*:*-android*:native/python@3.11"

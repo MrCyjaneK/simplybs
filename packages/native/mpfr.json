@@ -10,6 +10,8 @@
         }
     ],
     "dependencies": [
+        "*:*:native/_/_",
+        "*:*:native/bash",
         "*:*:native/gmp_static",
         "*:*:native/make"
     ],
@@ -20,7 +22,7 @@
             "*:*:config_opts=$config_opts --enable-static"
         ],
         "steps": [
-            "*:*:./configure $config_opts",
+            "*:*:bash ./configure $config_opts",
             "*:*:make -j$NUM_CORES",
             "*:*:make DESTDIR=$STAGING_DIR install"
         ]

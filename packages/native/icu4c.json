@@ -10,7 +10,10 @@
         }
     ],
     "dependencies": [
-        "*:*-w64-mingw32:native/make"
+        "*:*-w64-mingw32:native/_/_",
+        "*:*-w64-mingw32:native/bash",
+        "*:*-w64-mingw32:native/make",
+        "*:*-w64-mingw32:native/patch"
     ],
     "patches": [
         "icu-001-dont-build-static-dynamic-twice.patch"
@@ -24,7 +27,7 @@
             "*:*-w64-mingw32:patch -p1 < $PATCH_DIR/icu4c/icu-001-dont-build-static-dynamic-twice.patch",
             "*:*-w64-mingw32:mkdir -p $NATIVEPREFIX/share/",
             "*:*-w64-mingw32:cp -av . $NATIVEPREFIX/share/icu4c_55.2",
-            "*:*-w64-mingw32:WD=$PWD && unset HOST TARGET && cd $NATIVEPREFIX/share/icu4c_55.2 && sh $WD/source/runConfigureICU $ICU_PLATFORM --prefix=$NATIVEPREFIX/share/icu4c_55.2",
+            "*:*-w64-mingw32:WD=$PWD && unset HOST TARGET && cd $NATIVEPREFIX/share/icu4c_55.2 && bash $WD/source/runConfigureICU $ICU_PLATFORM --prefix=$NATIVEPREFIX/share/icu4c_55.2",
             "*:*-w64-mingw32:unset HOST TARGET && cd $NATIVEPREFIX/share/icu4c_55.2 && make -j$NUM_CORES",
             "*:*-w64-mingw32:mkdir -p $STAGING_DIR$NATIVEPREFIX/share",
             "*:*-w64-mingw32:cp -av $NATIVEPREFIX/share/icu4c_55.2 $STAGING_DIR$NATIVEPREFIX/share/"

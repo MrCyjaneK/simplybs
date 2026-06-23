@@ -17,6 +17,15 @@
         "*:*:native/libtool",
         "*:*:native/m4",
         "*:*:native/make",
+        "*:*:native/sed",
+        "*:*:native/grep",
+        "*:*:native/gawk",
+        "*:*:native/gzip",
+        "*:*:native/bash",
+        "*:*:native/diffutils",
+        "*:*:native/tar",
+        "*:*:native/coreutils",
+        "*:*:native/findutils",
         "*:*:native/perl"
     ],
     "patches": [
@@ -33,8 +42,8 @@
             "*:*:SKIP_WERROR_CHECK=yes"
         ],
         "steps": [
-            "*:*:./autogen.sh --no-po4a",
-            "*:*:./configure $config_opts",
+            "*:*:bash ./autogen.sh --no-po4a",
+            "*:*:bash ./configure $config_opts",
             "*:*:make -j$NUM_CORES",
             "*:*:make DESTDIR=$STAGING_DIR install",
             "*:*:rm $STAGING_DIR$PREFIX/lib/*.la"

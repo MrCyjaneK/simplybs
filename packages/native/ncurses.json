@@ -10,6 +10,8 @@
         }
     ],
     "dependencies": [
+        "*:*:native/_/_",
+        "*:*:native/bash",
         "*:*:native/make"
     ],
     "build": {
@@ -50,7 +52,7 @@
         ],
         "steps": [
             "*:*:cp $PATCH_DIR/ncurses/fallback.c ncurses",
-            "*:*:./configure $config_opts",
+            "*:*:bash ./configure $config_opts",
             "*:*:make -j$NUM_CORES $build_opts",
             "*:*:make install.libs DESTDIR=$STAGING_DIR"
         ]

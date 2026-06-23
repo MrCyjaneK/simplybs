@@ -1,16 +1,18 @@
 {
-    "package": "native/coreutils",
-    "version": "9.9",
+    "package": "native/findutils",
+    "version": "4.10.0",
     "type": "native",
     "download": [
         {
             "kind": "tar.xz",
-            "sha256": "19bcb6ca867183c57d77155eae946c5eced88183143b45ca51ad7d26c628ca75",
-            "url": "https://ftpmirror.gnu.org/gnu/coreutils/coreutils-9.9.tar.xz"
+            "sha256": "1387e0b67ff247d2abde998f90dfbf70c1491391a59ddfecb8ae698789f0a4f5",
+            "url": "https://ftp.gnu.org/gnu/findutils/findutils-4.10.0.tar.xz"
         }
     ],
     "dependencies": [
         "*:*:native/make",
+        "*:*:native/grep",
+        "*:*:native/sed",
         "*:*:native/bash",
         "*:*:native/_/_"
     ],

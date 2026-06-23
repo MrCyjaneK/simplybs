@@ -188,7 +188,7 @@ func (p *Package) buildPackageInternal(h *host.Host, buildDependencies bool) {
 			"HOST=" + h.Triplet,
 			"PREFIX=" + h.GetEnvPath(),
 			"NATIVEPREFIX=" + h.GetNativeEnvPath(),
-			"PATH=" + h.GetNativeEnvPath() + "/bin:" + env["PATH"] + ":" + pathEnv + ":" + h.GetEnvPath() + "/bin",
+			"PATH=" + h.GetNativeEnvPath() + "/bin:" + env["PATH"] + ":" + pathEnv + ":" + h.GetEnvPath() + "/bin" + ":" + h.GetNativeEnvPath() + "/_/bin",
 		}...)
 		for k, v := range env {
 			cmd.Env = append(cmd.Env, k+"="+v)
@@ -342,7 +342,7 @@ func (p *Package) StartShell(h *host.Host) {
 		"HOST=" + h.Triplet,
 		"PREFIX=" + h.GetEnvPath(),
 		"NATIVEPREFIX=" + h.GetNativeEnvPath(),
-		"PATH=" + h.GetNativeEnvPath() + "//bin:" + env["PATH"] + ":" + pathEnv,
+		"PATH=" + h.GetNativeEnvPath() + "/bin:" + env["PATH"] + ":" + pathEnv,
 		"TERM=" + os.Getenv("TERM"),
 	}...)
 

@@ -9,15 +9,19 @@
             "url": "http://downloads.sourceforge.net/project/boost/boost/1.83.0/boost_1_83_0.tar.bz2"
         }
     ],
+    "dependencies": [
+        "*:*:native/_/_",
+        "*:*:native/bash"
+    ],
     "build": {
         "env": [
             "*:*:config_libraries=system,filesystem,thread,timer,date_time,chrono,regex,serialization,atomic,program_options,log",
             "*:*-w64-*:config_libraries=system,filesystem,thread,timer,date_time,chrono,regex,serialization,atomic,program_options,locale,log"
         ],
         "steps": [
-            "*:*:./bootstrap.sh --without-icu --with-libraries=$config_libraries",
+            "*:*:./tools/build/src/engine/build.sh --cxx=$CXX --cxxflags=\"$CXXFLAGS $LDFLAGS\"",
             "*:*:mkdir -p $STAGING_DIR$NATIVEPREFIX/bin",
-            "*:*:cp b2 $STAGING_DIR$NATIVEPREFIX/bin/"
+            "*:*:cp tools/build/src/engine/b2 $STAGING_DIR$NATIVEPREFIX/bin/"
         ]
     }
 }

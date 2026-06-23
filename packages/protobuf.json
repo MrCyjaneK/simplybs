@@ -11,19 +11,26 @@
     ],
     "dependencies": [
         "*:*:native/_",
+        "*:*:native/bash",
+        "*:*:native/coreutils",
+        "*:*:native/grep",
+        "*:*:native/sed",
         "*:*:native/autoconf",
         "*:*:native/automake",
         "*:*:native/config",
         "*:*:native/m4",
         "*:*:native/make",
         "*:*:native/perl",
-        "*:*:native/protobuf"
+        "*:*:native/protobuf",
+        "*:*:native/gawk"
     ],
     "patches": [
         "visibility.patch"
     ],
     "build": {
         "env": [
+            "*:*:CC_FOR_BUILD=$CC",
+            "*:*:CXX_FOR_BUILD=$CXX",
             "*:*:CXXFLAGS=$CXXFLAGS -std=c++11",
             "*:*:config_opts=--host=$HOST --prefix=$PREFIX",
             "*:*:config_opts=$config_opts --disable-shared --with-protoc=$NATIVEPREFIX/bin/protoc",
@@ -36,7 +43,7 @@
             "*:*:cp -f $NATIVEPREFIX/share/config/config.sub third_party/googletest/googletest/build-aux/config.sub",
             "*:*:cp -f $NATIVEPREFIX/share/config/config.guess third_party/googletest/googlemock/build-aux/config.guess",
             "*:*:cp -f $NATIVEPREFIX/share/config/config.sub third_party/googletest/googlemock/build-aux/config.sub",
-            "*:*:./configure $config_opts",
+            "*:*:bash ./configure $config_opts",
             "*:*:make -j$NUM_CORES -C src libprotobuf.la",
             "*:*:make -j$NUM_CORES -C src DESTDIR=$STAGING_DIR install-libLTLIBRARIES install-nobase_includeHEADERS",
             "*:*:make -j$NUM_CORES DESTDIR=$STAGING_DIR install-pkgconfigDATA"

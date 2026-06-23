@@ -1,12 +1,12 @@
 {
-    "package": "native/file",
-    "version": "5.44",
+    "package": "native/gzip",
+    "version": "1.14",
     "type": "native",
     "download": [
         {
-            "kind": "tar.gz",
-            "sha256": "c9cc77c7c560c543135edc555af609d5619dbef011997e988ce40a3d75d86088",
-            "url": "https://astron.com/pub/file/file-5.46.tar.gz"
+            "kind": "tar.xz",
+            "sha256": "01a7b881bd220bfdf615f97b8718f80bdfd3f6add385b993dcf6efd14e8c0ac6",
+            "url": "http://ftpmirror.gnu.org/gnu/gzip/gzip-1.14.tar.xz"
         }
     ],
     "dependencies": [
@@ -15,6 +15,7 @@
         "*:*:native/make"
     ],
     "build": {
+        "env": [],
         "steps": [
             "*:*:bash ./configure --prefix=$NATIVEPREFIX",
             "*:*:make -j$NUM_CORES",

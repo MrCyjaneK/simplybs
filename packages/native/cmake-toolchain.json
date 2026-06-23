@@ -9,6 +9,9 @@
             "url": "https://github.com/MrCyjaneK/cmake-toolchain.git"
         }
     ],
+    "dependencies": [
+        "*:*:native/_/_"
+    ],
     "build": {
         "env": [],
         "steps": [

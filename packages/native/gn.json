@@ -10,6 +10,7 @@
         }
     ],
     "dependencies": [
+        "*:*:native/_/_",
         "*:*:native/git",
         "*:*:native/ninja",
         "*:*:native/pkgconf",

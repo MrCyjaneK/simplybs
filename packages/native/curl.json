@@ -10,16 +10,18 @@
         }
     ],
     "dependencies": [
+        "*:*:native/_/_",
+        "*:*:native/bash",
         "*:*:native/libpsl",
         "*:*:native/make",
         "*:*:native/openssl"
     ],
     "build": {
         "env": [
-            "*:*:config_opts=--with-openssl"
+            "*:*:config_opts=--with-openssl --disable-docs --disable-ldap"
         ],
         "steps": [
-            "*:*:./configure $config_opts --prefix=$NATIVEPREFIX",
+            "*:*:bash ./configure $config_opts --prefix=$NATIVEPREFIX",
             "*:*:make -j$NUM_CORES",
             "*:*:make DESTDIR=$STAGING_DIR install"
         ]

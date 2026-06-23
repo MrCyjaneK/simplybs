@@ -10,15 +10,20 @@
         }
     ],
     "dependencies": [
+        "*:*:native/_/_",
+        "*:*:native/bash",
+        "*:*:native/sed",
+        "*:*:native/grep",
         "*:*:native/m4",
         "*:*:native/make"
     ],
     "build": {
         "env": [],
         "steps": [
-            "*:*:./configure --prefix=$NATIVEPREFIX",
+            "*:*:bash ./configure --prefix=$NATIVEPREFIX",
             "*:*:make -j$NUM_CORES",
-            "*:*:make DESTDIR=$STAGING_DIR install"
+            "*:*:make DESTDIR=$STAGING_DIR install",
+            "*:*:ln -sf libtoolize $STAGING_DIR$NATIVEPREFIX/bin/glibtoolize"
         ]
     }
 }

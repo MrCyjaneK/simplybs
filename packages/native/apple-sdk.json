@@ -16,6 +16,9 @@
         }
     ],
     "dependencies": [
+        "*:*-apple-*:native/_/_",
+        "*:*-apple-*:native/bash",
+        "*:*-apple-*:native/coreutils",
         "*:*-apple-*:native/bzip2",
         "*:*-apple-*:native/cctools-port",
         "*:*-apple-*:native/cmake",
@@ -32,7 +35,8 @@
         "*:*-apple-*:native/pkgconf",
         "*:*-apple-*:native/python@3.11",
         "*:*-apple-*:native/xar",
-        "*:*-apple-*:native/xz"
+        "*:*-apple-*:native/xz",
+        "*:*:native/_/_"
     ],
     "build": {
         "env": [

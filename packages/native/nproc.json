@@ -9,6 +9,9 @@
             "url": "http://github.com/MrCyjaneK/nproc/archive/30acb0de0e18a2b16c277e6db840e5ce389d962d.tar.gz"
         }
     ],
+    "dependencies": [
+        "*:*:native/_/_"
+    ],
     "build": {
         "env": [],
         "steps": [

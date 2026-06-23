@@ -10,6 +10,7 @@
         }
     ],
     "dependencies": [
+        "*:*:native/_/_",
         "*:*:native/autoconf",
         "*:*:native/automake",
         "*:*:native/bash",
@@ -26,6 +27,7 @@
         "*:*:native/make",
         "*:*:native/ncurses",
         "*:*:native/patch",
+        "*:*:native/grep",
         "*:*:native/perl",
         "*:*:native/python@3.11",
         "*:*:native/rsync",

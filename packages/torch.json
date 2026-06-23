@@ -13,6 +13,8 @@
         "*:*:native/_",
         "*:*:native/cmake",
         "*:*:native/cmake-toolchain",
+        "*:*:native/coreutils",
+        "*:*:native/make",
         "*:*:libevent",
         "*:*:openssl",
         "*:*:tor",

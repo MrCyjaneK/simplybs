@@ -10,10 +10,13 @@
         }
     ],
     "dependencies": [
+        "*:*:native/_/_",
+        "*:*:native/bash",
         "*:*:native/bzip2",
         "*:*:native/make",
         "*:*:native/openssl",
         "*:*:native/xz",
+        "*:*:native/libxml2",
         "*:*:native/zlib"
     ],
     "build": {
@@ -23,10 +26,10 @@
             "*:*:config_opts=$config_opts --with-lzma=$NATIVEPREFIX"
         ],
         "steps": [
-            "*:*:cd xar && ./configure --prefix=$NATIVEPREFIX",
-            "*:*:cd xar && make -j$NUM_CORES",
-            "*:*:cd xar && make DESTDIR=$STAGING_DIR install",
-            "*:*:mkdir -p $STAGING_DIR$NATIVEPREFIX/include"
+            "*:*:cd xar && bash ./configure --prefix=$NATIVEPREFIX",
+            "*:*:cd xar && make V=1 -j$NUM_CORES",
+            "*:*:sed -i.bak 's|.././install-sh|./install-sh|g' xar/lib/Makefile.inc xar/src/Makefile.inc",
+            "*:*:cd xar && make V=1 DESTDIR=$STAGING_DIR install"
         ]
     }
 }

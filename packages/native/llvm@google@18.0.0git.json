@@ -10,9 +10,11 @@
         }
     ],
     "dependencies": [
+        "*:*:native/_/_",
         "*:*:native/cmake",
         "*:*:native/ninja",
-        "*:*:native/python@3.11"
+        "*:*:native/python@3.11",
+        "*:*:native/sed"
     ],
     "build": {
         "env": [

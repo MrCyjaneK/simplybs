@@ -11,6 +11,8 @@
     ],
     "dependencies": [
         "*:*:native/_",
+        "*:*:native/bash",
+        "*:*:native/coreutils",
         "*:*:native/boost-b2@1_83_0",
         "*:*:native/cmake",
         "*:*:native/python@3.14",
@@ -28,8 +30,8 @@
             "*:*-linux-android*:target_os=android",
             "*:*-mingw32*:target_os=windows",
             "*:*-linux-gnu*:target_os=linux",
-            "*:*:config_opts=variant=release --layout=system --without-python --user-config=user-config.jam",
-            "*:*:config_opts=$config_opts threading=multi link=static -sNO_BZIP2=1 -sNO_ZLIB=1",
+            "*:*:config_opts=variant=release --layout=system --without-python --without-mpi --without-graph_parallel --user-config=user-config.jam",
+            "*:*:config_opts=$config_opts threading=multi link=static -sNO_BZIP2=1 -sNO_ZLIB=1 -sICONV_PATH=$PREFIX",
             "*:aarch64-apple-darwin:config_opts=$config_opts address-model=64 threadapi=pthread architecture=arm --toolset=darwin runtime-link=shared",
             "*:x86_64-linux-android:config_opts=$config_opts address-model=64 threadapi=pthread runtime-link=static target-os=$target_os binary-format=elf abi=aapcs",
             "*:aarch64-linux-android:config_opts=$config_opts address-model=64 threadapi=pthread runtime-link=static target-os=$target_os binary-format=elf abi=aapcs",
@@ -58,6 +60,9 @@
         ],
         "steps": [
             "*:*:echo \"using $toolset : $toolset2 : $CXX $CXXFLAGS : <CXXFLAGS>\"$CXXFLAGS\" <linkflags>\"$LDFLAGS\" <archiver>\"$AR\" <arflags>\"$ARFLAGS\" <striper>\"$STRIP\" <ranlib>\"$RANLIB\" <rc>\"$WINDRES\" <target-os>\"$target_os\" : ;\" > user-config.jam",
+            "*:*:echo \"using lzma : : <include>$PREFIX/include <search>$PREFIX/lib ;\" >> user-config.jam",
+            "*:*:echo \"using zstd : : <include>$PREFIX/include <search>$PREFIX/lib ;\" >> user-config.jam",
+            "*:*:echo \"using openssl : : <include>$PREFIX/include <search>$PREFIX/lib ;\" >> user-config.jam",
             "*:*:b2 -j$NUM_CORES --prefix=$STAGING_DIR$PREFIX $config_opts",
             "*:*:b2 -j1 --prefix=$STAGING_DIR$PREFIX $config_opts stage",
             "*:*:b2 -d0 -j1 --prefix=$STAGING_DIR$PREFIX $config_opts install"

@@ -10,13 +10,16 @@
         }
     ],
     "dependencies": [
+        "*:*:native/_/_",
         "*:*:native/bison",
         "*:*:native/libiconv",
         "*:*:native/make",
+        "*:*:native/grep",
         "*:*:native/perl",
         "*:*:native/pkgconf",
         "*:*:native/texinfo",
-        "*:*:native/zlib"
+        "*:*:native/zlib",
+        "*:*:native/diffutils"
     ],
     "build": {
         "env": [
@@ -27,9 +30,7 @@
             "*:*:config_opts=$config_opts --enable-targets=all",
             "*:*:config_opts=$config_opts --disable-gprofng",
             "*:*:config_opts=$config_opts --libdir=$NATIVEPREFIX/lib",
-            "*:*:config_opts=$config_opts --infodir=$NATIVEPREFIX/share/info",
-            "*:*:CPPFLAGS=-I$NATIVEPREFIX/include",
-            "*:*:LDFLAGS=-L$NATIVEPREFIX/lib"
+            "*:*:config_opts=$config_opts --infodir=$NATIVEPREFIX/share/info"
         ],
         "steps": [
             "*:*:mkdir -p build",

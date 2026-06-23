@@ -8,7 +8,7 @@ import (
 func GetHostPath() string {
 	switch runtime.GOOS {
 	case "darwin":
-		return "/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin"
+		return ""
 	case "linux":
 		return "/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
 	default:

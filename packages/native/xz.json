@@ -10,8 +10,11 @@
         }
     ],
     "dependencies": [
+        "*:*:native/_/_",
         "*:*:native/autoconf",
         "*:*:native/automake",
+        "*:*:native/gzip",
+        "*:*:native/bash",
         "*:*:native/gettext",
         "*:*:native/libtool",
         "*:*:native/m4",
@@ -32,9 +35,8 @@
             "*:*:config_opts=$config_opts --disable-scripts"
         ],
         "steps": [
-            "*:*:pwd",
-            "*:*:./autogen.sh --no-po4a",
-            "*:*:./configure $config_opts",
+            "*:*:bash ./autogen.sh --no-po4a",
+            "*:*:bash ./configure $config_opts",
             "*:*:make -j$NUM_CORES",
             "*:*:make DESTDIR=$STAGING_DIR install",
             "*:*:rm $STAGING_DIR$NATIVEPREFIX/lib/*.la"

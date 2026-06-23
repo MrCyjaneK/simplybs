@@ -352,6 +352,7 @@
         }
     ],
     "dependencies": [
+        "*:*:native/_/_",
         "*:*:native/dart@3.7.0-224.0.dev",
         "*:*:native/gn",
         "*:*:native/libc++",
@@ -379,8 +380,8 @@
             "*:*:mkdir -p buildtools/mac-arm64/clang/bin",
             "*:*:mkdir -p buildtools/mac-arm64/clang/lib",
             "*:*:ln -s $NATIVEPREFIX/lib/libc++.a buildtools/mac-arm64/clang/lib/libc++.a",
-            "*:*:ln -s $(which clang) buildtools/mac-arm64/clang/bin/clang",
-            "*:*:ln -s $(which clang++) buildtools/mac-arm64/clang/bin/clang++",
+            "*:*:ln -s $CC buildtools/mac-arm64/clang/bin/clang",
+            "*:*:ln -s $CXX buildtools/mac-arm64/clang/bin/clang++",
             "*:*:ln -s $(which llvm-ar) buildtools/mac-arm64/clang/bin/llvm-ar",
             "*:*:ln -s $(which llvm-nm) buildtools/mac-arm64/clang/bin/llvm-nm",
             "*:*:ln -s $(which llvm-strip) buildtools/mac-arm64/clang/bin/llvm-strip",

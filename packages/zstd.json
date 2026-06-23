@@ -10,7 +10,11 @@
         }
     ],
     "dependencies": [
-        "*:*:native/_"
+        "*:*:native/_",
+        "*:*:native/make",
+        "*:*:native/coreutils",
+        "*:*:native/grep",
+        "*:*:native/sed"
     ],
     "build": {
         "env": [

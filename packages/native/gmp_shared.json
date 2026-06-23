@@ -10,6 +10,8 @@
         }
     ],
     "dependencies": [
+        "*:*:native/_/_",
+        "*:*:native/bash",
         "*:*:native/m4",
         "*:*:native/make",
         "*:*:native/perl"
@@ -21,7 +23,7 @@
             "*:*:config_opts=$config_opts --disable-static"
         ],
         "steps": [
-            "*:*:./configure $config_opts",
+            "*:*:bash ./configure $config_opts",
             "*:*:make -j$NUM_CORES",
             "*:*:make check",
             "*:*:make DESTDIR=$STAGING_DIR install"

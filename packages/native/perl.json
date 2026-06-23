@@ -10,16 +10,19 @@
         }
     ],
     "dependencies": [
-        "*:*:native/make"
+        "*:*:native/_/_",
+        "*:*:native/bash",
+        "*:*:native/make",
+        "*:*:native/sed"
     ],
     "build": {
         "env": [],
         "steps": [
             "*:*:mkdir -p $STAGING_DIR$NATIVEPREFIX/lib $NATIVEPREFIX/lib",
             "*:*:sed -i.bak '/^#ifndef PERL_BUILD_DATE$/,/^#endif$/{/^#ifndef PERL_BUILD_DATE$/!d; s/.*/\\#define PERL_BUILD_DATE \"Jan  1 1970 00:00:01\"/;}' perl.c",
-            "*:*:./Configure -des -Dprefix=$NATIVEPREFIX -Duseithreads -Dall_static",
-            "*:*:make -j$NUM_CORES",
-            "*:*:make DESTDIR=$STAGING_DIR install"
+            "*:*:bash ./Configure -des -Dprefix=$NATIVEPREFIX -Duseithreads -Dall_static -Dcc=$CC",
+            "*:*:make -j$NUM_CORES CC=$CC",
+            "*:*:make DESTDIR=$STAGING_DIR install CC=$CC"
         ]
     }
 }

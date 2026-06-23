@@ -24,6 +24,7 @@
     ],
     "dependencies": [
         "*:*:native/7zip",
+        "*:*:native/_/_",
         "*:*:native/sed"
     ],
     "build": {

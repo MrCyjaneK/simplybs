@@ -11,8 +11,11 @@
     ],
     "dependencies": [
         "*:*:native/_",
+        "*:*:native/coreutils",
+        "*:*:native/make",
         "*:*:native/libtool",
-        "*:*:native/sed"
+        "*:*:native/sed",
+        "*:*:native/bash"
     ],
     "build": {
         "env": [
@@ -21,7 +24,7 @@
             "*:*:CROSS_PREFIX=$HOST-"
         ],
         "steps": [
-            "*:*:./configure $config_opts",
+            "*:*:bash ./configure $config_opts",
             "*:*-android*:sed -i.bak s\\|^AR=.\\*$\\|AR=\"llvm-ar\"\\| Makefile",
             "*:*-android*:sed -i.bak s\\|^ARFLAGS=.\\*$\\|ARFLAGS=\"rcs\"\\| Makefile",
             "*:*-linux-gnu:sed -i.bak s\\|^AR=.\\*$\\|AR=\"$AR\"\\| Makefile",

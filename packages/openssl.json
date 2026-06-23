@@ -12,6 +12,8 @@
     "dependencies": [
         "*:*:native/_",
         "*:*:native/make",
+        "*:*:native/coreutils",
+        "*:*:native/sed",
         "*:*:native/perl"
     ],
     "build": {

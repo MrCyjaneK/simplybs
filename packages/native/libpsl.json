@@ -10,13 +10,16 @@
         }
     ],
     "dependencies": [
+        "*:*:native/_/_",
+        "*:*:native/bash",
         "*:*:native/make",
+        "*:*:native/python@3.11",
         "*:*:native/unistring"
     ],
     "build": {
         "env": [],
         "steps": [
-            "*:*:./configure --prefix=$NATIVEPREFIX",
+            "*:*:bash ./configure --prefix=$NATIVEPREFIX",
             "*:*:make -j$NUM_CORES",
             "*:*:make DESTDIR=$STAGING_DIR install"
         ]

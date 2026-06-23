@@ -16,11 +16,14 @@
         }
     ],
     "dependencies": [
+        "*:*:native/_/_",
+        "*:*:native/bash",
         "*:*:native/cmake",
         "*:*:native/make",
         "*:*:native/openssl",
         "*:*:native/patch",
         "*:*:native/perl",
+        "*:*:native/sed",
         "*:*:native/pkgconf",
         "*:*:native/zlib"
     ],
@@ -36,7 +39,7 @@
             "linux_arm64:*:sed -i.bak 's/^[[:space:]]*RUSTC_TARGET ?= x86_64-unknown-linux-gnu/RUSTC_TARGET ?= aarch64-unknown-linux-gnu/' ./minicargo.mk",
             "*:*:echo >> build-1.90.0.sh",
             "*:*:echo make -C run_rustc >> build-1.90.0.sh",
-            "*:*:env -i CXXFLAGS_EXTRA=\"$CFLAGS\" LINKFLAGS_EXTRA=\"$LDFLAGS\" PATH=$PATH PARLEVEL=$NUM_CORES ./build-1.90.0.sh -j$NUM_CORES",
+            "*:*:env -i CXXFLAGS_EXTRA=\"$CFLAGS\" LINKFLAGS_EXTRA=\"$LDFLAGS\" PATH=$PATH PARLEVEL=$NUM_CORES CC=\"$CC\" CXX=\"$CXX\" AR=\"$AR\" bash ./build-1.90.0.sh -j$NUM_CORES",
             "*:*:mkdir -p $STAGING_DIR$NATIVEPREFIX/bin",
             "*:*:mkdir -p $STAGING_DIR$NATIVEPREFIX/lib",
             "*:*:cp -a run_rustc/output-1.90.0/prefix/bin/* $STAGING_DIR$NATIVEPREFIX/bin",

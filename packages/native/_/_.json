@@ -1,0 +1,19 @@
+{
+    "package": "native/_/_",
+    "version": "0.0.0",
+    "type": "native",
+    "dependencies": [
+        "darwin_arm64:*:native/_/darwin_arm64_clang21"
+    ],
+    "build": {
+        "env": [
+            "*:none:A_=This is a meta-package library that includes c and c++ compiler",
+            "*:none:B_=All packages included as dependencies (other than bootstrap packages) are copied over to staging dir."
+        ],
+        "steps": [
+            "*:*:$NATIVEPREFIX/_/bin/mkdir -p $STAGING_DIR$NATIVEPREFIX",
+            "*:*:$NATIVEPREFIX/_/bin/rm -rf $STAGING_DIR$NATIVEPREFIX",
+            "*:*:$NATIVEPREFIX/_/bin/cp -a $NATIVEPREFIX $STAGING_DIR$NATIVEPREFIX"
+        ]
+    }
+}

@@ -10,9 +10,10 @@
         }
     ],
     "dependencies": [
-        "*:*:native/_",
+        "*:*:native/_/_",
         "*:*:native/autoconf",
         "*:*:native/automake",
+        "*:*:native/bash",
         "*:*:native/gettext",
         "*:*:native/libtool",
         "*:*:native/m4",
@@ -25,7 +26,7 @@
         ],
         "steps": [
             "*:*:autoreconf --force --install",
-            "*:*:./configure $config_opts",
+            "*:*:bash ./configure $config_opts",
             "*:*:make -j$NUM_CORES",
             "*:*:make install DESTDIR=$STAGING_DIR"
         ]

@@ -9,11 +9,15 @@
             "url": "http://ftpmirror.gnu.org/gnu/make/make-4.4.tar.gz"
         }
     ],
+    "dependencies": [
+        "*:*:native/_/_"
+    ],
     "build": {
         "env": [],
         "steps": [
-            "*:*:./configure --disable-dependency-tracking",
-            "*:*:./build.sh",
+            "*:*:echo $PATH",
+            "*:*:dash ./configure --disable-dependency-tracking",
+            "*:*:dash ./build.sh",
             "*:*:mkdir -p $STAGING_DIR$NATIVEPREFIX/bin",
             "*:*:cp make $STAGING_DIR/$NATIVEPREFIX/bin/make",
             "*:*:ln -s make $STAGING_DIR$NATIVEPREFIX/bin/gmake",

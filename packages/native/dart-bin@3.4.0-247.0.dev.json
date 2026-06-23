@@ -23,7 +23,8 @@
         }
     ],
     "dependencies": [
-        "*:*:native/7zip"
+        "*:*:native/7zip",
+        "*:*:native/_/_"
     ],
     "build": {
         "env": [],

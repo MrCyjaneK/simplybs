@@ -10,9 +10,13 @@
         }
     ],
     "dependencies": [
+        "*:*:native/_/_",
+        "*:*:native/autoconf",
         "*:*:native/automake",
+        "*:*:native/bash",
         "*:*:native/flex",
         "*:*:native/gawk",
+        "*:*:native/m4",
         "*:*:native/gettext",
         "*:*:native/libxml2",
         "*:*:native/make",
@@ -22,7 +26,7 @@
         "env": [],
         "steps": [
             "*:*:autoreconf -f -i",
-            "*:*:./configure --prefix=$NATIVEPREFIX",
+            "*:*:bash ./configure --prefix=$NATIVEPREFIX",
             "*:*:make xmlto -j$NUM_CORES",
             "*:*:make DESTDIR=$STAGING_DIR install-exec"
         ]

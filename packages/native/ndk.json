@@ -119,6 +119,7 @@
         }
     ],
     "dependencies": [
+        "*:*-android*:native/_/_",
         "*:*-android*:native/cmake",
         "*:*-android*:native/llvm@google@19.0.1",
         "*:*-android*:native/make",

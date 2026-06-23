@@ -10,7 +10,9 @@
         }
     ],
     "dependencies": [
-        "*:*:native/python@3.11"
+        "*:*:native/_/_",
+        "*:*:native/python@3.11",
+        "*:*:native/coreutils"
     ],
     "build": {
         "env": [],

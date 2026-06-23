@@ -9,6 +9,9 @@
             "url": "https://https.git.savannah.gnu.org/git/config.git"
         }
     ],
+    "dependencies": [
+        "*:*:native/_/_"
+    ],
     "build": {
         "env": [],
         "steps": [

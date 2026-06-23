@@ -10,6 +10,8 @@
         }
     ],
     "dependencies": [
+        "*:*:native/_/_",
+        "*:*:native/bash",
         "*:*:native/libiconv",
         "*:*:native/make"
     ],
@@ -19,7 +21,7 @@
             "*:*:LIBS=-liconv"
         ],
         "steps": [
-            "*:*:./configure $config_opts",
+            "*:*:bash ./configure $config_opts",
             "*:*:make -j$NUM_CORES",
             "*:*:make DESTDIR=$STAGING_DIR install"
         ]

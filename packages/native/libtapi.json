@@ -10,17 +10,18 @@
         }
     ],
     "dependencies": [
+        "*:*:native/_/_",
         "*:*:native/cmake",
-        "*:*:native/make",
         "*:*:native/ninja"
     ],
     "build": {
         "env": [
-            "*:*:INSTALLPREFIX=$NATIVEPREFIX"
+            "*:*:PATH=/usr/bin:/bin:$NATIVEPREFIX/bin:$NATIVEPREFIX/_/bin"
         ],
         "steps": [
-            "*:*:./build.sh",
-            "*:*:DESTDIR=$STAGING_DIR ./install.sh"
+            "*:*:cmake -G Ninja -S src/llvm -B build -DCMAKE_BUILD_TYPE=Release -DLLVM_ENABLE_PROJECTS='clang;tapi' -DLLVM_HOST_TRIPLE=aarch64-apple-darwin -DLLVM_INCLUDE_TESTS=OFF -DLLVM_INCLUDE_BENCHMARKS=OFF -DLLVM_ENABLE_TERMINFO=OFF -DCMAKE_OSX_SYSROOT=$NATIVEPREFIX/_/SDK/MacOSX26.1.sdk -DCMAKE_SHARED_LIBRARY_RUNTIME_C_FLAG=-Wl,-rpath, -DCMAKE_INSTALL_PREFIX=$NATIVEPREFIX -DTAPI_REPOSITORY_STRING=1300.6.5 -DTAPI_FULL_VERSION=1300.6.5 -DCMAKE_CXX_FLAGS=-stdlib=libc++ -DCMAKE_EXE_LINKER_FLAGS=\"-stdlib=libc++ -lc++ -lc++abi\" -DCMAKE_SHARED_LINKER_FLAGS=\"-stdlib=libc++ -lc++ -lc++abi\"",
+            "*:*:cmake --build build --target clangBasic libtapi -j$NUM_CORES",
+            "*:*:DESTDIR=$STAGING_DIR ninja -C build install-libtapi install-tapi-headers"
         ]
     }
 }

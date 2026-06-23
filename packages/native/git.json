@@ -10,20 +10,24 @@
         }
     ],
     "dependencies": [
+        "*:*:native/_/_",
+        "*:*:native/coreutils",
         "*:*:native/curl",
         "*:*:native/expat",
         "*:*:native/gettext",
+        "*:*:native/diffutils",
         "*:*:native/libiconv",
         "*:*:native/make",
         "*:*:native/openssl",
+        "*:*:native/python@3.14",
         "*:*:native/zlib"
     ],
     "build": {
         "env": [],
         "steps": [
-            "linux_*:*:make -j$NUM_CORES EXTLIBS='-liconv -lz -lgettextpo'",
-            "darwin_*:*:make -j$NUM_CORES EXTLIBS='-liconv -lz -lgettextpo -lintl'",
-            "*:*:make DESTDIR=$STAGING_DIR$NATIVEPREFIX install",
+            "linux_*:*:make -j$NUM_CORES prefix=$NATIVEPREFIX EXTLIBS='-liconv -lz -lgettextpo' CC=$CC",
+            "darwin_*:*:make -j$NUM_CORES prefix=$NATIVEPREFIX EXTLIBS='-liconv -lz -lgettextpo -lintl' CC=$CC",
+            "*:*:make prefix=$NATIVEPREFIX DESTDIR=$STAGING_DIR install CC=$CC",
             "*:*:mkdir -p $STAGING_DIR$HOME",
             "*:*:echo '[user]' >> $STAGING_DIR$HOME/.gitconfig",
             "*:*:echo '\tname = simplybs' >> $STAGING_DIR$HOME/.gitconfig",

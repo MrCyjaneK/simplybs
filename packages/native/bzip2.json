@@ -10,13 +10,16 @@
         }
     ],
     "dependencies": [
+        "*:*:native/_/_",
+        "*:*:native/diffutils",
         "*:*:native/make",
-        "*:*:native/openssl"
+        "*:*:native/openssl",
+        "*:*:native/sed"
     ],
     "build": {
         "steps": [
             "*:*:sed -i.bak 's/-Wall/-Wall -fPIC/' Makefile",
-            "*:*:make -j$NUM_CORES",
+            "*:*:make -j$NUM_CORES CC=\"$CC\"",
             "*:*:make install PREFIX=$STAGING_DIR$NATIVEPREFIX"
         ]
     }

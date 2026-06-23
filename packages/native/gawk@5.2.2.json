@@ -10,16 +10,19 @@
         }
     ],
     "dependencies": [
+        "*:*:native/_/_",
+        "*:*:native/bash",
         "*:*:native/make"
     ],
     "build": {
         "env": [
             "*:*:AUTOMAKE=true",
             "*:*:ACLOCAL=true",
-            "*:*:MAKEINFO=true"
+            "*:*:MAKEINFO=true",
+            "darwin_*:*:CFLAGS=$CFLAGS -include mach-o/dyld.h"
         ],
         "steps": [
-            "*:*:./configure --prefix=$NATIVEPREFIX",
+            "*:*:bash ./configure --prefix=$NATIVEPREFIX",
             "*:*:make -j$NUM_CORES",
             "*:*:make DESTDIR=$STAGING_DIR install"
         ]

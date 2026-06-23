@@ -508,8 +508,10 @@
         }
     ],
     "dependencies": [
+        "*:*:native/_/_",
         "*:*:native/dart-bin@3.4.0-247.0.dev",
         "*:*:native/gn",
+        "*:*:native/git",
         "*:*:native/libc++",
         "*:*:native/llvm-ar",
         "*:*:native/llvm-nm",
@@ -535,8 +537,8 @@
             "*:*:mkdir -p buildtools/$BUILDTARGET/clang/bin",
             "*:*:mkdir -p buildtools/$BUILDTARGET/clang/lib",
             "*:*:ln -s $NATIVEPREFIX/lib/libc++.a buildtools/$BUILDTARGET/clang/lib/libc++.a",
-            "*:*:ln -s $(which clang) buildtools/$BUILDTARGET/clang/bin/clang",
-            "*:*:ln -s $(which clang++) buildtools/$BUILDTARGET/clang/bin/clang++",
+            "*:*:ln -s $CC buildtools/$BUILDTARGET/clang/bin/clang",
+            "*:*:ln -s $CXX buildtools/$BUILDTARGET/clang/bin/clang++",
             "*:*:ln -s $(which llvm-ar) buildtools/$BUILDTARGET/clang/bin/llvm-ar",
             "*:*:ln -s $(which llvm-nm) buildtools/$BUILDTARGET/clang/bin/llvm-nm",
             "*:*:ln -s $(which llvm-strip) buildtools/$BUILDTARGET/clang/bin/llvm-strip",

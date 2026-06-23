@@ -10,14 +10,16 @@
         }
     ],
     "dependencies": [
+        "*:*:native/_/_",
         "*:*:native/make"
     ],
     "build": {
         "env": [],
         "steps": [
-            "*:*:./configure --prefix=$NATIVEPREFIX",
+            "*:*:dash ./configure --prefix=$NATIVEPREFIX",
             "*:*:make -j$NUM_CORES V=1",
-            "*:*:make install DESTDIR=$STAGING_DIR"
+            "*:*:make install DESTDIR=$STAGING_DIR",
+            "*:*:ln -sf $NATIVEPREFIX/bin/bash $STAGING_DIR$NATIVEPREFIX/bin/sh"
         ]
     }
 }

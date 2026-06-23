@@ -10,8 +10,10 @@
         }
     ],
     "dependencies": [
+        "*:*:native/_/_",
         "*:*:native/autoconf",
         "*:*:native/automake",
+        "*:*:native/bash",
         "*:*:native/libtool",
         "*:*:native/make",
         "*:*:native/perl",
@@ -22,7 +24,7 @@
             "*:*:config_opts=--prefix=$NATIVEPREFIX"
         ],
         "steps": [
-            "*:*:./configure $config_opts",
+            "*:*:bash ./configure $config_opts",
             "*:*:make -j$NUM_CORES",
             "*:*:make DESTDIR=$STAGING_DIR install"
         ]

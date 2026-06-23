@@ -10,7 +10,9 @@
         }
     ],
     "dependencies": [
+        "*:*:native/_/_",
         "*:*:native/automake",
+        "*:*:native/bash",
         "*:*:native/gawk",
         "*:*:native/gettext",
         "*:*:native/make",
@@ -21,7 +23,7 @@
             "*:*:HELP2MAN=true"
         ],
         "steps": [
-            "*:*:./configure --prefix=$NATIVEPREFIX",
+            "*:*:bash ./configure --prefix=$NATIVEPREFIX",
             "*:*:make -j$NUM_CORES",
             "*:*:make DESTDIR=$STAGING_DIR install"
         ]

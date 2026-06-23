@@ -10,17 +10,26 @@
         }
     ],
     "dependencies": [
-        "*:*:native/bzip2",
+        "*:*:native/_/_",
+        "*:*:native/bash",
+        "*:*:native/gettext",
+        "*:*:native/libiconv",
         "*:*:native/make",
         "*:*:native/patch",
+        "*:*:native/pkgconf",
         "*:*:native/zlib"
     ],
     "build": {
-        "env": [],
+        "env": [
+            "*:*:config_opts=--prefix=$NATIVEPREFIX",
+            "*:*:config_opts=$config_opts --disable-test-modules",
+            "*:*:config_opts=$config_opts --enable-static",
+            "*:*:MACOSX_DEPLOYMENT_TARGET=13.0",
+            "darwin_*:*:LIBS=-lintl -liconv"
+        ],
         "steps": [
             "*:*:sed -i.bak '/^#ifndef DATE/i\\\n\\/* Deterministic date and time.  *\\/\\\n#define DATE \"Jan  1 1970\"\\\n#define TIME \"00:00:01\"\\\n' Modules/getbuildinfo.c",
-            "*:*:sed -i.bak 's/^#\\(zlib[[:space:]]\\+zlibmodule\\.c[[:space:]]\\+-lz\\)/\\1/' Modules/Setup",
-            "*:*:./configure --disable-test-modules --prefix=$NATIVEPREFIX",
+            "*:*:bash ./configure $config_opts",
             "*:*:make -j$NUM_CORES",
             "*:*:make DESTDIR=$STAGING_DIR install",
             "*:*:cd $STAGING_DIR$NATIVEPREFIX/bin && ln -s python3 python"

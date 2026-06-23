@@ -10,12 +10,15 @@
         }
     ],
     "dependencies": [
-        "*:*:native/make"
+        "*:*:native/_/_",
+        "*:*:native/bash",
+        "*:*:native/make",
+        "*:*:native/sed"
     ],
     "build": {
         "env": [],
         "steps": [
-            "*:*:./configure --prefix=$NATIVEPREFIX --disable-nls",
+            "*:*:bash ./configure --prefix=$NATIVEPREFIX --disable-nls",
             "*:*:sed -i.bak 's/^run.*automake.*/exit 0/' build-aux/missing",
             "*:*:make -j$NUM_CORES",
             "*:*:make DESTDIR=$STAGING_DIR install"

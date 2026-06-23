@@ -10,6 +10,7 @@
         }
     ],
     "dependencies": [
+        "*:*:native/_/_",
         "*:*:native/m4",
         "*:*:native/make",
         "*:*:native/perl"

@@ -17,8 +17,9 @@
         }
     ],
     "dependencies": [
-        "*:*:native/7zip",
-        "*:*:native/python@3.11"
+        "*:*-android*:native/7zip",
+        "*:*-android*:native/_/_",
+        "*:*-android*:native/python@3.11"
     ],
     "build": {
         "env": [

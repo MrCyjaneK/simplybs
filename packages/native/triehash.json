@@ -10,7 +10,7 @@
         }
     ],
     "dependencies": [
-        "*:*:native/perl",
+        "*:*:native/_/_",
         "*:*:native/sed"
     ],
     "build": {

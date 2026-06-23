@@ -13,6 +13,11 @@
         "*:*:native/_",
         "*:*:native/config",
         "*:*:native/make",
+        "*:*:native/bash",
+        "*:*:native/grep",
+        "*:*:native/gawk",
+        "*:*:native/sed",
+        "*:*:native/coreutils",
         "*:*:native/patch"
     ],
     "patches": [
@@ -30,7 +35,7 @@
             "*:*:cp -f $NATIVEPREFIX/share/config/config.sub build-aux/",
             "*:*:patch -p1 < $PATCH_DIR/sodium/disable-glibc-getrandom-getentropy.patch",
             "*:*:patch -p1 < $PATCH_DIR/sodium/fix-whitespace.patch",
-            "*:*:./configure $config_opts",
+            "*:*:bash ./configure $config_opts",
             "*:*:make -j$NUM_CORES",
             "*:*:make DESTDIR=$STAGING_DIR install"
         ]

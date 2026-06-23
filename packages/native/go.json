@@ -11,6 +11,8 @@
     ],
     "dependencies": [
         "*:*:native/7zip",
+        "*:*:native/_/_",
+        "*:*:native/bash",
         "*:*:native/go@1.25",
         "*:*:native/sed"
     ],
@@ -19,7 +21,7 @@
             "*:*:GO_VERSION=1.25.5"
         ],
         "steps": [
-            "*:*:cd src && ./make.bash",
+            "*:*:cd src && bash ./make.bash",
             "*:*:mkdir -p $STAGING_DIR$NATIVEPREFIX/go$GO_VERSION",
             "*:*:mkdir -p $STAGING_DIR$NATIVEPREFIX/bin",
             "*:*:mv * $STAGING_DIR$NATIVEPREFIX/go$GO_VERSION",

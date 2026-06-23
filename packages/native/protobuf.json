@@ -10,8 +10,10 @@
         }
     ],
     "dependencies": [
+        "*:*:native/_/_",
         "*:*:native/autoconf",
         "*:*:native/automake",
+        "*:*:native/bash",
         "*:*:native/config",
         "*:*:native/m4",
         "*:*:native/make",
@@ -19,6 +21,8 @@
     ],
     "build": {
         "env": [
+            "*:*:CC_FOR_BUILD=$CC",
+            "*:*:CXX_FOR_BUILD=$CXX",
             "*:*:config_opts=--host=$HOST --prefix=$NATIVEPREFIX",
             "*:*:config_opts=$config_opts --disable-shared",
             "*:*-linux-gnu:config_opts=$config_opts --with-pic"
@@ -32,7 +36,7 @@
             "*:*:cp -f $NATIVEPREFIX/share/config/config.sub third_party/googletest/googlemock/build-aux/config.sub",
             "*:*:aclocal",
             "*:*:automake --add-missing",
-            "*:*:./configure $config_opts",
+            "*:*:bash ./configure $config_opts",
             "*:*:make -j$NUM_CORES",
             "*:*:make -j$NUM_CORES DESTDIR=$STAGING_DIR install",
             "*:*:rm $STAGING_DIR$NATIVEPREFIX/lib/libprotoc.a || true"

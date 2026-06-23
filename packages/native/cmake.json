@@ -10,16 +10,18 @@
         }
     ],
     "dependencies": [
+        "*:*:native/_/_",
         "*:*:native/make",
-        "*:*:native/openssl"
+        "*:*:native/openssl",
+        "*:*:native/zlib"
     ],
     "build": {
         "env": [
-            "*:*:OPENSSL_ROOT_DIR=$NATIVEPREFIX"
+            "*:*:OPENSSL_ROOT_DIR=$NATIVEPREFIX",
+            "*:*:ZLIB_ROOT=$NATIVEPREFIX"
         ],
         "steps": [
-            "*:*:./bootstrap --parallel=$NUM_CORES",
-            "*:*:./configure --prefix=$NATIVEPREFIX",
+            "*:*:./bootstrap --prefix=$NATIVEPREFIX --parallel=$NUM_CORES --no-system-curl -- -DZLIB_ROOT=$NATIVEPREFIX -DOPENSSL_ROOT_DIR=$NATIVEPREFIX -DCMAKE_USE_OPENSSL=ON -DUSE_LIBIDN2:BOOL=OFF -DCMAKE_DISABLE_FIND_PACKAGE_Libidn2=TRUE",
             "*:*:make -j$NUM_CORES",
             "*:*:make DESTDIR=$STAGING_DIR install"
         ]

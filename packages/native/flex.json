@@ -10,11 +10,17 @@
         }
     ],
     "dependencies": [
+        "*:*:native/_/_",
+        "*:*:native/bash",
+        "*:*:native/gettext",
+        "*:*:native/libiconv",
+        "*:*:native/unistring",
         "*:*:native/m4",
         "*:*:native/make"
     ],
     "build": {
         "env": [
+            "*:*:CC_FOR_BUILD=$CC",
             "*:*:CFLAGS=$CFLAGS -fPIC",
             "*:*:LDFLAGS=$LDFLAGS -fPIC",
             "*:*:config_opts=--prefix=$NATIVEPREFIX",
@@ -23,7 +29,7 @@
             "*:*:config_opts=$config_opts --enable-static"
         ],
         "steps": [
-            "*:*:./configure  $config_opts",
+            "*:*:bash ./configure  $config_opts",
             "*:*:make -j$NUM_CORES",
             "*:*:make DESTDIR=$STAGING_DIR install"
         ]

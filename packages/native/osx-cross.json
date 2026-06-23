@@ -23,7 +23,11 @@
     ],
     "dependencies": [
         "*:*-apple-*:native/7zip",
+        "*:*-apple-*:native/_/_",
+        "*:*-apple-*:native/bash",
+        "*:*-apple-*:native/coreutils",
         "*:*-apple-*:native/apple-sdk",
+        "*:*-apple-*:native/curl",
         "*:*-apple-*:native/bzip2",
         "*:*-apple-*:native/cmake",
         "*:*-apple-*:native/cpio",
@@ -38,6 +42,7 @@
         "*:*-apple-*:native/perl",
         "*:*-apple-*:native/pkgconf",
         "*:*-apple-*:native/python@3.11",
+        "*:*-apple-*:native/sed",
         "*:*-apple-*:native/unzip",
         "*:*-apple-*:native/xar",
         "*:*-apple-*:native/xz"
@@ -57,16 +62,22 @@
             "*:*-apple-*:TARGET_DIR=$NATIVEPREFIX/",
             "*:*-apple-*:UNATTENDED=1",
             "*:*-apple-*:SDK_VERSION=26.1",
-            "*:*-apple-*:COMPRESSLEVEL=6"
+            "*:*-apple-*:COMPRESSLEVEL=6",
+            "*:*-apple-*:LDFLAGS=$LDFLAGS -fuse-ld=lld",
+            "*:*-apple-*:CXXFLAGS=$CXXFLAGS -fuse-ld=lld"
         ],
         "steps": [
+            "*:*-apple-*:mkdir -p wrapper/bin",
+            "*:*-apple-*:printf '#!/bin/sh\\ncase \"$1\" in\\n  -productVersion) echo %s ;;\\n  *) echo %s ;;\\nesac\\n' \"${SDK_VERSION}\" \"${SDK_VERSION}\" > wrapper/bin/sw_vers",
+            "*:*-apple-*:chmod +x wrapper/bin/sw_vers",
             "*:*-apple-*:sed -i.bak 's/--with-libtapi=$TARGET_DIR/--with-libtapi=$PREFIX\\/native/g' build.sh",
             "*:*-apple-*:sed -i.bak 's/--with-libxar=$TARGET_DIR/--with-libxar=$PREFIX\\/native/g' build.sh",
             "*:*-apple-*:mv $NATIVEPREFIX/share/xcode-sdk/*${SDK_VERSION}* tarballs",
-            "*:*-apple-*:yes | INSTALLPREFIX=$NATIVEPREFIX ./build_apple_clang.sh",
+            "*:*-apple-*:sed -i.bak 's|-DLLVM_TEMPORARILY_ALLOW_OLD_TOOLCHAIN=1|-DLLVM_TEMPORARILY_ALLOW_OLD_TOOLCHAIN=1 -DCMAKE_OSX_SYSROOT=$NATIVEPREFIX/_/SDK/MacOSX${SDK_VERSION}.sdk -DCMAKE_OSX_DEPLOYMENT_TARGET=$OSX_MIN_VERSION|' build_clang.sh",
+            "*:*-apple-*:export PATH=$PWD/wrapper/bin:$PATH && yes | INSTALLPREFIX=$NATIVEPREFIX ./build_apple_clang.sh",
             "*:*-apple-*:cd build/clang-21/build_stage3 && make install DESTDIR=$STAGING_DIR && make install",
             "*:*-apple-*:sed -i.bak 's/## Compiler test ##/exit 0/g' build.sh",
-            "*:*-apple-*:OCDEBUG=1 TARGET_DIR=$STAGING_DIR$NATIVEPREFIX bash -x ./build.sh",
+            "*:*-apple-*:export PATH=$PWD/wrapper/bin:$PATH && OCDEBUG=1 TARGET_DIR=$STAGING_DIR$NATIVEPREFIX bash -x ./build.sh",
             "*:*-apple-*:rm $STAGING_DIR$NATIVEPREFIX/bin/*pkg-config"
         ]
     }

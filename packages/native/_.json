@@ -3,6 +3,7 @@
     "version": "0.0.0",
     "type": "native",
     "dependencies": [
+        "*:*:native/_/_",
         "*:*-android*:native/android_ndk",
         "*:*-apple-*:native/cctools-port",
         "*:*-apple-*:native/libtapi",
@@ -23,7 +24,7 @@
             "*:*:mkdir -p $STAGING_DIR$NATIVEPREFIX",
             "*:*:rm -rf $STAGING_DIR$NATIVEPREFIX",
             "*:*:cp -a $NATIVEPREFIX $STAGING_DIR$NATIVEPREFIX",
-            "*:*:rm -rf $STAGING_DIR$NATIVEPREFIX/bootstrap",
+            "*:*:rm -rf $STAGING_DIR$NATIVEPREFIX/_",
             "*:*:mkdir -p $STAGING_DIR$PREFIX",
             "*:*:rm -rf $STAGING_DIR$PREFIX",
             "*:*:cp -a $PREFIX $STAGING_DIR$PREFIX",

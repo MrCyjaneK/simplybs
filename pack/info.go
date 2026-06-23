@@ -82,7 +82,7 @@ func (p *Package) GeneratePackageInfo(h *host.Host) string {
 	delete(env, "PATH")
 	delete(env, "PREFIX")
 	pkgs["_env"] = env
-	if (p.Type == "native") {
+	if p.Type == "native" {
 		pkgs["_prefix"] = h.GetNativeEnvPath()
 	} else {
 		pkgs["_prefix"] = h.GetEnvPath()
@@ -151,7 +151,7 @@ func (p *Package) GetEnv(h *host.Host) map[string]string {
 		home = h.GetNativeEnvPath() + "/home/user"
 	}
 	env := map[string]string{
-		"PATH":         h.GetNativeEnvPath() + "/bin:" + utils.GetHostPath(),
+		"PATH":         h.GetNativeEnvPath() + "/bin:" + h.GetNativeEnvPath() + "/_/bin:" + utils.GetHostPath(),
 		"HOST":         h.Triplet,
 		"PREFIX":       h.GetEnvPath(),
 		"NATIVEPREFIX": h.GetNativeEnvPath(),
@@ -166,6 +166,8 @@ func (p *Package) GetEnv(h *host.Host) map[string]string {
 	if p.Type == "native" {
 		env = utils.AppendEnv(env, []string{
 			"*:*:CFLAGS=$CFLAGS -I" + h.GetNativeEnvPath() + "/include",
+			"*:*:CXXFLAGS=$CXXFLAGS -I" + h.GetNativeEnvPath() + "/include",
+			"*:*:CPPFLAGS=$CPPFLAGS -I" + h.GetNativeEnvPath() + "/include",
 			"*:*:LDFLAGS=$LDFLAGS -L" + h.GetNativeEnvPath() + "/lib",
 			"*:*:LD_LIBRARY_PATH=$LD_LIBRARY_PATH:" + h.GetNativeEnvPath() + "/lib",
 			"*:*:PKG_CONFIG_PATH=$PKG_CONFIG_PATH:" + h.GetNativeEnvPath() + "/lib/pkgconfig",
@@ -179,6 +181,8 @@ func (p *Package) GetEnv(h *host.Host) map[string]string {
 			"*:*:CFLAGS=$CFLAGS -I" + h.GetEnvPath() + "/usr/include",
 			"*:*:CXXFLAGS=$CXXFLAGS -I" + h.GetEnvPath() + "/include",
 			"*:*:CXXFLAGS=$CXXFLAGS -I" + h.GetEnvPath() + "/usr/include",
+			"*:*:CPPFLAGS=$CPPFLAGS -I" + h.GetEnvPath() + "/include",
+			"*:*:CPPFLAGS=$CPPFLAGS -I" + h.GetEnvPath() + "/usr/include",
 			"*:*:LDFLAGS=$LDFLAGS -L" + h.GetEnvPath() + "/lib",
 			"*:*:LD_LIBRARY_PATH=" + h.GetNativeEnvPath() + "/lib",
 			"*:*:PKG_CONFIG_PATH=$PKG_CONFIG_PATH:" + h.GetEnvPath() + "/lib/pkgconfig",

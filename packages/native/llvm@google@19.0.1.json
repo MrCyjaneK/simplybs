@@ -23,6 +23,7 @@
         }
     ],
     "dependencies": [
+        "*:*:native/_/_",
         "*:*:native/cmake",
         "*:*:native/gawk",
         "*:*:native/ninja",
