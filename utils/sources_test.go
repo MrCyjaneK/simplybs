@@ -45,6 +45,38 @@ func TestLoadSourcesFileBackwardCompat(t *testing.T) {
 	}
 }
 
+func TestIgnoredGitRefs(t *testing.T) {
+	s := NewSourcesFile()
+
+	if AddGitRef(s, "https://example.com/foo.git", "504e4711cee972ff751ab20ac8c259bbcaa22bb3") {
+		t.Fatal("expected ignored ref to be skipped")
+	}
+	if _, exists := s.Repositories["https://example.com/foo.git"]; exists {
+		t.Fatal("expected ignored ref not to create repository entry")
+	}
+
+	s.Repositories["https://example.com/foo.git"] = RepositoryInfo{
+		Refs: []string{
+			"abc123",
+			"504e4711cee972ff751ab20ac8c259bbcaa22bb3",
+			"c2b3d1e9ed841474b04671f06b0f005d03dede82",
+		},
+	}
+	encoded, err := MarshalSourcesFile(s)
+	if err != nil {
+		t.Fatalf("marshal: %v", err)
+	}
+	if strings.Contains(string(encoded), "504e4711cee972ff751ab20ac8c259bbcaa22bb3") {
+		t.Fatal("expected ignored ref to be filtered from marshaled output")
+	}
+	if strings.Contains(string(encoded), "c2b3d1e9ed841474b04671f06b0f005d03dede82") {
+		t.Fatal("expected ignored ref to be filtered from marshaled output")
+	}
+	if !strings.Contains(string(encoded), "abc123") {
+		t.Fatal("expected non-ignored ref to remain in marshaled output")
+	}
+}
+
 func TestMergeGitRefDedup(t *testing.T) {
 	s := NewSourcesFile()
 

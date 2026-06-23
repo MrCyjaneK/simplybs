@@ -1,7 +1,7 @@
 {
-    "package": "native/rust",
+    "package": "rust-std",
     "version": "1.95.0",
-    "type": "native",
+    "type": "host",
     "download": [
         {
             "kind": "tar.gz",
@@ -10,33 +10,27 @@
         }
     ],
     "dependencies": [
-        "*:*:native/_/_",
+        "*:*:native/_",
         "*:*:native/cmake",
         "*:*:native/make",
         "*:*:native/ninja",
-        "*:*:native/openssl",
-        "*:*:native/pkgconf",
         "*:*:native/python@3.11",
-        "*:*:native/rust@1_95_0"
+        "*:*:native/rust"
     ],
     "build": {
         "env": [],
         "steps": [
             "*:*:echo '[build]' > config.toml",
-            "*:*:echo 'full-bootstrap = true' >> config.toml",
             "*:*:echo 'vendor = true' >> config.toml",
-            "*:*:echo 'extended = true' >> config.toml",
-            "*:*:echo 'tools = [\"cargo\"]' >> config.toml",
+            "*:*:echo 'target = [\"x86_64-unknown-linux-gnu\"]' >> config.toml",
             "*:*:echo rustc = \\\"$NATIVEPREFIX/bin/rustc\\\" >> config.toml",
             "*:*:echo cargo = \\\"$NATIVEPREFIX/bin/cargo\\\" >> config.toml",
             "*:*:echo '[llvm]' >> config.toml",
             "*:*:echo 'ninja = true' >> config.toml",
             "*:*:echo 'download-ci-llvm = false' >> config.toml",
-            "*:*:env -u ARFLAGS python3 ./x.py build --stage 3 --verbose -j $NUM_CORES",
-            "*:*:mkdir -p $STAGING_DIR$NATIVEPREFIX/bin",
-            "*:*:cp -a build/*/stage3/lib $STAGING_DIR$NATIVEPREFIX/",
-            "*:*:cp -a build/*/stage3/bin/rustc $STAGING_DIR$NATIVEPREFIX/bin",
-            "*:*:cp -a build/*/stage3-tools-bin/cargo $STAGING_DIR$NATIVEPREFIX/bin"
+            "*:*:env -u ARFLAGS python3 ./x.py build library/std --stage 1 --target x86_64-unknown-linux-gnu -j1",
+            "*:*:mkdir -p $STAGING_DIR$NATIVEPREFIX/lib/rustlib/x86_64-unknown-linux-gnu",
+            "*:*:cp -a build/aarch64-unknown-linux-gnu/stage1-std/x86_64-unknown-linux-gnu/release/deps/. $STAGING_DIR$NATIVEPREFIX/lib/rustlib/x86_64-unknown-linux-gnu/lib"
         ]
     }
 }

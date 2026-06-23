@@ -113,15 +113,17 @@ func (p *Package) GetEnv(h *host.Host) map[string]string {
 	crash.Handle(err)
 	stagingPath := p.GenerateBuildPath(h, "staging")
 	env := map[string]string{
-		"PATH":         h.GetNativeEnvPath() + "/bin:" + h.GetNativeEnvPath() + "/_/bin:" + utils.GetHostPath(),
-		"HOST":         h.Triplet,
-		"PREFIX":       h.GetEnvPath(),
-		"NATIVEPREFIX": h.GetNativeEnvPath(),
-		"HOME":         p.homePath(h),
-		"HOST_PREFIX":  h.GetEnvPath(),
-		"NUM_CORES":    strconv.Itoa(getNumCores()),
-		"PATCH_DIR":    filepath.Join(getwd, "patches"),
-		"STAGING_DIR":  stagingPath,
+		"PATH":                   h.GetNativeEnvPath() + "/bin:" + h.GetNativeEnvPath() + "/_/bin:" + utils.GetHostPath(),
+		"HOST":                   h.Triplet,
+		"PREFIX":                 h.GetEnvPath(),
+		"NATIVEPREFIX":           h.GetNativeEnvPath(),
+		"HOME":                   p.homePath(h),
+		"HOST_PREFIX":            h.GetEnvPath(),
+		"NUM_CORES":              strconv.Itoa(getNumCores()),
+		"PATCH_DIR":              filepath.Join(getwd, "patches"),
+		"STAGING_DIR":            stagingPath,
+		"PKG_CONFIG_ALLOW_CROSS": "1",
+		"PKG_CONFIG_SYSROOT_DIR": h.GetEnvPath(),
 	}
 
 	env = utils.AppendEnv(env, builder.HostBuilder.GlobalEnv, h)

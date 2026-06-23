@@ -2,10 +2,49 @@ package utils
 
 import (
 	"bytes"
+	_ "embed"
 	"encoding/json"
 	"sort"
 	"strings"
 )
+
+//go:embed sources_ignored_refs.txt
+var sourcesIgnoredRefsFile string
+
+var sourcesIgnoredRefs map[string]struct{}
+
+func init() {
+	sourcesIgnoredRefs = make(map[string]struct{})
+	for _, line := range strings.Split(sourcesIgnoredRefsFile, "\n") {
+		line = strings.TrimSpace(line)
+		if line == "" || strings.HasPrefix(line, "#") {
+			continue
+		}
+		sourcesIgnoredRefs[line] = struct{}{}
+	}
+}
+
+func IsIgnoredGitRef(ref string) bool {
+	_, ignored := sourcesIgnoredRefs[ref]
+	return ignored
+}
+
+func FilterIgnoredGitRefs(s *SourcesFile) {
+	for url, repoInfo := range s.Repositories {
+		filtered := make([]string, 0, len(repoInfo.Refs))
+		for _, ref := range repoInfo.Refs {
+			if !IsIgnoredGitRef(ref) {
+				filtered = append(filtered, ref)
+			}
+		}
+		if len(filtered) == 0 {
+			delete(s.Repositories, url)
+			continue
+		}
+		repoInfo.Refs = filtered
+		s.Repositories[url] = repoInfo
+	}
+}
 
 func NewSourcesFile() *SourcesFile {
 	return &SourcesFile{
@@ -14,7 +53,7 @@ func NewSourcesFile() *SourcesFile {
 }
 
 func AddGitRef(s *SourcesFile, url, ref string) bool {
-	if url == "" || ref == "" {
+	if url == "" || ref == "" || IsIgnoredGitRef(ref) {
 		return false
 	}
 	repoInfo, exists := s.Repositories[url]
@@ -134,6 +173,7 @@ func SortSourcesFile(s *SourcesFile) {
 }
 
 func MarshalSourcesFile(s *SourcesFile) ([]byte, error) {
+	FilterIgnoredGitRefs(s)
 	SortSourcesFile(s)
 
 	var buf bytes.Buffer

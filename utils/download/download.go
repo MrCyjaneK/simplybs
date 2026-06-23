@@ -30,21 +30,34 @@ func downloadTempPath(path string) string {
 	return path + ".download.tmp"
 }
 
+func fileSizeAt(path string) int64 {
+	if info, err := os.Stat(path); err == nil {
+		return info.Size()
+	}
+	return 0
+}
+
 type ProgressWriter struct {
 	writer     io.Writer
 	total      int64
+	offset     int64
 	written    int64
 	lastUpdate time.Time
 	filename   string
 }
 
-func NewProgressWriter(writer io.Writer, total int64, filename string) *ProgressWriter {
+func NewProgressWriter(writer io.Writer, total, offset int64, filename string) *ProgressWriter {
 	return &ProgressWriter{
 		writer:     writer,
 		total:      total,
+		offset:     offset,
 		filename:   filename,
 		lastUpdate: time.Now(),
 	}
+}
+
+func (pw *ProgressWriter) downloaded() int64 {
+	return pw.offset + pw.written
 }
 
 func (pw *ProgressWriter) Write(p []byte) (int, error) {
@@ -64,20 +77,24 @@ func (pw *ProgressWriter) Write(p []byte) (int, error) {
 }
 
 func (pw *ProgressWriter) displayProgress() {
+	downloaded := pw.downloaded()
+	var line string
 	if pw.total <= 0 {
-		fmt.Printf("\r%s: Downloaded %s", pw.filename, formatBytes(pw.written))
+		line = fmt.Sprintf("%s: Downloaded %s", pw.filename, formatBytes(downloaded))
 	} else {
-		percentage := float64(pw.written) / float64(pw.total) * 100
-		fmt.Printf("\r%s: %.1f%% (%s / %s)", pw.filename, percentage, formatBytes(pw.written), formatBytes(pw.total))
+		percentage := float64(downloaded) / float64(pw.total) * 100
+		line = fmt.Sprintf("%s: %.1f%% (%s / %s)", pw.filename, percentage, formatBytes(downloaded), formatBytes(pw.total))
 	}
+	// Pad to erase leftover characters from shorter previous lines.
+	fmt.Printf("\r%-80s", line)
 }
 
 func (pw *ProgressWriter) finish() {
-	fmt.Printf("\r%s: Complete (%s)\n", pw.filename, formatBytes(pw.written))
+	fmt.Printf("\r%s: Complete (%s)\n", pw.filename, formatBytes(pw.downloaded()))
 }
 
-func copyWithProgress(dst io.Writer, src io.Reader, total int64, filename string) (int64, error) {
-	pw := NewProgressWriter(dst, total, filename)
+func copyWithProgress(dst io.Writer, src io.Reader, total, offset int64, filename string) (int64, error) {
+	pw := NewProgressWriter(dst, total, offset, filename)
 	n, err := io.Copy(pw, src)
 	if err != nil {
 		return n, err
@@ -145,7 +162,10 @@ func downloadToFileWithResume(destPath, url string) (int64, error) {
 	}
 
 	filename := filepath.Base(destPath)
-	bytesRead, err := copyWithProgress(out, resp.Body, contentLengthTotal(resp, fileSize), filename)
+	if strings.HasSuffix(filename, ".download.tmp") {
+		filename = strings.TrimSuffix(filename, ".download.tmp")
+	}
+	bytesRead, err := copyWithProgress(out, resp.Body, contentLengthTotal(resp, fileSize), fileSize, filename)
 	if err != nil {
 		return fileSize + bytesRead, fmt.Errorf("failed to write file: %v", err)
 	}
@@ -155,24 +175,35 @@ func downloadToFileWithResume(destPath, url string) (int64, error) {
 
 // DownloadURLWithRetries downloads url to destPath with progress, resume, and retries.
 func DownloadURLWithRetries(url, destPath string) error {
-	for attempt := 0; attempt <= maxDownloadRetries; attempt++ {
+	attempt := 0
+	for attempt <= maxDownloadRetries {
 		if attempt > 0 {
 			log.Printf("Retry attempt %d/%d for %s", attempt, maxDownloadRetries, url)
 			time.Sleep(downloadRetryDelay)
 		}
 
+		startSize := fileSizeAt(destPath)
 		bytesReceived, err := downloadToFileWithResume(destPath, url)
-		if err != nil {
-			if bytesReceived == 0 && attempt == 0 {
-				return fmt.Errorf("no data received from server: %v", err)
-			}
-			if attempt == maxDownloadRetries {
-				return fmt.Errorf("failed after %d retries: %v", maxDownloadRetries, err)
-			}
-			log.Printf("Download failed: %v", err)
+		if err == nil {
+			return nil
+		}
+
+		if bytesReceived == 0 && attempt == 0 {
+			return fmt.Errorf("no data received from server: %v", err)
+		}
+
+		log.Printf("Download failed: %v", err)
+
+		if bytesReceived > startSize {
+			log.Printf("Made progress (%s), resetting retry count", formatBytes(bytesReceived-startSize))
+			attempt = 0
 			continue
 		}
-		return nil
+
+		attempt++
+		if attempt > maxDownloadRetries {
+			return fmt.Errorf("failed after %d retries: %v", maxDownloadRetries, err)
+		}
 	}
 	return fmt.Errorf("download failed after all retries")
 }
@@ -235,26 +266,36 @@ func DownloadFile(packageName, path, url, expectedSha256 string, isMirror bool) 
 
 	os.MkdirAll(filepath.Dir(path), 0755)
 
-	for attempt := 0; attempt <= maxDownloadRetries; attempt++ {
+	attempt := 0
+	for attempt <= maxDownloadRetries {
 		if attempt > 0 {
 			log.Printf("Retry attempt %d/%d for %s", attempt, maxDownloadRetries, url)
 			time.Sleep(downloadRetryDelay)
 		}
 
+		startSize := fileSizeAt(downloadTempPath(path))
 		bytesReceived, err := downloadWithResume(path, url, expectedSha256)
-		if err != nil {
-			if bytesReceived == 0 && attempt == 0 {
-				return fmt.Errorf("no data received from server: %v", err)
-			}
-			if attempt == maxDownloadRetries {
-				return fmt.Errorf("failed after %d retries: %v", maxDownloadRetries, err)
-			}
-			log.Printf("Download failed: %v", err)
+		if err == nil {
+			log.Printf("Successfully downloaded and verified %s", path)
+			return nil
+		}
+
+		if bytesReceived == 0 && attempt == 0 {
+			return fmt.Errorf("no data received from server: %v", err)
+		}
+
+		log.Printf("Download failed: %v", err)
+
+		if bytesReceived > startSize {
+			log.Printf("Made progress (%s), resetting retry count", formatBytes(bytesReceived-startSize))
+			attempt = 0
 			continue
 		}
 
-		log.Printf("Successfully downloaded and verified %s", path)
-		return nil
+		attempt++
+		if attempt > maxDownloadRetries {
+			return fmt.Errorf("failed after %d retries: %v", maxDownloadRetries, err)
+		}
 	}
 
 	return fmt.Errorf("download failed after all retries")

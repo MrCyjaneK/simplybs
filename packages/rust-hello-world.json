@@ -11,7 +11,8 @@
     ],
     "dependencies": [
         "*:*:native/_",
-        "*:*:native/rust"
+        "*:*:native/rust",
+        "*:*:rust-std"
     ],
     "build": {
         "steps": [

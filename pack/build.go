@@ -135,6 +135,15 @@ func wipeDirContents(dir string) {
 	}
 }
 
+func resetBuildDirs() {
+	for _, dir := range []string{
+		filepath.Join(host.DataDir(), "work"),
+		filepath.Join(host.DataDir(), "staging"),
+	} {
+		utils.RemoveAll(dir)
+	}
+}
+
 func (p *Package) buildPackageInternal(h *host.Host, buildDependencies bool) {
 	var deps []*Package
 	if buildDependencies {
@@ -151,10 +160,9 @@ func (p *Package) buildPackageInternal(h *host.Host, buildDependencies bool) {
 	for _, dep := range deps {
 		dep.ExtractEnv(h, envPath, nativeEnvPath)
 	}
+	resetBuildDirs()
 	buildPath := p.GenerateBuildPath(h, "work")
 	stagingPath := p.GenerateBuildPath(h, "staging")
-	utils.RemoveAll(buildPath)
-	utils.RemoveAll(stagingPath)
 	os.MkdirAll(buildPath, 0755)
 	os.MkdirAll(stagingPath, 0755)
 	defer utils.RemoveAll(buildPath)
@@ -270,8 +278,8 @@ func shellEscape(value string) string {
 func (p *Package) StartShell(h *host.Host) {
 	log.Printf("Starting shell for package: %s for host %s", p.Package, h.Triplet)
 
+	resetBuildDirs()
 	buildPath := p.GenerateBuildPath(h, "work")
-	utils.RemoveAll(buildPath)
 	os.MkdirAll(buildPath, 0755)
 
 	log.Printf("Extracting source for package: %s", p.Package)
