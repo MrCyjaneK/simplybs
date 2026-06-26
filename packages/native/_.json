@@ -5,6 +5,7 @@
     "dependencies": [
         "*:*:native/_/_",
         "*:*-android*:native/android_ndk",
+        "*:*-apple-*:native/libc++",
         "*:*-apple-*:native/cctools-port",
         "*:*-apple-*:native/libtapi",
         "*:*-apple-*:native/libxml2",

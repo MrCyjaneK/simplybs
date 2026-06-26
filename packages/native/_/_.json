@@ -3,7 +3,8 @@
     "version": "0.0.0",
     "type": "native",
     "dependencies": [
-        "darwin_arm64:*:native/_/darwin_arm64_clang21"
+        "darwin_arm64:*:native/_/darwin_arm64_clang21",
+        "linux_arm64:*:native/_/linux_arm64_clang21"
     ],
     "build": {
         "env": [

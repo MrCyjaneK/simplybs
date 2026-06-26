@@ -1,12 +1,12 @@
 {
-    "package": "native/_/darwin_arm64_clang21",
+    "package": "native/_/linux_arm64_clang21",
     "version": "0.0.0",
     "type": "native",
     "download": [
         {
             "kind": "tar.xz",
-            "sha256": "f08445d419c7ac00e47e458618575cf3cb24db27d9c2e8636845288d8884b3c8",
-            "url": "https://github.com/MrCyjaneK/easybs/releases/download/r0/clang21-aarch64-apple-darwin.tar.xz"
+            "sha256": "a32317df0c3985f5da430bd6f9a8b9b1b194810d9755a51faa9a46f7c7cec1c0",
+            "url": "https://github.com/MrCyjaneK/easybs/releases/download/r0/clang21-aarch64-linux-gnu.tar.xz"
         }
     ],
     "build": {

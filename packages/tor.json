@@ -12,6 +12,7 @@
     "dependencies": [
         "*:*:native/_",
         "*:*:native/autoconf",
+        "*:*:native/bash",
         "*:*:native/automake",
         "*:*:native/coreutils",
         "*:*:native/findutils",
@@ -62,7 +63,7 @@
             "*:*:cp src/config/geoip $STAGING_DIR$PREFIX/share/tor",
             "*:*:cp src/config/geoip6 $STAGING_DIR$PREFIX/share/tor",
             "*:*:mkdir -p $STAGING_DIR$PREFIX/include/tor",
-            "*:*:cd src && find . -name '*.h' -exec sh -c 'mkdir -p \"$STAGING_DIR$PREFIX/include/tor/$(dirname \"$1\")\" && cp \"$1\" \"$STAGING_DIR$PREFIX/include/tor/$1\"' _ {} \\;"
+            "*:*:cd src && find . -name '*.h' -exec bash -c 'mkdir -p \"$STAGING_DIR$PREFIX/include/tor/$(dirname \"$1\")\" && cp \"$1\" \"$STAGING_DIR$PREFIX/include/tor/$1\"' _ {} \\;"
         ]
     }
 }

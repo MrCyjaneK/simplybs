@@ -12,6 +12,9 @@
     "dependencies": [
         "*:*:native/_/_",
         "*:*:native/bash",
+        "*:*:native/diffutils",
+        "*:*:native/coreutils",
+        "*:*:native/sed",
         "*:*:native/make"
     ],
     "build": {
@@ -29,7 +32,7 @@
             "*:*:config_opts=$config_opts --without-tests",
             "*:*:config_opts=$config_opts --without-tack",
             "*:*:config_opts=$config_opts --without-manpages",
-            "*:*:config_opts=$config_opts --with-termlib",
+            "*:*:config_opts=$config_opts --without-termlib",
             "*:*:config_opts=$config_opts --disable-tic-depends",
             "*:*:config_opts=$config_opts --disable-big-strings",
             "*:*:config_opts=$config_opts --disable-ext-colors",
@@ -39,7 +42,7 @@
             "*:*:config_opts=$config_opts --disable-rpath",
             "*:*:config_opts=$config_opts --disable-colorfgbg",
             "*:*:config_opts=$config_opts --disable-ext-mouse",
-            "*:*:config_opts=$config_opts --disable-symlinks",
+            "*:*:config_opts=$config_opts --enable-symlinks",
             "*:*:config_opts=$config_opts --enable-warnings",
             "*:*:config_opts=$config_opts --enable-assertions",
             "*:*:config_opts=$config_opts --with-default-terminfo-dir=/etc/_terminfo_",
@@ -54,7 +57,10 @@
             "*:*:cp $PATCH_DIR/ncurses/fallback.c ncurses",
             "*:*:bash ./configure $config_opts",
             "*:*:make -j$NUM_CORES $build_opts",
-            "*:*:make install.libs DESTDIR=$STAGING_DIR"
+            "*:*:make install.libs install.includes DESTDIR=$STAGING_DIR",
+            "*:*:ln -sf ncursesw/panel.h $STAGING_DIR$NATIVEPREFIX/include/panel.h",
+            "*:*:ln -sf ncursesw/form.h $STAGING_DIR$NATIVEPREFIX/include/form.h",
+            "*:*:ln -sf libncursesw.a $STAGING_DIR$NATIVEPREFIX/lib/libncurses.a"
         ]
     }
 }

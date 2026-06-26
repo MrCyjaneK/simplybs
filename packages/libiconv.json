@@ -16,6 +16,7 @@
         "*:*:native/gawk",
         "*:*:native/grep",
         "*:*:native/coreutils",
+        "*:*:native/findutils",
         "*:*:native/config",
         "*:*:native/make"
     ],

@@ -11,6 +11,7 @@
     ],
     "dependencies": [
         "*:*-apple-*:native/bzip2",
+        "*:*-apple-*:native/libc++",
         "*:*-apple-*:native/libtapi",
         "*:*-apple-*:native/make",
         "*:*-apple-*:native/openssl",
@@ -29,7 +30,9 @@
             "*:*-apple-*:config_opts=$config_opts --with-libtapi=$NATIVEPREFIX",
             "*:*-apple-*:config_opts=$config_opts --with-libxar=$NATIVEPREFIX",
             "*:*-apple-*:CC=clang",
-            "*:*-apple-*:CXX=clang++"
+            "*:*-apple-*:CXX=clang++",
+            "linux_arm64:*-apple-*:CXXFLAGS=$CXXFLAGS -stdlib=libc++ -I$NATIVEPREFIX/include/c++/v1",
+            "linux_arm64:*-apple-*:LIBS=-lc++abi -lunwind"
         ],
         "steps": [
             "*:*-apple-*:sed -i.bak '3182d' cctools/configure",

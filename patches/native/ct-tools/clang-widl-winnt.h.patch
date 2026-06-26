@@ -1,0 +1,21 @@
+--- a/mingw-w64-tools/widl/include/winnt.h
++++ b/mingw-w64-tools/widl/include/winnt.h
+@@ -2466,11 +2466,16 @@ static FORCEINLINE struct _TEB * WINAPI NtCurrentTeb(void)
+ {
+     return (struct _TEB *)__readfsdword( 0x18 );
+ }
+-#elif (defined(__aarch64__) || defined(__arm64ec__)) && defined(__GNUC__)
++#elif (defined(__aarch64__) || defined(__arm64ec__)) && defined(__GNUC__) && !defined(__clang__)
+ register struct _TEB *__wine_current_teb __asm__("x18");
+ static FORCEINLINE struct _TEB * WINAPI NtCurrentTeb(void)
+ {
+     return __wine_current_teb;
+ }
++#elif (defined(__aarch64__) || defined(__arm64ec__)) && defined(__clang__)
++static FORCEINLINE struct _TEB * WINAPI NtCurrentTeb(void)
++{
++    return (struct _TEB *)0;
++}
+ #elif (defined(__aarch64__) || defined(__arm64ec__)) && defined(_MSC_VER)
+ static FORCEINLINE struct _TEB * WINAPI NtCurrentTeb(void)
+ {

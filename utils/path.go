@@ -10,7 +10,7 @@ func GetHostPath() string {
 	case "darwin":
 		return ""
 	case "linux":
-		return "/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
+		return ""
 	default:
 		log.Fatalln("Unsupported OS: ", runtime.GOOS)
 		return ""
