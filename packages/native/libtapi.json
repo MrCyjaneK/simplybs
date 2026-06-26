@@ -41,8 +41,8 @@
             "linux_arm64:*:config_opts=$config_opts -DCMAKE_C_COMPILER=$NATIVEPREFIX/_/bin/clang",
             "linux_arm64:*:config_opts=$config_opts -DCMAKE_CXX_COMPILER=$NATIVEPREFIX/_/bin/clang++",
             "linux_arm64:*:CMAKE_CXX_FLAGS=-stdlib=libc++ -I$NATIVEPREFIX/include/c++/v1",
-            "linux_arm64:*:CMAKE_EXE_LINKER_FLAGS=-stdlib=libc++ -lc++ -lc++abi -lunwind -latomic",
-            "linux_arm64:*:CMAKE_SHARED_LINKER_FLAGS=-stdlib=libc++ -lc++ -lc++abi -lunwind"
+            "linux_arm64:*:CMAKE_EXE_LINKER_FLAGS=-L$NATIVEPREFIX/lib -stdlib=libc++ -lc++ -lc++abi -lunwind -latomic",
+            "linux_arm64:*:CMAKE_SHARED_LINKER_FLAGS=-L$NATIVEPREFIX/lib -stdlib=libc++ -lc++ -lc++abi -lunwind"
         ],
         "steps": [
             "darwin_arm64:*:cmake $config_opts -DCMAKE_EXE_LINKER_FLAGS=\"$CMAKE_EXE_LINKER_FLAGS\" -DCMAKE_SHARED_LINKER_FLAGS=\"$CMAKE_SHARED_LINKER_FLAGS\"",

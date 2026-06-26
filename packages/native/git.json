@@ -25,9 +25,10 @@
     "build": {
         "env": [],
         "steps": [
-            "linux_*:*:make -j$NUM_CORES prefix=$NATIVEPREFIX EXTLIBS='-liconv -lz -lgettextpo' CC=$CC",
-            "darwin_*:*:make -j$NUM_CORES prefix=$NATIVEPREFIX EXTLIBS='-liconv -lz -lgettextpo -lintl' CC=$CC",
-            "*:*:make prefix=$NATIVEPREFIX DESTDIR=$STAGING_DIR install CC=$CC",
+            "linux_*:*:make -j$NUM_CORES prefix=$NATIVEPREFIX LDFLAGS=\"$LDFLAGS\" EXTLIBS='-liconv -lz -lgettextpo' CC=$CC",
+            "darwin_*:*:make -j$NUM_CORES prefix=$NATIVEPREFIX LDFLAGS=\"$LDFLAGS\" EXTLIBS='-liconv -lz -lgettextpo -lintl' CC=$CC",
+            "linux_*:*:make prefix=$NATIVEPREFIX DESTDIR=$STAGING_DIR LDFLAGS=\"$LDFLAGS\" EXTLIBS='-liconv -lz -lgettextpo' install CC=$CC",
+            "darwin_*:*:make prefix=$NATIVEPREFIX DESTDIR=$STAGING_DIR LDFLAGS=\"$LDFLAGS\" EXTLIBS='-liconv -lz -lgettextpo -lintl' install CC=$CC",
             "*:*:mkdir -p $STAGING_DIR$HOME",
             "*:*:echo '[user]' >> $STAGING_DIR$HOME/.gitconfig",
             "*:*:echo '\tname = simplybs' >> $STAGING_DIR$HOME/.gitconfig",

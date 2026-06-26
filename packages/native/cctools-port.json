@@ -32,7 +32,7 @@
             "*:*-apple-*:CC=clang",
             "*:*-apple-*:CXX=clang++",
             "linux_arm64:*-apple-*:CXXFLAGS=$CXXFLAGS -stdlib=libc++ -I$NATIVEPREFIX/include/c++/v1",
-            "linux_arm64:*-apple-*:LIBS=-lc++abi -lunwind"
+            "linux_arm64:*-apple-*:LIBS=-L$NATIVEPREFIX/lib -lc++abi -lunwind"
         ],
         "steps": [
             "*:*-apple-*:sed -i.bak '3182d' cctools/configure",
