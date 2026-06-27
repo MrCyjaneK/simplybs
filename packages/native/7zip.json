@@ -11,9 +11,9 @@
     ],
     "dependencies": [
         "*:*:native/_/_",
+        "*:*:native/diffutils",
         "*:*:native/make",
-        "*:*:native/sed",
-        "*:*:native/diffutils"
+        "*:*:native/sed"
     ],
     "build": {
         "env": [],

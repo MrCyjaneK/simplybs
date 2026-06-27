@@ -12,19 +12,19 @@
     "dependencies": [
         "*:*:native/_",
         "*:*:native/autoconf",
-        "*:*:native/coreutils",
-        "*:*:native/bash",
         "*:*:native/automake",
+        "*:*:native/bash",
+        "*:*:native/coreutils",
+        "*:*:native/gawk",
         "*:*:native/gettext",
+        "*:*:native/grep",
         "*:*:native/libtool",
         "*:*:native/m4",
         "*:*:native/make",
-        "*:*:native/sed",
-        "*:*:native/grep",
         "*:*:native/patch",
-        "*:*:native/gawk",
         "*:*:native/perl",
-        "*:*:native/pkgconf"
+        "*:*:native/pkgconf",
+        "*:*:native/sed"
     ],
     "patches": [
         "fix_declaration.patch"

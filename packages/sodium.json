@@ -11,14 +11,14 @@
     ],
     "dependencies": [
         "*:*:native/_",
-        "*:*:native/config",
-        "*:*:native/make",
         "*:*:native/bash",
-        "*:*:native/grep",
-        "*:*:native/gawk",
-        "*:*:native/sed",
+        "*:*:native/config",
         "*:*:native/coreutils",
-        "*:*:native/patch"
+        "*:*:native/gawk",
+        "*:*:native/grep",
+        "*:*:native/make",
+        "*:*:native/patch",
+        "*:*:native/sed"
     ],
     "patches": [
         "disable-glibc-getrandom-getentropy.patch",

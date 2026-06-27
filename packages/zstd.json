@@ -11,9 +11,9 @@
     ],
     "dependencies": [
         "*:*:native/_",
-        "*:*:native/make",
         "*:*:native/coreutils",
         "*:*:native/grep",
+        "*:*:native/make",
         "*:*:native/sed"
     ],
     "build": {

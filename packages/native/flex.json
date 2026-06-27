@@ -14,9 +14,9 @@
         "*:*:native/bash",
         "*:*:native/gettext",
         "*:*:native/libiconv",
-        "*:*:native/unistring",
         "*:*:native/m4",
-        "*:*:native/make"
+        "*:*:native/make",
+        "*:*:native/unistring"
     ],
     "build": {
         "env": [

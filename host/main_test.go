@@ -2,27 +2,59 @@ package host_test
 
 import (
 	"fmt"
+	"os"
+	"path/filepath"
 	"strings"
 	"testing"
 
+	"github.com/mrcyjanek/simplybs/builder"
 	"github.com/mrcyjanek/simplybs/host"
+	"github.com/mrcyjanek/simplybs/pack"
 	"github.com/mrcyjanek/simplybs/utils/ifstring"
 )
 
+func chdirRepoRoot(t *testing.T) {
+	t.Helper()
+	wd, err := os.Getwd()
+	if err != nil {
+		t.Fatal(err)
+	}
+	for {
+		if _, err := os.Stat(filepath.Join(wd, "packages", "native", "_.json")); err == nil {
+			if err := os.Chdir(wd); err != nil {
+				t.Fatal(err)
+			}
+			return
+		}
+		parent := filepath.Dir(wd)
+		if parent == wd {
+			t.Fatal("could not find repo root (packages/native/_.json)")
+		}
+		wd = parent
+	}
+}
+
 func TestHosts(t *testing.T) {
-	for i := range host.SupportedHosts {
-		t.Run("Env vars: "+i, func(t *testing.T) {
-			assertEnv(t, i)
+	chdirRepoRoot(t)
+	meta, err := pack.FindPackage("native/_")
+	if err != nil {
+		t.Fatal(err)
+	}
+	for triplet := range host.SupportedHosts {
+		t.Run("Env vars: "+triplet, func(t *testing.T) {
+			assertEnv(t, triplet, meta.ExportEnv)
 		})
 	}
 }
 
-func assertEnv(t *testing.T, i string) {
-	env := host.SupportedHosts[i].Env
+func assertEnv(t *testing.T, triplet string, exportEnv []string) {
 	keys := []string{}
-	for _, envVar := range env {
-		parsed := ifstring.ParseIfString(envVar)
-		key := strings.Split(parsed.Content, "=")[0]
+	for _, envVar := range exportEnv {
+		is := ifstring.ParseIfString(envVar)
+		if !is.Matches(triplet, builder.GetName()) {
+			continue
+		}
+		key := strings.Split(is.Content, "=")[0]
 		keys = append(keys, key)
 	}
 	var required = []string{
@@ -47,24 +79,9 @@ func assertEnv(t *testing.T, i string) {
 				exists = true
 			}
 		}
-		if exists == false {
-			fmt.Println(i, "doesn't have", req)
+		if !exists {
+			fmt.Println(triplet, "doesn't have", req)
 			t.Fail()
 		}
 	}
-	// cat | sed -e "s|@HOST@|$(host)|g" \ <-- $TARGET
-	//     -e "s|@CC@|$(host_CC)|g" \ <--- $CC
-	//     -e "s|@CXX@|$(host_CXX)|g" \ <--- $CXX
-	//     -e "s|@AR@|$(toolchain_path)$(host_AR)|g" \ <--- $AR
-	//     -e "s|@RANLIB@|$(toolchain_path)$(host_RANLIB)|g" \ <--- $RANLIB
-	//     -e "s|@NM@|$(toolchain_path)$(host_NM)|g" \ <--- $NM
-	//     -e "s|@STRIP@|$(toolchain_path)$(host_STRIP)|g" \ <--- $STRIP
-	//     -e "s|@CFLAGS@|$(strip $(host_CFLAGS) $(host_$(release_type)_CFLAGS))|g" \ <--- $CFLAGS
-	//     -e "s|@CXXFLAGS@|$(strip $(host_CXXFLAGS) $(host_$(release_type)_CXXFLAGS))|g" \ <-- $CXXFLAGS
-	//     -e "s|@CPPFLAGS@|$(strip $(host_CPPFLAGS) $(host_$(release_type)_CPPFLAGS))|g" \ <-- $CPPFLAGS
-	//     -e "s|@LDFLAGS@|$(strip $(host_LDFLAGS) $(host_$(release_type)_LDFLAGS))|g" \ <-- $LDFLAGS
-	//     -e "s|@cmake_system_name@|$($(host_os)_cmake_system)|g" \ $CMAKE_SYSTEM_NAME
-	//     -e "s|@prefix@|$($(host_arch)_$(host_os)_prefix)|g"\ ---> $PREFIX
-	//     -e "s|@arch@|$(host_arch)|g"\ ---> aarch64/arm64/x86_64
-	// > $outfile <<EOF
 }

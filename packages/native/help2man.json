@@ -12,8 +12,8 @@
     "dependencies": [
         "*:*:native/_/_",
         "*:*:native/bash",
-        "*:*:native/perl",
-        "*:*:native/make"
+        "*:*:native/make",
+        "*:*:native/perl"
     ],
     "build": {
         "env": [

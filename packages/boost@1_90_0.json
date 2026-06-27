@@ -12,9 +12,9 @@
     "dependencies": [
         "*:*:native/_",
         "*:*:native/bash",
-        "*:*:native/coreutils",
         "*:*:native/boost-b2@1_90_0",
         "*:*:native/cmake",
+        "*:*:native/coreutils",
         "*:*:native/python@3.14",
         "*:*:libiconv",
         "*:*:openssl",

@@ -10,9 +10,9 @@
         }
     ],
     "dependencies": [
-        "*:*:native/make",
+        "*:*:native/_/_",
         "*:*:native/bash",
-        "*:*:native/_/_"
+        "*:*:native/make"
     ],
     "build": {
         "env": [

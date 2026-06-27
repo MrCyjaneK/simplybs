@@ -13,19 +13,19 @@
         "*:*:native/_",
         "*:*:native/autoconf",
         "*:*:native/automake",
-        "*:*:native/coreutils",
         "*:*:native/bash",
-        "*:*:native/libtool",
+        "*:*:native/cmake",
+        "*:*:native/coreutils",
         "*:*:native/gawk",
+        "*:*:native/grep",
+        "*:*:native/libtool",
+        "*:*:native/libtool",
+        "*:*:native/m4",
         "*:*:native/m4",
         "*:*:native/make",
-        "*:*:native/grep",
-        "*:*:native/sed",
-        "*:*:native/cmake",
-        "*:*:native/libtool",
-        "*:*:native/m4",
         "*:*:native/ninja",
-        "*:*:native/perl"
+        "*:*:native/perl",
+        "*:*:native/sed"
     ],
     "build": {
         "env": [

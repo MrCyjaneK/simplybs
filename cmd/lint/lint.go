@@ -25,6 +25,7 @@ type OrderedPackage struct {
 	Dependencies []string                 `json:"dependencies,omitempty"`
 	Patches      []string                 `json:"patches,omitempty"`
 	Build        map[string]interface{}   `json:"build,omitempty"`
+	ExportEnv    []string                 `json:"export-env,omitempty"`
 }
 
 func Lint() {
@@ -101,6 +102,15 @@ func fixFormatting() {
 		}
 		if v, ok := data["build"].(map[string]interface{}); ok {
 			ordered.Build = v
+		}
+		if v, ok := data["export-env"].([]interface{}); ok {
+			exportEnv := make([]string, len(v))
+			for i, env := range v {
+				if s, ok := env.(string); ok {
+					exportEnv[i] = s
+				}
+			}
+			ordered.ExportEnv = exportEnv
 		}
 
 		var buf bytes.Buffer

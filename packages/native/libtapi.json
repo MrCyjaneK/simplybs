@@ -13,8 +13,8 @@
         "*:*:native/_/_",
         "*:*:native/bash",
         "*:*:native/cmake",
-        "*:*:native/libc++",
-        "*:*:native/ninja"
+        "*:*:native/ninja",
+        "linux_arm64:*:native/libc++"
     ],
     "build": {
         "env": [
@@ -29,8 +29,9 @@
             "*:*:config_opts=$config_opts -DTAPI_REPOSITORY_STRING=1300.6.5",
             "*:*:config_opts=$config_opts -DTAPI_FULL_VERSION=1300.6.5",
             "darwin_arm64:*:config_opts=$config_opts -DLLVM_HOST_TRIPLE=aarch64-apple-darwin",
-            "darwin_arm64:*:config_opts=$config_opts -DCMAKE_SHARED_LIBRARY_RUNTIME_C_FLAG=-Wl,-rpath,",
             "darwin_arm64:*:config_opts=$config_opts -DCMAKE_OSX_SYSROOT=$NATIVEPREFIX/_/SDK/MacOSX26.1.sdk",
+            "darwin_arm64:*:config_opts=$config_opts -DCMAKE_OSX_DEPLOYMENT_TARGET=$OSX_MIN_VERSION",
+            "darwin_arm64:*:config_opts=$config_opts -DCMAKE_INSTALL_NAME_DIR=$NATIVEPREFIX/lib",
             "darwin_arm64:*:config_opts=$config_opts -DCMAKE_CXX_FLAGS=-stdlib=libc++",
             "darwin_arm64:*:CMAKE_EXE_LINKER_FLAGS=-stdlib=libc++ -lc++ -lc++abi",
             "darwin_arm64:*:CMAKE_SHARED_LINKER_FLAGS=-stdlib=libc++ -lc++ -lc++abi",
@@ -45,6 +46,7 @@
             "linux_arm64:*:CMAKE_SHARED_LINKER_FLAGS=-L$NATIVEPREFIX/lib -stdlib=libc++ -lc++ -lc++abi -lunwind"
         ],
         "steps": [
+            "darwin_arm64:*:sed -i.bak '/add_clang_subdirectory(IndexStore)/d; /add_clang_subdirectory(libclang)/d' src/clang/tools/CMakeLists.txt",
             "darwin_arm64:*:cmake $config_opts -DCMAKE_EXE_LINKER_FLAGS=\"$CMAKE_EXE_LINKER_FLAGS\" -DCMAKE_SHARED_LINKER_FLAGS=\"$CMAKE_SHARED_LINKER_FLAGS\"",
             "linux_arm64:*:cmake $config_opts -DCMAKE_CXX_FLAGS=\"$CMAKE_CXX_FLAGS\" -DCMAKE_EXE_LINKER_FLAGS=\"$CMAKE_EXE_LINKER_FLAGS\" -DCMAKE_SHARED_LINKER_FLAGS=\"$CMAKE_SHARED_LINKER_FLAGS\"",
             "*:*:cmake --build build --target clangBasic libtapi -j$NUM_CORES",

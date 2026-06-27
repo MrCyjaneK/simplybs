@@ -39,6 +39,7 @@ func (p *Package) FilterForHost(h *host.Host) *Package {
 	}
 	builderName := builder.GetName()
 	filtered.Dependencies = ifstring.FilterContent(p.Dependencies, h.Triplet, builderName)
+	filtered.ExportEnv = ifstring.FilterContent(p.ExportEnv, h.Triplet, builderName)
 	filtered.Build.Env = ifstring.FilterContent(p.Build.Env, h.Triplet, builderName)
 	filtered.Build.Steps = ifstring.FilterContent(p.Build.Steps, h.Triplet, builderName)
 
@@ -89,6 +90,14 @@ func (p *Package) GenerateSourceBuildPath(download *Download) string {
 	return utils.SourcePathForFileURL(download.URL)
 }
 
+func (p *Package) baseBuildPath(h *host.Host, kind string) string {
+	safeName := strings.ReplaceAll(p.Package+"-"+p.Version, "/", "_")
+	if p.Type == "native" {
+		return filepath.Join(host.DataDir(), kind, safeName)
+	}
+	return filepath.Join(host.DataDir(), kind, h.Triplet, safeName)
+}
+
 func (p *Package) GenerateBuildPath(h *host.Host, kind string) string {
 	if kind == "source" {
 		log.Fatalf("Source build path is not supported")
@@ -108,13 +117,13 @@ func getNumCores() int {
 	return cores
 }
 
-func (p *Package) GetEnv(h *host.Host) map[string]string {
+func (p *Package) minimalEnvWithStaging(h *host.Host, stagingPath string) map[string]string {
 	getwd, err := os.Getwd()
 	crash.Handle(err)
-	stagingPath := p.GenerateBuildPath(h, "staging")
-	env := map[string]string{
+	return map[string]string{
 		"PATH":                   h.GetNativeEnvPath() + "/bin:" + h.GetNativeEnvPath() + "/_/bin:" + utils.GetHostPath(),
 		"HOST":                   h.Triplet,
+		"TARGET":                 h.Triplet,
 		"PREFIX":                 h.GetEnvPath(),
 		"NATIVEPREFIX":           h.GetNativeEnvPath(),
 		"HOME":                   p.homePath(h),
@@ -124,48 +133,27 @@ func (p *Package) GetEnv(h *host.Host) map[string]string {
 		"STAGING_DIR":            stagingPath,
 		"PKG_CONFIG_ALLOW_CROSS": "1",
 		"PKG_CONFIG_SYSROOT_DIR": h.GetEnvPath(),
+		"BUILDER_GOOS":           runtime.GOOS,
+		"BUILDER_GOARCH":         runtime.GOARCH,
 	}
+}
 
-	env = utils.AppendEnv(env, builder.HostBuilder.GlobalEnv, h)
-	if p.Type == "native" {
-		env = utils.AppendEnv(env, []string{
-			"*:*:CFLAGS=$CFLAGS -I" + h.GetNativeEnvPath() + "/include",
-			"*:*:CXXFLAGS=$CXXFLAGS -I" + h.GetNativeEnvPath() + "/include",
-			"*:*:CPPFLAGS=$CPPFLAGS -I" + h.GetNativeEnvPath() + "/include",
-			"*:*:LDFLAGS=$LDFLAGS -L" + h.GetNativeEnvPath() + "/lib",
-			"*:*:LD_LIBRARY_PATH=$LD_LIBRARY_PATH:" + h.GetNativeEnvPath() + "/lib",
-			"*:*:PKG_CONFIG_PATH=$PKG_CONFIG_PATH:" + h.GetNativeEnvPath() + "/lib/pkgconfig",
-			"*:*:LIBRARY_PATH=$LIBRARY_PATH:" + h.GetNativeEnvPath() + "/lib",
-		}, h)
-	} else {
-		env = utils.AppendEnv(env, []string{
-			"*:*:CC_FOR_BUILD=" + builder.HostBuilder.GetCC(),
-			"*:*:CXX_FOR_BUILD=" + builder.HostBuilder.GetCXX(),
-			"*:*:CFLAGS=$CFLAGS -I" + h.GetEnvPath() + "/include",
-			"*:*:CFLAGS=$CFLAGS -I" + h.GetEnvPath() + "/usr/include",
-			"*:*:CXXFLAGS=$CXXFLAGS -I" + h.GetEnvPath() + "/include",
-			"*:*:CXXFLAGS=$CXXFLAGS -I" + h.GetEnvPath() + "/usr/include",
-			"*:*:CPPFLAGS=$CPPFLAGS -I" + h.GetEnvPath() + "/include",
-			"*:*:CPPFLAGS=$CPPFLAGS -I" + h.GetEnvPath() + "/usr/include",
-			"*:*:LDFLAGS=$LDFLAGS -L" + h.GetEnvPath() + "/lib",
-			"*:*:LD_LIBRARY_PATH=" + h.GetNativeEnvPath() + "/lib",
-			"*:*:PKG_CONFIG_PATH=$PKG_CONFIG_PATH:" + h.GetEnvPath() + "/lib/pkgconfig",
-			"*:*:LIBRARY_PATH=$LIBRARY_PATH:" + h.GetEnvPath() + "/lib",
-		}, h)
-	}
-	if p.Type != "native" {
-		env = utils.AppendEnv(env, h.Env, h)
-	}
+func (p *Package) minimalEnv(h *host.Host) map[string]string {
+	return p.minimalEnvWithStaging(h, p.GenerateBuildPath(h, "staging"))
+}
+
+func (p *Package) GetEnv(h *host.Host) map[string]string {
+	ctx := newExportEnvContext()
+	env := p.minimalEnv(h)
+	mergeResolvedExportEnv(env, ctx, filteredDependencyPackages(p.Dependencies, h), h)
 	env = utils.AppendEnv(env, p.Build.Env, h)
 	return env
 }
 
 func (p *Package) GetEnvForLogs(h *host.Host) map[string]string {
+	ctx := newExportEnvContext()
 	env := map[string]string{}
-	env = utils.AppendEnv(env, builder.HostBuilder.GlobalEnv, h)
+	mergeResolvedExportEnv(env, ctx, filteredDependencyPackages(p.Dependencies, h), h)
 	env = utils.AppendEnv(env, p.Build.Env, h)
-	if p.Type != "native" {
-		env = utils.AppendEnv(env, h.Env, h)
-	}
 	return env
 }

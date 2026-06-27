@@ -12,10 +12,10 @@
     "dependencies": [
         "*:*:native/_/_",
         "*:*:native/bash",
-        "*:*:native/diffutils",
         "*:*:native/coreutils",
-        "*:*:native/sed",
-        "*:*:native/make"
+        "*:*:native/diffutils",
+        "*:*:native/make",
+        "*:*:native/sed"
     ],
     "build": {
         "env": [

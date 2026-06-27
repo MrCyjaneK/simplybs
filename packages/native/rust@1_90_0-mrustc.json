@@ -23,8 +23,8 @@
         "*:*:native/openssl",
         "*:*:native/patch",
         "*:*:native/perl",
-        "*:*:native/sed",
         "*:*:native/pkgconf",
+        "*:*:native/sed",
         "*:*:native/zlib"
     ],
     "build": {

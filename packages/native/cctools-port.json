@@ -11,22 +11,19 @@
     ],
     "dependencies": [
         "*:*-apple-*:native/bzip2",
-        "*:*-apple-*:native/libc++",
         "*:*-apple-*:native/libtapi",
         "*:*-apple-*:native/make",
         "*:*-apple-*:native/openssl",
         "*:*-apple-*:native/xar",
         "*:*-apple-*:native/xz",
         "*:*-apple-*:native/zlib",
-        "*:*:native/_/_"
+        "*:*:native/_/_",
+        "linux_arm64:*-apple-*:native/libc++"
     ],
     "build": {
         "env": [
             "*:*-apple-*:config_opts=--prefix=$NATIVEPREFIX",
-            "*:aarch64-apple-darwin:BUILD_TARGET=aarch64-apple-darwin",
-            "*:x86_64-apple-darwin:BUILD_TARGET=x86_64-apple-darwin",
-            "*:aarch64-apple-ios*:BUILD_TARGET=aarch64-apple-ios",
-            "*:*-apple*:config_opts=$config_opts --target=$BUILD_TARGET",
+            "*:*-apple*:config_opts=$config_opts --target=$TARGET",
             "*:*-apple-*:config_opts=$config_opts --with-libtapi=$NATIVEPREFIX",
             "*:*-apple-*:config_opts=$config_opts --with-libxar=$NATIVEPREFIX",
             "*:*-apple-*:CC=clang",

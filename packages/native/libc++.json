@@ -12,9 +12,9 @@
     "dependencies": [
         "*:*:native/_/_",
         "*:*:native/bash",
+        "*:*:native/cmake",
+        "*:*:native/cmake",
         "*:*:native/coreutils",
-        "*:*:native/cmake",
-        "*:*:native/cmake",
         "*:*:native/ninja"
     ],
     "build": {

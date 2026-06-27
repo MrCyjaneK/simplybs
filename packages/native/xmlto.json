@@ -16,9 +16,9 @@
         "*:*:native/bash",
         "*:*:native/flex",
         "*:*:native/gawk",
-        "*:*:native/m4",
         "*:*:native/gettext",
         "*:*:native/libxml2",
+        "*:*:native/m4",
         "*:*:native/make",
         "*:*:native/perl"
     ],

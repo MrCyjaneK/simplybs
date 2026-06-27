@@ -18,10 +18,10 @@
     "dependencies": [
         "*:*-apple-*:native/_/_",
         "*:*-apple-*:native/bash",
-        "*:*-apple-*:native/coreutils",
         "*:*-apple-*:native/bzip2",
         "*:*-apple-*:native/cctools-port",
         "*:*-apple-*:native/cmake",
+        "*:*-apple-*:native/coreutils",
         "*:*-apple-*:native/cpio",
         "*:*-apple-*:native/gettext",
         "*:*-apple-*:native/git",

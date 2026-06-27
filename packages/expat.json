@@ -12,12 +12,12 @@
     "dependencies": [
         "*:*:native/_",
         "*:*:native/bash",
-        "*:*:native/sed",
         "*:*:native/coreutils",
         "*:*:native/findutils",
-        "*:*:native/make",
-        "*:*:native/grep",
         "*:*:native/gawk",
+        "*:*:native/grep",
+        "*:*:native/make",
+        "*:*:native/sed",
         "*:*:libiconv"
     ],
     "build": {

@@ -12,13 +12,13 @@
     "dependencies": [
         "*:*:native/_",
         "*:*:native/bash",
-        "*:*:native/sed",
-        "*:*:native/gawk",
-        "*:*:native/grep",
+        "*:*:native/config",
         "*:*:native/coreutils",
         "*:*:native/findutils",
-        "*:*:native/config",
-        "*:*:native/make"
+        "*:*:native/gawk",
+        "*:*:native/grep",
+        "*:*:native/make",
+        "*:*:native/sed"
     ],
     "build": {
         "env": [

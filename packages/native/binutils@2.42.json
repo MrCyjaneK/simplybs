@@ -12,14 +12,14 @@
     "dependencies": [
         "*:*:native/_/_",
         "*:*:native/bison",
+        "*:*:native/diffutils",
+        "*:*:native/grep",
         "*:*:native/libiconv",
         "*:*:native/make",
-        "*:*:native/grep",
         "*:*:native/perl",
         "*:*:native/pkgconf",
         "*:*:native/texinfo",
-        "*:*:native/zlib",
-        "*:*:native/diffutils"
+        "*:*:native/zlib"
     ],
     "build": {
         "env": [

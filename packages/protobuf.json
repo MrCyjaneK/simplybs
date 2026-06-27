@@ -11,18 +11,18 @@
     ],
     "dependencies": [
         "*:*:native/_",
-        "*:*:native/bash",
-        "*:*:native/coreutils",
-        "*:*:native/grep",
-        "*:*:native/sed",
         "*:*:native/autoconf",
         "*:*:native/automake",
+        "*:*:native/bash",
         "*:*:native/config",
+        "*:*:native/coreutils",
+        "*:*:native/gawk",
+        "*:*:native/grep",
         "*:*:native/m4",
         "*:*:native/make",
         "*:*:native/perl",
         "*:*:native/protobuf",
-        "*:*:native/gawk"
+        "*:*:native/sed"
     ],
     "patches": [
         "visibility.patch"

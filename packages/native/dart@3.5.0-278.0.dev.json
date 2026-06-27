@@ -510,8 +510,8 @@
     "dependencies": [
         "*:*:native/_/_",
         "*:*:native/dart-bin@3.4.0-247.0.dev",
-        "*:*:native/gn",
         "*:*:native/git",
+        "*:*:native/gn",
         "*:*:native/libc++",
         "*:*:native/llvm-ar",
         "*:*:native/llvm-nm",

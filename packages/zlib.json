@@ -11,11 +11,11 @@
     ],
     "dependencies": [
         "*:*:native/_",
+        "*:*:native/bash",
         "*:*:native/coreutils",
-        "*:*:native/make",
         "*:*:native/libtool",
-        "*:*:native/sed",
-        "*:*:native/bash"
+        "*:*:native/make",
+        "*:*:native/sed"
     ],
     "build": {
         "env": [

@@ -33,6 +33,7 @@ type Package struct {
 		Steps []string `json:"steps"`
 	} `json:"build"`
 	Dependencies []string `json:"dependencies"`
+	ExportEnv    []string `json:"export-env"`
 }
 
 type BuiltFile struct {

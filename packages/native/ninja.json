@@ -11,8 +11,8 @@
     ],
     "dependencies": [
         "*:*:native/_/_",
-        "*:*:native/python@3.11",
-        "*:*:native/coreutils"
+        "*:*:native/coreutils",
+        "*:*:native/python@3.11"
     ],
     "build": {
         "env": [],

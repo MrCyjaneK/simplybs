@@ -13,10 +13,10 @@
         "*:*:native/_/_",
         "*:*:native/bash",
         "*:*:native/bzip2",
+        "*:*:native/libxml2",
         "*:*:native/make",
         "*:*:native/openssl",
         "*:*:native/xz",
-        "*:*:native/libxml2",
         "*:*:native/zlib"
     ],
     "build": {
