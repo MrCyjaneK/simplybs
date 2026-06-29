@@ -5,7 +5,7 @@
     "download": [
         {
             "kind": "tar.xz",
-            "sha256": "125e86a1f93fb5572d07453e6ec2160066be94aed77a1625dfe5e5df12a58247",
+            "sha256": "fc16c4af5eb4af3a2a065404679a59db0f8ebeb4f22346ecf954b35bd05a49b0",
             "url": "https://github.com/MrCyjaneK/easybs/releases/download/r0/clang21-aarch64-apple-darwin.tar.xz"
         }
     ],
