@@ -5,8 +5,62 @@
     "download": [
         {
             "kind": "git",
-            "sha256": "f0894a6c06fc53542ab5505088f0a2feb5f14f4d",
+            "sha256": "f3508d4aa2d1345371ead9d9bbb035c5031f32b5",
             "url": "https://github.com/justxd22/monero-ndk"
+        },
+        {
+            "kind": "git",
+            "sha256": "3b5e7c83a6e226d5bd7ed2e9b67449b64812074c",
+            "url": "https://android.googlesource.com/toolchain/llvm-project",
+            "path": "sources/llvm-project"
+        },
+        {
+            "kind": "git",
+            "sha256": "e727bfb014bd436f581a66a450c939a6983a1fc3",
+            "url": "https://android.googlesource.com/toolchain/llvm_android",
+            "path": "sources/llvm_android"
+        },
+        {
+            "kind": "git",
+            "sha256": "d71e320ab860721f764fe7403588641c8a7bc65d",
+            "url": "https://android.googlesource.com/platform/external/toolchain-utils",
+            "path": "sources/toolchain-utils"
+        },
+        {
+            "kind": "git",
+            "sha256": "a63b21091ada240d92f8ceadb1cabbdedaaab81b",
+            "url": "https://android.googlesource.com/platform/bionic",
+            "path": "sources/bionic"
+        },
+        {
+            "kind": "git",
+            "sha256": "d7c644304e83c9bb92ede58c9c204d55f8157817",
+            "url": "https://android.googlesource.com/platform/external/arm-optimized-routines",
+            "path": "sources/arm-optimized-routines"
+        },
+        {
+            "kind": "git",
+            "sha256": "1b55aeaa18248574e61a531a89439c20ee55379d",
+            "url": "https://android.googlesource.com/platform/external/scudo",
+            "path": "sources/scudo"
+        },
+        {
+            "kind": "git",
+            "sha256": "b302aa5039729da396909ef03e815160dab4448c",
+            "url": "https://android.googlesource.com/platform/external/gwp_asan",
+            "path": "sources/gwp_asan"
+        },
+        {
+            "kind": "git",
+            "sha256": "a3b721a32242006b59cb12bd62c9133632af3a2d",
+            "url": "https://android.googlesource.com/platform/system/core",
+            "path": "sources/system-core"
+        },
+        {
+            "kind": "git",
+            "sha256": "bcac7c30d88a3773a7c0bc9f5617a23a886331fd",
+            "url": "https://android.googlesource.com/platform/system/logging",
+            "path": "sources/system-logging"
         }
     ],
     "dependencies": [
@@ -24,7 +78,6 @@
             "*:*-android*:API_LEVEL=21"
         ],
         "steps": [
-            "*:*-android*:make fetch",
             "*:*-android*:make all",
             "*:*-android*:mkdir -p $STAGING_DIR$NATIVEPREFIX",
             "*:*-android*:cp -a output/bin output/sysroot output/lib output/AndroidVersion.txt $STAGING_DIR$NATIVEPREFIX/",
