@@ -51,7 +51,6 @@
         "*:*:INSTALL_NAME_TOOL=$INSTALL_NAME_TOOL",
         "*:*:OTOOL=$OTOOL",
         "*:*:OSX_MIN_VERSION=$OSX_MIN_VERSION",
-        "*:*:lt_cv_prog_gnu_ld=$lt_cv_prog_gnu_ld",
         "*:aarch64-apple-darwin:HOST=aarch64-apple-darwin",
         "*:aarch64-apple-darwin:TARGET=aarch64-apple-darwin",
         "*:aarch64-apple-darwin:RUST_TRIPLET=aarch64-apple-darwin",

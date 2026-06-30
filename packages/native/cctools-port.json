@@ -23,7 +23,6 @@
     "build": {
         "env": [
             "*:*-apple-*:config_opts=--prefix=$NATIVEPREFIX",
-            "*:*-apple*:config_opts=$config_opts --target=$TARGET",
             "*:*-apple-*:config_opts=$config_opts --with-libtapi=$NATIVEPREFIX",
             "*:*-apple-*:config_opts=$config_opts --with-libxar=$NATIVEPREFIX",
             "*:*-apple-*:CC=clang",

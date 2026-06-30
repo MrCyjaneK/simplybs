@@ -24,7 +24,7 @@
             "*:*:PKGCONFIG_DIR=$NATIVEPREFIX/lib/pkgconfig:$PREFIX/lib/pkgconfig"
         ],
         "steps": [
-            "*:*:sh ./autogen.sh",
+            "*:*:bash ./autogen.sh",
             "*:*:bash ./configure --prefix=$NATIVEPREFIX --with-pkg-config-dir=$PKGCONFIG_DIR",
             "*:*:make -j$NUM_CORES",
             "*:*:make DESTDIR=$STAGING_DIR install",

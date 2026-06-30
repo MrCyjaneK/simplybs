@@ -5,7 +5,7 @@
     "download": [
         {
             "kind": "tar.xz",
-            "sha256": "bad39866fe2a91d1c399e09094c109c38ab911277f7c2367eb850cd423f7d78d",
+            "sha256": "9442ba966d3a1d3134e55ab21bf55ee3d4f281c0b850e3ef476a6314d373524d",
             "url": "https://github.com/MrCyjaneK/easybs/releases/download/r0/clang21-x86_64-linux-gnu.tar.xz"
         }
     ],

@@ -37,7 +37,7 @@
         "linux_amd64:*:AR=$NATIVEPREFIX/_/bin/ar",
         "linux_amd64:*:RANLIB=$NATIVEPREFIX/_/bin/ranlib",
         "linux_amd64:*:STRIP=$NATIVEPREFIX/_/bin/strip",
-        "linux_amd64:*:NM=$NATIVEPREFIX/_/bin/NM",
+        "linux_amd64:*:NM=$NATIVEPREFIX/_/bin/nm",
         "linux_arm64:*:CC=$NATIVEPREFIX/_/bin/clang",
         "linux_arm64:*:CXX=$NATIVEPREFIX/_/bin/clang++",
         "linux_arm64:*:AR=$NATIVEPREFIX/_/bin/ar",

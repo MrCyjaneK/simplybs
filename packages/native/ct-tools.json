@@ -159,10 +159,10 @@
             "*:x86_64-w64-mingw32:TOOL_TARGET=x86_64-w64-mingw32"
         ],
         "steps": [
-            "linux_arm64:*:ln -sf $NATIVEPREFIX/_/bin/clang $NATIVEPREFIX/_/bin/gcc",
-            "linux_arm64:*:ln -sf $NATIVEPREFIX/_/bin/clang++ $NATIVEPREFIX/_/bin/g++",
-            "linux_arm64:x86_64-w64-mingw32:mkdir -p patches/mingw-w64 && cp $PATCH_DIR/native/ct-tools/clang-widl-winnt.h.patch patches/mingw-w64/",
-            "linux_arm64:x86_64-w64-mingw32:sed -i '/put_new_config CT_MINGW_DEFAULT_MSVCRT_UCRT y/a\\    put_new_config CT_MINGW_W64_PATCH_LOCAL y\\n    put_new_config CT_MINGW_W64_PATCH_ORDER \"local,bundled\"\\n    put_new_config CT_PATCH_USE_LOCAL y\\n    put_new_config CT_LOCAL_PATCH_DIR \"'\"$(pwd)/patches\"'\"' run.sh",
+            "linux_*:*:ln -sf $NATIVEPREFIX/_/bin/clang $NATIVEPREFIX/_/bin/gcc",
+            "linux_*:*:ln -sf $NATIVEPREFIX/_/bin/clang++ $NATIVEPREFIX/_/bin/g++",
+            "linux_*:x86_64-w64-mingw32:mkdir -p patches/mingw-w64 && cp $PATCH_DIR/native/ct-tools/clang-widl-winnt.h.patch patches/mingw-w64/",
+            "linux_*:x86_64-w64-mingw32:sed -i '/put_new_config CT_MINGW_DEFAULT_MSVCRT_UCRT y/a\\    put_new_config CT_MINGW_W64_PATCH_LOCAL y\\n    put_new_config CT_MINGW_W64_PATCH_ORDER \"local,bundled\"\\n    put_new_config CT_PATCH_USE_LOCAL y\\n    put_new_config CT_LOCAL_PATCH_DIR \"'\"$(pwd)/patches\"'\"' run.sh",
             "*:{*-linux-gnu,*-w64-mingw32}:sed -i 's|install=\"./scripts/install-sh -c\"|install=\"'$NATIVEPREFIX'/bin/install -c\"|g' $NATIVEPREFIX/share/crosstool-ng/paths.sh",
             "*:{*-linux-gnu,*-w64-mingw32}:env -i PATH=$PATH PREFIX=$(realpath $STAGING_DIR$PREFIX) ./run.sh $TOOL_TARGET",
             "*:{*-linux-gnu,*-w64-mingw32}:mv $STAGING_DIR/$PREFIX/$TOOL_TARGET/$TOOL_TARGET/* $STAGING_DIR/$PREFIX",

@@ -5,7 +5,7 @@
     "download": [
         {
             "kind": "tar.xz",
-            "sha256": "b50f5b89157206e013f1e37f922c812d3fdc960e512dda6b5c69e692538ffd0c",
+            "sha256": "9962a2889f1782e904baa34a77e9e12d2fe7feecb845287f378999c7e442d001",
             "url": "https://github.com/MrCyjaneK/easybs/releases/download/r0/clang21-aarch64-linux-gnu.tar.xz"
         }
     ],
