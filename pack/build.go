@@ -184,9 +184,14 @@ func (p *Package) buildPackageInternal(h *host.Host, buildDependencies bool) {
 		pathEnv := utils.GetHostPath()
 		env := p.GetEnv(h)
 
+		hostTriplet := h.Triplet
+		if p.Type == "native" {
+			hostTriplet = builder.NativeTriplet()
+		}
+
 		cmd.Env = append(cmd.Env, []string{
 			"STAGING_DIR=" + stagingPath,
-			"HOST=" + h.Triplet,
+			"HOST=" + hostTriplet,
 			"PREFIX=" + h.GetEnvPath(),
 			"NATIVEPREFIX=" + h.GetNativeEnvPath(),
 			"PATH=" + h.GetNativeEnvPath() + "/bin:" + env["PATH"] + ":" + pathEnv + ":" + h.GetEnvPath() + "/bin" + ":" + h.GetNativeEnvPath() + "/_/bin",
@@ -320,8 +325,13 @@ func (p *Package) StartShell(h *host.Host) {
 	cmd.Stdout = os.Stdout
 	cmd.Stderr = os.Stderr
 
+	hostTriplet := h.Triplet
+	if p.Type == "native" {
+		hostTriplet = builder.NativeTriplet()
+	}
+
 	cmd.Env = append(cmd.Env, []string{
-		"HOST=" + h.Triplet,
+		"HOST=" + hostTriplet,
 		"PREFIX=" + h.GetEnvPath(),
 		"NATIVEPREFIX=" + h.GetNativeEnvPath(),
 		"PATH=" + h.GetNativeEnvPath() + "/bin:" + env["PATH"] + ":" + pathEnv,

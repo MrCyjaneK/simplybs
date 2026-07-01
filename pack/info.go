@@ -120,10 +120,16 @@ func getNumCores() int {
 func (p *Package) minimalEnvWithStaging(h *host.Host, stagingPath string) map[string]string {
 	getwd, err := os.Getwd()
 	crash.Handle(err)
+	hostTriplet := h.Triplet
+	targetTriplet := h.Triplet
+	if p.Type == "native" {
+		hostTriplet = builder.NativeTriplet()
+		targetTriplet = builder.NativeTriplet()
+	}
 	return map[string]string{
 		"PATH":                   h.GetNativeEnvPath() + "/bin:" + h.GetNativeEnvPath() + "/_/bin:" + utils.GetHostPath(),
-		"HOST":                   h.Triplet,
-		"TARGET":                 h.Triplet,
+		"HOST":                   hostTriplet,
+		"TARGET":                 targetTriplet,
 		"PREFIX":                 h.GetEnvPath(),
 		"NATIVEPREFIX":           h.GetNativeEnvPath(),
 		"HOME":                   p.homePath(h),
