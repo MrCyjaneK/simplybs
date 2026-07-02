@@ -14,7 +14,7 @@
         "*:*:native/bash",
         "*:*:native/cmake",
         "*:*:native/ninja",
-        "linux_arm64:*:native/libc++"
+        "*:*:native/libc++"
     ],
     "build": {
         "env": [
@@ -47,7 +47,7 @@
             "linux_*:*:CMAKE_SHARED_LINKER_FLAGS=-L$NATIVEPREFIX/lib -stdlib=libc++ -lc++ -lc++abi -lunwind"
         ],
         "steps": [
-            "darwin_arm64:*:sed -i.bak '/add_clang_subdirectory(IndexStore)/d; /add_clang_subdirectory(libclang)/d' src/clang/tools/CMakeLists.txt",
+            "*:*:sed -i.bak '/add_clang_subdirectory(IndexStore)/d; /add_clang_subdirectory(libclang)/d' src/clang/tools/CMakeLists.txt",
             "darwin_arm64:*:cmake $config_opts -DCMAKE_EXE_LINKER_FLAGS=\"$CMAKE_EXE_LINKER_FLAGS\" -DCMAKE_SHARED_LINKER_FLAGS=\"$CMAKE_SHARED_LINKER_FLAGS\"",
             "linux_*:*:cmake $config_opts -DCMAKE_CXX_FLAGS=\"$CMAKE_CXX_FLAGS\" -DCMAKE_EXE_LINKER_FLAGS=\"$CMAKE_EXE_LINKER_FLAGS\" -DCMAKE_SHARED_LINKER_FLAGS=\"$CMAKE_SHARED_LINKER_FLAGS\"",
             "*:*:cmake --build build --target clangBasic libtapi -j$NUM_CORES",

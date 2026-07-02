@@ -18,7 +18,7 @@
         "*:*-apple-*:native/xz",
         "*:*-apple-*:native/zlib",
         "*:*:native/_/_",
-        "linux_arm64:*-apple-*:native/libc++"
+        "*:*-apple-*:native/libc++"
     ],
     "build": {
         "env": [
@@ -27,8 +27,8 @@
             "*:*-apple-*:config_opts=$config_opts --with-libxar=$NATIVEPREFIX",
             "*:*-apple-*:CC=clang",
             "*:*-apple-*:CXX=clang++",
-            "linux_arm64:*-apple-*:CXXFLAGS=$CXXFLAGS -stdlib=libc++ -I$NATIVEPREFIX/include/c++/v1",
-            "linux_arm64:*-apple-*:LIBS=-L$NATIVEPREFIX/lib -lc++abi -lunwind"
+            "linux_*:*-apple-*:CXXFLAGS=$CXXFLAGS -stdlib=libc++ -I$NATIVEPREFIX/include/c++/v1",
+            "linux_*:*-apple-*:LIBS=-L$NATIVEPREFIX/lib -lc++abi"
         ],
         "steps": [
             "*:*-apple-*:sed -i.bak '3182d' cctools/configure",
