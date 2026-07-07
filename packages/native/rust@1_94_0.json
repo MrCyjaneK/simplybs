@@ -10,7 +10,9 @@
         }
     ],
     "dependencies": [
+        "*:*:native/_/_",
         "*:*:native/cmake",
+        "*:*:native/bash",
         "*:*:native/make",
         "*:*:native/ninja",
         "*:*:native/openssl",
@@ -19,7 +21,15 @@
         "*:*:native/rust@1_93_0"
     ],
     "build": {
-        "env": [],
+        "env": [
+            "*:*:PATH=$NATIVEPREFIX/bin:$NATIVEPREFIX/_/bin:$PATH",
+            "linux_amd64:*:CARGO_TARGET_X86_64_UNKNOWN_LINUX_GNU_LINKER=$NATIVEPREFIX/_/bin/clang",
+            "linux_amd64:*:RUSTFLAGS=-Clinker=$NATIVEPREFIX/_/bin/clang -Clink-arg=-L$NATIVEPREFIX/lib",
+            "linux_arm64:*:CARGO_TARGET_AARCH64_UNKNOWN_LINUX_GNU_LINKER=$NATIVEPREFIX/_/bin/clang",
+            "linux_arm64:*:RUSTFLAGS=-Clinker=$NATIVEPREFIX/_/bin/clang -Clink-arg=-L$NATIVEPREFIX/lib",
+            "darwin_arm64:*:CARGO_TARGET_AARCH64_APPLE_DARWIN_LINKER=$NATIVEPREFIX/_/bin/clang",
+            "darwin_arm64:*:RUSTFLAGS=-Clinker=$NATIVEPREFIX/_/bin/clang -Clink-arg=-L$NATIVEPREFIX/lib"
+        ],
         "steps": [
             "*:*:echo '[build]' > config.toml",
             "*:*:echo 'full-bootstrap = true' >> config.toml",

@@ -23,10 +23,15 @@
         }
     ],
     "dependencies": [
+        "*:*:native/_/_",
         "*:*:native/bash",
+        "*:*:native/gzip",
         "*:*:native/tar"
     ],
     "build": {
+        "env": [
+            "*:*:PATH=$NATIVEPREFIX/_/bin:$PATH"
+        ],
         "steps": [
             "linux_amd64:*:tar -xzf rust-1.90.0-x86_64-unknown-linux-gnu.tar.gz",
             "linux_amd64:*:cd rust-1.90.0-x86_64-unknown-linux-gnu && ./install.sh --prefix=$STAGING_DIR$NATIVEPREFIX --disable-ldconfig",
