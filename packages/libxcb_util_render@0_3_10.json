@@ -1,0 +1,39 @@
+{
+    "package": "libxcb_util_render@0_3_10",
+    "version": "0_3_10",
+    "type": "host",
+    "download": [
+        {
+            "kind": "tar.xz",
+            "sha256": "3e15d4f0e22d8ddbfbb9f5d77db43eacd7a304029bf25a6166cc63caa96d04ba",
+            "url": "https://xcb.freedesktop.org/dist/xcb-util-renderutil-0.3.10.tar.xz"
+        }
+    ],
+    "dependencies": [
+        "*:x86_64-linux-gnu:native/_",
+        "*:x86_64-linux-gnu:native/bash",
+        "*:x86_64-linux-gnu:native/coreutils",
+        "*:x86_64-linux-gnu:native/diffutils",
+        "*:x86_64-linux-gnu:native/grep",
+        "*:x86_64-linux-gnu:native/pkgconf",
+        "*:x86_64-linux-gnu:native/gawk",
+        "*:x86_64-linux-gnu:native/findutils",
+        "*:x86_64-linux-gnu:native/make",
+        "*:x86_64-linux-gnu:libxcb@1_17_0",
+        "*:x86_64-linux-gnu:libXau@1_0_12",
+        "*:x86_64-linux-gnu:xorgproto@2025_1",
+        "*:x86_64-linux-gnu:native/sed"
+    ],
+    "build": {
+        "env": [
+            "*:x86_64-linux-gnu:PKG_CONFIG_PATH=$PREFIX/lib/pkgconfig:$PREFIX/share/pkgconfig",
+            "*:x86_64-linux-gnu:config_opts=--host=$HOST --prefix=$PREFIX --disable-shared --enable-static --disable-devel-docs --without-doxygen --disable-dependency-tracking --enable-option-checking"
+        ],
+        "steps": [
+            "*:x86_64-linux-gnu:bash ./configure $config_opts",
+            "*:x86_64-linux-gnu:make -j$NUM_CORES",
+            "*:x86_64-linux-gnu:make DESTDIR=$STAGING_DIR install",
+            "*:x86_64-linux-gnu:rm -rf $STAGING_DIR$PREFIX/share $STAGING_DIR$PREFIX/lib/*.la"
+        ]
+    }
+}

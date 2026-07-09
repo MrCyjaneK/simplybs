@@ -1,0 +1,40 @@
+{
+    "package": "libxcb_util_image@0_4_1",
+    "version": "0_4_1",
+    "type": "host",
+    "download": [
+        {
+            "kind": "tar.xz",
+            "sha256": "ccad8ee5dadb1271fd4727ad14d9bd77a64e505608766c4e98267d9aede40d3d",
+            "url": "https://xcb.freedesktop.org/dist/xcb-util-image-0.4.1.tar.xz"
+        }
+    ],
+    "dependencies": [
+        "*:x86_64-linux-gnu:native/_",
+        "*:x86_64-linux-gnu:native/bash",
+        "*:x86_64-linux-gnu:native/coreutils",
+        "*:x86_64-linux-gnu:native/diffutils",
+        "*:x86_64-linux-gnu:native/grep",
+        "*:x86_64-linux-gnu:native/pkgconf",
+        "*:x86_64-linux-gnu:native/gawk",
+        "*:x86_64-linux-gnu:native/findutils",
+        "*:x86_64-linux-gnu:native/make",
+        "*:x86_64-linux-gnu:libxcb@1_17_0",
+        "*:x86_64-linux-gnu:libXau@1_0_12",
+        "*:x86_64-linux-gnu:xorgproto@2025_1",
+        "*:x86_64-linux-gnu:libxcb_util@0_4_1",
+        "*:x86_64-linux-gnu:native/sed"
+    ],
+    "build": {
+        "env": [
+            "*:x86_64-linux-gnu:PKG_CONFIG_PATH=$PREFIX/lib/pkgconfig:$PREFIX/share/pkgconfig",
+            "*:x86_64-linux-gnu:config_opts=--host=$HOST --prefix=$PREFIX --disable-shared --enable-static --disable-devel-docs --without-doxygen --disable-dependency-tracking --enable-option-checking"
+        ],
+        "steps": [
+            "*:x86_64-linux-gnu:bash ./configure $config_opts",
+            "*:x86_64-linux-gnu:make -j$NUM_CORES -C image",
+            "*:x86_64-linux-gnu:make DESTDIR=$STAGING_DIR -C image install",
+            "*:x86_64-linux-gnu:rm -rf $STAGING_DIR$PREFIX/share $STAGING_DIR$PREFIX/lib/*.la"
+        ]
+    }
+}

@@ -4,6 +4,7 @@ import (
 	"crypto/sha256"
 	"crypto/tls"
 	"encoding/hex"
+	"errors"
 	"fmt"
 	"io"
 	"log"
@@ -18,6 +19,8 @@ import (
 
 const maxDownloadRetries = 15
 const downloadRetryDelay = 5 * time.Second
+
+var ErrHashMismatch = errors.New("sha256 hash mismatch")
 
 var defaultHTTPClient = &http.Client{
 	Transport: &http.Transport{
@@ -173,6 +176,16 @@ func downloadToFileWithResume(destPath, url string) (int64, error) {
 	return fileSize + bytesRead, nil
 }
 
+func shouldResetRetryCount(err error, partialPath string, startSize, bytesReceived int64) bool {
+	if bytesReceived <= startSize {
+		return false
+	}
+	if errors.Is(err, ErrHashMismatch) {
+		return false
+	}
+	return fileSizeAt(partialPath) > startSize
+}
+
 // DownloadURLWithRetries downloads url to destPath with progress, resume, and retries.
 func DownloadURLWithRetries(url, destPath string) error {
 	attempt := 0
@@ -194,7 +207,7 @@ func DownloadURLWithRetries(url, destPath string) error {
 
 		log.Printf("Download failed: %v", err)
 
-		if bytesReceived > startSize {
+		if shouldResetRetryCount(err, destPath, startSize, bytesReceived) {
 			log.Printf("Made progress (%s), resetting retry count", formatBytes(bytesReceived-startSize))
 			attempt = 0
 			continue
@@ -286,7 +299,7 @@ func DownloadFile(packageName, path, url, expectedSha256 string, isMirror bool) 
 
 		log.Printf("Download failed: %v", err)
 
-		if bytesReceived > startSize {
+		if shouldResetRetryCount(err, downloadTempPath(path), startSize, bytesReceived) {
 			log.Printf("Made progress (%s), resetting retry count", formatBytes(bytesReceived-startSize))
 			attempt = 0
 			continue
@@ -323,7 +336,7 @@ func downloadWithResume(path, url, expectedSha256 string) (int64, error) {
 	actualHash := hex.EncodeToString(hasher.Sum(nil))
 	if actualHash != expectedSha256 {
 		os.Remove(tempPath)
-		return bytesRead, fmt.Errorf("SHA256 hash mismatch: expected %s, got %s", expectedSha256, actualHash)
+		return bytesRead, fmt.Errorf("%w: expected %s, got %s", ErrHashMismatch, expectedSha256, actualHash)
 	}
 
 	if err := os.Rename(tempPath, path); err != nil {

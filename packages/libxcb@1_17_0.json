@@ -1,0 +1,44 @@
+{
+    "package": "libxcb@1_17_0",
+    "version": "1_17_0",
+    "type": "host",
+    "download": [
+        {
+            "kind": "tar.gz",
+            "sha256": "2c69287424c9e2128cb47ffe92171e10417041ec2963bceafb65cb3fcf8f0b85",
+            "url": "https://xcb.freedesktop.org/dist/libxcb-1.17.0.tar.gz"
+        }
+    ],
+    "dependencies": [
+        "*:x86_64-linux-gnu:native/_",
+        "*:x86_64-linux-gnu:native/bash",
+        "*:x86_64-linux-gnu:native/coreutils",
+        "*:x86_64-linux-gnu:native/grep",
+        "*:x86_64-linux-gnu:native/pkgconf",
+        "*:x86_64-linux-gnu:native/gawk",
+        "*:x86_64-linux-gnu:native/findutils",
+        "*:x86_64-linux-gnu:native/make",
+        "*:x86_64-linux-gnu:native/patch",
+        "*:x86_64-linux-gnu:native/python@3.11",
+        "*:x86_64-linux-gnu:native/sed",
+        "*:x86_64-linux-gnu:xcb_proto@1_17_0",
+        "*:x86_64-linux-gnu:xorgproto@2025_1",
+        "*:x86_64-linux-gnu:libXau@1_0_12"
+    ],
+    "patches": [
+        "remove_pthread_stubs.patch"
+    ],
+    "build": {
+        "env": [
+            "*:x86_64-linux-gnu:PKG_CONFIG_PATH=$PREFIX/share/pkgconfig:$PREFIX/lib/pkgconfig",
+            "*:x86_64-linux-gnu:config_opts=--host=$HOST --prefix=$PREFIX --disable-shared --enable-static --disable-devel-docs --without-doxygen --without-launchd --disable-dependency-tracking --enable-option-checking --disable-composite --disable-damage --disable-dpms --disable-dri2 --disable-dri3 --disable-glx --disable-present --disable-record --disable-resource --disable-screensaver --disable-xevie --disable-xfree86-dri --disable-xinput --disable-xprint --disable-selinux --disable-xtest --disable-xv --disable-xvmc"
+        ],
+        "steps": [
+            "*:x86_64-linux-gnu:patch -p1 < $PATCH_DIR/libxcb/remove_pthread_stubs.patch",
+            "*:x86_64-linux-gnu:bash ./configure $config_opts",
+            "*:x86_64-linux-gnu:make -j$NUM_CORES",
+            "*:x86_64-linux-gnu:make DESTDIR=$STAGING_DIR install",
+            "*:x86_64-linux-gnu:rm -rf $STAGING_DIR$PREFIX/share $STAGING_DIR$PREFIX/lib/*.la"
+        ]
+    }
+}

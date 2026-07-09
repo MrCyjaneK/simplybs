@@ -1,0 +1,36 @@
+{
+    "package": "freetype@2_14_1",
+    "version": "2_14_1",
+    "type": "host",
+    "download": [
+        {
+            "kind": "tar.gz",
+            "sha256": "174d9e53402e1bf9ec7277e22ec199ba3e55a6be2c0740cb18c0ee9850fc8c34",
+            "url": "https://download.savannah.gnu.org/releases/freetype/freetype-2.14.1.tar.gz"
+        }
+    ],
+    "dependencies": [
+        "*:x86_64-linux-gnu:native/_",
+        "*:x86_64-linux-gnu:native/bash",
+        "*:x86_64-linux-gnu:native/coreutils",
+        "*:x86_64-linux-gnu:native/diffutils",
+        "*:x86_64-linux-gnu:native/grep",
+        "*:x86_64-linux-gnu:native/pkgconf",
+        "*:x86_64-linux-gnu:native/gawk",
+        "*:x86_64-linux-gnu:native/findutils",
+        "*:x86_64-linux-gnu:native/make",
+        "*:x86_64-linux-gnu:native/sed"
+    ],
+    "build": {
+        "env": [
+            "*:x86_64-linux-gnu:config_opts=--host=$HOST --prefix=$PREFIX --disable-shared --enable-static --without-zlib --without-png --without-harfbuzz --without-bzip2 --enable-option-checking --without-brotli --with-pic"
+        ],
+        "steps": [
+            "*:x86_64-linux-gnu:rm -rf docs",
+            "*:x86_64-linux-gnu:CC_BUILD='env PATH=/usr/bin:/bin LD=/usr/bin/ld /usr/bin/cc' bash ./configure $config_opts",
+            "*:x86_64-linux-gnu:make -j$NUM_CORES",
+            "*:x86_64-linux-gnu:make DESTDIR=$STAGING_DIR install",
+            "*:x86_64-linux-gnu:rm -rf $STAGING_DIR$PREFIX/share/man $STAGING_DIR$PREFIX/lib/*.la"
+        ]
+    }
+}

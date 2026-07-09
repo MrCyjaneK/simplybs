@@ -1,0 +1,43 @@
+{
+    "package": "libxcb_util_cursor@0_1_6",
+    "version": "0_1_6",
+    "type": "host",
+    "download": [
+        {
+            "kind": "tar.gz",
+            "sha256": "eae38b2dfc5c529a886e507ef576b12d2a20aa1f149608e4853af760f31be60b",
+            "url": "https://xcb.freedesktop.org/dist/xcb-util-cursor-0.1.6.tar.gz"
+        }
+    ],
+    "dependencies": [
+        "*:x86_64-linux-gnu:native/_",
+        "*:x86_64-linux-gnu:native/bash",
+        "*:x86_64-linux-gnu:native/coreutils",
+        "*:x86_64-linux-gnu:native/diffutils",
+        "*:x86_64-linux-gnu:native/grep",
+        "*:x86_64-linux-gnu:native/pkgconf",
+        "*:x86_64-linux-gnu:native/gawk",
+        "*:x86_64-linux-gnu:native/findutils",
+        "*:x86_64-linux-gnu:native/make",
+        "*:x86_64-linux-gnu:native/m4",
+        "*:x86_64-linux-gnu:libxcb@1_17_0",
+        "*:x86_64-linux-gnu:libXau@1_0_12",
+        "*:x86_64-linux-gnu:xorgproto@2025_1",
+        "*:x86_64-linux-gnu:libxcb_util@0_4_1",
+        "*:x86_64-linux-gnu:libxcb_util_image@0_4_1",
+        "*:x86_64-linux-gnu:libxcb_util_render@0_3_10",
+        "*:x86_64-linux-gnu:native/sed"
+    ],
+    "build": {
+        "env": [
+            "*:x86_64-linux-gnu:PKG_CONFIG_PATH=$PREFIX/lib/pkgconfig:$PREFIX/share/pkgconfig",
+            "*:x86_64-linux-gnu:config_opts=--host=$HOST --prefix=$PREFIX --disable-shared --enable-static --disable-devel-docs --without-doxygen --disable-dependency-tracking --enable-option-checking"
+        ],
+        "steps": [
+            "*:x86_64-linux-gnu:bash ./configure $config_opts",
+            "*:x86_64-linux-gnu:make -j$NUM_CORES",
+            "*:x86_64-linux-gnu:make DESTDIR=$STAGING_DIR install",
+            "*:x86_64-linux-gnu:rm -rf $STAGING_DIR$PREFIX/share $STAGING_DIR$PREFIX/lib/*.la"
+        ]
+    }
+}

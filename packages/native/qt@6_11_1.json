@@ -1,0 +1,62 @@
+{
+    "package": "native/qt@6_11_1",
+    "version": "6_11_1",
+    "type": "native",
+    "download": [
+        {
+            "kind": "tar.xz",
+            "path": "qtbase",
+            "sha256": "d9594a31228aa23ad6b531719a29b45f0f3989fe6c136d45767ea179f233c1ac",
+            "url": "https://download.qt.io/official_releases/qt/6.11/6.11.1/submodules/qtbase-everywhere-src-6.11.1.tar.xz"
+        },
+        {
+            "kind": "tar.xz",
+            "path": "qttools",
+            "sha256": "8e61835a679c93fa9c6065b142353c2071ba68e297898937c32a03777fcaf50d",
+            "url": "https://download.qt.io/official_releases/qt/6.11/6.11.1/submodules/qttools-everywhere-src-6.11.1.tar.xz"
+        },
+        {
+            "kind": "tar.xz",
+            "path": "qtshadertools",
+            "sha256": "2075052f9b23bcf9de045bbd180037084942f82cce870aab14a1454902c982fc",
+            "url": "https://download.qt.io/official_releases/qt/6.11/6.11.1/submodules/qtshadertools-everywhere-src-6.11.1.tar.xz"
+        }
+    ],
+    "dependencies": [
+        "*:*:native/_/_",
+        "*:*:native/cmake",
+        "*:*:native/ninja",
+        "*:*:native/patch",
+        "*:*:native/perl",
+        "*:*:native/pkgconf",
+        "*:*:native/sed",
+        "*:*-linux-*:native/wayland@1_25_0"
+    ],
+    "patches": [
+        "root_CMakeLists.txt",
+        "rcc_hardcode_timestamp.patch",
+        "guix_cross_lib_path.patch",
+        "qtbase-moc-ignore-gcc-macro.patch"
+    ],
+    "export-env": [
+        "*:*:QT_HOST_PATH=$NATIVEPREFIX/qt-host",
+        "*:*:PATH=$NATIVEPREFIX/qt-host/bin:$PATH"
+    ],
+    "build": {
+        "env": [
+            "*:*:config_opts=-release -libexecdir $NATIVEPREFIX/qt-host/bin -c++std c++17 -confirm-license -opensource -pkg-config -prefix $NATIVEPREFIX/qt-host -static -platform linux-g++ -xplatform linux-g++",
+            "*:*-linux-*:config_opts=$config_opts -xplatform linux-clang-libc++",
+            "*:*:config_opts=$config_opts -no-cups -no-egl -no-eglfs -no-evdev -no-feature-colordialog -no-feature-dial -no-feature-fontcombobox -no-feature-fontconfig -no-feature-freetype -no-feature-harfbuzz -no-feature-image_heuristic_mask -no-feature-keysequenceedit -no-feature-lcdnumber -no-feature-networkdiskcache -no-feature-pdf -no-feature-printdialog -no-feature-printer -no-feature-printpreviewdialog -no-feature-printpreviewwidget -no-feature-qmake -no-feature-sessionmanager -no-feature-sql -no-feature-syntaxhighlighter -no-feature-testlib -no-feature-textmarkdownwriter -no-feature-textodfwriter -no-feature-topleveldomain -no-feature-undocommand -no-feature-undogroup -no-feature-undostack -no-feature-undoview -no-feature-vnc -no-feature-vulkan -no-feature-widgets -no-feature-xkbcommon -no-feature-xlib -no-gif -no-glib -no-ico -no-icu -no-kms -no-libjpeg -no-libudev -no-linuxfb -nomake examples -nomake tests -no-mtdev -no-opengl -no-openssl -no-openvg -no-pch -no-reduce-relocations -no-sbom -no-schannel -no-sctp -no-securetransport -no-system-proxies -no-use-gold-linker -no-xcb-xlib -no-zstd"
+        ],
+        "steps": [
+            "*:*:for mod in qtbase qttools qtshadertools; do inner=$mod/$mod-everywhere-src-*; if [ -d $inner ]; then mv $inner/* $mod/ && rmdir $inner; fi; done",
+            "*:*:cp $PATCH_DIR/native_qt/root_CMakeLists.txt CMakeLists.txt",
+            "*:*:patch -p1 < $PATCH_DIR/native_qt/qtbase-moc-ignore-gcc-macro.patch",
+            "*:*:patch -p1 < $PATCH_DIR/native_qt/rcc_hardcode_timestamp.patch",
+            "*:*:patch -p1 < $PATCH_DIR/native_qt/guix_cross_lib_path.patch",
+            "*:*:cd qtbase && ./configure -top-level $config_opts",
+            "*:*:cmake --build . --parallel",
+            "*:*:DESTDIR=$STAGING_DIR cmake --install ."
+        ]
+    }
+}

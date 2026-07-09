@@ -18,12 +18,15 @@
         "*:*:native/grep",
         "*:*:native/make",
         "*:*:native/sed",
+        "*:*:native/diffutils",
         "*:*:libiconv"
     ],
     "build": {
         "env": [
             "*:*:CFLAGS=$CFLAGS -fPIC",
             "*:*:LDFLAGS=$LDFLAGS -fPIC",
+            "*:*:CPP=$CC -E",
+            "*:*:CXXCPP=$CXX $CXXFLAGS -E",
             "*:*:BUILD_HOST=$HOST",
             "*:aarch64-apple-ios-simulator:BUILD_HOST=aarch64-apple-ios"
         ],

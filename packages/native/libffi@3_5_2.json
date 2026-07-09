@@ -1,0 +1,27 @@
+{
+    "package": "native/libffi@3_5_2",
+    "version": "3_5_2",
+    "type": "native",
+    "download": [
+        {
+            "kind": "tar.gz",
+            "sha256": "f3a3082a23b37c293a4fcd1053147b371f2ff91fa7ea1b2a52e335676bac82dc",
+            "url": "https://github.com/libffi/libffi/releases/download/v3.5.2/libffi-3.5.2.tar.gz"
+        }
+    ],
+    "dependencies": [
+        "*:*:native/_/_",
+        "*:*:native/make"
+    ],
+    "build": {
+        "env": [
+            "*:*:CFLAGS=$CFLAGS -fPIC",
+            "*:*:LDFLAGS=$LDFLAGS -fPIC"
+        ],
+        "steps": [
+            "*:*:./configure --prefix=$NATIVEPREFIX --enable-static --disable-shared --disable-docs --with-pic",
+            "*:*:make -j$NUM_CORES",
+            "*:*:make DESTDIR=$STAGING_DIR install"
+        ]
+    }
+}
