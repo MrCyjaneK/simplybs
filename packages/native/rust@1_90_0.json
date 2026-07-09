@@ -18,7 +18,7 @@
         "*:*:native/openssl",
         "*:*:native/pkgconf",
         "*:*:native/python@3.11",
-        "*_amd64:*:native/rust@1_90_0-bin",
+        "*_amd64:*:native/rust@1_90_0-mrustc",
         "*_arm64:*:native/rust@1_90_0-bin"
     ],
     "build": {
