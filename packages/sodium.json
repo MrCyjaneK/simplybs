@@ -26,7 +26,6 @@
     ],
     "build": {
         "env": [
-            "*:*-android*:ANDROID_NDK_ROOT=$NATIVEPREFIX",
             "*:*:config_opts=--host=$HOST --prefix=$PREFIX",
             "*:*:config_opts=$config_opts --enable-static --disable-shared --with-pic"
         ],

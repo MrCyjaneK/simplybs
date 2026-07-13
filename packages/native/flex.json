@@ -20,9 +20,6 @@
     ],
     "build": {
         "env": [
-            "*:*:CC_FOR_BUILD=$CC",
-            "*:*:CFLAGS=$CFLAGS -fPIC",
-            "*:*:LDFLAGS=$LDFLAGS -fPIC",
             "*:*:config_opts=--prefix=$NATIVEPREFIX",
             "*:*:config_opts=$config_opts --with-pic",
             "*:*:config_opts=$config_opts --enable-shared",

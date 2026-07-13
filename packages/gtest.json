@@ -17,8 +17,7 @@
     "build": {
         "env": [
             "*:*:CXXFLAGS=$CXXFLAGS -std=c++11",
-            "*:*-linux-gnu:CXXFLAGS=$CXXFLAGS -fPIC",
-            "*:*:config_opts=-DCMAKE_TOOLCHAIN_FILE=$NATIVEPREFIX/toolchain.cmake",
+            "*:*:config_opts=-DCMAKE_TOOLCHAIN_FILE=$CMAKE_TOOLCHAIN_FILE",
             "*:*:config_opts=$config_opts -DGOOGLETEST_VERSION=1.17.0",
             "*:*:config_opts=$config_opts -DCMAKE_POLICY_VERSION_MINIMUM=3.5",
             "*:*:config_opts=$config_opts -DCMAKE_INSTALL_PREFIX=$PREFIX",

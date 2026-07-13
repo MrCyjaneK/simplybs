@@ -24,7 +24,7 @@
     ],
     "build": {
         "env": [
-            "*:*:config_opts=-DCMAKE_TOOLCHAIN_FILE=$NATIVEPREFIX/toolchain.cmake",
+            "*:*:config_opts=-DCMAKE_TOOLCHAIN_FILE=$CMAKE_TOOLCHAIN_FILE",
             "*:*:config_opts=$config_opts -DTOR_BUILD_DIR=$PREFIX",
             "*:*:config_opts=$config_opts -DCMAKE_INSTALL_PREFIX=$PREFIX"
         ],

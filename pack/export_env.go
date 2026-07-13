@@ -67,6 +67,10 @@ func (ctx *exportEnvContext) resolvedExportEnv(p *Package, h *host.Host) []EnvKV
 	}
 
 	base := copyEnv(p.minimalEnvWithStaging(h, p.baseBuildPath(h, "staging")))
+	// Export-env describes the toolchain for h.Triplet; HOST/TARGET must match the
+	// build target even when the exporting package is type "native".
+	base["HOST"] = h.Triplet
+	base["TARGET"] = h.Triplet
 	for _, dep := range filteredDependencyPackages(p.Dependencies, h) {
 		for _, e := range ctx.resolvedExportEnv(dep, h) {
 			if skipFromDeps[e.K] {

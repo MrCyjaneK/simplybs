@@ -30,9 +30,7 @@
     ],
     "build": {
         "env": [
-            "*:*:HOSTOVERRIDE=$HOST",
-            "*:aarch64-apple-ios-simulator:HOSTOVERRIDE=aarch64-apple-ios",
-            "*:*:config_opts=--host=$HOSTOVERRIDE --prefix=$PREFIX",
+            "*:*:config_opts=--host=$HOST --prefix=$PREFIX",
             "*:*:config_opts=$config_opts --disable-asciidoc",
             "*:*:config_opts=$config_opts --disable-system-torrc",
             "*:*:config_opts=$config_opts --disable-manpage",

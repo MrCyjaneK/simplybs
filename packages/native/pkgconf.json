@@ -20,12 +20,10 @@
         "*:*:native/perl"
     ],
     "build": {
-        "env": [
-            "*:*:PKGCONFIG_DIR=$NATIVEPREFIX/lib/pkgconfig:$PREFIX/lib/pkgconfig"
-        ],
+        "env": [],
         "steps": [
             "*:*:bash ./autogen.sh",
-            "*:*:bash ./configure --prefix=$NATIVEPREFIX --with-pkg-config-dir=$PKGCONFIG_DIR",
+            "*:*:bash ./configure --prefix=$NATIVEPREFIX --with-pkg-config-dir=$NATIVEPREFIX/lib/pkgconfig",
             "*:*:make -j$NUM_CORES",
             "*:*:make DESTDIR=$STAGING_DIR install",
             "*:*:ln -s pkgconf $STAGING_DIR$NATIVEPREFIX/bin/pkg-config"

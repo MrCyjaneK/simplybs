@@ -10,26 +10,21 @@
         }
     ],
     "dependencies": [
-        "*:x86_64-linux-gnu:native/_",
-        "*:x86_64-linux-gnu:native/bash",
-        "*:x86_64-linux-gnu:native/coreutils",
-        "*:x86_64-linux-gnu:native/diffutils",
-        "*:x86_64-linux-gnu:native/gawk",
-        "*:x86_64-linux-gnu:native/grep",
-        "*:x86_64-linux-gnu:native/make",
-        "*:x86_64-linux-gnu:native/sed"
+        "*:*-linux-gnu:native/_",
+        "*:*-linux-gnu:native/bash",
+        "*:*-linux-gnu:native/coreutils",
+        "*:*-linux-gnu:native/diffutils",
+        "*:*-linux-gnu:native/gawk",
+        "*:*-linux-gnu:native/grep",
+        "*:*-linux-gnu:native/make",
+        "*:*-linux-gnu:native/sed"
     ],
     "build": {
-        "env": [
-            "*:x86_64-linux-gnu:CPP=$CC -E",
-            "*:x86_64-linux-gnu:CXXCPP=$CXX $CXXFLAGS -E",
-            "*:x86_64-linux-gnu:CFLAGS=$CFLAGS -fPIC",
-            "*:x86_64-linux-gnu:LDFLAGS=$LDFLAGS -fPIC"
-        ],
+        "env": [],
         "steps": [
-            "*:x86_64-linux-gnu:bash ./configure --host=$HOST --prefix=$PREFIX --enable-static --disable-shared --disable-docs --with-pic",
-            "*:x86_64-linux-gnu:make -j$NUM_CORES",
-            "*:x86_64-linux-gnu:make DESTDIR=$STAGING_DIR install"
+            "*:*-linux-gnu:bash ./configure --host=$HOST --prefix=$PREFIX --enable-static --disable-shared --disable-docs --with-pic",
+            "*:*-linux-gnu:make -j$NUM_CORES",
+            "*:*-linux-gnu:make DESTDIR=$STAGING_DIR install"
         ]
     }
 }

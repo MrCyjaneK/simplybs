@@ -17,7 +17,6 @@
     ],
     "build": {
         "env": [
-            "*:*:CFLAGS=$CFLAGS -fPIC",
             "*:*:config_opts=--prefix=$NATIVEPREFIX --static",
             "*:*:LIBTOOL=$NATIVEPREFIX/bin/libtool",
             "*:*:CROSS_PREFIX=$HOST-"

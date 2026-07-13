@@ -29,9 +29,7 @@
     ],
     "build": {
         "env": [
-            "*:*:HOSTOVERRIDE=$HOST",
-            "*:aarch64-apple-ios-simulator:HOSTOVERRIDE=aarch64-apple-ios",
-            "*:*:config_opts=--host=$HOSTOVERRIDE --prefix=$PREFIX ",
+            "*:*:config_opts=--host=$HOST --prefix=$PREFIX ",
             "*:*:config_opts=$config_opts --disable-shared",
             "*:*:config_opts=$config_opts --disable-openssl",
             "*:*:config_opts=$config_opts --disable-mbedtls",
@@ -40,9 +38,7 @@
             "*:*:config_opts=$config_opts --disable-debug-mode",
             "*:*:config_opts=$config_opts --enable-static",
             "*:*:config_opts=$config_opts --with-pic",
-            "*:*:config_opts=$config_opts --disable-samples",
-            "*:*:CFLAGS=$CFLAGS -fPIC",
-            "*:*:CXXFLAGS=$CXXFLAGS -fPIC"
+            "*:*:config_opts=$config_opts --disable-samples"
         ],
         "steps": [
             "*:*-w64-mingw32:sed -i.bak 's|WIN32_WINNT 0x400|WIN32_WINNT 0x700|g' configure.ac",

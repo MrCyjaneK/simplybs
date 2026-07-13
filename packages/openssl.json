@@ -16,9 +16,13 @@
         "*:*:native/perl",
         "*:*:native/sed"
     ],
+    "export-env": [
+        "*:*-linux-gnu:OPENSSL_LIBS=-lssl -lcrypto -lpthread -ldl",
+        "*:*-apple-darwin:OPENSSL_LIBS=-lssl -lcrypto",
+        "*:*-w64-mingw32:OPENSSL_LIBS=-lssl -lcrypto -lws2_32"
+    ],
     "build": {
         "env": [
-            "*:*-android*:ANDROID_NDK_ROOT=$NATIVEPREFIX",
             "*:*-android*:CC=clang",
             "*:*-android*:AR=ar",
             "*:*-android*:RANLIB=ranlib",

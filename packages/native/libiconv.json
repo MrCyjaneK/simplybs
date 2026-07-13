@@ -16,7 +16,6 @@
     ],
     "build": {
         "env": [
-            "*:*:CFLAGS=$CFLAGS -fPIC",
             "*:*:config_opts=--prefix=$NATIVEPREFIX --disable-nls --enable-static --disable-shared",
             "*:*:config_opts=$config_opts",
             "*:*linux:config_opts=$config_opts --with-pic"

@@ -22,16 +22,9 @@
         "*:*:libiconv"
     ],
     "build": {
-        "env": [
-            "*:*:CFLAGS=$CFLAGS -fPIC",
-            "*:*:LDFLAGS=$LDFLAGS -fPIC",
-            "*:*:CPP=$CC -E",
-            "*:*:CXXCPP=$CXX $CXXFLAGS -E",
-            "*:*:BUILD_HOST=$HOST",
-            "*:aarch64-apple-ios-simulator:BUILD_HOST=aarch64-apple-ios"
-        ],
+        "env": [],
         "steps": [
-            "*:*:bash ./configure --host=$BUILD_HOST --prefix=$PREFIX --disable-shared --without-docbook --without-tests --without-examples --enable-option-checking --without-xmlwf --with-pic",
+            "*:*:bash ./configure --host=$HOST --prefix=$PREFIX --disable-shared --without-docbook --without-tests --without-examples --enable-option-checking --without-xmlwf --with-pic",
             "*:*:make -j$NUM_CORES",
             "*:*:make DESTDIR=$STAGING_DIR install"
         ]

@@ -12,6 +12,9 @@
     "dependencies": [
         "*:*:native/_/_"
     ],
+    "export-env": [
+        "*:*:CMAKE_TOOLCHAIN_FILE=$NATIVEPREFIX/toolchain.cmake"
+    ],
     "build": {
         "env": [],
         "steps": [

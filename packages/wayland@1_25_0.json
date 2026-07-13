@@ -10,20 +10,20 @@
         }
     ],
     "dependencies": [
-        "*:x86_64-linux-gnu:native/_",
-        "*:x86_64-linux-gnu:native/bash",
-        "*:x86_64-linux-gnu:native/coreutils",
-        "*:x86_64-linux-gnu:native/grep",
-        "*:x86_64-linux-gnu:native/gawk",
-        "*:x86_64-linux-gnu:native/findutils",
-        "*:x86_64-linux-gnu:native/meson",
-        "*:x86_64-linux-gnu:native/ninja",
-        "*:x86_64-linux-gnu:native/pkgconf",
-        "*:x86_64-linux-gnu:native/python@3.11",
-        "*:x86_64-linux-gnu:native/wayland@1_25_0",
-        "*:x86_64-linux-gnu:expat",
-        "*:x86_64-linux-gnu:libffi@3_5_2",
-        "*:x86_64-linux-gnu:native/sed"
+        "*:*-linux-gnu:native/_",
+        "*:*-linux-gnu:native/bash",
+        "*:*-linux-gnu:native/coreutils",
+        "*:*-linux-gnu:native/grep",
+        "*:*-linux-gnu:native/gawk",
+        "*:*-linux-gnu:native/findutils",
+        "*:*-linux-gnu:native/meson",
+        "*:*-linux-gnu:native/ninja",
+        "*:*-linux-gnu:native/pkgconf",
+        "*:*-linux-gnu:native/python@3.11",
+        "*:*-linux-gnu:native/wayland@1_25_0",
+        "*:*-linux-gnu:expat",
+        "*:*-linux-gnu:libffi@3_5_2",
+        "*:*-linux-gnu:native/sed"
     ],
     "patches": [
         "toolchain.txt"
@@ -31,11 +31,11 @@
     "build": {
         "env": [],
         "steps": [
-            "*:x86_64-linux-gnu:cp $PATCH_DIR/wayland/toolchain.txt toolchain.txt",
-            "*:x86_64-linux-gnu:sed -i -e \"s|@host_prefix@|$PREFIX|\" -e \"s|@cc@|$CC|\" -e \"s|@cxx@|$CXX|\" -e \"s|@ar@|$AR|\" -e \"s|@strip@|$STRIP|\" -e \"s|@arch@|$ARCH|\" toolchain.txt",
-            "*:x86_64-linux-gnu:PKG_CONFIG_LIBDIR=$PREFIX/lib/pkgconfig:$NATIVEPREFIX/lib/pkgconfig PKG_CONFIG_PATH=$NATIVEPREFIX/lib/pkgconfig $NATIVEPREFIX/bin/meson setup --cross-file toolchain.txt build -Ddtd_validation=false -Ddocumentation=false -Dprefer_static=true -Ddefault_library=static -Dtests=false -Dscanner=false",
-            "*:x86_64-linux-gnu:ninja -C build",
-            "*:x86_64-linux-gnu:DESTDIR=$STAGING_DIR ninja -C build install"
+            "*:*-linux-gnu:cp $PATCH_DIR/wayland/toolchain.txt toolchain.txt",
+            "*:*-linux-gnu:sed -i -e \"s|@host_prefix@|$PREFIX|\" -e \"s|@cc@|$CC|\" -e \"s|@cxx@|$CXX|\" -e \"s|@ar@|$AR|\" -e \"s|@strip@|$STRIP|\" -e \"s|@arch@|$ARCH|\" toolchain.txt",
+            "*:*-linux-gnu:$NATIVEPREFIX/bin/meson setup --cross-file toolchain.txt build -Ddtd_validation=false -Ddocumentation=false -Dprefer_static=true -Ddefault_library=static -Dtests=false -Dscanner=false",
+            "*:*-linux-gnu:ninja -C build",
+            "*:*-linux-gnu:DESTDIR=$STAGING_DIR ninja -C build install"
         ]
     }
 }

@@ -19,8 +19,6 @@
         ]
     },
     "export-env": [
-        "darwin_arm64:*:HOST=aarch64-apple-darwin",
-        "darwin_arm64:*:TARGET=aarch64-apple-darwin",
         "darwin_arm64:*:OSX_MIN_VERSION=13",
         "darwin_arm64:*:CC=$NATIVEPREFIX/_/bin/clang",
         "darwin_arm64:*:CXX=$NATIVEPREFIX/_/bin/clang++",
@@ -32,16 +30,12 @@
         "darwin_arm64:*:OTOOL=$NATIVEPREFIX/_/bin/otool",
         "darwin_arm64:*:INSTALL_NAME_TOOL=$NATIVEPREFIX/_/bin/install_name_tool",
         "darwin_arm64:*:lt_cv_prog_gnu_ld=no",
-        "linux_amd64:*:HOST=x86_64-linux-gnu",
-        "linux_amd64:*:TARGET=x86_64-linux-gnu",
         "linux_amd64:*:CC=$NATIVEPREFIX/_/bin/clang",
         "linux_amd64:*:CXX=$NATIVEPREFIX/_/bin/clang++",
         "linux_amd64:*:AR=$NATIVEPREFIX/_/bin/ar",
         "linux_amd64:*:RANLIB=$NATIVEPREFIX/_/bin/ranlib",
         "linux_amd64:*:STRIP=$NATIVEPREFIX/_/bin/strip",
         "linux_amd64:*:NM=$NATIVEPREFIX/_/bin/nm",
-        "linux_arm64:*:HOST=aarch64-linux-gnu",
-        "linux_arm64:*:TARGET=aarch64-linux-gnu",
         "linux_arm64:*:CC=$NATIVEPREFIX/_/bin/clang",
         "linux_arm64:*:CXX=$NATIVEPREFIX/_/bin/clang++",
         "linux_arm64:*:AR=$NATIVEPREFIX/_/bin/ar",
@@ -51,9 +45,15 @@
         "*:*:CFLAGS=$CFLAGS -I$NATIVEPREFIX/include",
         "*:*:CXXFLAGS=$CXXFLAGS -I$NATIVEPREFIX/include",
         "*:*:CPPFLAGS=$CPPFLAGS -I$NATIVEPREFIX/include",
+        "*:*:CFLAGS=$CFLAGS -fPIC",
+        "*:*:CXXFLAGS=$CXXFLAGS -fPIC",
+        "*:*:LDFLAGS=$LDFLAGS -fPIC",
+        "*:*:CC_FOR_BUILD=$CC",
+        "*:*:CXX_FOR_BUILD=$CXX",
         "*:*:LDFLAGS=$LDFLAGS -L$NATIVEPREFIX/lib",
         "*:*:LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$NATIVEPREFIX/lib",
-        "*:*:PKG_CONFIG_PATH=$PKG_CONFIG_PATH:$NATIVEPREFIX/lib/pkgconfig",
-        "*:*:LIBRARY_PATH=$LIBRARY_PATH:$NATIVEPREFIX/lib"
+        "*:*:LIBRARY_PATH=$LIBRARY_PATH:$NATIVEPREFIX/lib",
+        "*:*:CC_BUILD=$CC $CFLAGS",
+        "*:*:CXX_BUILD=$CXX $CXXFLAGS"
     ]
 }

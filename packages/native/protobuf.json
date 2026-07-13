@@ -21,8 +21,6 @@
     ],
     "build": {
         "env": [
-            "*:*:CC_FOR_BUILD=$CC",
-            "*:*:CXX_FOR_BUILD=$CXX",
             "*:*:config_opts=--host=$HOST --prefix=$NATIVEPREFIX",
             "*:*:config_opts=$config_opts --disable-shared",
             "*:*-linux-gnu:config_opts=$config_opts --with-pic"

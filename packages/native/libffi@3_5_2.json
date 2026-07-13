@@ -14,10 +14,7 @@
         "*:*:native/make"
     ],
     "build": {
-        "env": [
-            "*:*:CFLAGS=$CFLAGS -fPIC",
-            "*:*:LDFLAGS=$LDFLAGS -fPIC"
-        ],
+        "env": [],
         "steps": [
             "*:*:./configure --prefix=$NATIVEPREFIX --enable-static --disable-shared --disable-docs --with-pic",
             "*:*:make -j$NUM_CORES",

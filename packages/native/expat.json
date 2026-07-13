@@ -17,10 +17,7 @@
         "*:*:native/perl"
     ],
     "build": {
-        "env": [
-            "*:*:CFLAGS=$CFLAGS -fPIC",
-            "*:*:LDFLAGS=$LDFLAGS -fPIC"
-        ],
+        "env": [],
         "steps": [
             "*:*:./configure --prefix=$NATIVEPREFIX --disable-shared --without-docbook --without-tests --without-examples --enable-option-checking --without-xmlwf --with-pic",
             "*:*:make -j$NUM_CORES",

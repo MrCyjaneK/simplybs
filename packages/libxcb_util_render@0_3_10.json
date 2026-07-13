@@ -10,30 +10,29 @@
         }
     ],
     "dependencies": [
-        "*:x86_64-linux-gnu:native/_",
-        "*:x86_64-linux-gnu:native/bash",
-        "*:x86_64-linux-gnu:native/coreutils",
-        "*:x86_64-linux-gnu:native/diffutils",
-        "*:x86_64-linux-gnu:native/grep",
-        "*:x86_64-linux-gnu:native/pkgconf",
-        "*:x86_64-linux-gnu:native/gawk",
-        "*:x86_64-linux-gnu:native/findutils",
-        "*:x86_64-linux-gnu:native/make",
-        "*:x86_64-linux-gnu:libxcb@1_17_0",
-        "*:x86_64-linux-gnu:libXau@1_0_12",
-        "*:x86_64-linux-gnu:xorgproto@2025_1",
-        "*:x86_64-linux-gnu:native/sed"
+        "*:*-linux-gnu:native/_",
+        "*:*-linux-gnu:native/bash",
+        "*:*-linux-gnu:native/coreutils",
+        "*:*-linux-gnu:native/diffutils",
+        "*:*-linux-gnu:native/grep",
+        "*:*-linux-gnu:native/pkgconf",
+        "*:*-linux-gnu:native/gawk",
+        "*:*-linux-gnu:native/findutils",
+        "*:*-linux-gnu:native/make",
+        "*:*-linux-gnu:libxcb@1_17_0",
+        "*:*-linux-gnu:libXau@1_0_12",
+        "*:*-linux-gnu:xorgproto@2025_1",
+        "*:*-linux-gnu:native/sed"
     ],
     "build": {
         "env": [
-            "*:x86_64-linux-gnu:PKG_CONFIG_PATH=$PREFIX/lib/pkgconfig:$PREFIX/share/pkgconfig",
-            "*:x86_64-linux-gnu:config_opts=--host=$HOST --prefix=$PREFIX --disable-shared --enable-static --disable-devel-docs --without-doxygen --disable-dependency-tracking --enable-option-checking"
+            "*:*-linux-gnu:config_opts=--host=$HOST --prefix=$PREFIX --disable-shared --enable-static --disable-devel-docs --without-doxygen --disable-dependency-tracking --enable-option-checking"
         ],
         "steps": [
-            "*:x86_64-linux-gnu:bash ./configure $config_opts",
-            "*:x86_64-linux-gnu:make -j$NUM_CORES",
-            "*:x86_64-linux-gnu:make DESTDIR=$STAGING_DIR install",
-            "*:x86_64-linux-gnu:rm -rf $STAGING_DIR$PREFIX/share $STAGING_DIR$PREFIX/lib/*.la"
+            "*:*-linux-gnu:bash ./configure $config_opts",
+            "*:*-linux-gnu:make -j$NUM_CORES",
+            "*:*-linux-gnu:make DESTDIR=$STAGING_DIR install",
+            "*:*-linux-gnu:rm -rf $STAGING_DIR$PREFIX/share $STAGING_DIR$PREFIX/lib/*.la"
         ]
     }
 }

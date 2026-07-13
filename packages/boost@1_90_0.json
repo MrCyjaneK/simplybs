@@ -50,10 +50,8 @@
             "*:*-android*:toolset=gcc",
             "*:*mingw32*:toolset=gcc",
             "*:*-ios*:toolset2=iphone",
-            "*:*:CXXFLAGS=$CXXFLAGS -fPIC",
             "*:*-apple-*:AR=libtool",
             "*:{*-linux-*,*-w64-*}:ARFLAGS=rcs",
-            "*:*:WINDRES=$RC $RCFLAGS",
             "none:*-apple-darwin:config_opts=$config_opts define=BOOST_LOG_WITHOUT_SYSLOG",
             "none:*-apple-darwin:config_opts=$config_opts define=BOOST_LOG_WITHOUT_IPC",
             "*:*-apple-*:config_opts=$config_opts define=_DARWIN_C_SOURCE"
