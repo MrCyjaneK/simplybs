@@ -19,9 +19,7 @@
         "*:*:rust-std"
     ],
     "build": {
-        "env": [
-            "linux_*:*-apple-*:PATH=$NATIVEPREFIX/bin:$NATIVEPREFIX/_/bin"
-        ],
+        "env": [],
         "steps": [
             "*:*:cargo build --target $RUST_TRIPLET --release",
             "*:*:$NATIVEPREFIX/bin/mkdir -p $STAGING_DIR$PREFIX/bin",

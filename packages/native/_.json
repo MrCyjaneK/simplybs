@@ -192,6 +192,7 @@
         "*:armv7a-linux-androideabi:RUST_TRIPLET=armv7-linux-androideabi",
         "*:armv7a-linux-androideabi:CC=$NATIVEPREFIX/bin/armv7a-linux-androideabi21-clang",
         "*:armv7a-linux-androideabi:CXX=$NATIVEPREFIX/bin/armv7a-linux-androideabi21-clang++",
+        "*:armv7a-linux-androideabi:CXXFLAGS=$CXXFLAGS -DLIBC_NO_FSEEKO",
         "*:*:CPP=$CC $CFLAGS -E",
         "*:*:CXXCPP=$CXX $CXXFLAGS -E",
         "*:x86_64-linux-gnu:CARGO_TARGET_X86_64_UNKNOWN_LINUX_GNU_LINKER=$CC",
@@ -207,6 +208,12 @@
         "*:aarch64-apple-ios:CARGO_TARGET_AARCH64_APPLE_IOS_LINKER=$RUST_LINK_CC",
         "*:aarch64-apple-ios:CARGO_TARGET_AARCH64_APPLE_IOS_RUSTFLAGS=-Clink-arg=-mios-version-min=$IOS_MIN_VERSION -Clink-arg=-isysroot -Clink-arg=$SDK_PATH -Clink-arg=-L$PREFIX/lib -Clink-arg=-lc++ -Clink-arg=-lc++abi",
         "*:aarch64-apple-ios-simulator:CARGO_TARGET_AARCH64_APPLE_IOS_SIM_LINKER=$RUST_LINK_CC",
-        "*:aarch64-apple-ios-simulator:CARGO_TARGET_AARCH64_APPLE_IOS_SIM_RUSTFLAGS=-Clink-arg=-mios-version-min=$IOS_MIN_VERSION -Clink-arg=-isysroot -Clink-arg=$SDK_PATH -Clink-arg=-L$PREFIX/lib -Clink-arg=-lc++ -Clink-arg=-lc++abi"
+        "*:aarch64-apple-ios-simulator:CARGO_TARGET_AARCH64_APPLE_IOS_SIM_RUSTFLAGS=-Clink-arg=-mios-version-min=$IOS_MIN_VERSION -Clink-arg=-isysroot -Clink-arg=$SDK_PATH -Clink-arg=-L$PREFIX/lib -Clink-arg=-lc++ -Clink-arg=-lc++abi",
+        "*:aarch64-linux-android:CARGO_TARGET_AARCH64_LINUX_ANDROID_LINKER=$CC",
+        "*:aarch64-linux-android:CARGO_TARGET_AARCH64_LINUX_ANDROID_RUSTFLAGS=-Clink-arg=-L$PREFIX/lib -Clink-arg=-lc -Clink-arg=-lc++abi -Clink-arg=-lm",
+        "*:x86_64-linux-android:CARGO_TARGET_X86_64_LINUX_ANDROID_LINKER=$CC",
+        "*:x86_64-linux-android:CARGO_TARGET_X86_64_LINUX_ANDROID_RUSTFLAGS=-Clink-arg=-L$PREFIX/lib -Clink-arg=-lc -Clink-arg=-lc++abi -Clink-arg=-lm",
+        "*:armv7a-linux-androideabi:CARGO_TARGET_ARMV7_LINUX_ANDROIDEABI_LINKER=$CC",
+        "*:armv7a-linux-androideabi:CARGO_TARGET_ARMV7_LINUX_ANDROIDEABI_RUSTFLAGS=-Clink-arg=-L$PREFIX/lib -Clink-arg=-lc -Clink-arg=-lc++abi -Clink-arg=-lm"
     ]
 }

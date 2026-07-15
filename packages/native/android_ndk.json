@@ -23,9 +23,9 @@
     ],
     "build": {
         "env": [
-            "*:aarch64-linux-android:config_opts=--arch arm",
+            "*:aarch64-linux-android:config_opts=--arch arm64",
             "*:x86_64-linux-android:config_opts=--arch x86_64",
-            "*:armv7a-linux-androideabi:config_opts=--arch arm64",
+            "*:armv7a-linux-androideabi:config_opts=--arch arm",
             "*:i686-linux-android:config_opts=--arch x86",
             "*:aarch64-linux-android:BUILDLIB_HOST=aarch64-linux-android",
             "*:x86_64-linux-android:BUILDLIB_HOST=x86_64-linux-android",
