@@ -91,6 +91,7 @@
         "*:x86_64-apple-darwin:NM=$NATIVEPREFIX/bin/nm",
         "*:x86_64-apple-darwin:LIBTOOL=$NATIVEPREFIX/bin/llvm-libtool-darwin",
         "*:x86_64-apple-darwin:LDFLAGS=-L$PREFIX/lib -lc++ -lc++abi",
+        "*:*-apple-*:RUST_LINK_CC=$NATIVEPREFIX/bin/$HOST-clang",
         "*:aarch64-apple-ios:RUST_TRIPLET=aarch64-apple-ios",
         "*:aarch64-apple-ios:ARCH=aarch64",
         "*:aarch64-apple-ios:CMAKE_SYSTEM_NAME=iOS",
@@ -155,6 +156,7 @@
         "*:*-linux-gnu:CFLAGS=--sysroot=$PREFIX/sysroot -I$PREFIX/include -I$PREFIX/usr/include",
         "*:*-linux-gnu:CXXFLAGS=--sysroot=$PREFIX/sysroot -I$PREFIX/include -I$PREFIX/include/c++/15.2.0 -I$PREFIX/include/c++/15.2.0/$HOST -I$PREFIX/usr/include",
         "*:*-linux-gnu:CPPFLAGS=-I$PREFIX/include -I$PREFIX/usr/include",
+        "*:*-linux-gnu:LDFLAGS=--sysroot=$PREFIX/sysroot -L$PREFIX/lib -L$PREFIX/usr/lib",
         "*:*-linux-gnu:AR=$NATIVEPREFIX/bin/$HOST-ar",
         "*:*-linux-gnu:RANLIB=$NATIVEPREFIX/bin/$HOST-ranlib",
         "*:*-linux-gnu:AS=$NATIVEPREFIX/bin/$HOST-as",
@@ -191,6 +193,20 @@
         "*:armv7a-linux-androideabi:CC=$NATIVEPREFIX/bin/armv7a-linux-androideabi21-clang",
         "*:armv7a-linux-androideabi:CXX=$NATIVEPREFIX/bin/armv7a-linux-androideabi21-clang++",
         "*:*:CPP=$CC $CFLAGS -E",
-        "*:*:CXXCPP=$CXX $CXXFLAGS -E"
+        "*:*:CXXCPP=$CXX $CXXFLAGS -E",
+        "*:x86_64-linux-gnu:CARGO_TARGET_X86_64_UNKNOWN_LINUX_GNU_LINKER=$CC",
+        "*:x86_64-linux-gnu:CARGO_TARGET_X86_64_UNKNOWN_LINUX_GNU_RUSTFLAGS=-Clink-arg=--sysroot=$PREFIX/sysroot -Clink-arg=-L$PREFIX/lib -Clink-arg=-L$PREFIX/usr/lib",
+        "*:aarch64-linux-gnu:CARGO_TARGET_AARCH64_UNKNOWN_LINUX_GNU_LINKER=$CC",
+        "*:aarch64-linux-gnu:CARGO_TARGET_AARCH64_UNKNOWN_LINUX_GNU_RUSTFLAGS=-Clink-arg=--sysroot=$PREFIX/sysroot -Clink-arg=-L$PREFIX/lib -Clink-arg=-L$PREFIX/usr/lib",
+        "*:x86_64-w64-mingw32:CARGO_TARGET_X86_64_PC_WINDOWS_GNU_LINKER=$CC",
+        "*:x86_64-w64-mingw32:CARGO_TARGET_X86_64_PC_WINDOWS_GNU_RUSTFLAGS=-Clink-arg=--sysroot=$PREFIX/sysroot -Clink-arg=-L$PREFIX/lib -Clink-arg=-L$PREFIX/usr/lib",
+        "*:x86_64-apple-darwin:CARGO_TARGET_X86_64_APPLE_DARWIN_LINKER=$RUST_LINK_CC",
+        "*:x86_64-apple-darwin:CARGO_TARGET_X86_64_APPLE_DARWIN_RUSTFLAGS=-Clink-arg=-mmacosx-version-min=$OSX_MIN_VERSION -Clink-arg=-isysroot -Clink-arg=$SDK_PATH -Clink-arg=-L$PREFIX/lib -Clink-arg=-lc++ -Clink-arg=-lc++abi",
+        "*:aarch64-apple-darwin:CARGO_TARGET_AARCH64_APPLE_DARWIN_LINKER=$RUST_LINK_CC",
+        "*:aarch64-apple-darwin:CARGO_TARGET_AARCH64_APPLE_DARWIN_RUSTFLAGS=-Clink-arg=-mmacosx-version-min=$OSX_MIN_VERSION -Clink-arg=-isysroot -Clink-arg=$SDK_PATH -Clink-arg=-L$PREFIX/lib -Clink-arg=-lc++ -Clink-arg=-lc++abi",
+        "*:aarch64-apple-ios:CARGO_TARGET_AARCH64_APPLE_IOS_LINKER=$RUST_LINK_CC",
+        "*:aarch64-apple-ios:CARGO_TARGET_AARCH64_APPLE_IOS_RUSTFLAGS=-Clink-arg=-mios-version-min=$IOS_MIN_VERSION -Clink-arg=-isysroot -Clink-arg=$SDK_PATH -Clink-arg=-L$PREFIX/lib -Clink-arg=-lc++ -Clink-arg=-lc++abi",
+        "*:aarch64-apple-ios-simulator:CARGO_TARGET_AARCH64_APPLE_IOS_SIM_LINKER=$RUST_LINK_CC",
+        "*:aarch64-apple-ios-simulator:CARGO_TARGET_AARCH64_APPLE_IOS_SIM_RUSTFLAGS=-Clink-arg=-mios-version-min=$IOS_MIN_VERSION -Clink-arg=-isysroot -Clink-arg=$SDK_PATH -Clink-arg=-L$PREFIX/lib -Clink-arg=-lc++ -Clink-arg=-lc++abi"
     ]
 }

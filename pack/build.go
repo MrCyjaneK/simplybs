@@ -144,6 +144,39 @@ func resetBuildDirs() {
 	}
 }
 
+func parseStepProfile(content string) (profile, cmd string) {
+	if strings.HasPrefix(content, "@") {
+		rest := content[1:]
+		if idx := strings.IndexByte(rest, ' '); idx != -1 {
+			return rest[:idx], rest[idx+1:]
+		}
+		return rest, ""
+	}
+	return "", content
+}
+
+func (p *Package) envForStep(h *host.Host, profileName string) map[string]string {
+	return p.envForStepFrom(p.GetEnv(h), h, profileName)
+}
+
+func (p *Package) envForStepFrom(env map[string]string, h *host.Host, profileName string) map[string]string {
+	env = copyEnv(env)
+	if profileName == "" {
+		return env
+	}
+	prof, ok := p.Build.Profiles[profileName]
+	if !ok {
+		log.Fatalf("[%s] unknown build profile %q", p.Package, profileName)
+	}
+	for _, k := range prof.Unset {
+		delete(env, k)
+	}
+	if len(prof.Env) > 0 {
+		env = utils.AppendEnv(env, prof.Env, h)
+	}
+	return env
+}
+
 func (p *Package) buildPackageInternal(h *host.Host, buildDependencies bool) {
 	var deps []*Package
 	if buildDependencies {
@@ -179,10 +212,16 @@ func (p *Package) buildPackageInternal(h *host.Host, buildDependencies bool) {
 
 	builderName := builder.GetName()
 	for _, step := range ifstring.FilterContent(p.Build.Steps, h.Triplet, builderName) {
-		cmd := exec.Command("sh", "-c", step)
+		profileName, stepCmd := parseStepProfile(step)
+		baseEnv := p.GetEnv(h)
+		profileName = utils.ExpandEnvFromMap(profileName, baseEnv)
+		if profileName == "" && strings.HasPrefix(step, "@") {
+			continue
+		}
+		cmd := exec.Command("sh", "-c", stepCmd)
 		cmd.Dir = buildPath
 		pathEnv := utils.GetHostPath()
-		env := p.GetEnv(h)
+		env := p.envForStepFrom(baseEnv, h, profileName)
 
 		hostTriplet := h.Triplet
 		if p.Type == "native" {
@@ -202,12 +241,15 @@ func (p *Package) buildPackageInternal(h *host.Host, buildDependencies bool) {
 
 		writeDotEnv(path.Join(buildPath, "_source_me"), cmd.Env)
 
-		log.Printf("Executing step: %s", step)
+		log.Printf("Executing step: %s", stepCmd)
+		if profileName != "" {
+			log.Printf("Using build profile: %s", profileName)
+		}
 		cmd.Stderr = os.Stderr
 		cmd.Stdout = os.Stdout
 		err := cmd.Run()
 		if err != nil {
-			log.Fatalf("[%s] build step failed: %s, error: %v, %s", p.Package, step, err, cmd.Dir)
+			log.Fatalf("[%s] build step failed: %s, error: %v, %s", p.Package, stepCmd, err, cmd.Dir)
 		}
 	}
 

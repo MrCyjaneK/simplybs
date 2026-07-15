@@ -23,14 +23,20 @@ type Download struct {
 	Path   string `json:"path"`
 }
 
+type StepProfile struct {
+	Unset []string `json:"unset,omitempty"`
+	Env   []string `json:"env,omitempty"`
+}
+
 type Package struct {
 	Package  string      `json:"package"`
 	Version  string      `json:"version"`
 	Type     string      `json:"type"`
 	Download []*Download `json:"download"`
 	Build    struct {
-		Env   []string `json:"env"`
-		Steps []string `json:"steps"`
+		Env      []string               `json:"env"`
+		Profiles map[string]StepProfile `json:"profiles,omitempty"`
+		Steps    []string               `json:"steps"`
 	} `json:"build"`
 	Dependencies []string `json:"dependencies"`
 	ExportEnv    []string `json:"export-env"`

@@ -15,7 +15,7 @@
         "*:*:native/git",
         "*:*:native/gzip",
         "*:*:native/tar",
-        "*:*:native/rust",
+        "*:*:native/rust-toolchain",
         "*:*:rust-std"
     ],
     "build": {
@@ -23,8 +23,6 @@
             "linux_*:*-apple-*:PATH=$NATIVEPREFIX/bin:$NATIVEPREFIX/_/bin"
         ],
         "steps": [
-            "linux_amd64:x86_64-linux-gnu:$NATIVEPREFIX/bin/rm -rf $NATIVEPREFIX/lib/rustlib/$RUST_TRIPLET && archive=$($NATIVEPREFIX/bin/ls -t $(dirname $PATCH_DIR)/.buildlib/${BUILDER_GOOS}_${BUILDER_GOARCH}/built/$HOST/rust-std-*_native.tar.gz 2>/dev/null | $NATIVEPREFIX/bin/head -1) && $NATIVEPREFIX/bin/tar -xzf $archive -C $NATIVEPREFIX lib/rustlib/$RUST_TRIPLET",
-            "linux_arm64:aarch64-linux-gnu:$NATIVEPREFIX/bin/rm -rf $NATIVEPREFIX/lib/rustlib/$RUST_TRIPLET && archive=$($NATIVEPREFIX/bin/ls -t $(dirname $PATCH_DIR)/.buildlib/${BUILDER_GOOS}_${BUILDER_GOARCH}/built/$HOST/rust-std-*_native.tar.gz 2>/dev/null | $NATIVEPREFIX/bin/head -1) && $NATIVEPREFIX/bin/tar -xzf $archive -C $NATIVEPREFIX lib/rustlib/$RUST_TRIPLET",
             "*:*:cargo build --target $RUST_TRIPLET --release",
             "*:*:$NATIVEPREFIX/bin/mkdir -p $STAGING_DIR$PREFIX/bin",
             "*:*:$NATIVEPREFIX/bin/cp ./target/$RUST_TRIPLET/release/rust-hello-world.exe $STAGING_DIR$PREFIX/bin 2>/dev/null || $NATIVEPREFIX/bin/cp ./target/$RUST_TRIPLET/release/rust-hello-world $STAGING_DIR$PREFIX/bin"

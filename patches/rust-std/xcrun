@@ -1,0 +1,14 @@
+#!/bin/sh
+case "$*" in
+  *--show-sdk-path*)
+    if [ -n "$SDK_PATH" ]; then
+      echo "$SDK_PATH"
+      exit 0
+    fi
+    ;;
+esac
+if [ -x "$NATIVEPREFIX/bin/xcrun.real" ]; then
+  exec "$NATIVEPREFIX/bin/xcrun.real" "$@"
+fi
+echo "xcrun: unsupported invocation: $*" >&2
+exit 1
