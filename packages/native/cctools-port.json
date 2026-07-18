@@ -18,7 +18,7 @@
         "*:*-apple-*:native/xz",
         "*:*-apple-*:native/zlib",
         "*:*:native/_/_",
-        "*:*-apple-*:native/libc++"
+        "linux_*:*-apple-*:native/libc++"
     ],
     "build": {
         "env": [

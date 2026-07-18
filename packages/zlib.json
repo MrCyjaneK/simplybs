@@ -13,6 +13,7 @@
         "*:*:native/_",
         "*:*:native/bash",
         "*:*:native/coreutils",
+        "*:*:native/grep",
         "*:*:native/libtool",
         "*:*:native/make",
         "*:*:native/sed"
@@ -28,6 +29,8 @@
             "*:*-android*:sed -i.bak s\\|^ARFLAGS=.\\*$\\|ARFLAGS=\"rcs\"\\| Makefile",
             "*:*-linux-gnu:sed -i.bak s\\|^AR=.\\*$\\|AR=\"$AR\"\\| Makefile",
             "*:*-linux-gnu:sed -i.bak s\\|^ARFLAGS=.\\*$\\|ARFLAGS=\"rcs\"\\| Makefile",
+            "*:*-w64-*:sed -i.bak s\\|^AR=.\\*$\\|AR=\"$AR\"\\| Makefile",
+            "*:*-w64-*:sed -i.bak s\\|^ARFLAGS=.\\*$\\|ARFLAGS=\"rcs\"\\| Makefile",
             "*:*:make -j$NUM_CORES",
             "*:*:make DESTDIR=$STAGING_DIR install"
         ]

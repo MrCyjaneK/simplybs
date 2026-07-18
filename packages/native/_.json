@@ -47,7 +47,7 @@
         "*:*:CFLAGS=$CFLAGS -fPIC",
         "*:*:CXXFLAGS=$CXXFLAGS -fPIC",
         "*:*:LDFLAGS=$LDFLAGS -fPIC",
-        "darwin_arm64:*:LDFLAGS=$LDFLAGS -stdlib=libc++ -lc++ -lc++abi",
+        "none:*:LDFLAGS=$LDFLAGS -stdlib=libc++ -lc++ -lc++abi",
         "*:*:LDFLAGS=$LDFLAGS -L$PREFIX/lib",
         "*:*:LD_LIBRARY_PATH=$NATIVEPREFIX/lib",
         "*:*:PKG_CONFIG_PATH=$NATIVEPREFIX/lib/pkgconfig:$PREFIX/lib/pkgconfig:$PREFIX/share/pkgconfig",

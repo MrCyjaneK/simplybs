@@ -25,7 +25,8 @@
         "*:*:native/python@3.11",
         "*:*:native/rust",
         "*:*:native/tar",
-        "*:*:native/zlib"
+        "*:*:native/zlib",
+        "*:*:native/libpsl"
     ],
     "build": {
         "env": [
@@ -243,11 +244,12 @@
             "linux_*:*-linux-gnu:ln -sf $NATIVEPREFIX/_/bin/clang $NATIVEPREFIX/bin/cc",
             "linux_*:*-linux-gnu:ln -sf $NATIVEPREFIX/_/bin/clang++ $NATIVEPREFIX/bin/c++",
             "linux_*:*-apple-*:ln -sf $NATIVEPREFIX/_/bin/llvm-strip $NATIVEPREFIX/bin/strip",
-            "linux_*:*-apple-ios*:test -x $NATIVEPREFIX/bin/xcrun.real || mv $NATIVEPREFIX/bin/xcrun $NATIVEPREFIX/bin/xcrun.real",
-            "linux_*:*-apple-ios*:cp $PATCH_DIR/rust-std/xcrun $NATIVEPREFIX/bin/xcrun",
-            "linux_*:*-apple-ios*:chmod +x $NATIVEPREFIX/bin/xcrun",
+            "none:*-apple-ios*:mv $NATIVEPREFIX/bin/xcrun $NATIVEPREFIX/bin/xcrun.real",
+            "*:*-apple-ios*:cp $PATCH_DIR/rust-std/xcrun $NATIVEPREFIX/bin/xcrun",
+            "*:*-apple-ios*:chmod +x $NATIVEPREFIX/bin/xcrun",
             "darwin_arm64:*:ln -sf $NATIVEPREFIX/_/bin/clang $NATIVEPREFIX/bin/cc",
             "darwin_arm64:*:ln -sf $NATIVEPREFIX/_/bin/clang++ $NATIVEPREFIX/bin/c++",
+            "darwin_arm64:*:rm -f $NATIVEPREFIX/lib/libc++abi*.dylib $NATIVEPREFIX/lib/libunwind*.dylib",
             "*:*:echo 'profile = \"library\"' > config.toml",
             "*:*:echo '[build]' >> config.toml",
             "*:*:echo 'vendor = true' >> config.toml",
