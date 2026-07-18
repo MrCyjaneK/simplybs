@@ -56,7 +56,7 @@ func (h *Host) GetEnvPath() string {
 	return filepath.Join(dir, "env")
 }
 
-// aarch64-apple-darwin,x86_64-apple-darwin,aarch64-apple-ios,aarch64-apple-ios-simulator,x86_64-w64-mingw32,aarch64-linux-gnu,x86_64-linux-android,armv7a-linux-androideabi
+// aarch64-apple-darwin,x86_64-apple-darwin,aarch64-apple-ios,aarch64-apple-ios-simulator,x86_64-w64-mingw32,x86_64-linux-gnu,aarch64-linux-gnu,aarch64-linux-android,x86_64-linux-android,armv7a-linux-androideabi
 
 var SupportedHosts = map[string]*Host{
 	"aarch64-apple-darwin":        {Triplet: "aarch64-apple-darwin"},
