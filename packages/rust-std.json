@@ -117,13 +117,17 @@
                 "unset": [
                     "LD", "AS", "NM", "OBJCOPY", "OBJDUMP", "STRIP", "READELF",
                     "MACOSX_DEPLOYMENT_TARGET", "CMAKE_SYSTEM_NAME",
-                    "CC", "CXX", "CFLAGS", "CXXFLAGS", "CPPFLAGS",
+                    "CC", "CXX", "CFLAGS", "CXXFLAGS", "CPPFLAGS", "LDFLAGS",
+                    "RUST_LDFLAGS",
                     "CC_x86_64_unknown_linux_gnu", "CXX_x86_64_unknown_linux_gnu",
                     "CFLAGS_x86_64_unknown_linux_gnu", "CXXFLAGS_x86_64_unknown_linux_gnu",
+                    "LDFLAGS_x86_64_unknown_linux_gnu",
                     "CC_aarch64_unknown_linux_gnu", "CXX_aarch64_unknown_linux_gnu",
                     "CFLAGS_aarch64_unknown_linux_gnu", "CXXFLAGS_aarch64_unknown_linux_gnu",
+                    "LDFLAGS_aarch64_unknown_linux_gnu",
                     "CC_x86_64_pc_windows_gnu", "CXX_x86_64_pc_windows_gnu",
                     "CFLAGS_x86_64_pc_windows_gnu", "CXXFLAGS_x86_64_pc_windows_gnu",
+                    "LDFLAGS_x86_64_pc_windows_gnu",
                     "CC_aarch64_linux_android", "CXX_aarch64_linux_android",
                     "CFLAGS_aarch64_linux_android", "CXXFLAGS_aarch64_linux_android",
                     "LDFLAGS_aarch64_linux_android",
@@ -140,6 +144,7 @@
                     "*:*:CXX=$NATIVEPREFIX/_/bin/clang++",
                     "*:*:CFLAGS=-fPIC -I$NATIVEPREFIX/include",
                     "*:*:CXXFLAGS=-fPIC -I$NATIVEPREFIX/include",
+                    "darwin_arm64:*:SDKROOT=$NATIVEPREFIX/_/SDK/MacOSX26.1.sdk",
                     "*:*:ARFLAGS="
                 ]
             },
