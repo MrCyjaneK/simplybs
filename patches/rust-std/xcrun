@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/usr/bin/env bash
 case "$*" in
   *--show-sdk-path*)
     if [ -n "$SDK_PATH" ]; then
@@ -6,9 +6,13 @@ case "$*" in
       exit 0
     fi
     ;;
+  *--version*)
+    echo "xcrun version 72."
+    exit 0
+    ;;
 esac
 if [ -x "$NATIVEPREFIX/bin/xcrun.real" ]; then
-  exec "$NATIVEPREFIX/bin/xcrun.real" "$@"
+  exec -a xcrun "$NATIVEPREFIX/bin/xcrun.real" "$@"
 fi
 echo "xcrun: unsupported invocation: $*" >&2
 exit 1
