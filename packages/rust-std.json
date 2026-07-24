@@ -271,6 +271,8 @@
             "*:*-apple-ios*:test -L $NATIVEPREFIX/bin/xcrun && mv $NATIVEPREFIX/bin/xcrun $NATIVEPREFIX/bin/xcrun.real || true",
             "*:*-apple-ios*:cp -f $PATCH_DIR/rust-std/xcrun $NATIVEPREFIX/bin/xcrun",
             "*:*-apple-ios*:chmod +x $NATIVEPREFIX/bin/xcrun",
+            "*:*:ln -sf $NATIVEPREFIX/bin/bash $NATIVEPREFIX/_/bin/sh",
+            "*:*:ln -sf $NATIVEPREFIX/bin/uname $NATIVEPREFIX/_/bin/uname",
             "darwin_arm64:*:rm -f $NATIVEPREFIX/lib/libc++abi*.dylib $NATIVEPREFIX/lib/libunwind*.dylib",
             "*:*:echo 'profile = \"library\"' > config.toml",
             "*:*:echo '[build]' >> config.toml",
