@@ -226,9 +226,10 @@
                     "CFLAGS_x86_64_pc_windows_gnu", "CXXFLAGS_x86_64_pc_windows_gnu"
                 ],
                 "env": [
-                    "*:*:PATH=$NATIVEPREFIX/_/bin:$NATIVEPREFIX/bin",
-                    "*:*:CC=$NATIVEPREFIX/_/bin/clang",
-                    "*:*:CXX=$NATIVEPREFIX/_/bin/clang++",
+                    "*:*:PATH=$NATIVEPREFIX/bin:$NATIVEPREFIX/_/bin",
+                    "*:*:CC=$NATIVEPREFIX/bin/clang",
+                    "*:*:CXX=$NATIVEPREFIX/bin/clang++",
+                    "*:*:MACOSX_DEPLOYMENT_TARGET=$OSX_MIN_VERSION",
                     "*:*:CFLAGS=-fPIC -I$NATIVEPREFIX/include",
                     "*:*:CXXFLAGS=-fPIC -I$NATIVEPREFIX/include",
                     "linux_arm64:*:CXXFLAGS_aarch64_unknown_linux_gnu=-fPIC -I$NATIVEPREFIX/include",
