@@ -64,7 +64,8 @@
             "*:*-apple-*:SDK_VERSION=26.1",
             "*:*-apple-*:COMPRESSLEVEL=6",
             "darwin_arm64:*-apple-*:LDFLAGS=-fuse-ld=$NATIVEPREFIX/_/bin/ld",
-            "linux_*:*-apple-*:LDFLAGS=$LDFLAGS -fuse-ld=lld",
+            "linux_*:*-apple-*:LDFLAGS=$LDFLAGS -fuse-ld=lld -L$NATIVEPREFIX/_/sysroot/lib",
+            "linux_*:*-apple-*:CPLUS_INCLUDE_PATH=$NATIVEPREFIX/_/include/c++/15.2.0:$NATIVEPREFIX/_/include/c++/15.2.0/$HOST",
             "linux_*:*-apple-*:CXXFLAGS=$CXXFLAGS -fuse-ld=lld"
         ],
         "steps": [
