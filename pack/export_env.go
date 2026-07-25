@@ -93,6 +93,16 @@ func (ctx *exportEnvContext) resolvedExportEnv(p *Package, h *host.Host) []EnvKV
 	return result
 }
 
+func (p *Package) GetExportEnv(h *host.Host) map[string]string {
+	ctx := newExportEnvContext()
+	kvs := ctx.resolvedExportEnv(p, h)
+	env := make(map[string]string, len(kvs))
+	for _, e := range kvs {
+		env[e.K] = e.V
+	}
+	return env
+}
+
 func mergeResolvedExportEnv(env map[string]string, ctx *exportEnvContext, deps []*Package, h *host.Host) {
 	for _, dep := range deps {
 		for _, e := range ctx.resolvedExportEnv(dep, h) {

@@ -49,8 +49,20 @@ func (p *Package) ExtractEnv(host *host.Host, envPath string, envNativePath stri
 	for k, v := range env {
 		newEnv = append(newEnv, k+"="+v)
 	}
+	exportEnv := p.GetExportEnv(host)
+	exportEnvLines := []string{}
+	for k, v := range exportEnv {
+		exportEnvLines = append(exportEnvLines, k+"="+v)
+	}
 	os.MkdirAll(envPath, 0750)
-	writeDotEnv(envPath+"/_source_me", newEnv)
+	safeName := strings.ReplaceAll(p.Package, "/", "_")
+	if p.Type == "native" {
+		writeDotEnv(envNativePath+"/_source_me@"+safeName, newEnv)
+		writeDotEnv(envNativePath+"/_source_me_export@"+safeName, exportEnvLines)
+	} else {
+		writeDotEnv(envPath+"/_source_me@"+safeName, newEnv)
+		writeDotEnv(envPath+"/_source_me_export@"+safeName, exportEnvLines)
+	}
 }
 
 func (p *Package) DownloadSource(download *Download) {
