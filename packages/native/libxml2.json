@@ -13,13 +13,12 @@
         "*:*:native/_/_",
         "*:*:native/bash",
         "*:*:native/make",
-        "*:*:native/pkgconf",
-        "*:*:native/python@3.14"
+        "*:*:native/pkgconf"
     ],
     "build": {
         "env": [],
         "steps": [
-            "*:*:bash ./configure --prefix=$NATIVEPREFIX",
+            "*:*:bash ./configure --prefix=$NATIVEPREFIX --without-python",
             "*:*:make -j$NUM_CORES",
             "*:*:make DESTDIR=$STAGING_DIR install"
         ]
