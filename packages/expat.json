@@ -22,7 +22,9 @@
         "*:*:libiconv"
     ],
     "build": {
-        "env": [],
+        "env": [
+            "*:aarch64-apple-ios-simulator:HOST=aarch64-apple-ios"
+        ],
         "steps": [
             "*:*:bash ./configure --host=$HOST --prefix=$PREFIX --disable-shared --without-docbook --without-tests --without-examples --enable-option-checking --without-xmlwf --with-pic",
             "*:*:make -j$NUM_CORES",
