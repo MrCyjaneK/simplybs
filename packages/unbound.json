@@ -31,6 +31,7 @@
     ],
     "build": {
         "env": [
+            "*:aarch64-apple-ios-simulator:HOST=aarch64-apple-ios",
             "*:*:config_opts=--disable-shared --enable-static --without-pyunbound --prefix=$PREFIX --host=$HOST",
             "*:*:config_opts=$config_opts --with-libexpat=$PREFIX --with-ssl=$PREFIX --with-libevent=no",
             "*:*:config_opts=$config_opts --without-pythonmodule --disable-flto --with-pthreads --with-libunbound-only",
