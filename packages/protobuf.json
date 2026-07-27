@@ -29,6 +29,8 @@
     ],
     "build": {
         "env": [
+            "*:*:CPP_FOR_BUILD=$CPP",
+            "*:*:CXXCPP_FOR_BUILD=$CXXCPP",
             "*:*:CXXFLAGS=$CXXFLAGS -std=c++11",
             "*:*:config_opts=--host=$HOST --prefix=$PREFIX",
             "*:*:config_opts=$config_opts --disable-shared --with-protoc=$NATIVEPREFIX/bin/protoc",
