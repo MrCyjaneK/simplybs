@@ -22,6 +22,7 @@
     ],
     "build": {
         "env": [
+            "*:aarch64-apple-ios-simulator:HOST=aarch64-apple-ios",
             "*:*:config_opts=--host=$HOST --prefix=$PREFIX --disable-nls --enable-static --disable-shared",
             "*:*:config_opts=$config_opts --disable-malloca",
             "*:*:config_opts=$config_opts",
