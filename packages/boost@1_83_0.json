@@ -26,6 +26,7 @@
     ],
     "build": {
         "env": [
+            "*:*-linux-gnu*:CXXFLAGS=$CXXFLAGS -fPIC",
             "*:*-apple-ios*:target_os=iphone",
             "*:*-linux-android*:target_os=android",
             "*:*-mingw32*:target_os=windows",

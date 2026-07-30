@@ -4,3 +4,6 @@
 ct-config
 .DS_Store
 logs
+
+*.log
+*.pid

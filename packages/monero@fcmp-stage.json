@@ -1,0 +1,57 @@
+{
+    "package": "monero@fcmp-stage",
+    "version": "fcmp-stage",
+    "type": "host",
+    "download": [
+        {
+            "kind": "git",
+            "sha256": "450c789fbe47e3c8847bf928fad9e7c5ccf39d16",
+            "url": "https://github.com/seraphis-migration/monero.git"
+        }
+    ],
+    "dependencies": [
+        "*:*:native/_/_",
+        "*:*:native/_",
+        "*:*:native/cmake",
+        "*:*:native/cmake-toolchain",
+        "*:*:native/curl",
+        "*:*:native/git",
+        "*:*:native/libpsl",
+        "*:*:native/libxml2",
+        "*:*:native/make",
+        "*:*:native/patch",
+        "*:*:native/pkgconf",
+        "*:*:native/protobuf",
+        "*:*:native/python@3.14",
+        "*:*:native/rust-toolchain",
+        "*:*:native/sed",
+        "*:*:boost@1_83_0",
+        "*:*:libiconv",
+        "*:*:openssl",
+        "*:*:protobuf",
+        "*:*:rust-std",
+        "*:*:sodium",
+        "*:*:unbound",
+        "*:*:zeromq",
+        "*:*:zlib"
+    ],
+    "patches": [
+        "dummy_rt.patch",
+        "drop_translations.patch"
+    ],
+    "build": {
+        "env": [
+            "*:*:config_opts=-DCMAKE_TOOLCHAIN_FILE=$CMAKE_TOOLCHAIN_FILE",
+            "*:*:config_opts=$config_opts -DCMAKE_INSTALL_PREFIX=$PREFIX"
+        ],
+        "steps": [
+            "*:*:git submodule update --init --force",
+            "*:*:patch -p1 < $PATCH_DIR/monero@fcmp-stage/dummy_rt.patch",
+            "*:*:patch -p1 < $PATCH_DIR/monero@fcmp-stage/drop_translations.patch",
+            "*:*:mkdir -p build",
+            "*:*:cd build && cmake .. $config_opts",
+            "*:*:cd build && make -j1",
+            "*:*:cd build && make DESTDIR=$STAGING_DIR install"
+        ]
+    }
+}

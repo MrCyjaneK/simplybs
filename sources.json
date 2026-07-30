@@ -1010,11 +1010,6 @@
                 "e0bd5e08395bcd5ae105ad279d8d3ba67e8b738b"
             ]
         },
-        "https://github.com/justxd22/monero-ndk": {
-            "refs": [
-                "f0894a6c06fc53542ab5505088f0a2feb5f14f4d"
-            ]
-        },
         "https://github.com/libffi/libffi.git": {
             "refs": [
                 "e2eda0cf72a0598b44278cc91860ea402273fa29"
@@ -1063,6 +1058,11 @@
         "https://github.com/pypa/pyproject-hooks": {
             "refs": [
                 "4b7c6d113fb89b755d762a88712c8a6873cddd47"
+            ]
+        },
+        "https://github.com/seraphis-migration/monero.git": {
+            "refs": [
+                "450c789fbe47e3c8847bf928fad9e7c5ccf39d16"
             ]
         },
         "https://github.com/tpoechtrager/apple-libtapi.git": {
@@ -2156,6 +2156,11 @@
         },
         {
             "kind": "tar.gz",
+            "url": "https://download.savannah.gnu.org/releases/freetype/freetype-2.14.1.tar.gz",
+            "sha256": "174d9e53402e1bf9ec7277e22ec199ba3e55a6be2c0740cb18c0ee9850fc8c34"
+        },
+        {
+            "kind": "tar.gz",
             "url": "https://github.com/PCRE2Project/pcre2/releases/download/pcre2-10.46/pcre2-10.46.tar.gz",
             "sha256": "8d28d7f2c3b970c3a4bf3776bcbb5adfc923183ce74bc8df1ebaad8c1985bd07"
         },
@@ -2168,6 +2173,11 @@
             "kind": "tar.gz",
             "url": "https://github.com/git/git/archive/refs/tags/v2.51.0.tar.gz",
             "sha256": "3524fc5fd81f16f80e1696a8281bd8ad831048b67848015d7b7382bf365ae685"
+        },
+        {
+            "kind": "tar.gz",
+            "url": "https://github.com/libffi/libffi/releases/download/v3.5.2/libffi-3.5.2.tar.gz",
+            "sha256": "f3a3082a23b37c293a4fcd1053147b371f2ff91fa7ea1b2a52e335676bac82dc"
         },
         {
             "kind": "tar.gz",
@@ -2213,6 +2223,16 @@
         },
         {
             "kind": "tar.gz",
+            "url": "https://github.com/xkbcommon/libxkbcommon/archive/refs/tags/xkbcommon-1.13.1.tar.gz",
+            "sha256": "aeb951964c2f7ecc08174cb5517962d157595e9e3f38fc4a130b91dc2f9fec18"
+        },
+        {
+            "kind": "tar.gz",
+            "url": "https://gitlab.freedesktop.org/wayland/wayland/-/archive/1.25.0/wayland-1.25.0.tar.gz",
+            "sha256": "95413723f6cd0462770eda207a1c78d142d0a1bba9b0572a4ed1da6a9b27059c"
+        },
+        {
+            "kind": "tar.gz",
             "url": "https://go.dev/dl/go1.25.0.src.tar.gz",
             "sha256": "4bd01e91297207bfa450ea40d4d5a93b1b531a5e438473b2a06e18e077227225"
         },
@@ -2246,6 +2266,11 @@
         },
         {
             "kind": "tar.gz",
+            "url": "https://www.freedesktop.org/software/fontconfig/release/fontconfig-2.12.6.tar.gz",
+            "sha256": "064b9ebf060c9e77011733ac9dc0e2ce92870b574cca2405e11f5353a683c334"
+        },
+        {
+            "kind": "tar.gz",
             "url": "https://www.sqlite.org/2021/sqlite-autoconf-3350500.tar.gz",
             "sha256": "f52b72a5c319c3e516ed7a92e123139a6e87af08a2dc43d7757724f6132e6db0"
         },
@@ -2253,6 +2278,31 @@
             "kind": "tar.gz",
             "url": "https://www.sqlite.org/2025/sqlite-autoconf-3510100.tar.gz",
             "sha256": "4f2445cd70479724d32ad015ec7fd37fbb6f6130013bd4bfbc80c32beb42b7e0"
+        },
+        {
+            "kind": "tar.gz",
+            "url": "https://xcb.freedesktop.org/dist/libxcb-1.17.0.tar.gz",
+            "sha256": "2c69287424c9e2128cb47ffe92171e10417041ec2963bceafb65cb3fcf8f0b85"
+        },
+        {
+            "kind": "tar.gz",
+            "url": "https://xcb.freedesktop.org/dist/xcb-util-cursor-0.1.6.tar.gz",
+            "sha256": "eae38b2dfc5c529a886e507ef576b12d2a20aa1f149608e4853af760f31be60b"
+        },
+        {
+            "kind": "tar.gz",
+            "url": "https://xorg.freedesktop.org/archive/individual/proto/xcb-proto-1.17.0.tar.gz",
+            "sha256": "392d3c9690f8c8202a68fdb89c16fd55159ab8d65000a6da213f4a1576e97a16"
+        },
+        {
+            "kind": "tar.gz",
+            "url": "https://xorg.freedesktop.org/archive/individual/proto/xorgproto-2025.1.tar.gz",
+            "sha256": "d6f89f65bafb8c9b735e0515882b8a1511e8e864dde5e9513e191629369f2256"
+        },
+        {
+            "kind": "tar.gz",
+            "url": "https://xorg.freedesktop.org/releases/individual/lib/libXau-1.0.12.tar.gz",
+            "sha256": "2402dd938da4d0a332349ab3d3586606175e19cb32cb9fe013c19f1dc922dcee"
         },
         {
             "kind": "tar.xz",
@@ -2263,6 +2313,11 @@
             "kind": "tar.xz",
             "url": "http://crosstool-ng.org/download/crosstool-ng/crosstool-ng-1.28.0.tar.xz",
             "sha256": "5750e29a2bda5cd8d67900592576b1670a1987a4dcd5e4f6beae09138a1f5699"
+        },
+        {
+            "kind": "tar.xz",
+            "url": "http://ftpmirror.gnu.org/gnu/gcc/gcc-15.2.0/gcc-15.2.0.tar.xz",
+            "sha256": "438fd996826b0c82485a29da03a72d71d6e3541a83ec702df4271f6fe025d24e"
         },
         {
             "kind": "tar.xz",
@@ -2301,6 +2356,11 @@
         },
         {
             "kind": "tar.xz",
+            "url": "https://dbus.freedesktop.org/releases/dbus/dbus-1.14.10.tar.xz",
+            "sha256": "ba1f21d2bd9d339da2d4aa8780c09df32fea87998b73da24f49ab9df1e36a50f"
+        },
+        {
+            "kind": "tar.xz",
             "url": "https://download.gnome.org/sources/glib/2.86/glib-2.86.4.tar.xz",
             "sha256": "d4e2b5d791d5015ffd8c6971ad8e975a0a55c1a14926cdb25cf843ff00682260"
         },
@@ -2313,6 +2373,48 @@
             "kind": "tar.xz",
             "url": "https://download.qemu.org/qemu-10.2.1.tar.xz",
             "sha256": "a3717477d8e2c84d630bfffbc20f6cd3293eb45aa1e6dac6d0cc27689991c9e1"
+        },
+        {
+            "kind": "tar.xz",
+            "url": "https://download.qt.io/official_releases/qt/6.11/6.11.1/submodules/qtbase-everywhere-src-6.11.1.tar.xz",
+            "sha256": "d9594a31228aa23ad6b531719a29b45f0f3989fe6c136d45767ea179f233c1ac",
+            "path": "qtbase"
+        },
+        {
+            "kind": "tar.xz",
+            "url": "https://download.qt.io/official_releases/qt/6.11/6.11.1/submodules/qtmultimedia-everywhere-src-6.11.1.tar.xz",
+            "sha256": "390f8e52ddee3aca5c4de7eead900c84c4fa61ff6d1f0ebea9c7543365c09b0a",
+            "path": "qtmultimedia"
+        },
+        {
+            "kind": "tar.xz",
+            "url": "https://download.qt.io/official_releases/qt/6.11/6.11.1/submodules/qtshadertools-everywhere-src-6.11.1.tar.xz",
+            "sha256": "2075052f9b23bcf9de045bbd180037084942f82cce870aab14a1454902c982fc",
+            "path": "qtshadertools"
+        },
+        {
+            "kind": "tar.xz",
+            "url": "https://download.qt.io/official_releases/qt/6.11/6.11.1/submodules/qtsvg-everywhere-src-6.11.1.tar.xz",
+            "sha256": "7f3cf02f4824bf03c2c5859ea6db173bf1482a1daf24e6cdf7bc78cfa26a8a94",
+            "path": "qtsvg"
+        },
+        {
+            "kind": "tar.xz",
+            "url": "https://download.qt.io/official_releases/qt/6.11/6.11.1/submodules/qttools-everywhere-src-6.11.1.tar.xz",
+            "sha256": "8e61835a679c93fa9c6065b142353c2071ba68e297898937c32a03777fcaf50d",
+            "path": "qttools"
+        },
+        {
+            "kind": "tar.xz",
+            "url": "https://download.qt.io/official_releases/qt/6.11/6.11.1/submodules/qtwayland-everywhere-src-6.11.1.tar.xz",
+            "sha256": "95788aa502f75441d4edf65932b235f76523084e13dbbb7b9ee2d207b32bd9b3",
+            "path": "qtwayland"
+        },
+        {
+            "kind": "tar.xz",
+            "url": "https://download.qt.io/official_releases/qt/6.11/6.11.1/submodules/qtwebsockets-everywhere-src-6.11.1.tar.xz",
+            "sha256": "243e3aa11924c8c5c1645e892f62d013caa3766c57512ca926d5b58146646fbf",
+            "path": "qtwebsockets"
         },
         {
             "kind": "tar.xz",
@@ -2381,8 +2483,43 @@
         },
         {
             "kind": "tar.xz",
+            "url": "https://github.com/MrCyjaneK/easybs/releases/download/r1/clang21-aarch64-apple-darwin.tar.xz",
+            "sha256": "80e16711526b83f323a1014479a19a816e24f785f30dd712b5be297cc9b604e1"
+        },
+        {
+            "kind": "tar.xz",
+            "url": "https://github.com/llvm/llvm-project/releases/download/llvmorg-19.1.7/llvm-project-19.1.7.src.tar.xz",
+            "sha256": "82401fea7b79d0078043f7598b835284d6650a75b93e64b6f761ea7b63097501"
+        },
+        {
+            "kind": "tar.xz",
             "url": "https://static.mrcyjanek.net/bootstrap/clang21-aarch64-apple-darwin.tar.xz",
             "sha256": "735e9433e8961ab960b9a7c68a1f4ded5d0a6eecf8de58cd7bad80550ae184f1"
+        },
+        {
+            "kind": "tar.xz",
+            "url": "https://xcb.freedesktop.org/dist/xcb-util-0.4.1.tar.xz",
+            "sha256": "5abe3bbbd8e54f0fa3ec945291b7e8fa8cfd3cccc43718f8758430f94126e512"
+        },
+        {
+            "kind": "tar.xz",
+            "url": "https://xcb.freedesktop.org/dist/xcb-util-image-0.4.1.tar.xz",
+            "sha256": "ccad8ee5dadb1271fd4727ad14d9bd77a64e505608766c4e98267d9aede40d3d"
+        },
+        {
+            "kind": "tar.xz",
+            "url": "https://xcb.freedesktop.org/dist/xcb-util-keysyms-0.4.1.tar.xz",
+            "sha256": "7c260a5294412aed429df1da2f8afd3bd07b7cba3fec772fba15a613a6d5c638"
+        },
+        {
+            "kind": "tar.xz",
+            "url": "https://xcb.freedesktop.org/dist/xcb-util-renderutil-0.3.10.tar.xz",
+            "sha256": "3e15d4f0e22d8ddbfbb9f5d77db43eacd7a304029bf25a6166cc63caa96d04ba"
+        },
+        {
+            "kind": "tar.xz",
+            "url": "https://xcb.freedesktop.org/dist/xcb-util-wm-0.4.2.tar.xz",
+            "sha256": "62c34e21d06264687faea7edbf63632c9f04d55e72114aa4a57bb95e4f888a0b"
         }
     ]
 }
