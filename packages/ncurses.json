@@ -10,7 +10,13 @@
         }
     ],
     "dependencies": [
-        "*:*:native/_"
+        "*:*:native/_/_",
+        "*:*:native/_",
+        "*:*:native/sed",
+        "*:*:native/grep",
+        "*:*:native/make",
+        "*:*:native/gawk",
+        "*:*:native/bash"
     ],
     "patches": [
         "fallback.c"
@@ -51,6 +57,7 @@
             "*:*:config_opts=$config_opts --disable-term-driver",
             "*:*:config_opts=$config_opts --enable-interop",
             "*:*:config_opts=$config_opts --enable-widec",
+            "*:*:config_opts=$config_opts --with-build-cc=$CC_FOR_BUILD",
             "*:*:SHOULD_BUILD=echo",
             "*:*-linux-*:SHOULD_BUILD=",
             "*:*-w64-mingw32:SHOULD_BUILD=",
@@ -58,7 +65,7 @@
         ],
         "steps": [
             "*:*:$SHOULD_BUILD cp $PATCH_DIR/ncurses/fallback.c ncurses",
-            "*:*:$SHOULD_BUILD ./configure $config_opts",
+            "*:*:$SHOULD_BUILD bash ./configure $config_opts",
             "*:*:$SHOULD_BUILD make -j$NUM_CORES $build_opts",
             "*:*:$SHOULD_BUILD make install.libs DESTDIR=$STAGING_DIR"
         ]

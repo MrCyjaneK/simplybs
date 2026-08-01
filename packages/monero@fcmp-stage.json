@@ -37,20 +37,24 @@
     ],
     "patches": [
         "dummy_rt.patch",
-        "drop_translations.patch"
+        "drop_translations.patch",
+        "remove_icu4c.patch"
     ],
     "build": {
         "env": [
             "*:*:config_opts=-DCMAKE_TOOLCHAIN_FILE=$CMAKE_TOOLCHAIN_FILE",
-            "*:*:config_opts=$config_opts -DCMAKE_INSTALL_PREFIX=$PREFIX"
+            "*:*:config_opts=$config_opts -DCMAKE_INSTALL_PREFIX=$PREFIX",
+            "*:*:config_opts=$config_opts -DDEPENDS=ON -DUSE_READLINE=OFF",
+            "*:*-android*:config_opts=$config_opts -DANDROID=ON"
         ],
         "steps": [
             "*:*:git submodule update --init --force",
             "*:*:patch -p1 < $PATCH_DIR/monero@fcmp-stage/dummy_rt.patch",
             "*:*:patch -p1 < $PATCH_DIR/monero@fcmp-stage/drop_translations.patch",
+            "*:*:patch -p1 < $PATCH_DIR/monero@fcmp-stage/remove_icu4c.patch",
             "*:*:mkdir -p build",
             "*:*:cd build && cmake .. $config_opts",
-            "*:*:cd build && make -j1",
+            "*:*:cd build && make -j$NUM_CORES",
             "*:*:cd build && make DESTDIR=$STAGING_DIR install"
         ]
     }

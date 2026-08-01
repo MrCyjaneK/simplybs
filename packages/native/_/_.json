@@ -19,7 +19,7 @@
         ]
     },
     "export-env": [
-        "darwin_arm64:*:OSX_MIN_VERSION=13",
+        "darwin_arm64:*:OSX_MIN_VERSION=13.0",
         "darwin_arm64:*:CC=$NATIVEPREFIX/_/bin/clang",
         "darwin_arm64:*:CXX=$NATIVEPREFIX/_/bin/clang++",
         "darwin_arm64:*:LDFLAGS=$LDFLAGS -stdlib=libc++ -lc++ -lc++abi",

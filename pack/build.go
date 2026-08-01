@@ -21,15 +21,15 @@ func (p *Package) EnsureBuilt(h *host.Host, buildDependencies bool) {
 	buildPath := p.GenerateBuildPath(h, "built") + ".info.txt"
 	info, err := os.ReadFile(buildPath)
 	if err != nil {
-		log.Printf("[%s] No build cache found, building...", p.Package)
+		log.Printf("[%s][%s] No build cache found, building...", h.Triplet, p.Package)
 		p.BuildPackage(h, true)
 		return
 	}
 	if string(info) == p.GeneratePackageInfo(h) {
-		log.Printf("[%s] Build cache found, skipping build...", p.Package)
+		log.Printf("[%s][%s] Build cache found, skipping build...", h.Triplet, p.Package)
 		return
 	}
-	log.Printf("[%s] Build cache found, but info mismatch, rebuilding...", p.Package)
+	log.Printf("[%s][%s] Build cache found, but info mismatch, rebuilding...", h.Triplet, p.Package)
 	p.BuildPackage(h, true)
 }
 
