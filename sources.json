@@ -978,6 +978,11 @@
                 "919e9e64cc4b20f5a1e4df1e38cce1bfe15aff09"
             ]
         },
+        "https://github.com/Tencent/rapidjson.git": {
+            "refs": [
+                "129d19ba7f496df5e33658527a7158c79b99c21c"
+            ]
+        },
         "https://github.com/besser82/libxcrypt": {
             "refs": [
                 "55ea777e8d567e5e86ffac917c28815ac54cc341"
@@ -987,6 +992,12 @@
             "refs": [
                 "620b909cd0713f68084378b63cf61b5232757b90",
                 "a3fef85781d3cda0b27388916f3287826aeec177"
+            ]
+        },
+        "https://github.com/google/googletest.git": {
+            "refs": [
+                "0a439623f75c029912728d80cb7f1b8b48739ca4",
+                "b514bdc898e2951020cbdca1304b75f5950d1f59"
             ]
         },
         "https://github.com/guillemj/libmd.git": {
@@ -1003,6 +1014,11 @@
             "refs": [
                 "5e96a8279489832924056b1fa82f29d5837c9469",
                 "8c63d71ff886bda90c86db28466287f977374237"
+            ]
+        },
+        "https://github.com/jeffro256/mx25519.git": {
+            "refs": [
+                "e808a6406b254091f4ed83bf8ea35f032da7f0b7"
             ]
         },
         "https://github.com/julian-klode/triehash.git": {
@@ -1040,6 +1056,16 @@
                 "e0fa23f1a3cb1eb1407165bd2fc36d2f6e6ad728"
             ]
         },
+        "https://github.com/miniupnp/miniupnp.git": {
+            "refs": [
+                "544e6fcc73c5ad9af48a8985c94f0f1d742ef2e0"
+            ]
+        },
+        "https://github.com/monero-project/supercop.git": {
+            "refs": [
+                "633500ad8c8759995049ccd022107d1fa8a1bbc9"
+            ]
+        },
         "https://github.com/nodejs/node.git": {
             "refs": [
                 "1da054d99bb16d35c54d759f36ccc125b90070bd"
@@ -1063,6 +1089,11 @@
         "https://github.com/seraphis-migration/monero.git": {
             "refs": [
                 "450c789fbe47e3c8847bf928fad9e7c5ccf39d16"
+            ]
+        },
+        "https://github.com/tevador/RandomX.git": {
+            "refs": [
+                "102f8acf90a7649ada410de5499a7ec62e49e1da"
             ]
         },
         "https://github.com/tpoechtrager/apple-libtapi.git": {
@@ -1678,6 +1709,11 @@
             "kind": "tar.gz",
             "url": "http://download.libsodium.org/libsodium/releases/libsodium-1.0.18.tar.gz",
             "sha256": "6f504490b342a4f8a4c4a02fc9b866cbef8622d5df4e5452b46be121e46636c1"
+        },
+        {
+            "kind": "tar.gz",
+            "url": "http://download.libsodium.org/libsodium/releases/libsodium-1.0.22.tar.gz",
+            "sha256": "adbdd8f16149e81ac6078a03aca6fc03b592b89ef7b5ed83841c086191be3349"
         },
         {
             "kind": "tar.gz",

@@ -7,6 +7,48 @@
             "kind": "git",
             "sha256": "450c789fbe47e3c8847bf928fad9e7c5ccf39d16",
             "url": "https://github.com/seraphis-migration/monero.git"
+        },
+        {
+            "kind": "git",
+            "path": "external/gtest",
+            "sha256": "b514bdc898e2951020cbdca1304b75f5950d1f59",
+            "url": "https://github.com/google/googletest.git"
+        },
+        {
+            "kind": "git",
+            "path": "external/mx25519",
+            "sha256": "e808a6406b254091f4ed83bf8ea35f032da7f0b7",
+            "url": "https://github.com/jeffro256/mx25519.git"
+        },
+        {
+            "kind": "git",
+            "path": "external/miniupnp",
+            "sha256": "544e6fcc73c5ad9af48a8985c94f0f1d742ef2e0",
+            "url": "https://github.com/miniupnp/miniupnp.git"
+        },
+        {
+            "kind": "git",
+            "path": "external/randomx",
+            "sha256": "102f8acf90a7649ada410de5499a7ec62e49e1da",
+            "url": "https://github.com/tevador/RandomX.git"
+        },
+        {
+            "kind": "git",
+            "path": "external/rapidjson",
+            "sha256": "129d19ba7f496df5e33658527a7158c79b99c21c",
+            "url": "https://github.com/Tencent/rapidjson.git"
+        },
+        {
+            "kind": "git",
+            "path": "external/supercop",
+            "sha256": "633500ad8c8759995049ccd022107d1fa8a1bbc9",
+            "url": "https://github.com/monero-project/supercop.git"
+        },
+        {
+            "kind": "git",
+            "path": "external/rapidjson/thirdparty/gtest",
+            "sha256": "0a439623f75c029912728d80cb7f1b8b48739ca4",
+            "url": "https://github.com/google/googletest.git"
         }
     ],
     "dependencies": [
@@ -38,21 +80,25 @@
     "patches": [
         "dummy_rt.patch",
         "drop_translations.patch",
-        "remove_icu4c.patch"
+        "remove_icu4c.patch",
+        "447.patch",
+        "fix-ios-depends-build.patch"
     ],
     "build": {
         "env": [
             "*:*:config_opts=-DCMAKE_TOOLCHAIN_FILE=$CMAKE_TOOLCHAIN_FILE",
             "*:*:config_opts=$config_opts -DCMAKE_INSTALL_PREFIX=$PREFIX",
-            "*:*:config_opts=$config_opts -DDEPENDS=ON -DUSE_READLINE=OFF",
+            "*:*:config_opts=$config_opts -DDEPENDS=ON",
+            "*:*:config_opts=$config_opts -DMANUAL_SUBMODULES=1",
+            "*:*:config_opts=$config_opts -DUSE_READLINE=OFF",
             "*:*-android*:config_opts=$config_opts -DANDROID=ON"
         ],
         "steps": [
-            "*:*:git submodule update --init --force",
             "*:*:patch -p1 < $PATCH_DIR/monero@fcmp-stage/dummy_rt.patch",
             "*:*:patch -p1 < $PATCH_DIR/monero@fcmp-stage/drop_translations.patch",
             "*:*:patch -p1 < $PATCH_DIR/monero@fcmp-stage/remove_icu4c.patch",
             "*:*:patch -p1 < $PATCH_DIR/monero@fcmp-stage/447.patch",
+            "*:*:patch -p1 < $PATCH_DIR/monero@fcmp-stage/fix-ios-depends-build.patch",
             "*:*:mkdir -p build",
             "*:*:cd build && cmake .. $config_opts",
             "*:*:cd build && make -j$NUM_CORES",
