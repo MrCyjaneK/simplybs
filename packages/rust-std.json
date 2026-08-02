@@ -9,6 +9,14 @@
             "url": "http://static.rust-lang.org/dist/rustc-1.95.0-src.tar.gz"
         }
     ],
+    "export-env": [
+        "linux_arm64:aarch64-linux-gnu:CARGO_TARGET_AARCH64_UNKNOWN_LINUX_GNU_LINKER=$NATIVEPREFIX/bin/cargo-linker-clang",
+        "linux_arm64:aarch64-linux-gnu:RUSTFLAGS=-Clinker=$NATIVEPREFIX/bin/cargo-linker-clang -Clink-arg=-L$NATIVEPREFIX/lib",
+        "linux_amd64:x86_64-linux-gnu:CARGO_TARGET_X86_64_UNKNOWN_LINUX_GNU_LINKER=$NATIVEPREFIX/bin/cargo-linker-clang",
+        "linux_amd64:x86_64-linux-gnu:RUSTFLAGS=-Clinker=$NATIVEPREFIX/bin/cargo-linker-clang -Clink-arg=-L$NATIVEPREFIX/lib",
+        "darwin_arm64:aarch64-apple-darwin:CARGO_TARGET_AARCH64_APPLE_DARWIN_LINKER=$NATIVEPREFIX/bin/cargo-linker-clang",
+        "darwin_arm64:aarch64-apple-darwin:RUSTFLAGS=-Clinker=$NATIVEPREFIX/bin/cargo-linker-clang -Clink-arg=-L$NATIVEPREFIX/lib"
+    ],
     "dependencies": [
         "*:*:native/_/_",
         "*:*:native/_",
@@ -90,12 +98,16 @@
             "*:armv7a-linux-androideabi:CXX_armv7_linux_androideabi=$RUST_CXX",
             "*:armv7a-linux-androideabi:AR_armv7_linux_androideabi=$RUST_AR",
             "*:*:RUST_STD_PROFILE=std",
-            "linux_amd64:x86_64-linux-gnu:RUST_STD_PROFILE=std-native",
-            "linux_arm64:aarch64-linux-gnu:RUST_STD_PROFILE=std-native",
+            "linux_amd64:x86_64-linux-gnu:RUST_STD_PROFILE=",
+            "linux_amd64:x86_64-linux-gnu:RUST_LLVM_PROFILE=",
+            "linux_arm64:aarch64-linux-gnu:RUST_STD_PROFILE=",
+            "linux_arm64:aarch64-linux-gnu:RUST_LLVM_PROFILE=",
             "linux_amd64:aarch64-linux-gnu:RUST_STD_PROFILE=std-native",
             "linux_arm64:x86_64-linux-gnu:RUST_STD_PROFILE=std-native",
             "darwin_arm64:*:RUST_STD_PROFILE=std-native",
             "*:*-apple-*:RUST_STD_PROFILE=std-apple",
+            "darwin_arm64:aarch64-apple-darwin:RUST_STD_PROFILE=",
+            "darwin_arm64:aarch64-apple-darwin:RUST_LLVM_PROFILE=",
             "*:*-w64-mingw32:RUST_STD_PROFILE=std-mingw",
             "*:*android*:RUST_STD_PROFILE=std-android",
             "*:*android*:RUST_LLVM_PROFILE=llvm",
@@ -296,6 +308,7 @@
             "*:*:echo 'ninja = true' >> config.toml",
             "*:*:echo 'download-ci-llvm = false' >> config.toml",
             "*:*:echo 'libzstd = false' >> config.toml",
+            "linux_arm64:aarch64-linux-gnu:sed -i 's/download-ci-llvm = false/download-ci-llvm = true/; s/libzstd = false/libzstd = true/' config.toml",
             "*:*:@$RUST_LLVM_PROFILE python3 ./x.py build llvm -j$NUM_CORES",
             "*:*:@$RUST_STD_PROFILE python3 ./x.py build library/std --stage 1 --target $RUST_TRIPLET -j$NUM_CORES",
             "linux_*:*-apple-*:ln -sf $RUST_CC $NATIVEPREFIX/bin/cc",
@@ -306,9 +319,18 @@
             "*:*-apple-ios*:cp -f $PATCH_DIR/rust-std/xcrun $STAGING_DIR$NATIVEPREFIX/bin/xcrun",
             "*:*-apple-ios*:chmod +x $STAGING_DIR$NATIVEPREFIX/bin/xcrun",
             "*:*:touch $STAGING_DIR$NATIVEPREFIX/bin/.keep",
-            "*:*:$NATIVEPREFIX/bin/rm -rf $STAGING_DIR$NATIVEPREFIX/lib/rustlib/$RUST_TRIPLET",
-            "*:*:$NATIVEPREFIX/bin/cp -a build/*/stage1/lib/rustlib/$RUST_TRIPLET $STAGING_DIR$NATIVEPREFIX/lib/rustlib/",
-            "*:*:test \"$BUILD_TRIPLET\" = \"$RUST_TRIPLET\" || $NATIVEPREFIX/bin/cp -a $NATIVEPREFIX/lib/rustlib/$BUILD_TRIPLET $STAGING_DIR$NATIVEPREFIX/lib/rustlib/"
+            "linux_amd64:x86_64-linux-gnu:printf '#!/bin/sh\\nexec \"$NATIVEPREFIX/bin/x86_64-linux-gnu-gcc\" --sysroot=\"$PREFIX/sysroot\" \"$@\"\\n' > $STAGING_DIR$NATIVEPREFIX/bin/cargo-linker-clang",
+            "linux_amd64:x86_64-linux-gnu:chmod +x $STAGING_DIR$NATIVEPREFIX/bin/cargo-linker-clang",
+            "linux_amd64:x86_64-linux-gnu:cp -a $NATIVEPREFIX/lib/rustlib/$RUST_TRIPLET $STAGING_DIR$NATIVEPREFIX/lib/rustlib/",
+            "linux_arm64:aarch64-linux-gnu:printf '#!/bin/sh\\nexec \"$NATIVEPREFIX/bin/aarch64-linux-gnu-gcc\" --sysroot=\"$PREFIX/sysroot\" \"$@\"\\n' > $STAGING_DIR$NATIVEPREFIX/bin/cargo-linker-clang",
+            "linux_arm64:aarch64-linux-gnu:chmod +x $STAGING_DIR$NATIVEPREFIX/bin/cargo-linker-clang",
+            "linux_arm64:aarch64-linux-gnu:cp -a $NATIVEPREFIX/lib/rustlib/$RUST_TRIPLET $STAGING_DIR$NATIVEPREFIX/lib/rustlib/",
+            "darwin_arm64:aarch64-apple-darwin:printf '#!/bin/sh\\nexec \"$NATIVEPREFIX/bin/aarch64-apple-darwin-clang\" -mmacosx-version-min=13.0 -isysroot \"$NATIVEPREFIX/SDK/MacOSX26.1.sdk\" -L\"$PREFIX/lib\" -lc++ -lc++abi \"$@\"\\n' > $STAGING_DIR$NATIVEPREFIX/bin/cargo-linker-clang",
+            "darwin_arm64:aarch64-apple-darwin:chmod +x $STAGING_DIR$NATIVEPREFIX/bin/cargo-linker-clang",
+            "darwin_arm64:aarch64-apple-darwin:cp -a $NATIVEPREFIX/lib/rustlib/$RUST_TRIPLET $STAGING_DIR$NATIVEPREFIX/lib/rustlib/",
+            "*:*:@$RUST_STD_PROFILE $NATIVEPREFIX/bin/rm -rf $STAGING_DIR$NATIVEPREFIX/lib/rustlib/$RUST_TRIPLET",
+            "*:*:@$RUST_STD_PROFILE $NATIVEPREFIX/bin/cp -a build/*/stage1/lib/rustlib/$RUST_TRIPLET $STAGING_DIR$NATIVEPREFIX/lib/rustlib/",
+            "*:*:@$RUST_STD_PROFILE test \"$BUILD_TRIPLET\" = \"$RUST_TRIPLET\" || $NATIVEPREFIX/bin/cp -a $NATIVEPREFIX/lib/rustlib/$BUILD_TRIPLET $STAGING_DIR$NATIVEPREFIX/lib/rustlib/"
         ]
     }
 }
