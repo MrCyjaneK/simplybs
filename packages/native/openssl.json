@@ -16,7 +16,7 @@
     ],
     "build": {
         "env": [
-            "*:*:config_opts=--prefix=$NATIVEPREFIX --openssldir=$NATIVEPREFIX/etc/openssl --libdir=$NATIVEPREFIX/lib",
+            "*:*:config_opts=--prefix=$NATIVEPREFIX --openssldir=$NATIVEPREFIX/etc/openssl --libdir=lib",
             "*:*:config_opts=$config_opts no-capieng",
             "*:*:config_opts=$config_opts no-dso",
             "*:*:config_opts=$config_opts no-dtls1",

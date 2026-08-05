@@ -26,7 +26,7 @@
             "*:*-android*:CC=clang",
             "*:*-android*:AR=ar",
             "*:*-android*:RANLIB=ranlib",
-            "*:*:config_opts=--prefix=$PREFIX --openssldir=$PREFIX/etc/openssl --libdir=$PREFIX/lib",
+            "*:*:config_opts=--prefix=$PREFIX --openssldir=$PREFIX/etc/openssl --libdir=lib",
             "*:*:config_opts=$config_opts no-ec_nistp_64_gcc_128",
             "*:*:config_opts=$config_opts no-gost",
             "*:*:config_opts=$config_opts no-md2",

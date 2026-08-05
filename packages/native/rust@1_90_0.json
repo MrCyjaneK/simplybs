@@ -24,6 +24,7 @@
     "build": {
         "env": [
             "*:*:PATH=$NATIVEPREFIX/bin:$NATIVEPREFIX/_/bin:$PATH",
+            "*:*:OPENSSL_DIR=$NATIVEPREFIX",
             "linux_amd64:*:CARGO_TARGET_X86_64_UNKNOWN_LINUX_GNU_LINKER=$NATIVEPREFIX/_/bin/clang",
             "linux_amd64:*:RUSTFLAGS=-Clinker=$NATIVEPREFIX/_/bin/clang -Clink-arg=-L$NATIVEPREFIX/lib",
             "linux_arm64:*:CARGO_TARGET_AARCH64_UNKNOWN_LINUX_GNU_LINKER=$NATIVEPREFIX/_/bin/clang",
