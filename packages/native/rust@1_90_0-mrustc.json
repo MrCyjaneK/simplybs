@@ -49,7 +49,7 @@
             "darwin_arm64:*:$NATIVEPREFIX/bin/sed -i.bak 's/^[[:space:]]*RUSTC_TARGET ?= x86_64-apple-darwin/RUSTC_TARGET ?= aarch64-apple-darwin/' run_rustc/Makefile",
             "linux_arm64:*:$NATIVEPREFIX/bin/sed -i.bak 's/^[[:space:]]*RUSTC_TARGET ?= x86_64-unknown-linux-gnu/RUSTC_TARGET ?= aarch64-unknown-linux-gnu/' run_rustc/Makefile",
             "linux_arm64:*:$NATIVEPREFIX/bin/sed -i.bak 's/^[[:space:]]*RUSTC_TARGET ?= x86_64-unknown-linux-gnu/RUSTC_TARGET ?= aarch64-unknown-linux-gnu/' ./minicargo.mk",
-            "*:*:$NATIVEPREFIX/bin/sed -i.bak 's/LLVM_ENABLE_ZLIB=OFF/LLVM_ENABLE_ZLIB=OFF LLVM_ENABLE_ZSTD=OFF/' minicargo.mk",
+            "*:*:$NATIVEPREFIX/bin/sed -i.bak 's/LLVM_ENABLE_ZLIB=OFF/LLVM_ENABLE_ZLIB=OFF LLVM_ENABLE_ZSTD=OFF LLVM_ENABLE_LIBXML2=OFF/' minicargo.mk",
             "linux_amd64:*:REP=$NATIVEPREFIX/lib && $NATIVEPREFIX/bin/sed -i.bak \"s|^RUSTC_ENV_VARS += LD_LIBRARY_PATH=|RUSTC_ENV_VARS += LD_LIBRARY_PATH=$REP:|\" minicargo.mk",
             "*:*:echo >> build-1.90.0.sh",
             "*:*:echo make -C run_rustc >> build-1.90.0.sh",
