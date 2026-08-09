@@ -44,8 +44,8 @@ func (h *Host) GetNativeEnvPath() string {
 	if os.Getenv("SIMPLYBS_NATIVE_ENV_DIR") != "" {
 		return filepath.Join(os.Getenv("SIMPLYBS_NATIVE_ENV_DIR"))
 	}
-	dir := h.GetEnvPath()
-	return filepath.Join(dir, "native")
+	dir := DataDirRoot()
+	return filepath.Join(dir, "env-native")
 }
 
 func (h *Host) GetEnvPath() string {
