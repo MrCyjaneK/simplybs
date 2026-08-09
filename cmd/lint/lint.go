@@ -6,7 +6,6 @@ import (
 	"log"
 	"os"
 	"path/filepath"
-	"sort"
 	"strings"
 
 	"github.com/mrcyjanek/simplybs/builder"
@@ -24,8 +23,8 @@ type OrderedPackage struct {
 	Download     []map[string]interface{} `json:"download,omitempty"`
 	Dependencies []string                 `json:"dependencies,omitempty"`
 	Patches      []string                 `json:"patches,omitempty"`
+	ExportEnv    *[]string                `json:"export-env,omitempty"`
 	Build        map[string]interface{}   `json:"build,omitempty"`
-	ExportEnv    []string                 `json:"export-env,omitempty"`
 }
 
 func Lint() {
@@ -73,23 +72,12 @@ func fixFormatting() {
 			}
 		}
 		if v, ok := data["dependencies"].([]interface{}); ok {
-			nativeDeps := []string{}
-			otherDeps := []string{}
-
+			ordered.Dependencies = make([]string, 0, len(v))
 			for _, dep := range v {
 				if s, ok := dep.(string); ok {
-					is := ifstring.ParseIfString(s)
-					if strings.HasPrefix(is.Content, "native") {
-						nativeDeps = append(nativeDeps, s)
-					} else {
-						otherDeps = append(otherDeps, s)
-					}
+					ordered.Dependencies = append(ordered.Dependencies, s)
 				}
 			}
-
-			sort.Strings(nativeDeps)
-			sort.Strings(otherDeps)
-			ordered.Dependencies = append(nativeDeps, otherDeps...)
 		}
 		if v, ok := data["patches"].([]interface{}); ok {
 			patches := make([]string, len(v))
@@ -100,17 +88,19 @@ func fixFormatting() {
 			}
 			ordered.Patches = patches
 		}
-		if v, ok := data["build"].(map[string]interface{}); ok {
-			ordered.Build = v
-		}
-		if v, ok := data["export-env"].([]interface{}); ok {
-			exportEnv := make([]string, len(v))
-			for i, env := range v {
-				if s, ok := env.(string); ok {
-					exportEnv[i] = s
+		if _, exists := data["export-env"]; exists {
+			exportEnv := []string{}
+			if v, ok := data["export-env"].([]interface{}); ok {
+				for _, env := range v {
+					if s, ok := env.(string); ok {
+						exportEnv = append(exportEnv, s)
+					}
 				}
 			}
-			ordered.ExportEnv = exportEnv
+			ordered.ExportEnv = &exportEnv
+		}
+		if v, ok := data["build"].(map[string]interface{}); ok {
+			ordered.Build = v
 		}
 
 		var buf bytes.Buffer
@@ -251,7 +241,16 @@ func dfsCycleDetection(packageName string, graph map[string][]string, color map[
 
 func createSourcesFile() {
 	log.Println("Creating sources.json file...")
-	sources := utils.NewSourcesFile()
+	sources, err := utils.LoadSourcesFile()
+	if err != nil {
+		if os.IsNotExist(err) {
+			sources = utils.NewSourcesFile()
+		} else {
+			log.Fatalf("Failed to load sources.json: %v", err)
+		}
+	} else if sources.Repositories == nil {
+		sources.Repositories = make(map[string]utils.RepositoryInfo)
+	}
 
 	currentRefs := 0
 	currentDownloads := 0

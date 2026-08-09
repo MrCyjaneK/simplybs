@@ -17,24 +17,6 @@
         "*:*-w64-mingw32:native/ct-tools",
         "*:*:native/_/_"
     ],
-    "build": {
-        "env": [
-            "*:none:A_=This is a meta-package library that includes c and c++ compiler",
-            "*:none:B_=All packages included as dependencies (other than bootstrap packages) are copied over to staging dir"
-        ],
-        "steps": [
-            "*:*:mkdir -p $STAGING_DIR$NATIVEPREFIX",
-            "*:*:rm -rf $STAGING_DIR$NATIVEPREFIX",
-            "*:*:cp -a $NATIVEPREFIX $STAGING_DIR$NATIVEPREFIX",
-            "*:*:rm -rf $STAGING_DIR$NATIVEPREFIX/_",
-            "*:*:mkdir -p $STAGING_DIR$PREFIX",
-            "*:*:rm -rf $STAGING_DIR$PREFIX",
-            "*:*:cp -a $PREFIX $STAGING_DIR$PREFIX",
-            "*:*:rm -rf $STAGING_DIR$PREFIX/bootstrap",
-            "*:*:mkdir -p $STAGING_DIR$HOME",
-            "*:*:touch $STAGING_DIR$HOME/.zshrc"
-        ]
-    },
     "export-env": [
         "*:*:CC_FOR_BUILD=$CC",
         "*:*:CXX_FOR_BUILD=$CXX",
@@ -221,5 +203,23 @@
         "*:x86_64-linux-android:CARGO_TARGET_X86_64_LINUX_ANDROID_RUSTFLAGS=-Clink-arg=-L$PREFIX/lib -Clink-arg=-lc -Clink-arg=-lc++abi -Clink-arg=-lm",
         "*:armv7a-linux-androideabi:CARGO_TARGET_ARMV7_LINUX_ANDROIDEABI_LINKER=$CC",
         "*:armv7a-linux-androideabi:CARGO_TARGET_ARMV7_LINUX_ANDROIDEABI_RUSTFLAGS=-Clink-arg=-L$PREFIX/lib -Clink-arg=-lc -Clink-arg=-lc++abi -Clink-arg=-lm"
-    ]
+    ],
+    "build": {
+        "env": [
+            "*:none:A_=This is a meta-package library that includes c and c++ compiler",
+            "*:none:B_=All packages included as dependencies (other than bootstrap packages) are copied over to staging dir"
+        ],
+        "steps": [
+            "*:*:mkdir -p $STAGING_DIR$NATIVEPREFIX",
+            "*:*:rm -rf $STAGING_DIR$NATIVEPREFIX",
+            "*:*:cp -a $NATIVEPREFIX $STAGING_DIR$NATIVEPREFIX",
+            "*:*:rm -rf $STAGING_DIR$NATIVEPREFIX/_",
+            "*:*:mkdir -p $STAGING_DIR$PREFIX",
+            "*:*:rm -rf $STAGING_DIR$PREFIX",
+            "*:*:cp -a $PREFIX $STAGING_DIR$PREFIX",
+            "*:*:rm -rf $STAGING_DIR$PREFIX/bootstrap",
+            "*:*:mkdir -p $STAGING_DIR$HOME",
+            "*:*:touch $STAGING_DIR$HOME/.zshrc"
+        ]
+    }
 }

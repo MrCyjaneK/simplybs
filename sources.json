@@ -1026,6 +1026,11 @@
                 "e0bd5e08395bcd5ae105ad279d8d3ba67e8b738b"
             ]
         },
+        "https://github.com/justxd22/monero-ndk": {
+            "refs": [
+                "f0894a6c06fc53542ab5505088f0a2feb5f14f4d"
+            ]
+        },
         "https://github.com/libffi/libffi.git": {
             "refs": [
                 "e2eda0cf72a0598b44278cc91860ea402273fa29"

@@ -7,17 +7,6 @@
         "linux_amd64:*:native/_/linux_amd64_clang21",
         "linux_arm64:*:native/_/linux_arm64_clang21"
     ],
-    "build": {
-        "env": [
-            "*:none:A_=This is a meta-package library that includes c and c++ compiler",
-            "*:none:B_=All packages included as dependencies (other than bootstrap packages) are copied over to staging dir."
-        ],
-        "steps": [
-            "*:*:$NATIVEPREFIX/_/bin/mkdir -p $STAGING_DIR$NATIVEPREFIX",
-            "*:*:$NATIVEPREFIX/_/bin/rm -rf $STAGING_DIR$NATIVEPREFIX",
-            "*:*:$NATIVEPREFIX/_/bin/cp -a $NATIVEPREFIX $STAGING_DIR$NATIVEPREFIX"
-        ]
-    },
     "export-env": [
         "darwin_arm64:*:OSX_MIN_VERSION=13.0",
         "darwin_arm64:*:CC=$NATIVEPREFIX/_/bin/clang",
@@ -60,5 +49,16 @@
         "*:*:LIBRARY_PATH=$LIBRARY_PATH:$NATIVEPREFIX/lib",
         "*:*:CC_BUILD=$CC $CFLAGS",
         "*:*:CXX_BUILD=$CXX $CXXFLAGS"
-    ]
+    ],
+    "build": {
+        "env": [
+            "*:none:A_=This is a meta-package library that includes c and c++ compiler",
+            "*:none:B_=All packages included as dependencies (other than bootstrap packages) are copied over to staging dir."
+        ],
+        "steps": [
+            "*:*:$NATIVEPREFIX/_/bin/mkdir -p $STAGING_DIR$NATIVEPREFIX",
+            "*:*:$NATIVEPREFIX/_/bin/rm -rf $STAGING_DIR$NATIVEPREFIX",
+            "*:*:$NATIVEPREFIX/_/bin/cp -a $NATIVEPREFIX $STAGING_DIR$NATIVEPREFIX"
+        ]
+    }
 }
