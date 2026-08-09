@@ -1051,6 +1051,11 @@
                 "ebb370ca83af193212df4dcbadcc5d87bc0de2f0"
             ]
         },
+        "https://github.com/mayanklahiri/easyexif.git": {
+            "refs": [
+                "cd994a3b6009bc3c1f84062e96bd7f5ad16e85f6"
+            ]
+        },
         "https://github.com/mesonbuild/meson.git": {
             "refs": [
                 "751b09390996163348612f0b106114256305ee40"
@@ -1074,6 +1079,11 @@
         "https://github.com/nodejs/node.git": {
             "refs": [
                 "1da054d99bb16d35c54d759f36ccc125b90070bd"
+            ]
+        },
+        "https://github.com/nothings/stb.git": {
+            "refs": [
+                "013ac3beddff3dbffafd5177e7972067cd2b5083"
             ]
         },
         "https://github.com/pypa/flit.git": {
@@ -1114,6 +1124,11 @@
         "https://github.com/tpoechtrager/xar.git": {
             "refs": [
                 "5fa4675419cfec60ac19a9c7f7c2d0e7c831a497"
+            ]
+        },
+        "https://gitlab.com/libeigen/eigen.git": {
+            "refs": [
+                "e7248b26a1ed53fa030c5c459f7ea095dfd276ac"
             ]
         },
         "https://gitlab.gnome.org/GNOME/glib.git": {
@@ -2202,6 +2217,12 @@
         },
         {
             "kind": "tar.gz",
+            "url": "https://github.com/HowardHinnant/date/archive/refs/tags/v3.0.1.tar.gz",
+            "sha256": "7a390f200f0ccd207e8cff6757e04817c1a0aec3e327b006b7eb451c57ee3538",
+            "path": "deps/date"
+        },
+        {
+            "kind": "tar.gz",
             "url": "https://github.com/PCRE2Project/pcre2/releases/download/pcre2-10.46/pcre2-10.46.tar.gz",
             "sha256": "8d28d7f2c3b970c3a4bf3776bcbb5adfc923183ce74bc8df1ebaad8c1985bd07"
         },
@@ -2212,8 +2233,44 @@
         },
         {
             "kind": "tar.gz",
+            "url": "https://github.com/abseil/abseil-cpp/archive/refs/tags/20240722.0.tar.gz",
+            "sha256": "f50e5ac311a81382da7fa75b97310e4b9006474f9560ac46f54a9967f07d4ae3",
+            "path": "deps/abseil_cpp"
+        },
+        {
+            "kind": "tar.gz",
+            "url": "https://github.com/boostorg/mp11/archive/refs/tags/boost-1.82.0.tar.gz",
+            "sha256": "1705680b0849cac3258e528270c9071b440b95372e5be0b9197da89e84a794eb",
+            "path": "deps/mp11"
+        },
+        {
+            "kind": "tar.gz",
+            "url": "https://github.com/dcleblanc/SafeInt/archive/refs/tags/3.0.28.tar.gz",
+            "sha256": "d6b164bcea92a746e4d44132e505c7ab1816d1089ba99ebc674ccd4b70262ed5",
+            "path": "deps/safeint"
+        },
+        {
+            "kind": "tar.gz",
             "url": "https://github.com/git/git/archive/refs/tags/v2.51.0.tar.gz",
             "sha256": "3524fc5fd81f16f80e1696a8281bd8ad831048b67848015d7b7382bf365ae685"
+        },
+        {
+            "kind": "tar.gz",
+            "url": "https://github.com/google/flatbuffers/archive/refs/tags/v23.5.26.tar.gz",
+            "sha256": "1cce06b17cddd896b6d73cc047e36a254fb8df4d7ea18a46acf16c4c0cd3f3f3",
+            "path": "deps/flatbuffers"
+        },
+        {
+            "kind": "tar.gz",
+            "url": "https://github.com/google/nsync/archive/refs/tags/1.26.0.tar.gz",
+            "sha256": "80fc1e605bb3cf5f272811ece39c4fb6761ffcb9b30563301845cc9ff381eb8b",
+            "path": "deps/google_nsync"
+        },
+        {
+            "kind": "tar.gz",
+            "url": "https://github.com/google/re2/archive/refs/tags/2024-07-02.tar.gz",
+            "sha256": "eb2df807c781601c14a260a507a5bb4509be1ee626024cb45acbd57cb9d4032b",
+            "path": "deps/re2"
         },
         {
             "kind": "tar.gz",
@@ -2222,8 +2279,59 @@
         },
         {
             "kind": "tar.gz",
+            "url": "https://github.com/microsoft/GSL/archive/refs/tags/v4.0.0.tar.gz",
+            "sha256": "f0e32cb10654fea91ad56bde89170d78cfbf4363ee0b01d8f097de2ba49f6ce9",
+            "path": "deps/GSL"
+        },
+        {
+            "kind": "tar.gz",
+            "url": "https://github.com/microsoft/onnxruntime/archive/refs/tags/v1.20.1.tar.gz",
+            "sha256": "d4c005506a2bbf88a838b14f8d1578406b8be2fb64abb50beeff908fb272529e"
+        },
+        {
+            "kind": "tar.gz",
             "url": "https://github.com/ninja-build/ninja/archive/refs/tags/v1.13.1.tar.gz",
             "sha256": "f0055ad0369bf2e372955ba55128d000cfcc21777057806015b45e4accbebf23"
+        },
+        {
+            "kind": "tar.gz",
+            "url": "https://github.com/nlohmann/json/archive/refs/tags/v3.10.5.tar.gz",
+            "sha256": "5daca6ca216495edf89d167f808d1d03c4a4d929cef7da5e10f135ae1540c7e4",
+            "path": "deps/nlohmann_json"
+        },
+        {
+            "kind": "tar.gz",
+            "url": "https://github.com/nlohmann/json/archive/refs/tags/v3.11.3.tar.gz",
+            "sha256": "0d8ef5af7f9794e3263480193c491549b2ba6cc74bb018906202ada498a79406"
+        },
+        {
+            "kind": "tar.gz",
+            "url": "https://github.com/onnx/onnx/archive/refs/tags/v1.16.1.tar.gz",
+            "sha256": "0e6aa2c0a59bb2d90858ad0040ea1807117cc2f05b97702170f18e6cd6b66fb3",
+            "path": "deps/onnx"
+        },
+        {
+            "kind": "tar.gz",
+            "url": "https://github.com/protocolbuffers/protobuf/archive/refs/tags/v21.12.tar.gz",
+            "sha256": "22fdaf641b31655d4b2297f9981fa5203b2866f8332d3c6333f6b0107bb320de"
+        },
+        {
+            "kind": "tar.gz",
+            "url": "https://github.com/protocolbuffers/protobuf/archive/refs/tags/v21.12.tar.gz",
+            "sha256": "22fdaf641b31655d4b2297f9981fa5203b2866f8332d3c6333f6b0107bb320de",
+            "path": "deps/protobuf"
+        },
+        {
+            "kind": "tar.gz",
+            "url": "https://github.com/protocolbuffers/utf8_range/archive/72c943dea2b9240cd09efde15191e144bc7c7d38.tar.gz",
+            "sha256": "e008768a46ee0ee646b8e4ef02f55af3634b3ad38b750489eb793774331ca5bd",
+            "path": "deps/utf8_range"
+        },
+        {
+            "kind": "tar.gz",
+            "url": "https://github.com/pytorch/cpuinfo/archive/ca678952a9a8eaa6de112d154e8e104b22f9ab3f.tar.gz",
+            "sha256": "c8f43b307fa7d911d88fec05448161eb1949c3fc0cb62f3a7a2c61928cdf2e9b",
+            "path": "deps/pytorch_cpuinfo"
         },
         {
             "kind": "tar.gz",
@@ -2266,6 +2374,11 @@
             "kind": "tar.gz",
             "url": "https://github.com/xkbcommon/libxkbcommon/archive/refs/tags/xkbcommon-1.13.1.tar.gz",
             "sha256": "aeb951964c2f7ecc08174cb5517962d157595e9e3f38fc4a130b91dc2f9fec18"
+        },
+        {
+            "kind": "tar.gz",
+            "url": "https://github.com/zxing-cpp/zxing-cpp/archive/refs/tags/v2.3.0.tar.gz",
+            "sha256": "64e4139103fdbc57752698ee15b5f0b0f7af9a0331ecbdc492047e0772c417ba"
         },
         {
             "kind": "tar.gz",

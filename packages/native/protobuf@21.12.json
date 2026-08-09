@@ -1,0 +1,25 @@
+{
+    "package": "native/protobuf@21.12",
+    "version": "21.12",
+    "type": "native",
+    "download": [
+        {
+            "kind": "tar.gz",
+            "sha256": "22fdaf641b31655d4b2297f9981fa5203b2866f8332d3c6333f6b0107bb320de",
+            "url": "https://github.com/protocolbuffers/protobuf/archive/refs/tags/v21.12.tar.gz"
+        }
+    ],
+    "dependencies": [
+        "*:*:native/_/_",
+        "*:*:native/cmake",
+        "*:*:native/make"
+    ],
+    "build": {
+        "env": [],
+        "steps": [
+            "*:*:cmake -S . -B build -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=$NATIVEPREFIX -Dprotobuf_BUILD_TESTS=OFF -Dprotobuf_BUILD_SHARED_LIBS=OFF -Dprotobuf_WITH_ZLIB=OFF",
+            "*:*:cmake --build build -j$NUM_CORES",
+            "*:*:DESTDIR=$STAGING_DIR cmake --install build"
+        ]
+    }
+}
