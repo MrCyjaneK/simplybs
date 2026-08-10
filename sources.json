@@ -941,6 +941,11 @@
                 "66979328cf3f15cecdc61ea58c9f81e6071f8983"
             ]
         },
+        "https://github.com/FFmpeg/FFmpeg.git": {
+            "refs": [
+                "d32b387f2b0a484599d4587d651891f0c63c4238"
+            ]
+        },
         "https://github.com/MrCyjaneK/7zz_unzip.git": {
             "refs": [
                 "f802bc7b20bf0626d765ff3fe0ef0adb3fd93b26"
