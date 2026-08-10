@@ -999,6 +999,11 @@
                 "a3fef85781d3cda0b27388916f3287826aeec177"
             ]
         },
+        "https://github.com/ggml-org/whisper.cpp.git": {
+            "refs": [
+                "306c88f4d1286aec1bf96e544632897886af5501"
+            ]
+        },
         "https://github.com/google/googletest.git": {
             "refs": [
                 "0a439623f75c029912728d80cb7f1b8b48739ca4",
