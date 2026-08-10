@@ -1004,6 +1004,11 @@
                 "306c88f4d1286aec1bf96e544632897886af5501"
             ]
         },
+        "https://github.com/google/filament.git": {
+            "refs": [
+                "0e58877c09afb1aacd09ff640f74d2adcd2a7e80"
+            ]
+        },
         "https://github.com/google/googletest.git": {
             "refs": [
                 "0a439623f75c029912728d80cb7f1b8b48739ca4",
