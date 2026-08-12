@@ -122,6 +122,7 @@
                     "*:*:CXX=$NATIVEPREFIX/_/bin/clang++",
                     "*:*:CFLAGS=-fPIC -I$NATIVEPREFIX/include",
                     "*:*:CXXFLAGS=-fPIC -I$NATIVEPREFIX/include",
+                    "linux_*:*:LDFLAGS=-L$NATIVEPREFIX/_/sysroot/lib",
                     "linux_amd64:aarch64-linux-gnu:HOST=x86_64-linux-gnu",
                     "linux_arm64:x86_64-linux-gnu:HOST=aarch64-linux-gnu",
                     "darwin_arm64:*:SDKROOT=$NATIVEPREFIX/_/SDK/MacOSX26.1.sdk",
@@ -144,6 +145,7 @@
                     "CPPFLAGS",
                     "LDFLAGS",
                     "RUST_LDFLAGS",
+                    "LIBRARY_PATH",
                     "CC_x86_64_unknown_linux_gnu",
                     "CXX_x86_64_unknown_linux_gnu",
                     "CFLAGS_x86_64_unknown_linux_gnu",
@@ -269,7 +271,12 @@
             },
             "std-mingw": {
                 "env": [
-                    "*:*:PATH=$NATIVEPREFIX/bin:$NATIVEPREFIX/_/bin",
+                    "*:*:PATH=$NATIVEPREFIX/_/bin:$NATIVEPREFIX/bin",
+                    "*:*:CC=$NATIVEPREFIX/_/bin/clang",
+                    "*:*:CXX=$NATIVEPREFIX/_/bin/clang++",
+                    "*:*:CFLAGS=-fPIC -I$NATIVEPREFIX/include",
+                    "*:*:CXXFLAGS=-fPIC -I$NATIVEPREFIX/include",
+                    "linux_*:*:LDFLAGS=-L$NATIVEPREFIX/_/sysroot/lib",
                     "linux_arm64:*:CFLAGS_aarch64_unknown_linux_gnu=-fPIC -I$NATIVEPREFIX/include",
                     "linux_arm64:*:CXXFLAGS_aarch64_unknown_linux_gnu=-fPIC -I$NATIVEPREFIX/include",
                     "linux_amd64:*:CFLAGS_x86_64_unknown_linux_gnu=-fPIC -I$NATIVEPREFIX/include",
@@ -286,13 +293,21 @@
                     "READELF",
                     "MACOSX_DEPLOYMENT_TARGET",
                     "CMAKE_SYSTEM_NAME",
+                    "CC",
+                    "CXX",
                     "CFLAGS",
                     "CXXFLAGS",
                     "CPPFLAGS",
+                    "LDFLAGS",
+                    "RUST_LDFLAGS",
+                    "LIBRARY_PATH",
                     "CFLAGS_x86_64_unknown_linux_gnu",
                     "CXXFLAGS_x86_64_unknown_linux_gnu",
                     "CFLAGS_aarch64_unknown_linux_gnu",
-                    "CXXFLAGS_aarch64_unknown_linux_gnu"
+                    "CXXFLAGS_aarch64_unknown_linux_gnu",
+                    "CFLAGS_x86_64_pc_windows_gnu",
+                    "CXXFLAGS_x86_64_pc_windows_gnu",
+                    "LDFLAGS_x86_64_pc_windows_gnu"
                 ]
             },
             "std-native": {
