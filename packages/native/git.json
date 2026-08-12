@@ -17,6 +17,7 @@
         "*:*:native/expat",
         "*:*:native/gettext",
         "*:*:native/libiconv",
+        "*:*:native/libpsl",
         "*:*:native/make",
         "*:*:native/openssl",
         "*:*:native/python@3.14",
@@ -26,14 +27,16 @@
         "env": [],
         "steps": [
             "linux_*:*:make -j$NUM_CORES prefix=$NATIVEPREFIX LDFLAGS=\"$LDFLAGS\" EXTLIBS='-liconv -lz -lgettextpo' CC=$CC",
+            "windows_*:*:make -j$NUM_CORES prefix=$NATIVEPREFIX LDFLAGS=\"$LDFLAGS\" EXTLIBS='-liconv -lz -lgettextpo -lcurl -lpsl -lssl -lcrypto' CC=$CC",
             "darwin_*:*:make -j$NUM_CORES prefix=$NATIVEPREFIX LDFLAGS=\"$LDFLAGS\" EXTLIBS='-liconv -lz -lgettextpo -lintl' CC=$CC",
             "linux_*:*:make prefix=$NATIVEPREFIX DESTDIR=$STAGING_DIR LDFLAGS=\"$LDFLAGS\" EXTLIBS='-liconv -lz -lgettextpo' install CC=$CC",
+            "windows_*:*:make prefix=$NATIVEPREFIX DESTDIR=$STAGING_DIR LDFLAGS=\"$LDFLAGS\" EXTLIBS='-liconv -lz -lgettextpo -lcurl -lpsl -lssl -lcrypto' install CC=$CC",
             "darwin_*:*:make prefix=$NATIVEPREFIX DESTDIR=$STAGING_DIR LDFLAGS=\"$LDFLAGS\" EXTLIBS='-liconv -lz -lgettextpo -lintl' install CC=$CC",
             "*:*:mkdir -p $STAGING_DIR$HOME",
             "*:*:echo '[user]' >> $STAGING_DIR$HOME/.gitconfig",
             "*:*:echo '\tname = simplybs' >> $STAGING_DIR$HOME/.gitconfig",
             "*:*:echo '\temail = simplybs@mrcyjanek.net' >> $STAGING_DIR$HOME/.gitconfig",
-            "*:*:python3 $PATCH_DIR/android_ndk/symlink_same.py $STAGING_DIR$NATIVEPREFIX"
+            "*:*:python3.14 $PATCH_DIR/android_ndk/symlink_same.py $STAGING_DIR$NATIVEPREFIX"
         ]
     }
 }

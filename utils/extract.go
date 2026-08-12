@@ -356,6 +356,12 @@ func CreateTarGz(sourcePath, archivePath string) error {
 
 		header, err := tar.FileInfoHeader(info, "")
 		if err != nil {
+			// Windows reparse points / Cygwin native symlinks show up as
+			// ModeIrregular and cannot be archived by archive/tar.
+			if info.Mode()&os.ModeIrregular != 0 {
+				log.Printf("skipping irregular file (not archivable): %s", path)
+				continue
+			}
 			return err
 		}
 

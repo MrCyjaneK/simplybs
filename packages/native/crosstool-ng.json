@@ -45,10 +45,16 @@
             "*:x86_64-linux-musl:TOOL_TARGET=x86_64-linux-musl"
         ],
         "steps": [
+            "*:*:test -e $NATIVEPREFIX/bin/makeinfo || cp -f $NATIVEPREFIX/bin/texi2any $NATIVEPREFIX/bin/makeinfo",
+            "*:*:test -e $NATIVEPREFIX/bin/which || printf '%s\\n' '#!/bin/sh' 'command -v \"$1\"' >$NATIVEPREFIX/bin/which && chmod +x $NATIVEPREFIX/bin/which",
             "*:*:./bootstrap",
             "*:*:./configure --prefix=$NATIVEPREFIX",
             "*:*:make -j$NUM_CORES",
-            "*:*:make install DESTDIR=$STAGING_DIR"
+            "*:*:make install DESTDIR=$STAGING_DIR",
+            "*:*:rm -f $STAGING_DIR$NATIVEPREFIX/share/crosstool-ng/LICENSE && cp -f $STAGING_DIR$NATIVEPREFIX/share/crosstool-ng/COPYING $STAGING_DIR$NATIVEPREFIX/share/crosstool-ng/LICENSE",
+            "*:*:mkdir -p $STAGING_DIR$NATIVEPREFIX/bin",
+            "*:*:printf '%s\\n' '#!/bin/sh' 'command -v \"$1\"' >$STAGING_DIR$NATIVEPREFIX/bin/which && chmod +x $STAGING_DIR$NATIVEPREFIX/bin/which",
+            "*:*:test -e $STAGING_DIR$NATIVEPREFIX/bin/makeinfo || cp -f $STAGING_DIR$NATIVEPREFIX/bin/texi2any $STAGING_DIR$NATIVEPREFIX/bin/makeinfo 2>/dev/null || true"
         ]
     }
 }

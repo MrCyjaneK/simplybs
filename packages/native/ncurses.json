@@ -58,9 +58,13 @@
             "*:*:bash ./configure $config_opts",
             "*:*:make -j$NUM_CORES $build_opts",
             "*:*:make install.libs install.includes DESTDIR=$STAGING_DIR",
-            "*:*:ln -sf ncursesw/panel.h $STAGING_DIR$NATIVEPREFIX/include/panel.h",
-            "*:*:ln -sf ncursesw/form.h $STAGING_DIR$NATIVEPREFIX/include/form.h",
-            "*:*:ln -sf libncursesw.a $STAGING_DIR$NATIVEPREFIX/lib/libncurses.a"
+            "*:*:cp -f $STAGING_DIR$NATIVEPREFIX/include/ncursesw/panel.h $STAGING_DIR$NATIVEPREFIX/include/panel.h",
+            "*:*:cp -f $STAGING_DIR$NATIVEPREFIX/include/ncursesw/form.h $STAGING_DIR$NATIVEPREFIX/include/form.h",
+            "*:*:cp -f $STAGING_DIR$NATIVEPREFIX/include/ncursesw/curses.h $STAGING_DIR$NATIVEPREFIX/include/curses.h",
+            "*:*:cp -f $STAGING_DIR$NATIVEPREFIX/include/ncursesw/curses.h $STAGING_DIR$NATIVEPREFIX/include/ncurses.h",
+            "*:*:cp -f $STAGING_DIR$NATIVEPREFIX/lib/libncursesw.a $STAGING_DIR$NATIVEPREFIX/lib/libncurses.a",
+            "*:*:cp -f $STAGING_DIR$NATIVEPREFIX/lib/libpanelw.a $STAGING_DIR$NATIVEPREFIX/lib/libpanel.a",
+            "*:*:sed -i.bak '1i#define NCURSES_STATIC' $STAGING_DIR$NATIVEPREFIX/include/ncursesw/ncurses_dll.h"
         ]
     }
 }

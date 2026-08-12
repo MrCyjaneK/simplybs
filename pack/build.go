@@ -90,6 +90,9 @@ func (p *Package) ExtractSource(host *host.Host, buildPath string) {
 	}
 	var err error
 	for _, download := range p.Download {
+		if download.Kind == "none" {
+			continue
+		}
 		sourcePath := p.GenerateSourceBuildPath(download)
 		actualBuildPath := buildPath
 		if download.Path != "" {
@@ -107,8 +110,6 @@ func (p *Package) ExtractSource(host *host.Host, buildPath string) {
 		case "blob":
 			os.MkdirAll(filepath.Dir(actualBuildPath), 0755)
 			err = utils.Copy(sourcePath, actualBuildPath)
-		case "none":
-			return
 		default:
 			log.Fatalf("Unsupported archive kind: %s", download.Kind)
 		}
@@ -215,7 +216,7 @@ func (p *Package) buildPackageInternal(h *host.Host, buildDependencies bool) {
 
 	p.ExtractSource(h, buildPath)
 
-	infoPath := filepath.Join(stagingPath, p.prefixPath(h), ".buildlib", p.ShortName(h)+".txt")
+	infoPath := filepath.Join(utils.DestDirJoin(stagingPath, p.prefixPath(h)), ".buildlib", p.ShortName(h)+".txt")
 	os.MkdirAll(filepath.Dir(infoPath), 0755)
 	err := os.WriteFile(infoPath, []byte(p.GeneratePackageInfo(h)), 0644)
 	if err != nil {
@@ -230,7 +231,11 @@ func (p *Package) buildPackageInternal(h *host.Host, buildDependencies bool) {
 		if profileName == "" && strings.HasPrefix(step, "@") {
 			continue
 		}
-		cmd := exec.Command("sh", "-c", stepCmd)
+		nativePrefix := h.GetNativeEnvPath()
+		tmpDir := filepath.Join(nativePrefix, "_", "tmp")
+		os.MkdirAll(tmpDir, 0755)
+		shell := utils.ResolveShell(nativePrefix)
+		cmd := exec.Command(shell, "-c", stepCmd)
 		cmd.Dir = buildPath
 		pathEnv := utils.GetHostPath()
 		env := p.envForStepFrom(baseEnv, h, profileName)
@@ -240,16 +245,23 @@ func (p *Package) buildPackageInternal(h *host.Host, buildDependencies bool) {
 			hostTriplet = builder.NativeTriplet()
 		}
 
-		cmd.Env = append(cmd.Env, []string{
-			"STAGING_DIR=" + stagingPath,
-			"HOST=" + hostTriplet,
-			"PREFIX=" + h.GetEnvPath(),
-			"NATIVEPREFIX=" + h.GetNativeEnvPath(),
-			"PATH=" + h.GetNativeEnvPath() + "/bin:" + env["PATH"] + ":" + pathEnv + ":" + h.GetEnvPath() + "/bin" + ":" + h.GetNativeEnvPath() + "/_/bin",
-		}...)
-		for k, v := range env {
-			cmd.Env = append(cmd.Env, k+"="+v)
+		// Explicit env only — do not inherit the parent process environment.
+		overrides := map[string]string{
+			"STAGING_DIR":  utils.ToShellPath(stagingPath),
+			"HOST":         hostTriplet,
+			"PREFIX":       utils.ToShellPath(h.GetEnvPath()),
+			"NATIVEPREFIX": utils.ToShellPath(nativePrefix),
+			"PATH":         utils.BuildStepPATH(nativePrefix, h.GetEnvPath(), env["PATH"], pathEnv),
+			"TEMP":         utils.ToShellPath(tmpDir),
+			"TMP":          utils.ToShellPath(tmpDir),
+			"TMPDIR":       utils.ToShellPath(tmpDir),
+			"CYGWIN":       "nodosfilewarning",
+			"MSYS":         "nodosfilewarning",
 		}
+		for k, v := range env {
+			overrides[k] = v
+		}
+		cmd.Env = utils.ProcessEnv(overrides)
 
 		writeDotEnv(path.Join(buildPath, "_source_me"), cmd.Env)
 
@@ -257,9 +269,7 @@ func (p *Package) buildPackageInternal(h *host.Host, buildDependencies bool) {
 		if profileName != "" {
 			log.Printf("Using build profile: %s", profileName)
 		}
-		cmd.Stderr = os.Stderr
-		cmd.Stdout = os.Stdout
-		err := cmd.Run()
+		err := utils.RunLive(cmd)
 		if err != nil {
 			log.Fatalf("[%s] build step failed: %s, error: %v, %s", p.Package, stepCmd, err, cmd.Dir)
 		}
@@ -269,13 +279,15 @@ func (p *Package) buildPackageInternal(h *host.Host, buildDependencies bool) {
 	builtNativeArchivePath := p.GenerateBuildPath(h, "built") + "_native.tar.gz"
 	os.MkdirAll(filepath.Dir(builtArchivePath), 0755)
 	os.MkdirAll(filepath.Dir(builtNativeArchivePath), 0755)
-	os.MkdirAll(filepath.Join(stagingPath, h.GetNativeEnvPath()), 0755)
-	os.MkdirAll(filepath.Join(stagingPath, h.GetEnvPath()), 0755)
-	err = utils.CreateTarGz(filepath.Join(stagingPath, h.GetNativeEnvPath()), builtNativeArchivePath)
+	stagedNative := utils.DestDirJoin(stagingPath, h.GetNativeEnvPath())
+	stagedHost := utils.DestDirJoin(stagingPath, h.GetEnvPath())
+	os.MkdirAll(stagedNative, 0755)
+	os.MkdirAll(stagedHost, 0755)
+	err = utils.CreateTarGz(stagedNative, builtNativeArchivePath)
 	if err != nil {
 		log.Fatalf("Failed to create archive %s: %v", builtArchivePath, err)
 	}
-	err = utils.CreateTarGz(filepath.Join(stagingPath, h.GetEnvPath()), builtArchivePath)
+	err = utils.CreateTarGz(stagedHost, builtArchivePath)
 	if err != nil {
 		log.Fatalf("Failed to create archive %s: %v", builtArchivePath, err)
 	}
@@ -310,6 +322,10 @@ func writeDotEnv(path string, env []string) {
 		if len(parts) > 1 {
 			val = parts[1]
 		}
+		// Skip keys that are not valid bash identifiers (e.g. inherited Windows names).
+		if !isBashIdent(key) {
+			continue
+		}
 
 		escapedVal := shellEscape(val)
 
@@ -317,6 +333,22 @@ func writeDotEnv(path string, env []string) {
 	}
 
 	f.WriteString(b.String())
+}
+
+func isBashIdent(name string) bool {
+	if name == "" {
+		return false
+	}
+	for i, r := range name {
+		if r == '_' || (r >= 'A' && r <= 'Z') || (r >= 'a' && r <= 'z') {
+			continue
+		}
+		if i > 0 && r >= '0' && r <= '9' {
+			continue
+		}
+		return false
+	}
+	return true
 }
 func shellEscape(value string) string {
 	if value == "" {
@@ -349,10 +381,12 @@ func (p *Package) StartShell(h *host.Host) {
 
 	env := p.GetEnv(h)
 	pathEnv := utils.GetHostPath()
+	nativePrefix := h.GetNativeEnvPath()
+	os.MkdirAll(filepath.Join(nativePrefix, "_", "tmp"), 0755)
 
 	userShell := os.Getenv("SHELL")
 	if userShell == "" {
-		userShell = "/bin/sh"
+		userShell = utils.ResolveShell(nativePrefix)
 	}
 	fmt.Print("\n\n")
 	builderName := builder.GetName()
@@ -384,17 +418,24 @@ func (p *Package) StartShell(h *host.Host) {
 		hostTriplet = builder.NativeTriplet()
 	}
 
-	cmd.Env = append(cmd.Env, []string{
-		"HOST=" + hostTriplet,
-		"PREFIX=" + h.GetEnvPath(),
-		"NATIVEPREFIX=" + h.GetNativeEnvPath(),
-		"PATH=" + h.GetNativeEnvPath() + "/bin:" + env["PATH"] + ":" + pathEnv,
-		"TERM=" + os.Getenv("TERM"),
-	}...)
-
-	for k, v := range env {
-		cmd.Env = append(cmd.Env, k+"="+v)
+	overrides := map[string]string{
+		"HOST":         hostTriplet,
+		"PREFIX":       utils.ToShellPath(h.GetEnvPath()),
+		"NATIVEPREFIX": utils.ToShellPath(nativePrefix),
+		"PATH":         utils.BuildStepPATH(nativePrefix, h.GetEnvPath(), env["PATH"], pathEnv),
+		"TEMP":         utils.ToShellPath(filepath.Join(nativePrefix, "_", "tmp")),
+		"TMP":          utils.ToShellPath(filepath.Join(nativePrefix, "_", "tmp")),
+		"TMPDIR":       utils.ToShellPath(filepath.Join(nativePrefix, "_", "tmp")),
+		"CYGWIN":       "nodosfilewarning",
+		"MSYS":         "nodosfilewarning",
 	}
+	if term := os.Getenv("TERM"); term != "" {
+		overrides["TERM"] = term
+	}
+	for k, v := range env {
+		overrides[k] = v
+	}
+	cmd.Env = utils.ProcessEnv(overrides)
 	writeDotEnv(path.Join(buildPath, "_source_me"), cmd.Env)
 
 	err := cmd.Run()

@@ -33,10 +33,17 @@
         "env": [
             "*:aarch64-apple-ios*:HOST=aarch64-apple-darwin",
             "*:*:config_opts=--prefix=$PREFIX --host=$HOST --without-documentation --disable-shared --without-libsodium --disable-curve --disable-libbsd",
+            "*:*-w64-mingw32:config_opts=$config_opts --disable-pedantic --disable-Werror",
             "*:*-linux-gnu:config_opts=$config_opts --with-pic",
-            "*:*:cxxflags=$CXXFLAGS -std=c++17"
+            "*:*:cxxflags=$CXXFLAGS -std=c++17",
+            "*:*:SED=$NATIVEPREFIX/bin/sed",
+            "*:*:GREP=$NATIVEPREFIX/bin/grep",
+            "*:*:PKG_CONFIG=$NATIVEPREFIX/bin/pkgconf"
         ],
         "steps": [
+            "*:*:mkdir -p config",
+            "*:*:libtoolize --copy --force",
+            "*:*:test -f config/ltmain.sh || cp -f ltmain.sh config/ltmain.sh",
             "*:*:bash ./autogen.sh",
             "*:*:patch -p1 < $PATCH_DIR/zeromq/fix_declaration.patch",
             "*:*:bash ./configure $config_opts",

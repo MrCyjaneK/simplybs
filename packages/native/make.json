@@ -19,9 +19,14 @@
             "*:*:dash ./configure --disable-dependency-tracking",
             "*:*:dash ./build.sh",
             "*:*:mkdir -p $STAGING_DIR$NATIVEPREFIX/bin",
-            "*:*:cp make $STAGING_DIR/$NATIVEPREFIX/bin/make",
-            "*:*:ln -s make $STAGING_DIR$NATIVEPREFIX/bin/gmake",
-            "*:*:ln -s make $STAGING_DIR$NATIVEPREFIX/bin/gnumake"
+            "*:*:cp make $STAGING_DIR$NATIVEPREFIX/bin/make",
+            "windows_amd64:*:test -f make.exe && cp -f make.exe $STAGING_DIR$NATIVEPREFIX/bin/make.exe || true",
+            "darwin_arm64:*:ln -s make $STAGING_DIR$NATIVEPREFIX/bin/gmake",
+            "darwin_arm64:*:ln -s make $STAGING_DIR$NATIVEPREFIX/bin/gnumake",
+            "linux_*:*:ln -s make $STAGING_DIR$NATIVEPREFIX/bin/gmake",
+            "linux_*:*:ln -s make $STAGING_DIR$NATIVEPREFIX/bin/gnumake",
+            "windows_amd64:*:cp -f $STAGING_DIR$NATIVEPREFIX/bin/make.exe $STAGING_DIR$NATIVEPREFIX/bin/gmake.exe",
+            "windows_amd64:*:cp -f $STAGING_DIR$NATIVEPREFIX/bin/make.exe $STAGING_DIR$NATIVEPREFIX/bin/gnumake.exe"
         ]
     }
 }

@@ -15,9 +15,13 @@
         "*:*:native/make"
     ],
     "build": {
-        "env": [],
+        "env": [
+            "*:*:config_opts=--prefix=$NATIVEPREFIX",
+            "windows_*:*:config_opts=$config_opts gl_cv_have_weak=no"
+        ],
         "steps": [
-            "*:*:bash ./configure --prefix=$NATIVEPREFIX",
+            "*:*:bash ./configure $config_opts",
+            "windows_*:*:bash $PATCH_DIR/native/_/drop-gnulib-wint-wrappers.sh",
             "*:*:make -j$NUM_CORES",
             "*:*:make DESTDIR=$STAGING_DIR install"
         ]

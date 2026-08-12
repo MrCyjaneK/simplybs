@@ -64,8 +64,8 @@
             "*:*-apple-*:SDK_VERSION=26.1",
             "*:*-apple-*:COMPRESSLEVEL=6",
             "darwin_arm64:*-apple-*:LDFLAGS=-fuse-ld=$NATIVEPREFIX/_/bin/ld",
-            "linux_*:*-apple-*:LDFLAGS=$LDFLAGS -fuse-ld=lld -L$NATIVEPREFIX/_/sysroot/lib",
-            "linux_*:*-apple-*:CXXFLAGS=$CXXFLAGS -fuse-ld=lld"
+            "{linux_*,windows_*}:*-apple-*:LDFLAGS=$LDFLAGS -fuse-ld=lld -L$NATIVEPREFIX/_/sysroot/lib",
+            "{linux_*,windows_*}:*-apple-*:CXXFLAGS=$CXXFLAGS -fuse-ld=lld"
         ],
         "steps": [
             "*:*-apple-*:mkdir -p wrapper/bin",
@@ -78,9 +78,9 @@
             "*:*-apple-*:sed -i.bak 's/--with-libxar=$TARGET_DIR/--with-libxar=$PREFIX\\/native/g' build.sh",
             "*:*-apple-*:mv $NATIVEPREFIX/share/xcode-sdk/*${SDK_VERSION}* tarballs",
             "darwin_arm64:*-apple-*:sed -i.bak 's|-DLLVM_TEMPORARILY_ALLOW_OLD_TOOLCHAIN=1|-DLLVM_TEMPORARILY_ALLOW_OLD_TOOLCHAIN=1 -DCMAKE_OSX_SYSROOT=$NATIVEPREFIX/_/SDK/MacOSX${SDK_VERSION}.sdk -DCMAKE_OSX_DEPLOYMENT_TARGET=$OSX_MIN_VERSION -DHOST_LINK_VERSION=711 -DCMAKE_EXE_LINKER_FLAGS=-fuse-ld=$NATIVEPREFIX/_/bin/ld -DCMAKE_SHARED_LINKER_FLAGS=-fuse-ld=$NATIVEPREFIX/_/bin/ld|' build_clang.sh",
-            "linux_*:*-apple-*:sed -i.bak 's|-DLLVM_TEMPORARILY_ALLOW_OLD_TOOLCHAIN=1|-DLLVM_TEMPORARILY_ALLOW_OLD_TOOLCHAIN=1 -DCMAKE_OSX_SYSROOT=$NATIVEPREFIX/_/SDK/MacOSX${SDK_VERSION}.sdk -DCMAKE_OSX_DEPLOYMENT_TARGET=$OSX_MIN_VERSION|' build_clang.sh",
-            "linux_*:*-apple-*:sed -i.bak 's|export CFLAGS=\"\"|export CFLAGS=\"--gcc-toolchain=$NATIVEPREFIX/_/libexec/gcc-toolchain --sysroot=$NATIVEPREFIX/_/sysroot\"|' build_clang.sh",
-            "linux_*:*-apple-*:sed -i.bak 's|export CXXFLAGS=\"\"|export CXXFLAGS=\"--gcc-toolchain=$NATIVEPREFIX/_/libexec/gcc-toolchain --sysroot=$NATIVEPREFIX/_/sysroot\"|' build_clang.sh",
+            "{linux_*,windows_*}:*-apple-*:sed -i.bak 's|-DLLVM_TEMPORARILY_ALLOW_OLD_TOOLCHAIN=1|-DLLVM_TEMPORARILY_ALLOW_OLD_TOOLCHAIN=1 -DCMAKE_OSX_SYSROOT=$NATIVEPREFIX/_/SDK/MacOSX${SDK_VERSION}.sdk -DCMAKE_OSX_DEPLOYMENT_TARGET=$OSX_MIN_VERSION|' build_clang.sh",
+            "{linux_*,windows_*}:*-apple-*:sed -i.bak 's|export CFLAGS=\"\"|export CFLAGS=\"--gcc-toolchain=$NATIVEPREFIX/_/libexec/gcc-toolchain --sysroot=$NATIVEPREFIX/_/sysroot\"|' build_clang.sh",
+            "{linux_*,windows_*}:*-apple-*:sed -i.bak 's|export CXXFLAGS=\"\"|export CXXFLAGS=\"--gcc-toolchain=$NATIVEPREFIX/_/libexec/gcc-toolchain --sysroot=$NATIVEPREFIX/_/sysroot\"|' build_clang.sh",
             "*:*-apple-*:export PATH=$PWD/wrapper/bin:$PATH && CC=$NATIVEPREFIX/_/bin/clang-21 CXX=$NATIVEPREFIX/_/bin/clang++-21 LDFLAGS=-fuse-ld=$NATIVEPREFIX/_/bin/ld yes | INSTALLPREFIX=$NATIVEPREFIX ./build_apple_clang.sh",
             "*:*-apple-*:cd build/clang-21/build_stage3 && make -j$NUM_CORES install DESTDIR=$STAGING_DIR && make -j$NUM_CORES install",
             "*:*-apple-*:sed -i.bak 's/## Compiler test ##/exit 0/g' build.sh",

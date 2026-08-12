@@ -12,6 +12,10 @@ import (
 	"github.com/mrcyjanek/simplybs/utils/download"
 )
 
+func gitCommand(args ...string) *exec.Cmd {
+	return exec.Command(ResolveGit(), args...)
+}
+
 func verifyBundleHasRef(bundlePath string, refs []string) bool {
 	tempVerifyDir := bundlePath + ".verify.tmp"
 	defer RemoveAll(tempVerifyDir)
@@ -19,14 +23,14 @@ func verifyBundleHasRef(bundlePath string, refs []string) bool {
 	os.MkdirAll(tempVerifyDir, 0755)
 
 	// Initialize a temporary git repo
-	initCmd := exec.Command("git", "init")
+	initCmd := gitCommand("init")
 	initCmd.Dir = tempVerifyDir
 	if err := initCmd.Run(); err != nil {
 		return false
 	}
 
 	for _, ref := range refs {
-		fetchCmd := exec.Command("git", "fetch", bundlePath, ref)
+		fetchCmd := gitCommand("fetch", bundlePath, ref)
 		fetchCmd.Dir = tempVerifyDir
 		if err := fetchCmd.Run(); err != nil {
 			log.Printf("Bundle does not contain ref %s", ref)
@@ -89,7 +93,7 @@ func createBundleFromRepo(bundlePath, url string, refs []string) error {
 	defer RemoveAll(tempDir)
 
 	log.Printf("Cloning repository from %s", url)
-	cloneCmd := exec.Command("git", "clone", url, tempDir)
+	cloneCmd := gitCommand("clone", url, tempDir)
 	cloneCmd.Stdout = os.Stdout
 	cloneCmd.Stderr = os.Stderr
 	if err := cloneCmd.Run(); err != nil {
@@ -104,7 +108,7 @@ func createBundleFromRepo(bundlePath, url string, refs []string) error {
 		branchName := fmt.Sprintf("bundle-ref-%d", i)
 		branchNames = append(branchNames, branchName)
 
-		branchCmd := exec.Command("git", "branch", branchName, ref)
+		branchCmd := gitCommand("branch", branchName, ref)
 		branchCmd.Dir = tempDir
 		branchCmd.Stdout = os.Stdout
 		branchCmd.Stderr = os.Stderr
@@ -115,7 +119,7 @@ func createBundleFromRepo(bundlePath, url string, refs []string) error {
 	}
 
 	bundleArgs := append([]string{"bundle", "create", bundlePath}, branchNames...)
-	bundleCmd := exec.Command("git", bundleArgs...)
+	bundleCmd := gitCommand(bundleArgs...)
 	bundleCmd.Dir = tempDir
 	bundleCmd.Stdout = os.Stdout
 	bundleCmd.Stderr = os.Stderr
@@ -203,13 +207,13 @@ func ExtractGitCloneBundle(bundlePath, destPath, ref string) error {
 	os.MkdirAll(destPath, 0755)
 
 	steps := [][]string{
-		{"git", "init"},
-		{"git", "fetch", bundlePath, ref},
-		{"git", "checkout", "--force", ref},
+		{"init"},
+		{"fetch", bundlePath, ref},
+		{"checkout", "--force", ref},
 	}
 
 	for i, step := range steps {
-		cmd := exec.Command(step[0], step[1:]...)
+		cmd := gitCommand(step...)
 		cmd.Dir = destPath
 		cmd.Stdout = os.Stdout
 		cmd.Stderr = os.Stderr

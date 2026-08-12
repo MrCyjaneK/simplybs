@@ -17,11 +17,23 @@
         "*:*:native/unistring"
     ],
     "build": {
-        "env": [],
+        "env": [
+            "*:*:config_opts=--prefix=$NATIVEPREFIX",
+            "windows_*:*:config_opts=$config_opts --disable-builtin"
+        ],
         "steps": [
-            "*:*:bash ./configure --prefix=$NATIVEPREFIX",
-            "*:*:make -j$NUM_CORES",
-            "*:*:make DESTDIR=$STAGING_DIR install"
+            "*:*:bash ./configure $config_opts",
+            "windows_*:*:sed -i.bak -e 's/^BUILT_SOURCES = suffixes_dafsa.h/BUILT_SOURCES =/' -e '/^suffixes_dafsa\\.h:/,/^$/d' src/Makefile",
+            "linux_*:*:make -j$NUM_CORES",
+            "linux_*:*:make DESTDIR=$STAGING_DIR install",
+            "darwin_*:*:make -j$NUM_CORES",
+            "darwin_*:*:make DESTDIR=$STAGING_DIR install",
+            "windows_*:*:make -j$NUM_CORES -C include",
+            "windows_*:*:make -j$NUM_CORES -C src",
+            "windows_*:*:make -j$NUM_CORES -C tools",
+            "windows_*:*:make DESTDIR=$STAGING_DIR -C include install",
+            "windows_*:*:make DESTDIR=$STAGING_DIR -C src install",
+            "windows_*:*:make DESTDIR=$STAGING_DIR -C tools install"
         ]
     }
 }

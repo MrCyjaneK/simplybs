@@ -17,6 +17,8 @@
         "*:*:native/sed"
     ],
     "build": {
+        "env": [
+        ],
         "steps": [
             "*:*:sed -i.bak 's/-Wall/-Wall -fPIC/' Makefile",
             "*:*:make -j$NUM_CORES CC=\"$CC\"",

@@ -18,7 +18,8 @@
     "build": {
         "env": [
             "*:*:config_opts=--prefix=$NATIVEPREFIX",
-            "*:*:LIBS=-liconv"
+            "*:*:LIBS=-liconv",
+            "windows_*:*:config_opts=$config_opts gl_cv_have_weak=no"
         ],
         "steps": [
             "*:*:bash ./configure $config_opts",

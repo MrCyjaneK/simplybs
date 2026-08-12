@@ -84,7 +84,7 @@
             "kind": "blob",
             "path": "work/.build/tarballs/musl-1.2.5.tar.gz",
             "sha256": "a9a118bbe84d8764da0ea0d28b3ab3fae8477fc7e4085d90102b8596fc7c75e4",
-            "url": "https://www.musl-libc.org/releases/musl-1.2.5.tar.gz"
+            "url": "https://sources.voidlinux.org/musl-1.2.5/musl-1.2.5.tar.gz"
         },
         {
             "kind": "blob",
@@ -108,7 +108,7 @@
             "kind": "blob",
             "path": "work/.build/tarballs/zlib-1.3.1.tar.xz",
             "sha256": "38ef96b8dfe510d42707d9c781877914792541133e1870841463bfa73f883e32",
-            "url": "http://www.zlib.net/zlib-1.3.1.tar.xz"
+            "url": "https://github.com/madler/zlib/releases/download/v1.3.1/zlib-1.3.1.tar.xz"
         },
         {
             "kind": "blob",
@@ -163,6 +163,12 @@
         "steps": [
             "linux_*:*:ln -sf $NATIVEPREFIX/_/bin/clang $NATIVEPREFIX/_/bin/gcc",
             "linux_*:*:ln -sf $NATIVEPREFIX/_/bin/clang++ $NATIVEPREFIX/_/bin/g++",
+            "windows_*:*:ln -sf $NATIVEPREFIX/_/bin/clang $NATIVEPREFIX/_/bin/gcc",
+            "windows_*:*:ln -sf $NATIVEPREFIX/_/bin/clang++ $NATIVEPREFIX/_/bin/g++",
+            "windows_*:*:test -e $NATIVEPREFIX/bin/which || printf '%s\\n' '#!/bin/sh' 'command -v \"$1\"' >$NATIVEPREFIX/bin/which && chmod +x $NATIVEPREFIX/bin/which",
+            "windows_*:*:test -e $NATIVEPREFIX/bin/makeinfo || cp -f $NATIVEPREFIX/bin/texi2any $NATIVEPREFIX/bin/makeinfo",
+            "windows_*:*:test -e $NATIVEPREFIX/share/crosstool-ng/LICENSE || cp -f $NATIVEPREFIX/share/crosstool-ng/COPYING $NATIVEPREFIX/share/crosstool-ng/LICENSE",
+            "windows_*:{*-linux-gnu,*-linux-musl,*-w64-mingw32}:sed -i.bak '/put_new_config CT_CC_LANG_CXX y/a\\    put_new_config CT_BINUTILS_PLUGINS n\\n    put_new_config CT_CC_GCC_ENABLE_PLUGINS n\\n    put_new_config CT_MINGW_TOOLS n' run.sh",
             "darwin_*:*:mv $NATIVEPREFIX/_/bin/lld $NATIVEPREFIX/_/bin/lld-real",
             "darwin_*:*:rm -f $NATIVEPREFIX/_/bin/ld $NATIVEPREFIX/_/bin/ld64.lld $NATIVEPREFIX/_/bin/ld.lld",
             "darwin_*:*:sed \"s|@LD64_LLD@|$NATIVEPREFIX/_/bin/lld-real|g; s|@SDK_VERSION@|26.1|g\" $PATCH_DIR/native/ct-tools/host-ld-wrapper.sh > $NATIVEPREFIX/_/bin/ld && chmod +x $NATIVEPREFIX/_/bin/ld",
@@ -177,9 +183,12 @@
             "darwin_*:{*-linux-gnu,*-linux-musl}:sed -i.bak '/put_new_config CT_CC_LANG_CXX y/a\\    put_new_config CT_NCURSES_HOST_FALLBACKS \"\"' run.sh",
             "linux_*:x86_64-w64-mingw32:mkdir -p patches/mingw-w64 && cp $PATCH_DIR/native/ct-tools/clang-widl-winnt.h.patch patches/mingw-w64/",
             "linux_*:x86_64-w64-mingw32:sed -i '/put_new_config CT_MINGW_DEFAULT_MSVCRT_UCRT y/a\\    put_new_config CT_MINGW_W64_PATCH_LOCAL y\\n    put_new_config CT_MINGW_W64_PATCH_ORDER \"local,bundled\"\\n    put_new_config CT_PATCH_USE_LOCAL y\\n    put_new_config CT_LOCAL_PATCH_DIR \"'\"$(pwd)/patches\"'\"' run.sh",
+            "windows_*:x86_64-w64-mingw32:mkdir -p patches/mingw-w64 && cp $PATCH_DIR/native/ct-tools/clang-widl-winnt.h.patch patches/mingw-w64/",
+            "windows_*:x86_64-w64-mingw32:sed -i '/put_new_config CT_MINGW_DEFAULT_MSVCRT_UCRT y/a\\    put_new_config CT_MINGW_W64_PATCH_LOCAL y\\n    put_new_config CT_MINGW_W64_PATCH_ORDER \"local,bundled\"\\n    put_new_config CT_PATCH_USE_LOCAL y\\n    put_new_config CT_LOCAL_PATCH_DIR \"'\"$(pwd)/patches\"'\"' run.sh",
             "*:{*-linux-gnu,*-w64-mingw32}:sed -i 's|install=\"./scripts/install-sh -c\"|install=\"'$NATIVEPREFIX'/bin/install -c\"|g' $NATIVEPREFIX/share/crosstool-ng/paths.sh",
             "*:{*-linux-gnu,*-w64-mingw32}:mkdir -p $STAGING_DIR$PREFIX",
             "linux_*:{*-linux-gnu,*-w64-mingw32}:env -i PATH=$NATIVEPREFIX/bin:$NATIVEPREFIX/_/bin:$PATH LIBTOOL=$NATIVEPREFIX/bin/libtool AR=$NATIVEPREFIX/_/bin/llvm-ar RANLIB=$NATIVEPREFIX/_/bin/llvm-ranlib PREFIX=$(realpath $STAGING_DIR$PREFIX) ./run.sh $TOOL_TARGET",
+            "windows_*:{*-linux-gnu,*-linux-musl,*-w64-mingw32}:env -i SYSTEMROOT=\"$SYSTEMROOT\" TEMP=\"$TEMP\" TMP=\"$TMP\" PATH=$NATIVEPREFIX/bin:$NATIVEPREFIX/_/bin:$PATH LIBTOOL=$NATIVEPREFIX/bin/libtool AR=$NATIVEPREFIX/_/bin/llvm-ar RANLIB=$NATIVEPREFIX/_/bin/llvm-ranlib PREFIX=$(realpath $STAGING_DIR$PREFIX) ./run.sh $TOOL_TARGET",
             "darwin_*:{*-linux-gnu,*-w64-mingw32}:env -i SDKROOT=$NATIVEPREFIX/_/SDK/MacOSX26.1.sdk PATH=$NATIVEPREFIX/bin:$NATIVEPREFIX/_/bin:$PATH LIBTOOL=$NATIVEPREFIX/bin/libtool AR=$NATIVEPREFIX/_/bin/llvm-ar RANLIB=$NATIVEPREFIX/_/bin/llvm-ranlib PREFIX=$(realpath $STAGING_DIR$PREFIX) ./run.sh $TOOL_TARGET",
             "*:{*-linux-gnu,*-w64-mingw32}:mv $STAGING_DIR/$PREFIX/$TOOL_TARGET/$TOOL_TARGET/* $STAGING_DIR/$PREFIX",
             "*:{*-linux-gnu,*-w64-mingw32}:rm -rf $STAGING_DIR/$PREFIX/$TOOL_TARGET/$TOOL_TARGET",
@@ -189,7 +198,11 @@
             "*:x86_64-linux-gnu:cd $STAGING_DIR/$NATIVEPREFIX/bin && for f in x86_64-linux-gnu-*; do ln -sf $f ${f#x86_64-linux-gnu-}; done",
             "*:aarch64-linux-gnu:cd $STAGING_DIR/$NATIVEPREFIX/bin && for f in aarch64-linux-gnu-*; do ln -sf $f ${f#aarch64-linux-gnu-}; done",
             "*:x86_64-linux-musl:cd $STAGING_DIR/$NATIVEPREFIX/bin && for f in x86_64-linux-musl-*; do ln -sf $f ${f#x86_64-linux-musl-}; done",
-            "*:x86_64-w64-mingw32:cd $STAGING_DIR/$NATIVEPREFIX/bin && for f in x86_64-w64-mingw32-*; do ln -sf $f ${f#x86_64-w64-mingw32-}; done"
+            "linux_*:x86_64-w64-mingw32:cd $STAGING_DIR/$NATIVEPREFIX/bin && for f in x86_64-w64-mingw32-*; do ln -sf $f ${f#x86_64-w64-mingw32-}; done",
+            "darwin_*:x86_64-w64-mingw32:cd $STAGING_DIR/$NATIVEPREFIX/bin && for f in x86_64-w64-mingw32-*; do ln -sf $f ${f#x86_64-w64-mingw32-}; done",
+            "windows_*:x86_64-w64-mingw32:find $STAGING_DIR/$PREFIX -type l -print0 | while IFS= read -r -d '' l; do t=$(readlink \"$l\"); case \"$t\" in ../../x86_64-w64-mingw32/sysroot/*) ln -sfn \"../sysroot/${t#../../x86_64-w64-mingw32/sysroot/}\" \"$l\";; ../../x86_64-w64-mingw32/lib32/*) ln -sfn \"../lib32/${t#../../x86_64-w64-mingw32/lib32/}\" \"$l\";; esac; done",
+            "windows_*:x86_64-w64-mingw32:cd $STAGING_DIR/$NATIVEPREFIX/bin && for f in x86_64-w64-mingw32-*; do cp -f \"$f\" \"${f#x86_64-w64-mingw32-}\"; done",
+            "windows_*:x86_64-w64-mingw32:find $STAGING_DIR/$PREFIX $STAGING_DIR/$NATIVEPREFIX -type l -print0 | sort -rz | while IFS= read -r -d '' l; do t=$(readlink -f \"$l\" 2>/dev/null || true); if [ -n \"$t\" ] && [ -e \"$t\" ]; then rm -f \"$l\"; cp -a \"$t\" \"$l\"; else rm -f \"$l\"; fi; done"
         ]
     }
 }

@@ -203,27 +203,30 @@ func Cleanup() {
 				currentFileName := fmt.Sprintf("%s-%s-%s", pkg.Package, pkg.Version, currentBuildID)
 				currentFileName = strings.ReplaceAll(currentFileName, "/", "_")
 
-				archPath := filepath.Join(builder, "built", target, currentFileName+".tar.gz")
-				archNativePath := filepath.Join(builder, "built", target, currentFileName+"_native.tar.gz")
-				infoPath := filepath.Join(builder, "built", target, currentFileName+".info.txt")
-
+				var archPath, archNativePath, infoPath string
 				if pkg.Type == "native" {
+					// Native archives live flat under built/ (no target triplet dir).
 					archPath = filepath.Join(builder, "built", currentFileName+".tar.gz")
-					archNativePath = filepath.Join(builder, "built", target, currentFileName+"_native.tar.gz")
+					archNativePath = filepath.Join(builder, "built", currentFileName+"_native.tar.gz")
 					infoPath = filepath.Join(builder, "built", currentFileName+".info.txt")
+				} else {
+					archPath = filepath.Join(builder, "built", target, currentFileName+".tar.gz")
+					archNativePath = filepath.Join(builder, "built", target, currentFileName+"_native.tar.gz")
+					infoPath = filepath.Join(builder, "built", target, currentFileName+".info.txt")
 				}
 
-				keepFiles[archPath] = true
-				keepFiles[archNativePath] = true
-				keepFiles[infoPath] = true
+				// Walk uses ToSlash; keep keys must match on Windows (filepath.Join uses '\').
+				keepFiles[filepath.ToSlash(archPath)] = true
+				keepFiles[filepath.ToSlash(archNativePath)] = true
+				keepFiles[filepath.ToSlash(infoPath)] = true
 			}
 		}
 
 		var keepFilesCopy = make(map[string]bool)
 		maps.Copy(keepFilesCopy, keepFiles)
-		for k, _ := range keepFilesCopy {
-			if k[len(k)-len(".tar.gz"):] == ".tar.gz" {
-				keepFiles[k[:len(k)-len(".tar.gz")]+"_native.tar.gz"] = true
+		for k := range keepFilesCopy {
+			if strings.HasSuffix(k, ".tar.gz") && !strings.HasSuffix(k, "_native.tar.gz") {
+				keepFiles[strings.TrimSuffix(k, ".tar.gz")+"_native.tar.gz"] = true
 			}
 		}
 
@@ -231,7 +234,7 @@ func Cleanup() {
 			sourcePath := pkg.GenerateSourceBuildPath(download)
 			relPath, err := filepath.Rel(buildlibDir, sourcePath)
 			if err == nil {
-				keepSources[relPath] = true
+				keepSources[filepath.ToSlash(relPath)] = true
 			}
 		}
 	}

@@ -1,0 +1,18 @@
+{
+    "package": "native/_/windows_amd64_cygwin_clang",
+    "version": "0.0.0",
+    "type": "native",
+    "download": [
+        {
+            "kind": "tar.xz",
+            "sha256": "6b31052404b8c5eb9f66c48230aafa4e2947b9dc6a6048515aae67e9c33e87a6",
+            "url": "https://github.com/MrCyjaneK/easybs/releases/download/r2/clang20-x86_64-windows-cygwin.tar.xz"
+        }
+    ],
+    "build": {
+        "steps": [
+            "*:*:./bin/mkdir -p $STAGING_DIR$NATIVEPREFIX/_/",
+            "*:*:./bin/cp -a * $STAGING_DIR$NATIVEPREFIX/_/ || true"
+        ]
+    }
+}

@@ -14,9 +14,12 @@
         "*:*:unistring"
     ],
     "build": {
-        "env": [],
+        "env": [
+            "*:*:config_opts=--prefix=$PREFIX",
+            "windows_*:*:config_opts=$config_opts --disable-builtin"
+        ],
         "steps": [
-            "*:*:./configure --prefix=$PREFIX",
+            "*:*:./configure $config_opts",
             "*:*:make -j$NUM_CORES",
             "*:*:make DESTDIR=$STAGING_DIR install"
         ]

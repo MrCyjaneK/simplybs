@@ -22,7 +22,7 @@
             "*:*:ACLOCAL=true"
         ],
         "steps": [
-            "*:*:./configure --prefix=$NATIVEPREFIX",
+            "*:*:./configure --prefix=$NATIVEPREFIX gl_cv_have_weak=no",
             "*:*:make -j$NUM_CORES",
             "*:*:make DESTDIR=$STAGING_DIR install"
         ]

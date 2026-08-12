@@ -6,7 +6,7 @@
         {
             "kind": "tar.gz",
             "sha256": "0d5cd86965f869a26cf64f4b71be7b96f90a3ba8b3d74e27e8e9d9d5550f31ba",
-            "url": "http://ftpmirror.gnu.org/bash/bash-5.3.tar.gz"
+            "url": "https://ftp.gnu.org/gnu/bash/bash-5.3.tar.gz"
         }
     ],
     "dependencies": [
@@ -17,9 +17,13 @@
         "env": [],
         "steps": [
             "*:*:dash ./configure --prefix=$NATIVEPREFIX",
-            "*:*:make -j$NUM_CORES V=1",
+            "darwin_arm64:*:make -j$NUM_CORES V=1",
+            "linux_*:*:make -j$NUM_CORES V=1",
+            "windows_amd64:*:make -j$NUM_CORES V=1 LDFLAGS=\"$LDFLAGS -Wl,--allow-multiple-definition\"",
             "*:*:make install DESTDIR=$STAGING_DIR",
-            "*:*:ln -sf $NATIVEPREFIX/bin/bash $STAGING_DIR$NATIVEPREFIX/bin/sh"
+            "darwin_arm64:*:ln -sf $NATIVEPREFIX/bin/bash $STAGING_DIR$NATIVEPREFIX/bin/sh",
+            "linux_*:*:ln -sf $NATIVEPREFIX/bin/bash $STAGING_DIR$NATIVEPREFIX/bin/sh",
+            "windows_amd64:*:test -f $STAGING_DIR$NATIVEPREFIX/bin/bash.exe && cp -f $STAGING_DIR$NATIVEPREFIX/bin/bash.exe $STAGING_DIR$NATIVEPREFIX/bin/sh.exe || true"
         ]
     }
 }

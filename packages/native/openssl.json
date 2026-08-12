@@ -40,7 +40,9 @@
             "linux_arm64:*:config_opts=$config_opts linux-generic64",
             "darwin_arm64:*:config_opts=$config_opts darwin64-arm64-cc",
             "darwin_amd64:*:config_opts=$config_opts darwin64-x86_64-cc",
-            "windows_amd64:*:config_opts=$config_opts mingw64"
+            "windows_amd64:*:config_opts=$config_opts -fPIC",
+            "windows_amd64:*:config_opts=$config_opts no-winstore",
+            "windows_amd64:*:config_opts=$config_opts Cygwin-x86_64"
         ],
         "steps": [
             "*:*:sed -i.bak 's/#define DATE \"built on: \\$date\"/#define DATE \"built on: Jan  1 1970 00:00:01\"/' util/mkbuildinf.pl",

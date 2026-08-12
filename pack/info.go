@@ -26,7 +26,7 @@ func (p *Package) prefixPath(h *host.Host) string {
 }
 
 func (p *Package) homePath(h *host.Host) string {
-	return p.prefixPath(h) + "/home/user"
+	return filepath.Join(p.prefixPath(h), "home", "user")
 }
 
 func (p *Package) FilterForHost(h *host.Host) *Package {
@@ -127,18 +127,18 @@ func (p *Package) minimalEnvWithStaging(h *host.Host, stagingPath string) map[st
 		targetTriplet = builder.NativeTriplet()
 	}
 	return map[string]string{
-		"PATH":                   h.GetNativeEnvPath() + "/bin:" + h.GetNativeEnvPath() + "/_/bin:" + utils.GetHostPath(),
+		"PATH":                   utils.BuildStepPATH(h.GetNativeEnvPath(), h.GetEnvPath(), "", utils.GetHostPath()),
 		"HOST":                   hostTriplet,
 		"TARGET":                 targetTriplet,
-		"PREFIX":                 h.GetEnvPath(),
-		"NATIVEPREFIX":           h.GetNativeEnvPath(),
-		"HOME":                   p.homePath(h),
-		"HOST_PREFIX":            h.GetEnvPath(),
+		"PREFIX":                 utils.ToShellPath(h.GetEnvPath()),
+		"NATIVEPREFIX":           utils.ToShellPath(h.GetNativeEnvPath()),
+		"HOME":                   utils.ToShellPath(p.homePath(h)),
+		"HOST_PREFIX":            utils.ToShellPath(h.GetEnvPath()),
 		"NUM_CORES":              strconv.Itoa(getNumCores()),
-		"PATCH_DIR":              filepath.Join(getwd, "patches"),
-		"STAGING_DIR":            stagingPath,
+		"PATCH_DIR":              utils.ToShellPath(filepath.Join(getwd, "patches")),
+		"STAGING_DIR":            utils.ToShellPath(stagingPath),
 		"PKG_CONFIG_ALLOW_CROSS": "1",
-		"PKG_CONFIG_SYSROOT_DIR": h.GetEnvPath(),
+		"PKG_CONFIG_SYSROOT_DIR": utils.ToShellPath(h.GetEnvPath()),
 		"BUILDER_GOOS":           runtime.GOOS,
 		"BUILDER_GOARCH":         runtime.GOARCH,
 	}

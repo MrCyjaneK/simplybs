@@ -138,6 +138,7 @@ func downloadToFileWithResume(destPath, url string) (int64, error) {
 	if err != nil {
 		return 0, fmt.Errorf("failed to create request: %v", err)
 	}
+	// req.Header.Set("User-Agent", "simplybs/1.0 (+https://github.com/mrcyjanek/simplybs)")
 
 	if fileSize > 0 {
 		req.Header.Set("Range", fmt.Sprintf("bytes=%d-", fileSize))
@@ -279,39 +280,75 @@ func DownloadFile(packageName, path, url, expectedSha256 string, isMirror bool) 
 
 	os.MkdirAll(filepath.Dir(path), 0755)
 
-	attempt := 0
-	for attempt <= maxDownloadRetries {
-		if attempt > 0 {
-			log.Printf("Retry attempt %d/%d for %s", attempt, maxDownloadRetries, url)
-			time.Sleep(downloadRetryDelay)
-		}
+	candidates := []string{url}
+	if alt := gnuFtpFallbackURL(url); alt != "" && alt != url {
+		// Prefer mirrors.kernel.org when ftpmirror is flaky (502 / timeouts).
+		candidates = []string{alt, url}
+	}
 
-		startSize := fileSizeAt(downloadTempPath(path))
-		bytesReceived, err := downloadWithResume(path, url, expectedSha256)
-		if err == nil {
-			log.Printf("Successfully downloaded and verified %s", path)
-			return nil
-		}
+	var lastErr error
+	for _, candidate := range candidates {
+		attempt := 0
+		for attempt <= maxDownloadRetries {
+			if attempt > 0 {
+				log.Printf("Retry attempt %d/%d for %s", attempt, maxDownloadRetries, candidate)
+				time.Sleep(downloadRetryDelay)
+			}
 
-		if bytesReceived == 0 && attempt == 0 {
-			return fmt.Errorf("no data received from server: %v", err)
-		}
+			startSize := fileSizeAt(downloadTempPath(path))
+			bytesReceived, err := downloadWithResume(path, candidate, expectedSha256)
+			if err == nil {
+				log.Printf("Successfully downloaded and verified %s", path)
+				return nil
+			}
+			lastErr = err
 
-		log.Printf("Download failed: %v", err)
+			if bytesReceived == 0 && attempt == 0 {
+				log.Printf("No data from %s: %v", candidate, err)
+				break
+			}
 
-		if shouldResetRetryCount(err, downloadTempPath(path), startSize, bytesReceived) {
-			log.Printf("Made progress (%s), resetting retry count", formatBytes(bytesReceived-startSize))
-			attempt = 0
-			continue
-		}
+			log.Printf("Download failed: %v", err)
 
-		attempt++
-		if attempt > maxDownloadRetries {
-			return fmt.Errorf("failed after %d retries: %v", maxDownloadRetries, err)
+			if shouldResetRetryCount(err, downloadTempPath(path), startSize, bytesReceived) {
+				log.Printf("Made progress (%s), resetting retry count", formatBytes(bytesReceived-startSize))
+				attempt = 0
+				continue
+			}
+
+			attempt++
+			if attempt > maxDownloadRetries {
+				log.Printf("Failed after %d retries for %s: %v", maxDownloadRetries, candidate, err)
+				break
+			}
 		}
 	}
 
+	if lastErr != nil {
+		return fmt.Errorf("download failed after all retries: %v", lastErr)
+	}
 	return fmt.Errorf("download failed after all retries")
+}
+
+// gnuFtpFallbackURL maps flaky GNU FTP hosts to mirrors.kernel.org.
+func gnuFtpFallbackURL(raw string) string {
+	u, err := url.Parse(raw)
+	if err != nil {
+		return ""
+	}
+	host := strings.ToLower(u.Host)
+	switch host {
+	case "ftpmirror.gnu.org", "www.ftpmirror.gnu.org", "ftp.gnu.org", "www.gnu.org":
+	default:
+		return ""
+	}
+	u.Scheme = "https"
+	u.Host = "mirrors.kernel.org"
+	// www.gnu.org paths are under /software/...; kernel mirror only has /gnu/.
+	if host == "www.gnu.org" {
+		return ""
+	}
+	return u.String()
 }
 
 func downloadWithResume(path, url, expectedSha256 string) (int64, error) {
@@ -326,12 +363,13 @@ func downloadWithResume(path, url, expectedSha256 string) (int64, error) {
 	if err != nil {
 		return bytesRead, fmt.Errorf("failed to open file for verification: %v", err)
 	}
-	defer file.Close()
 
 	hasher := sha256.New()
 	if _, err := io.Copy(hasher, file); err != nil {
+		file.Close()
 		return bytesRead, fmt.Errorf("failed to calculate hash: %v", err)
 	}
+	file.Close()
 
 	actualHash := hex.EncodeToString(hasher.Sum(nil))
 	if actualHash != expectedSha256 {
@@ -340,11 +378,32 @@ func downloadWithResume(path, url, expectedSha256 string) (int64, error) {
 	}
 
 	if err := os.Rename(tempPath, path); err != nil {
+		// Windows can refuse rename if AV still has a handle; fall back to copy.
+		if copyErr := copyFile(tempPath, path); copyErr != nil {
+			os.Remove(tempPath)
+			return bytesRead, fmt.Errorf("failed to move download into place: %v (copy fallback: %v)", err, copyErr)
+		}
 		os.Remove(tempPath)
-		return bytesRead, fmt.Errorf("failed to move download into place: %v", err)
 	}
 
 	return bytesRead, nil
+}
+
+func copyFile(src, dst string) error {
+	in, err := os.Open(src)
+	if err != nil {
+		return err
+	}
+	defer in.Close()
+	out, err := os.OpenFile(dst, os.O_CREATE|os.O_WRONLY|os.O_TRUNC, 0644)
+	if err != nil {
+		return err
+	}
+	defer out.Close()
+	if _, err := io.Copy(out, in); err != nil {
+		return err
+	}
+	return out.Close()
 }
 
 func FileSHA256(path string) (string, error) {

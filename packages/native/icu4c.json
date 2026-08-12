@@ -21,7 +21,8 @@
     "build": {
         "env": [
             "linux_*:*:ICU_PLATFORM=Linux/gcc",
-            "darwin_*:*:ICU_PLATFORM=Darwin"
+            "darwin_*:*:ICU_PLATFORM=Darwin",
+            "windows_*:*:ICU_PLATFORM=Cygwin/gcc"
         ],
         "steps": [
             "*:*-w64-mingw32:patch -p1 < $PATCH_DIR/icu4c/icu-001-dont-build-static-dynamic-twice.patch",

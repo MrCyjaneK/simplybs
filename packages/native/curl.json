@@ -14,7 +14,8 @@
         "*:*:native/bash",
         "*:*:native/libpsl",
         "*:*:native/make",
-        "*:*:native/openssl"
+        "*:*:native/openssl",
+        "*:*:native/perl"
     ],
     "build": {
         "env": [

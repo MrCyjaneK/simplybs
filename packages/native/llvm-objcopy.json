@@ -14,13 +14,13 @@
         "*:*:native/bash",
         "*:*:native/cmake",
         "*:*:native/make",
-        "*:*:native/ninja"
+        "*:*:native/python@3.11"
     ],
     "build": {
         "steps": [
             "*:*:mkdir build && cd build",
-            "*:*:cd build && cmake -G Ninja -DLLVM_ENABLE_PROJECTS='llvm' -DCMAKE_BUILD_TYPE=Release ../llvm",
-            "*:*:cd build && ninja llvm-objcopy",
+            "*:*:cd build && cmake -G \"Unix Makefiles\" -DLLVM_ENABLE_PROJECTS='llvm' -DCMAKE_BUILD_TYPE=Release -DLLVM_TARGETS_TO_BUILD=X86 -DLLVM_INCLUDE_TESTS=OFF -DPython3_EXECUTABLE=$NATIVEPREFIX/bin/python3.11 ../llvm",
+            "*:*:cd build && make -j$NUM_CORES llvm-objcopy",
             "*:*:mkdir -p $STAGING_DIR$NATIVEPREFIX/bin/",
             "*:*:cp build/bin/llvm-objcopy $STAGING_DIR$NATIVEPREFIX/bin/llvm-objcopy"
         ]

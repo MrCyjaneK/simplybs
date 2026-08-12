@@ -16,12 +16,19 @@
         "*:*:native/sed"
     ],
     "build": {
-        "env": [],
+        "env": [
+        ],
         "steps": [
             "*:*:mkdir -p $STAGING_DIR$NATIVEPREFIX/lib $NATIVEPREFIX/lib",
             "*:*:sed -i.bak '/^#ifndef PERL_BUILD_DATE$/,/^#endif$/{/^#ifndef PERL_BUILD_DATE$/!d; s/.*/\\#define PERL_BUILD_DATE \"Jan  1 1970 00:00:01\"/;}' perl.c",
-            "*:*:bash ./Configure -des -Dprefix=$NATIVEPREFIX -Duseithreads -Dall_static -Dcc=$CC -Dlibs=\"-lpthread -ldl -lm -lutil -lc\"",
-            "*:*:make -j$NUM_CORES CC=$CC",
+            "linux_*:*:bash ./Configure -des -Dprefix=$NATIVEPREFIX -Duseithreads -Dall_static -Dcc=$CC -Dlibs=\"-lpthread -ldl -lm -lutil -lc\"",
+            "darwin_*:*:bash ./Configure -des -Dprefix=$NATIVEPREFIX -Duseithreads -Dall_static -Dcc=$CC -Dlibs=\"-lpthread -ldl -lm -lutil -lc\"",
+            "windows_amd64:*:bash ./Configure -des -Dprefix=$NATIVEPREFIX -Duseithreads -Dcc=$CC -Dld=$CC -Dlibs=\"-lm\"",
+            "windows_amd64:*:sed -i.bak \"s|^PATH=.*|PATH='.:$NATIVEPREFIX/bin:$NATIVEPREFIX/_/bin:/usr/bin/'|\" config.sh",
+            "windows_amd64:*:bash ./Configure -S",
+            "linux_*:*:make -j$NUM_CORES CC=$CC",
+            "darwin_*:*:make -j$NUM_CORES CC=$CC",
+            "windows_amd64:*:make -j1 CC=$CC",
             "*:*:make DESTDIR=$STAGING_DIR install CC=$CC"
         ]
     }

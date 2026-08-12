@@ -16,7 +16,8 @@
         "*:*:native/sed"
     ],
     "build": {
-        "env": [],
+        "env": [
+        ],
         "steps": [
             "*:*:bash ./configure --prefix=$NATIVEPREFIX --disable-nls",
             "*:*:sed -i.bak 's/^run.*automake.*/exit 0/' build-aux/missing",
