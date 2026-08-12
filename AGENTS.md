@@ -55,3 +55,11 @@ already fail on a clean checkout — unrelated to environment setup.
 ## Tooling
 
 `go` and `gh` are provided by the base image; there is nothing else to install.
+
+## Cache environment variables
+
+`install.sh` exports the shared cache settings box-wide (via `/etc/environment`
+and `/etc/profile.d/simplybs-cache.sh`), so every command sees them:
+
+- `SIMPLYBS_CACHE_TAG=v0-sbs-<user>-<goos>-<goarch>` (e.g. `v0-sbs-ubuntu-linux-amd64`)
+- `SIMPLYBS_CACHE_REPO=mrcyjanek/simplybs_private`
