@@ -304,10 +304,7 @@
                     "CFLAGS_x86_64_unknown_linux_gnu",
                     "CXXFLAGS_x86_64_unknown_linux_gnu",
                     "CFLAGS_aarch64_unknown_linux_gnu",
-                    "CXXFLAGS_aarch64_unknown_linux_gnu",
-                    "CFLAGS_x86_64_pc_windows_gnu",
-                    "CXXFLAGS_x86_64_pc_windows_gnu",
-                    "LDFLAGS_x86_64_pc_windows_gnu"
+                    "CXXFLAGS_aarch64_unknown_linux_gnu"
                 ]
             },
             "std-native": {
