@@ -83,7 +83,47 @@ $ go run . -host armv7a-linux-androideabi -package tor -build
 
 ## Recommended / "official" cache settings
 
-
 ```bash
 SIMPLYBS_ENV_DIR=/opt/_
 ```
+
+## Build cache (GitHub Releases)
+
+Built package archives are content-addressed (`package-version-<8-char-hash>`).
+They can be shared via a rolling GitHub Release without downloading the whole
+cache on every run.
+
+Cache is enabled only when **both** required variables are set:
+
+| Variable | Required | Purpose |
+| --- | --- | --- |
+| `SIMPLYBS_CACHE_TAG` | yes | Release tag (e.g. `v0-sbs-$USER-$GOOS-$GOARCH`) |
+| `SIMPLYBS_CACHE_REPO` | yes | `owner/repo` hosting the release |
+| `SIMPLYBS_GH` | no | Optional path to `gh` |
+
+```bash
+# Set by .cursor/install.sh box-wide; override if needed:
+# export SIMPLYBS_CACHE_TAG=v0-sbs-$USER-$(go env GOOS)-$(go env GOARCH)
+# export SIMPLYBS_CACHE_REPO=mrcyjanek/simplybs_private
+```
+
+With those set, `-build` auto-pulls the needed package tree up front, pulls
+per-package inside `EnsureBuilt` as a fallback, pushes each package after a
+successful local build, and runs a final tree push for anything still missing
+on the release:
+
+```bash
+go run . -host x86_64-linux-gnu -package zlib -build
+```
+
+Explicit pull/push still work:
+
+```bash
+go run . -host x86_64-linux-gnu -package zlib -cache-pull
+go run . -cache-push                                          # all local built/
+go run . -host x86_64-linux-gnu -package zlib -cache-push     # that package tree only
+```
+
+Push only uploads local artifacts that are not already on the release (a
+package rebuild with a new hash is a new asset name, so “changed” caches
+upload naturally).

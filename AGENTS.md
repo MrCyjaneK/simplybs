@@ -63,3 +63,12 @@ and `/etc/profile.d/simplybs-cache.sh`), so every command sees them:
 
 - `SIMPLYBS_CACHE_TAG=v0-sbs-<user>-<goos>-<goarch>` (e.g. `v0-sbs-ubuntu-linux-amd64`)
 - `SIMPLYBS_CACHE_REPO=mrcyjanek/simplybs_private`
+
+When both are set, cache is enabled: `-build` auto-pulls needed artifacts and
+auto-pushes new/changed ones (see README). Explicit flags:
+
+```bash
+go run . -host x86_64-linux-gnu -package zlib -cache-pull
+go run . -host x86_64-linux-gnu -package zlib -build
+go run . -host x86_64-linux-gnu -package zlib -cache-push
+```

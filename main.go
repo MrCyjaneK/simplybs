@@ -27,6 +27,8 @@ func main() {
 	argVersion := flag.Bool("v", false, "Show version")
 	argShell := flag.Bool("shell", false, "Extract source and start shell with build environment")
 	argCleanup := flag.Bool("cleanup", false, "Remove everything except current built archives")
+	argCachePull := flag.Bool("cache-pull", false, "Download needed build-cache artifacts (requires SIMPLYBS_CACHE_TAG and SIMPLYBS_CACHE_REPO)")
+	argCachePush := flag.Bool("cache-push", false, "Upload new/changed local build-cache artifacts (requires SIMPLYBS_CACHE_TAG and SIMPLYBS_CACHE_REPO)")
 	// argQuiet := flag.Bool("quiet", false, "Redirect stdout and stderr to /dev/null")
 	flag.Parse()
 	if *argVersion {
@@ -49,8 +51,16 @@ func main() {
 	packageNames := []*pack.Package{}
 	if *argWorld {
 		packageNames = pack.GetAllPackages()
-	} else {
+	} else if *argPkg != "" {
 		packageNames = pack.GetPackagesByList(*argPkg)
+	}
+
+	if *argCachePush && *argPkg == "" && !*argWorld {
+		// Push every local built artifact for this builder that is not on the release.
+		if err := pack.CachePush(nil, nil); err != nil {
+			crash.Handle(err)
+		}
+		return
 	}
 
 	if len(packageNames) == 0 {
@@ -63,6 +73,30 @@ func main() {
 			}
 		}
 		log.Println("Downloaded all sources")
+		return
+	}
+
+	if *argCachePull || *argCachePush {
+		if *argHost == "" {
+			crash.Handle(fmt.Errorf("-cache-pull/-cache-push with -package requires -host"))
+		}
+		hosts := strings.SplitSeq(*argHost, ",")
+		for h := range hosts {
+			host := host.SupportedHosts[h]
+			if host == nil {
+				crash.Handle(fmt.Errorf("host %s not supported", h))
+			}
+			if *argCachePull {
+				if err := pack.CachePull(packageNames, host); err != nil {
+					crash.Handle(err)
+				}
+			}
+			if *argCachePush {
+				if err := pack.CachePush(packageNames, host); err != nil {
+					crash.Handle(err)
+				}
+			}
+		}
 		return
 	}
 
@@ -85,8 +119,19 @@ func buildForHost(host *host.Host, packageNames []*pack.Package, list bool, extr
 	}
 
 	if build {
+		if pack.CacheEnabled() {
+			log.Printf("cache: enabled (tag=%s repo=%s); auto pull/push", pack.CacheTag(), pack.CacheRepo())
+			if err := pack.CachePull(packageNames, host); err != nil {
+				log.Printf("cache: auto-pull failed: %v", err)
+			}
+		}
 		for _, pkg := range packageNames {
 			pkg.EnsureBuilt(host, true)
+		}
+		if pack.CacheEnabled() {
+			if err := pack.CachePush(packageNames, host); err != nil {
+				log.Printf("cache: auto-push failed: %v", err)
+			}
 		}
 	}
 	if extract {
