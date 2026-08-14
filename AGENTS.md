@@ -24,6 +24,36 @@ go run . -world -host <triplet> -build                    # build everything for
 Supported host triplets are defined in `host/main.go` (e.g. `x86_64-linux-gnu`,
 `aarch64-linux-android`, `x86_64-w64-mingw32`, `aarch64-apple-darwin`).
 
+## rust-std (all platforms)
+
+`rust-std` builds the Rust standard library (`library/std`, stage 1) for a
+given `-host` triplet. **“All platforms”** means every entry in
+`host.SupportedHosts` — pass them as a comma-separated `-host` list:
+
+| `-host` (simplybs triplet) | Rust target (`$RUST_TRIPLET`) |
+| --- | --- |
+| `x86_64-linux-gnu` | `x86_64-unknown-linux-gnu` |
+| `aarch64-linux-gnu` | `aarch64-unknown-linux-gnu` |
+| `x86_64-w64-mingw32` | `x86_64-pc-windows-gnu` |
+| `aarch64-apple-darwin` | `aarch64-apple-darwin` |
+| `x86_64-apple-darwin` | `x86_64-apple-darwin` |
+| `aarch64-apple-ios` | `aarch64-apple-ios` |
+| `aarch64-apple-ios-simulator` | `aarch64-apple-ios-sim` |
+| `aarch64-linux-android` | `aarch64-linux-android` |
+| `x86_64-linux-android` | `x86_64-linux-android` |
+| `armv7a-linux-androideabi` | `armv7-linux-androideabi` |
+
+```bash
+go run . -host \
+  aarch64-apple-darwin,x86_64-apple-darwin,aarch64-apple-ios,aarch64-apple-ios-simulator,\
+  x86_64-w64-mingw32,x86_64-linux-gnu,aarch64-linux-gnu,aarch64-linux-android,\
+  x86_64-linux-android,armv7a-linux-androideabi \
+  -package rust-std -build
+```
+
+Each host build is independent (separate artifact under `.buildlib/<goos>_<goarch>/built/`).
+Requires `native/rust` (and the full native toolchain for that target) to already be built.
+
 ## After editing packages — always run lint
 
 Whenever you add or change a package definition (new source, new git ref, bumped
