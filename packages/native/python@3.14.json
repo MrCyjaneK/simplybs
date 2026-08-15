@@ -36,8 +36,8 @@
             "*:*:bash ./configure $config_opts",
             "*:*:make -j$NUM_CORES",
             "*:*:make DESTDIR=$STAGING_DIR install",
-            "*:*:rm -f $STAGING_DIR$NATIVEPREFIX/bin/python3 && cp -f $STAGING_DIR$NATIVEPREFIX/bin/python3.14 $STAGING_DIR$NATIVEPREFIX/bin/python3",
-            "*:*:rm -f $STAGING_DIR$NATIVEPREFIX/bin/python && cp -f $STAGING_DIR$NATIVEPREFIX/bin/python3.14 $STAGING_DIR$NATIVEPREFIX/bin/python"
+            "*:*:ln -sf python3.14 $STAGING_DIR$NATIVEPREFIX/bin/python3",
+            "*:*:ln -sf python3.14 $STAGING_DIR$NATIVEPREFIX/bin/python"
         ]
     }
 }
