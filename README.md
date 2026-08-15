@@ -102,7 +102,6 @@ Cache is enabled only when **both** required variables are set:
 | `SIMPLYBS_GH` | no | Optional path to `gh` |
 
 ```bash
-# Set by .cursor/install.sh box-wide; override if needed:
 # export SIMPLYBS_CACHE_TAG=v0-sbs-$USER-$(go env GOOS)-$(go env GOARCH)
 # export SIMPLYBS_CACHE_REPO=mrcyjanek/simplybs_private
 ```
