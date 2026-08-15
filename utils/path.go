@@ -210,10 +210,12 @@ func hasEnvKey(env map[string]string, key string) bool {
 
 // BuildStepPATH prefers the simplybs native toolchain, then bootstrap host
 // bins (seed / Git), then prefix bins. Always colon-separated for POSIX sh.
+// $NATIVEPREFIX/bin (bash, etc.) must precede $NATIVEPREFIX/_/bin (clang seed
+// toybox sh) so Configure scripts pick up bash for SHELL.
 func BuildStepPATH(nativePrefix, prefix, envPath, hostPath string) string {
 	parts := []string{
-		ToShellPath(filepath.Join(nativePrefix, "_", "bin")),
 		ToShellPath(filepath.Join(nativePrefix, "bin")),
+		ToShellPath(filepath.Join(nativePrefix, "_", "bin")),
 	}
 	if envPath != "" {
 		parts = append(parts, envPath)
