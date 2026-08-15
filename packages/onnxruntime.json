@@ -94,19 +94,21 @@
         }
     ],
     "dependencies": [
-        "*:{*-linux-gnu,*-apple-*}:native/_",
-        "*:{*-linux-gnu,*-apple-*}:native/cmake",
-        "*:{*-linux-gnu,*-apple-*}:native/cmake-toolchain",
-        "*:{*-linux-gnu,*-apple-*}:native/make",
-        "*:{*-linux-gnu,*-apple-*}:native/coreutils",
-        "*:{*-linux-gnu,*-apple-*}:native/bash",
-        "*:{*-linux-gnu,*-apple-*}:native/python@3.11",
-        "*:{*-linux-gnu,*-apple-*}:native/patch",
-        "*:{*-linux-gnu,*-apple-*}:native/protobuf@21.12"
+        "*:*:native/_",
+        "*:*:native/cmake",
+        "*:*:native/cmake-toolchain",
+        "*:*:native/make",
+        "*:*:native/coreutils",
+        "*:*:native/bash",
+        "*:*:native/python@3.11",
+        "*:*:native/patch",
+        "*:*:native/protobuf@21.12",
+        "*:*-android*:libiconv"
     ],
     "build": {
         "env": [
-            "*:{*-linux-gnu,*-apple-*}:ort_extra=",
+            "*:*:ort_extra=",
+            "*:*-android*:ort_extra=Iconv_INCLUDE_DIR=$PREFIX/include Iconv_LIBRARY=$PREFIX/lib/libiconv.a",
             "*:aarch64-apple-darwin:ort_extra=CMAKE_OSX_ARCHITECTURES=arm64",
             "*:x86_64-apple-darwin:ort_extra=CMAKE_OSX_ARCHITECTURES=x86_64",
             "*:aarch64-apple-ios:ort_extra=CMAKE_OSX_ARCHITECTURES=arm64 CMAKE_OSX_DEPLOYMENT_TARGET=14.0",
@@ -117,15 +119,17 @@
             "*:aarch64-apple-ios-simulator:CXX=$NATIVEPREFIX/bin/aarch64-apple-ios-simulator-clang++ -target aarch64-apple-ios-simulator -mios-version-min=14.0 -isysroot $SDK_PATH -I$PREFIX/include"
         ],
         "steps": [
-            "*:{*-linux-gnu,*-apple-*}:patch -p1 < $PATCH_DIR/onnxruntime/cstdint-optimizer-api.patch",
-            "*:{*-linux-gnu,*-apple-*}:patch -p1 -d deps/google_nsync < cmake/patches/nsync/nsync_1.26.0.patch",
-            "*:{*-linux-gnu,*-apple-*}:patch -p1 -d deps/protobuf < cmake/patches/protobuf/protobuf_cmake.patch",
-            "*:{*-linux-gnu,*-apple-*}:patch -p1 -d deps/flatbuffers < cmake/patches/flatbuffers/flatbuffers.patch",
-            "*:{*-linux-gnu,*-apple-*}:patch -p1 -d deps/onnx < cmake/patches/onnx/onnx.patch",
-            "*:{*-linux-gnu,*-apple-*}:./build.sh --config Release --build_shared_lib --parallel --skip_tests --allow_running_as_root --compile_no_warning_as_error --skip_submodule_sync --path_to_protoc_exe $NATIVEPREFIX/bin/protoc --cmake_extra_defines CMAKE_TOOLCHAIN_FILE=$CMAKE_TOOLCHAIN_FILE CMAKE_INSTALL_PREFIX=$PREFIX FETCHCONTENT_FULLY_DISCONNECTED=ON FETCHCONTENT_SOURCE_DIR_ABSEIL_CPP=$PWD/deps/abseil_cpp FETCHCONTENT_SOURCE_DIR_RE2=$PWD/deps/re2 FETCHCONTENT_SOURCE_DIR_GOOGLE_NSYNC=$PWD/deps/google_nsync FETCHCONTENT_SOURCE_DIR_UTF8_RANGE=$PWD/deps/utf8_range FETCHCONTENT_SOURCE_DIR_PROTOBUF=$PWD/deps/protobuf FETCHCONTENT_SOURCE_DIR_DATE=$PWD/deps/date FETCHCONTENT_SOURCE_DIR_MP11=$PWD/deps/mp11 FETCHCONTENT_SOURCE_DIR_NLOHMANN_JSON=$PWD/deps/nlohmann_json FETCHCONTENT_SOURCE_DIR_PYTORCH_CPUINFO=$PWD/deps/pytorch_cpuinfo FETCHCONTENT_SOURCE_DIR_PYTORCH_CLOG=$PWD/deps/pytorch_cpuinfo FETCHCONTENT_SOURCE_DIR_GSL=$PWD/deps/GSL FETCHCONTENT_SOURCE_DIR_SAFEINT=$PWD/deps/safeint FETCHCONTENT_SOURCE_DIR_FLATBUFFERS=$PWD/deps/flatbuffers FETCHCONTENT_SOURCE_DIR_ONNX=$PWD/deps/onnx onnxruntime_USE_PREINSTALLED_EIGEN=ON eigen_SOURCE_PATH=$PWD/deps/eigen CMAKE_POLICY_VERSION_MINIMUM=3.5 onnxruntime_BUILD_UNIT_TESTS=OFF FLATBUFFERS_BUILD_FLATC=OFF $ort_extra",
-            "linux_*:{*-linux-gnu,*-apple-*}:DESTDIR=$STAGING_DIR cmake --install build/Linux/Release --prefix \"$PREFIX\"",
-            "darwin_*:{*-linux-gnu,*-apple-*}:DESTDIR=$STAGING_DIR cmake --install build/MacOS/Release --prefix \"$PREFIX\"",
-            "*:{*-linux-gnu,*-apple-*}:cp -a $STAGING_DIR$PREFIX/include/onnxruntime/. $STAGING_DIR$PREFIX/include/"
+            "*:*:patch -p1 < $PATCH_DIR/onnxruntime/cstdint-optimizer-api.patch",
+            "*:*-android*:patch -p1 < $PATCH_DIR/onnxruntime/android-log-and-sink.patch",
+            "*:*:patch -p1 -d deps/google_nsync < cmake/patches/nsync/nsync_1.26.0.patch",
+            "*:*:patch -p1 -d deps/protobuf < cmake/patches/protobuf/protobuf_cmake.patch",
+            "*:*:patch -p1 -d deps/flatbuffers < cmake/patches/flatbuffers/flatbuffers.patch",
+            "*:*:patch -p1 -d deps/onnx < cmake/patches/onnx/onnx.patch",
+            "*:*-android*:patch -p1 -d deps/pytorch_cpuinfo < $PATCH_DIR/onnxruntime/cpuinfo-android-properties.patch",
+            "*:*:./build.sh --config Release --build_shared_lib --parallel --skip_tests --allow_running_as_root --compile_no_warning_as_error --skip_submodule_sync --path_to_protoc_exe $NATIVEPREFIX/bin/protoc --cmake_extra_defines CMAKE_TOOLCHAIN_FILE=$CMAKE_TOOLCHAIN_FILE CMAKE_INSTALL_PREFIX=$PREFIX FETCHCONTENT_FULLY_DISCONNECTED=ON FETCHCONTENT_SOURCE_DIR_ABSEIL_CPP=$PWD/deps/abseil_cpp FETCHCONTENT_SOURCE_DIR_RE2=$PWD/deps/re2 FETCHCONTENT_SOURCE_DIR_GOOGLE_NSYNC=$PWD/deps/google_nsync FETCHCONTENT_SOURCE_DIR_UTF8_RANGE=$PWD/deps/utf8_range FETCHCONTENT_SOURCE_DIR_PROTOBUF=$PWD/deps/protobuf FETCHCONTENT_SOURCE_DIR_DATE=$PWD/deps/date FETCHCONTENT_SOURCE_DIR_MP11=$PWD/deps/mp11 FETCHCONTENT_SOURCE_DIR_NLOHMANN_JSON=$PWD/deps/nlohmann_json FETCHCONTENT_SOURCE_DIR_PYTORCH_CPUINFO=$PWD/deps/pytorch_cpuinfo FETCHCONTENT_SOURCE_DIR_PYTORCH_CLOG=$PWD/deps/pytorch_cpuinfo FETCHCONTENT_SOURCE_DIR_GSL=$PWD/deps/GSL FETCHCONTENT_SOURCE_DIR_SAFEINT=$PWD/deps/safeint FETCHCONTENT_SOURCE_DIR_FLATBUFFERS=$PWD/deps/flatbuffers FETCHCONTENT_SOURCE_DIR_ONNX=$PWD/deps/onnx onnxruntime_USE_PREINSTALLED_EIGEN=ON eigen_SOURCE_PATH=$PWD/deps/eigen CMAKE_POLICY_VERSION_MINIMUM=3.5 onnxruntime_BUILD_UNIT_TESTS=OFF FLATBUFFERS_BUILD_FLATC=OFF $ort_extra",
+            "linux_*:*:DESTDIR=$STAGING_DIR cmake --install build/Linux/Release --prefix \"$PREFIX\"",
+            "darwin_*:*:DESTDIR=$STAGING_DIR cmake --install build/MacOS/Release --prefix \"$PREFIX\"",
+            "*:*:cp -a $STAGING_DIR$PREFIX/include/onnxruntime/. $STAGING_DIR$PREFIX/include/"
         ]
     }
 }
