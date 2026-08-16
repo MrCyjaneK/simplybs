@@ -46,9 +46,9 @@
         },
         {
             "kind": "blob",
-            "path": "work/.build/tarballs/glibc-2.42.tar.xz",
-            "sha256": "d1775e32e4628e64ef930f435b67bb63af7599acb6be2b335b9f19f16509f17f",
-            "url": "http://ftpmirror.gnu.org/gnu/glibc/glibc-2.42.tar.xz"
+            "path": "work/.build/tarballs/glibc-2.41.tar.xz",
+            "sha256": "a5a26b22f545d6b7d7b3dd828e11e428f24f4fac43c934fb071b6a7d0828e901",
+            "url": "http://ftpmirror.gnu.org/gnu/glibc/glibc-2.41.tar.xz"
         },
         {
             "kind": "blob",
@@ -185,6 +185,7 @@
             "linux_*:x86_64-w64-mingw32:sed -i '/put_new_config CT_MINGW_DEFAULT_MSVCRT_UCRT y/a\\    put_new_config CT_MINGW_W64_PATCH_LOCAL y\\n    put_new_config CT_MINGW_W64_PATCH_ORDER \"local,bundled\"\\n    put_new_config CT_PATCH_USE_LOCAL y\\n    put_new_config CT_LOCAL_PATCH_DIR \"'\"$(pwd)/patches\"'\"' run.sh",
             "windows_*:x86_64-w64-mingw32:mkdir -p patches/mingw-w64 && cp $PATCH_DIR/native/ct-tools/clang-widl-winnt.h.patch patches/mingw-w64/",
             "windows_*:x86_64-w64-mingw32:sed -i '/put_new_config CT_MINGW_DEFAULT_MSVCRT_UCRT y/a\\    put_new_config CT_MINGW_W64_PATCH_LOCAL y\\n    put_new_config CT_MINGW_W64_PATCH_ORDER \"local,bundled\"\\n    put_new_config CT_PATCH_USE_LOCAL y\\n    put_new_config CT_LOCAL_PATCH_DIR \"'\"$(pwd)/patches\"'\"' run.sh",
+            "*:*-linux-gnu:sed -i -e 's/^CT_GLIBC_V_2_42=y$/# CT_GLIBC_V_2_42 is not set/' -e 's/^# CT_GLIBC_V_2_41 is not set$/CT_GLIBC_V_2_41=y/' -e 's/^CT_GLIBC_VERSION=\"2.42\"$/CT_GLIBC_VERSION=\"2.41\"/' -e 's/^CT_GLIBC_2_42_or_later=y$/# CT_GLIBC_2_42_or_later is not set/' -e 's/^CT_GLIBC_2_42_or_older=y$/CT_GLIBC_2_41_or_older=y/' -e 's/^CT_GLIBC_later_than_2_41=y$/# CT_GLIBC_later_than_2_41 is not set/' platforms/$TOOL_TARGET/.config",
             "*:{*-linux-gnu,*-w64-mingw32}:sed -i 's|install=\"./scripts/install-sh -c\"|install=\"'$NATIVEPREFIX'/bin/install -c\"|g' $NATIVEPREFIX/share/crosstool-ng/paths.sh",
             "*:{*-linux-gnu,*-w64-mingw32}:mkdir -p $STAGING_DIR$PREFIX",
             "linux_*:{*-linux-gnu,*-w64-mingw32}:env -i PATH=$NATIVEPREFIX/bin:$NATIVEPREFIX/_/bin:$PATH LIBTOOL=$NATIVEPREFIX/bin/libtool AR=$NATIVEPREFIX/_/bin/llvm-ar RANLIB=$NATIVEPREFIX/_/bin/llvm-ranlib PREFIX=$(realpath $STAGING_DIR$PREFIX) ./run.sh $TOOL_TARGET",

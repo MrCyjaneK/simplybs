@@ -1279,6 +1279,12 @@
         },
         {
             "kind": "blob",
+            "url": "http://ftpmirror.gnu.org/gnu/glibc/glibc-2.41.tar.xz",
+            "sha256": "a5a26b22f545d6b7d7b3dd828e11e428f24f4fac43c934fb071b6a7d0828e901",
+            "path": "work/.build/tarballs/glibc-2.41.tar.xz"
+        },
+        {
+            "kind": "blob",
             "url": "http://ftpmirror.gnu.org/gnu/glibc/glibc-2.42.tar.xz",
             "sha256": "d1775e32e4628e64ef930f435b67bb63af7599acb6be2b335b9f19f16509f17f",
             "path": ".build/tarballs/glibc-2.42.tar.xz"
@@ -1543,6 +1549,12 @@
         },
         {
             "kind": "blob",
+            "url": "https://github.com/madler/zlib/releases/download/v1.3.1/zlib-1.3.1.tar.xz",
+            "sha256": "38ef96b8dfe510d42707d9c781877914792541133e1870841463bfa73f883e32",
+            "path": "work/.build/tarballs/zlib-1.3.1.tar.xz"
+        },
+        {
+            "kind": "blob",
             "url": "https://go.dev/dl/go1.25.0.darwin-arm64.tar.gz",
             "sha256": "544932844156d8172f7a28f77f2ac9c15a23046698b6243f633b0a0b00c0749c",
             "path": "./go-darwin_arm64.tar.gz"
@@ -1594,6 +1606,12 @@
             "url": "https://raw.githubusercontent.com/NetBSD/pkgsrc/6034096dc85159a02116524692545cf5752c8f33/databases/db5/patches/patch-src_dbinc_db.in",
             "sha256": "302b78f3e1f131cfbf91b24e53a5c79e1d9234c143443ab936b9e5ad08dea5b6",
             "path": "patch/patch-src_dbinc_db.in"
+        },
+        {
+            "kind": "blob",
+            "url": "https://sources.voidlinux.org/musl-1.2.5/musl-1.2.5.tar.gz",
+            "sha256": "a9a118bbe84d8764da0ea0d28b3ab3fae8477fc7e4085d90102b8596fc7c75e4",
+            "path": "work/.build/tarballs/musl-1.2.5.tar.gz"
         },
         {
             "kind": "blob",
@@ -2232,6 +2250,11 @@
         },
         {
             "kind": "tar.gz",
+            "url": "https://ftp.gnu.org/gnu/bash/bash-5.3.tar.gz",
+            "sha256": "0d5cd86965f869a26cf64f4b71be7b96f90a3ba8b3d74e27e8e9d9d5550f31ba"
+        },
+        {
+            "kind": "tar.gz",
             "url": "https://github.com/HowardHinnant/date/archive/refs/tags/v3.0.1.tar.gz",
             "sha256": "7a390f200f0ccd207e8cff6757e04817c1a0aec3e327b006b7eb451c57ee3538",
             "path": "deps/date"
@@ -2291,6 +2314,11 @@
             "kind": "tar.gz",
             "url": "https://github.com/libffi/libffi/releases/download/v3.5.2/libffi-3.5.2.tar.gz",
             "sha256": "f3a3082a23b37c293a4fcd1053147b371f2ff91fa7ea1b2a52e335676bac82dc"
+        },
+        {
+            "kind": "tar.gz",
+            "url": "https://github.com/madler/zlib/releases/download/v1.3.1/zlib-1.3.1.tar.gz",
+            "sha256": "9a93b2b7dfdac77ceba5a558a580e74667dd6fede4585b91eefb60f03b72df23"
         },
         {
             "kind": "tar.gz",
@@ -2654,6 +2682,11 @@
             "kind": "tar.xz",
             "url": "https://github.com/MrCyjaneK/easybs/releases/download/r1/clang21-aarch64-apple-darwin.tar.xz",
             "sha256": "80e16711526b83f323a1014479a19a816e24f785f30dd712b5be297cc9b604e1"
+        },
+        {
+            "kind": "tar.xz",
+            "url": "https://github.com/MrCyjaneK/easybs/releases/download/r2/clang20-x86_64-windows-cygwin.tar.xz",
+            "sha256": "6b31052404b8c5eb9f66c48230aafa4e2947b9dc6a6048515aae67e9c33e87a6"
         },
         {
             "kind": "tar.xz",
