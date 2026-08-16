@@ -12,6 +12,7 @@
     "dependencies": [
         "*:*:native/_/_",
         "*:*:native/autoconf",
+        "*:*:native/bash",
         "*:*:native/libiconv",
         "*:*:native/make",
         "*:*:native/perl"
