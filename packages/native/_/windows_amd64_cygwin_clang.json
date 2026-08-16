@@ -12,7 +12,7 @@
     "build": {
         "steps": [
             "*:*:./bin/mkdir -p $STAGING_DIR$NATIVEPREFIX/_/",
-            "*:*:./bin/cp -a * $STAGING_DIR$NATIVEPREFIX/_/ || true"
+            "*:*:./bin/cp -a bin etc include lib libexec sbin share tmp usr $STAGING_DIR$NATIVEPREFIX/_/ || true"
         ]
     }
 }

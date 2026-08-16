@@ -240,7 +240,7 @@ func (p *Package) buildPackageInternal(h *host.Host, buildDependencies bool) {
 		nativePrefix := h.GetNativeEnvPath()
 		tmpDir := filepath.Join(nativePrefix, "_", "tmp")
 		os.MkdirAll(tmpDir, 0755)
-		shell := utils.ResolveShell(nativePrefix)
+		shell := utils.ResolveShellForBuild(nativePrefix, buildPath)
 		cmd := exec.Command(shell, "-c", stepCmd)
 		cmd.Dir = buildPath
 		pathEnv := utils.GetHostPath()
@@ -253,16 +253,18 @@ func (p *Package) buildPackageInternal(h *host.Host, buildDependencies bool) {
 
 		// Explicit env only — do not inherit the parent process environment.
 		overrides := map[string]string{
-			"STAGING_DIR":  utils.ToShellPath(stagingPath),
-			"HOST":         hostTriplet,
-			"PREFIX":       utils.ToShellPath(h.GetEnvPath()),
-			"NATIVEPREFIX": utils.ToShellPath(nativePrefix),
-			"PATH":         utils.BuildStepPATH(nativePrefix, h.GetEnvPath(), env["PATH"], pathEnv),
-			"TEMP":         utils.ToShellPath(tmpDir),
-			"TMP":          utils.ToShellPath(tmpDir),
-			"TMPDIR":       utils.ToShellPath(tmpDir),
-			"CYGWIN":       "nodosfilewarning",
-			"MSYS":         "nodosfilewarning",
+			"STAGING_DIR":         utils.ToShellPath(stagingPath),
+			"HOST":                hostTriplet,
+			"PREFIX":              utils.ToShellPath(h.GetEnvPath()),
+			"NATIVEPREFIX":        utils.ToShellPath(nativePrefix),
+			"PATH":                utils.BuildStepPATH(nativePrefix, h.GetEnvPath(), env["PATH"], pathEnv),
+			"TEMP":                utils.ToShellPath(tmpDir),
+			"TMP":                 utils.ToShellPath(tmpDir),
+			"TMPDIR":              utils.ToShellPath(tmpDir),
+			"CYGWIN":              "nodosfilewarning",
+			"MSYS":                "nodosfilewarning",
+			"MSYS_NO_PATHCONV":    "1",
+			"MSYS2_ARG_CONV_EXCL": "*",
 		}
 		for k, v := range env {
 			overrides[k] = v

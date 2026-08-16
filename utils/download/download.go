@@ -11,6 +11,7 @@ import (
 	"net/http"
 	"net/url"
 	"os"
+	"path"
 	"path/filepath"
 	"strconv"
 	"strings"
@@ -251,8 +252,10 @@ func URLToPath(urlStr string) (string, error) {
 		return "", fmt.Errorf("failed to parse URL: %v", err)
 	}
 
-	path := strings.TrimPrefix(parsedURL.Path, "/")
-	return filepath.Join(parsedURL.Host, path), nil
+	// Always slash-separated: used as a mirror URL suffix and as a relative
+	// cache key. Callers that need a filesystem path must filepath.FromSlash.
+	rel := strings.TrimPrefix(parsedURL.Path, "/")
+	return path.Join(parsedURL.Host, rel), nil
 }
 
 func DownloadFile(packageName, path, url, expectedSha256 string, isMirror bool) error {

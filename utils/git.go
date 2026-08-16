@@ -6,6 +6,7 @@ import (
 	"log"
 	"os"
 	"os/exec"
+	"path"
 	"path/filepath"
 	"strings"
 
@@ -49,7 +50,7 @@ func downloadBundleFromMirrors(bundlePath, originalURL string, refs []string) er
 	}
 
 	bundleFilename := filepath.Base(bundlePath)
-	mirrorPath := filepath.Join(filepath.Dir(urlPath), bundleFilename)
+	mirrorPath := path.Join(path.Dir(urlPath), bundleFilename)
 
 	mirrors := download.GetMirrors()
 	tempFile := bundlePath + ".download.tmp"

@@ -137,8 +137,17 @@ func DestDirJoin(staging, prefix string) string {
 }
 
 // ResolveShell returns the shell used for build steps.
-// Prefer Cygwin seed sh when present; otherwise Git for Windows sh.
+// Prefer $NATIVEPREFIX/_/bin/sh (Cygwin seed) when present; otherwise Git.
+// Do not use $NATIVEPREFIX/bin/sh — that would bypass PATH order and can pick
+// the wrong shell relative to the bash we build into bin/.
 func ResolveShell(nativePrefix string) string {
+	return ResolveShellForBuild(nativePrefix, "")
+}
+
+// ResolveShellForBuild is ResolveShell, but when buildPath contains bin/sh
+// (e.g. the extracted windows cygwin seed tarball), prefer that over Git.
+// Cold bootstrap has no $NATIVEPREFIX/_ yet; Git Bash would mangle /cygdrive paths.
+func ResolveShellForBuild(nativePrefix, buildPath string) string {
 	if runtime.GOOS != "windows" {
 		return "sh"
 	}
@@ -148,15 +157,17 @@ func ResolveShell(nativePrefix string) string {
 	candidates := []string{
 		filepath.Join(nativePrefix, "_", "bin", "sh.exe"),
 		filepath.Join(nativePrefix, "_", "bin", "sh"),
-		// After native/_ stages tools into bin/, prefer that Cygwin sh
-		// over Git Bash so /cygdrive paths keep working.
-		filepath.Join(nativePrefix, "bin", "sh.exe"),
-		filepath.Join(nativePrefix, "bin", "sh"),
-		filepath.Join(nativePrefix, "bin", "bash.exe"),
-		filepath.Join(nativePrefix, "bin", "bash"),
+	}
+	if buildPath != "" {
+		candidates = append(candidates,
+			filepath.Join(buildPath, "bin", "sh.exe"),
+			filepath.Join(buildPath, "bin", "sh"),
+		)
+	}
+	candidates = append(candidates,
 		filepath.Join(WindowsCygwinSeedBin(), "sh.exe"),
 		filepath.Join(WindowsCygwinSeedBin(), "sh"),
-	}
+	)
 	for _, b := range windowsGitBins() {
 		candidates = append(candidates, filepath.Join(b, "sh.exe"))
 	}
