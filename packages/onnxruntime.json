@@ -108,6 +108,7 @@
     "build": {
         "env": [
             "*:*:ort_extra=",
+            "*:*-linux-gnu:ort_extra=CMAKE_SHARED_LINKER_FLAGS=-static-libstdc++",
             "*:*-android*:ort_extra=Iconv_INCLUDE_DIR=$PREFIX/include Iconv_LIBRARY=$PREFIX/lib/libiconv.a",
             "*:aarch64-apple-darwin:ort_extra=CMAKE_OSX_ARCHITECTURES=arm64",
             "*:x86_64-apple-darwin:ort_extra=CMAKE_OSX_ARCHITECTURES=x86_64",
