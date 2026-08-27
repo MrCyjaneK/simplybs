@@ -136,7 +136,7 @@
         "*:*-linux-gnu:CC=$NATIVEPREFIX/bin/$HOST-gcc",
         "*:*-linux-gnu:CXX=$NATIVEPREFIX/bin/$HOST-g++",
         "*:*-linux-gnu:CFLAGS=--sysroot=$PREFIX/sysroot -I$PREFIX/include -I$PREFIX/usr/include",
-        "*:*-linux-gnu:CXXFLAGS=--sysroot=$PREFIX/sysroot -I$PREFIX/include -I$PREFIX/include/c++/15.2.0 -I$PREFIX/include/c++/15.2.0/$HOST -I$PREFIX/usr/include",
+        "*:*-linux-gnu:CXXFLAGS=--sysroot=$PREFIX/sysroot -I$PREFIX/include -I$PREFIX/include/c++/13.4.0 -I$PREFIX/include/c++/13.4.0/$HOST -I$PREFIX/usr/include",
         "*:*-linux-gnu:CPPFLAGS=-I$PREFIX/include -I$PREFIX/usr/include",
         "*:*-linux-gnu:LDFLAGS=--sysroot=$PREFIX/sysroot -L$PREFIX/lib -L$PREFIX/usr/lib",
         "*:*-linux-gnu:AR=$NATIVEPREFIX/bin/$HOST-ar",
