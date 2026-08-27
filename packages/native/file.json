@@ -15,8 +15,7 @@
         "*:*:native/make"
     ],
     "build": {
-        "env": [
-        ],
+        "env": [],
         "steps": [
             "*:*:bash ./configure --prefix=$NATIVEPREFIX",
             "*:*:make -j$NUM_CORES",
