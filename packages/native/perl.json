@@ -16,8 +16,7 @@
         "*:*:native/sed"
     ],
     "build": {
-        "env": [
-        ],
+        "env": [],
         "steps": [
             "*:*:mkdir -p $STAGING_DIR$NATIVEPREFIX/lib $NATIVEPREFIX/lib",
             "*:*:sed -i.bak '/^#ifndef PERL_BUILD_DATE$/,/^#endif$/{/^#ifndef PERL_BUILD_DATE$/!d; s/.*/\\#define PERL_BUILD_DATE \"Jan  1 1970 00:00:01\"/;}' perl.c",

@@ -34,6 +34,12 @@
         },
         {
             "kind": "blob",
+            "path": "work/.build/tarballs/gcc-13.4.0.tar.xz",
+            "sha256": "9c4ce6dbb040568fdc545588ac03c5cbc95a8dbf0c7aa490170843afb59ca8f5",
+            "url": "http://ftpmirror.gnu.org/gnu/gcc/gcc-13.4.0/gcc-13.4.0.tar.xz"
+        },
+        {
+            "kind": "blob",
             "path": "work/.build/tarballs/gdb-16.3.tar.xz",
             "sha256": "bcfcd095528a987917acf9fff3f1672181694926cc18d609c99d0042c00224c5",
             "url": "http://ftpmirror.gnu.org/gnu/gdb/gdb-16.3.tar.xz"
@@ -186,6 +192,7 @@
             "windows_*:x86_64-w64-mingw32:mkdir -p patches/mingw-w64 && cp $PATCH_DIR/native/ct-tools/clang-widl-winnt.h.patch patches/mingw-w64/",
             "windows_*:x86_64-w64-mingw32:sed -i '/put_new_config CT_MINGW_DEFAULT_MSVCRT_UCRT y/a\\    put_new_config CT_MINGW_W64_PATCH_LOCAL y\\n    put_new_config CT_MINGW_W64_PATCH_ORDER \"local,bundled\"\\n    put_new_config CT_PATCH_USE_LOCAL y\\n    put_new_config CT_LOCAL_PATCH_DIR \"'\"$(pwd)/patches\"'\"' run.sh",
             "*:*-linux-gnu:sed -i -e 's/^CT_GLIBC_V_2_42=y$/# CT_GLIBC_V_2_42 is not set/' -e 's/^# CT_GLIBC_V_2_41 is not set$/CT_GLIBC_V_2_41=y/' -e 's/^CT_GLIBC_VERSION=\"2.42\"$/CT_GLIBC_VERSION=\"2.41\"/' -e 's/^CT_GLIBC_2_42_or_later=y$/# CT_GLIBC_2_42_or_later is not set/' -e 's/^CT_GLIBC_2_42_or_older=y$/CT_GLIBC_2_41_or_older=y/' -e 's/^CT_GLIBC_later_than_2_41=y$/# CT_GLIBC_later_than_2_41 is not set/' platforms/$TOOL_TARGET/.config",
+            "*:*-linux-gnu:sed -i -e 's/^CT_GCC_V_15=y$/# CT_GCC_V_15 is not set/' -e 's/^# CT_GCC_V_13 is not set$/CT_GCC_V_13=y/' -e 's/^CT_GCC_VERSION=\"15.2.0\"$/CT_GCC_VERSION=\"13.4.0\"/' -e 's/^CT_GCC_later_than_15=y$/# CT_GCC_later_than_15 is not set/' -e 's/^CT_GCC_15_or_later=y$/# CT_GCC_15_or_later is not set/' -e 's/^CT_GCC_later_than_14=y$/# CT_GCC_later_than_14 is not set/' -e 's/^CT_GCC_14_or_later=y$/# CT_GCC_14_or_later is not set/' -e 's/^CT_GCC_later_than_13=y$/# CT_GCC_later_than_13 is not set/' platforms/$TOOL_TARGET/.config",
             "*:{*-linux-gnu,*-w64-mingw32}:sed -i 's|install=\"./scripts/install-sh -c\"|install=\"'$NATIVEPREFIX'/bin/install -c\"|g' $NATIVEPREFIX/share/crosstool-ng/paths.sh",
             "*:{*-linux-gnu,*-w64-mingw32}:mkdir -p $STAGING_DIR$PREFIX",
             "linux_*:{*-linux-gnu,*-w64-mingw32}:env -i PATH=$NATIVEPREFIX/bin:$NATIVEPREFIX/_/bin:$PATH LIBTOOL=$NATIVEPREFIX/bin/libtool AR=$NATIVEPREFIX/_/bin/llvm-ar RANLIB=$NATIVEPREFIX/_/bin/llvm-ranlib PREFIX=$(realpath $STAGING_DIR$PREFIX) ./run.sh $TOOL_TARGET",

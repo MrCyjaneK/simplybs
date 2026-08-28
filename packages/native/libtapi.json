@@ -9,7 +9,7 @@
             "url": "https://github.com/tpoechtrager/apple-libtapi.git"
         }
     ],
-        "dependencies": [
+    "dependencies": [
         "*:*:native/_/_",
         "*:*:native/bash",
         "*:*:native/cmake",
