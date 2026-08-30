@@ -1,0 +1,70 @@
+{
+    "package": "boost@1_90_0",
+    "version": "1_90_0",
+    "type": "host",
+    "download": [
+        {
+            "kind": "tar.bz2",
+            "sha256": "49551aff3b22cbc5c5a9ed3dbc92f0e23ea50a0f7325b0d198b705e8ee3fc305",
+            "url": "http://downloads.sourceforge.net/project/boost/boost/1.90.0/boost_1_90_0.tar.bz2"
+        }
+    ],
+    "dependencies": [
+        "*:*:native/_",
+        "*:*:native/bash",
+        "*:*:native/boost-b2@1_90_0",
+        "*:*:native/cmake",
+        "*:*:native/coreutils",
+        "*:*:native/python@3.14",
+        "*:*:libiconv",
+        "*:*:openssl",
+        "*:*:xz",
+        "*:*:zstd"
+    ],
+    "patches": [
+        "fix_io_control_hpp.patch"
+    ],
+    "build": {
+        "env": [
+            "*:*-linux-gnu*:CXXFLAGS=$CXXFLAGS -fPIC",
+            "*:*-apple-ios*:target_os=iphone",
+            "*:*-linux-android*:target_os=android",
+            "*:*-mingw32*:target_os=windows",
+            "*:*-linux-gnu*:target_os=linux",
+            "*:*:config_opts=variant=release --layout=system --without-python --without-mpi --without-graph_parallel --user-config=user-config.jam",
+            "*:*:config_opts=$config_opts threading=multi link=static -sNO_BZIP2=1 -sNO_ZLIB=1 -sICONV_PATH=$PREFIX",
+            "*:aarch64-apple-darwin:config_opts=$config_opts address-model=64 threadapi=pthread architecture=arm --toolset=darwin runtime-link=shared",
+            "*:x86_64-linux-android:config_opts=$config_opts address-model=64 threadapi=pthread runtime-link=static target-os=$target_os binary-format=elf abi=aapcs",
+            "*:aarch64-linux-android:config_opts=$config_opts address-model=64 threadapi=pthread runtime-link=static target-os=$target_os binary-format=elf abi=aapcs",
+            "*:armv7a-linux-androideabi:config_opts=$config_opts address-model=32 architecture=arm threadapi=pthread runtime-link=static target-os=$target_os binary-format=elf abi=aapcs",
+            "*:x86_64-apple-darwin:config_opts=$config_opts address-model=64 architecture=x86",
+            "*:aarch64-apple-ios:config_opts=$config_opts address-model=64 architecture=arm --toolset=darwin-iphone link=static runtime-link=static --without-process",
+            "*:aarch64-apple-ios-simulator:config_opts=$config_opts address-model=64 architecture=arm --toolset=darwin-iphone link=static runtime-link=static --without-process",
+            "*:x86_64-w64-mingw32:config_opts=$config_opts target-os=$target_os binary-format=pe threadapi=win32 runtime-link=static address-model=64 architecture=x86",
+            "*:i686-w64-mingw32:config_opts=$config_opts target-os=$target_os binary-format=pe threadapi=win32 runtime-link=static address-model=32 architecture=x86",
+            "*:i686-linux-gnu:config_opts=$config_opts address-model=32 architecture=x86 threadapi=pthread runtime-link=static",
+            "*:x86_64-linux-gnu:config_opts=$config_opts address-model=64 architecture=x86 threadapi=pthread runtime-link=static",
+            "*:aarch64-linux-gnu:config_opts=$config_opts address-model=64 architecture=arm threadapi=pthread runtime-link=static",
+            "*:*:toolset=gcc",
+            "*:*-apple-*:archiver=$LIBTOOL",
+            "*:*-apple-*:toolset=darwin",
+            "*:*-android*:toolset=gcc",
+            "*:*mingw32*:toolset=gcc",
+            "*:*-ios*:toolset2=iphone",
+            "*:*-apple-*:AR=libtool",
+            "*:{*-linux-*,*-w64-*}:ARFLAGS=rcs",
+            "none:*-apple-darwin:config_opts=$config_opts define=BOOST_LOG_WITHOUT_SYSLOG",
+            "none:*-apple-darwin:config_opts=$config_opts define=BOOST_LOG_WITHOUT_IPC",
+            "*:*-apple-*:config_opts=$config_opts define=_DARWIN_C_SOURCE"
+        ],
+        "steps": [
+            "*:*:echo \"using $toolset : $toolset2 : $CXX $CXXFLAGS : <CXXFLAGS>\"$CXXFLAGS\" <linkflags>\"$LDFLAGS\" <archiver>\"$AR\" <arflags>\"$ARFLAGS\" <striper>\"$STRIP\" <ranlib>\"$RANLIB\" <rc>\"$WINDRES\" <target-os>\"$target_os\" : ;\" > user-config.jam",
+            "*:*:echo \"using lzma : : <include>$PREFIX/include <search>$PREFIX/lib ;\" >> user-config.jam",
+            "*:*:echo \"using zstd : : <include>$PREFIX/include <search>$PREFIX/lib ;\" >> user-config.jam",
+            "*:*:echo \"using openssl : : <include>$PREFIX/include <search>$PREFIX/lib ;\" >> user-config.jam",
+            "*:*:b2 -j$NUM_CORES --prefix=$STAGING_DIR$PREFIX $config_opts",
+            "*:*:b2 -j1 --prefix=$STAGING_DIR$PREFIX $config_opts stage",
+            "*:*:b2 -d0 -j1 --prefix=$STAGING_DIR$PREFIX $config_opts install"
+        ]
+    }
+}

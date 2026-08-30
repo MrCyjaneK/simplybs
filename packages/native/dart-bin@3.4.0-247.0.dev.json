@@ -1,0 +1,40 @@
+{
+    "package": "native/dart-bin@3.4.0-247.0.dev",
+    "version": "3.4.0-247.0.dev",
+    "type": "native",
+    "download": [
+        {
+            "kind": "blob",
+            "path": "./dartsdk-darwin_arm64.zip",
+            "sha256": "95eec1e3dfa7c891d928c0ae3be9550675eefa95b240ea5dd414f9b4c2a90369",
+            "url": "https://storage.googleapis.com/dart-archive/channels/dev/release/3.4.0-247.0.dev/sdk/dartsdk-macos-arm64-release.zip"
+        },
+        {
+            "kind": "blob",
+            "path": "./dartsdk-linux_amd64.zip",
+            "sha256": "3cff0b896fb2f665c8ab2cbf746882fcf42d2def7c3c64db7e2208ee092932da",
+            "url": "https://storage.googleapis.com/dart-archive/channels/dev/release/3.4.0-247.0.dev/sdk/dartsdk-linux-x64-release.zip"
+        },
+        {
+            "kind": "blob",
+            "path": "./dartsdk-linux_arm64.zip",
+            "sha256": "98c0c8bd016ba6e1156d4630409f47ef42e16226efe331751e706711496208fc",
+            "url": "https://storage.googleapis.com/dart-archive/channels/dev/release/3.4.0-247.0.dev/sdk/dartsdk-linux-arm64-release.zip"
+        }
+    ],
+    "dependencies": [
+        "*:*:native/7zip",
+        "*:*:native/_/_"
+    ],
+    "build": {
+        "env": [],
+        "steps": [
+            "*:*:mkdir build",
+            "*:*:cd build && 7zz x ../dartsdk-${BUILDER_GOOS}_${BUILDER_GOARCH}.zip",
+            "*:*:mkdir -p $STAGING_DIR$NATIVEPREFIX",
+            "*:*:mv build/dart-sdk/lib $STAGING_DIR$NATIVEPREFIX",
+            "*:*:mv build/dart-sdk/include $STAGING_DIR$NATIVEPREFIX",
+            "*:*:mv build/dart-sdk/bin $STAGING_DIR$NATIVEPREFIX"
+        ]
+    }
+}

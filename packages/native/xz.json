@@ -1,0 +1,43 @@
+{
+    "package": "native/xz",
+    "version": "5.8.1",
+    "type": "native",
+    "download": [
+        {
+            "kind": "tar.gz",
+            "sha256": "507825b599356c10dca1cd720c9d0d0c9d5400b9de300af00e4d1ea150795543",
+            "url": "http://github.com/tukaani-project/xz/releases/download/v5.8.1/xz-5.8.1.tar.gz"
+        }
+    ],
+    "dependencies": [
+        "*:*:native/_/_",
+        "*:*:native/autoconf",
+        "*:*:native/automake",
+        "*:*:native/bash",
+        "*:*:native/gettext",
+        "*:*:native/gzip",
+        "*:*:native/libtool",
+        "*:*:native/m4",
+        "*:*:native/make",
+        "*:*:native/perl"
+    ],
+    "patches": [
+        "fix_declaration.patch"
+    ],
+    "build": {
+        "env": [
+            "*:*:config_opts=--prefix=$NATIVEPREFIX --host=$HOST",
+            "*:*:config_opts=$config_opts --disable-shared",
+            "*:*:config_opts=$config_opts --enable-static",
+            "*:*:config_opts=$config_opts --disable-doc",
+            "*:*:config_opts=$config_opts --disable-scripts"
+        ],
+        "steps": [
+            "*:*:bash ./autogen.sh --no-po4a",
+            "*:*:bash ./configure $config_opts",
+            "*:*:make -j$NUM_CORES",
+            "*:*:make DESTDIR=$STAGING_DIR install",
+            "*:*:rm $STAGING_DIR$NATIVEPREFIX/lib/*.la"
+        ]
+    }
+}

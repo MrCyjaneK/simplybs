@@ -2,61 +2,59 @@
     "package": "openssl",
     "version": "3.5.1",
     "type": "host",
-    "download": {
-        "kind": "tar.gz",
-        "sha256": "529043b15cffa5f36077a4d0af83f3de399807181d607441d734196d889b641f",
-        "url": "http://www.openssl.org/source/openssl-3.5.1.tar.gz"
-    },
+    "download": [
+        {
+            "kind": "tar.gz",
+            "sha256": "529043b15cffa5f36077a4d0af83f3de399807181d607441d734196d889b641f",
+            "url": "http://www.openssl.org/source/openssl-3.5.1.tar.gz"
+        }
+    ],
     "dependencies": [
-        "*-android*:native/android_ndk",
-        "all:native/make",
-        "all:native/perl"
+        "*:*:native/_",
+        "*:*:native/coreutils",
+        "*:*:native/make",
+        "*:*:native/perl",
+        "*:*:native/sed"
+    ],
+    "export-env": [
+        "*:*-linux-gnu:OPENSSL_LIBS=-lssl -lcrypto -lpthread -ldl",
+        "*:*-apple-darwin:OPENSSL_LIBS=-lssl -lcrypto",
+        "*:*-w64-mingw32:OPENSSL_LIBS=-lssl -lcrypto -lws2_32"
     ],
     "build": {
         "env": [
-            "*-android*:ANDROID_NDK_ROOT=$PREFIX/native",
-            "*-android*:CC=clang",
-            "*-android*:AR=ar",
-            "*-android*:RANLIB=ranlib",
-            "all:config_opts=--prefix=$PREFIX --openssldir=$PREFIX/etc/openssl --libdir=$PREFIX/lib",
-            "all:config_opts=$config_opts no-capieng",
-            "all:config_opts=$config_opts no-dso",
-            "all:config_opts=$config_opts no-dtls1",
-            "all:config_opts=$config_opts no-ec_nistp_64_gcc_128",
-            "all:config_opts=$config_opts no-gost",
-            "all:config_opts=$config_opts no-md2",
-            "all:config_opts=$config_opts no-rc5",
-            "all:config_opts=$config_opts no-rdrand",
-            "all:config_opts=$config_opts no-rfc3779",
-            "all:config_opts=$config_opts no-sctp",
-            "all:config_opts=$config_opts no-shared",
-            "all:config_opts=$config_opts no-ssl-trace",
-            "all:config_opts=$config_opts no-ssl3",
-            "all:config_opts=$config_opts no-tests",
-            "all:config_opts=$config_opts no-unit-test",
-            "all:config_opts=$config_opts no-weak-ssl-ciphers",
-            "all:config_opts=$config_opts no-zlib",
-            "all:config_opts=$config_opts no-zlib-dynamic",
-            "*linux*:config_opts=$config_opts -fPIC -Wa,--noexecstack",
-            "x86_64-linux*:config_opts=$config_opts linux-x86_64",
-            "i686-linux*:config_opts=$config_opts linux-generic32",
-            "arm-linux*:config_opts=$config_opts linux-generic32",
-            "aarch64-linux-gnu:config_opts=$config_opts linux-generic64",
-            "armv7a-linux-androideabi:config_opts=$config_opts --static android-arm",
-            "aarch64-linux-android:config_opts=$config_opts --static android-arm64",
-            "aarch64-apple-darwin:config_opts=$config_opts darwin64-arm64-cc",
-            "aarch64-apple-ios*:config_opts=$config_opts darwin64-arm64-cc",
-            "x86_64-apple-darwin:config_opts=$config_opts darwin64-x86_64-cc",
-            "x86_64-w64-mingw32:config_opts=$config_opts mingw64",
-            "i686-w64-mingw32:config_opts=$config_opts mingw"
+            "*:*-android*:CC=clang",
+            "*:*-android*:AR=ar",
+            "*:*-android*:RANLIB=ranlib",
+            "*:*:config_opts=--prefix=$PREFIX --openssldir=$PREFIX/etc/openssl --libdir=lib",
+            "*:*:config_opts=$config_opts no-ec_nistp_64_gcc_128",
+            "*:*:config_opts=$config_opts no-gost",
+            "*:*:config_opts=$config_opts no-md2",
+            "*:*:config_opts=$config_opts no-rc5",
+            "*:*:config_opts=$config_opts no-ssl-trace",
+            "*:*:config_opts=$config_opts no-tests",
+            "*:*:config_opts=$config_opts no-unit-test",
+            "*:*linux*:config_opts=$config_opts -fPIC -Wa,--noexecstack",
+            "*:x86_64-linux-gnu:config_opts=$config_opts linux-x86_64",
+            "*:i686-linux*:config_opts=$config_opts linux-generic32",
+            "*:arm-linux*:config_opts=$config_opts linux-generic32",
+            "*:aarch64-linux-gnu:config_opts=$config_opts linux-generic64",
+            "*:armv7a-linux-androideabi:config_opts=$config_opts android-arm",
+            "*:aarch64-linux-android:config_opts=$config_opts android-arm64",
+            "*:x86_64-linux-android:config_opts=$config_opts android-x86_64",
+            "*:aarch64-apple-darwin:config_opts=$config_opts darwin64-arm64-cc",
+            "*:aarch64-apple-ios*:config_opts=$config_opts darwin64-arm64-cc",
+            "*:x86_64-apple-darwin:config_opts=$config_opts darwin64-x86_64-cc",
+            "*:x86_64-w64-mingw32:config_opts=$config_opts mingw64",
+            "*:i686-w64-mingw32:config_opts=$config_opts mingw"
         ],
         "steps": [
-            "all:sed -i.bak 's/#define DATE \"built on: \\$date\"/#define DATE \"built on: Jan  1 1970 00:00:01\"/' util/mkbuildinf.pl",
-            "all:sed -i.bak 's|crypto ssl apps util tools fuzz providers doc|crypto ssl util tools providers|' build.info",
-            "armv7a-linux-androideabi:sed -i.bak s/arm-linux-androideabi/armv7a-linux-androideabi/g ./Configurations/15-android.conf",
-            "all:./Configure $config_opts",
-            "all:make -j$NUM_CORES build_libs",
-            "all:make -j$NUM_CORES DESTDIR=$STAGING_DIR install_sw"
+            "*:*:sed -i.bak 's/#define DATE \"built on: \\$date\"/#define DATE \"built on: Jan  1 1970 00:00:01\"/' util/mkbuildinf.pl",
+            "*:*:sed -i.bak 's|crypto ssl apps util tools fuzz providers doc|crypto ssl util tools providers|' build.info",
+            "*:armv7a-linux-androideabi:sed -i.bak s/arm-linux-androideabi/armv7a-linux-androideabi/g ./Configurations/15-android.conf",
+            "*:*:./Configure $config_opts",
+            "*:*:make -j$NUM_CORES build_libs",
+            "*:*:make -j$NUM_CORES DESTDIR=$STAGING_DIR install_sw"
         ]
     }
 }

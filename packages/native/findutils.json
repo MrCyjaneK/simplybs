@@ -1,0 +1,31 @@
+{
+    "package": "native/findutils",
+    "version": "4.10.0",
+    "type": "native",
+    "download": [
+        {
+            "kind": "tar.xz",
+            "sha256": "1387e0b67ff247d2abde998f90dfbf70c1491391a59ddfecb8ae698789f0a4f5",
+            "url": "https://ftp.gnu.org/gnu/findutils/findutils-4.10.0.tar.xz"
+        }
+    ],
+    "dependencies": [
+        "*:*:native/_/_",
+        "*:*:native/bash",
+        "*:*:native/grep",
+        "*:*:native/make",
+        "*:*:native/sed"
+    ],
+    "build": {
+        "env": [
+            "*:*:config_opts=--prefix=$NATIVEPREFIX",
+            "windows_*:*:config_opts=$config_opts gl_cv_have_weak=no"
+        ],
+        "steps": [
+            "*:*:bash ./configure $config_opts",
+            "windows_*:*:bash $PATCH_DIR/native/_/drop-gnulib-wint-wrappers.sh",
+            "*:*:make -j$NUM_CORES",
+            "*:*:DESTDIR=$STAGING_DIR make install"
+        ]
+    }
+}

@@ -1,0 +1,18 @@
+{
+    "package": "native/_/darwin_arm64_clang21",
+    "version": "0.0.0",
+    "type": "native",
+    "download": [
+        {
+            "kind": "tar.xz",
+            "sha256": "80e16711526b83f323a1014479a19a816e24f785f30dd712b5be297cc9b604e1",
+            "url": "https://github.com/MrCyjaneK/easybs/releases/download/r1/clang21-aarch64-apple-darwin.tar.xz"
+        }
+    ],
+    "build": {
+        "steps": [
+            "*:*:./bin/mkdir -p $STAGING_DIR$NATIVEPREFIX/_/",
+            "*:*:./bin/cp -a * $STAGING_DIR$NATIVEPREFIX/_/"
+        ]
+    }
+}

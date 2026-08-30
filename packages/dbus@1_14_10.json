@@ -1,0 +1,41 @@
+{
+    "package": "dbus@1_14_10",
+    "version": "1_14_10",
+    "type": "host",
+    "download": [
+        {
+            "kind": "tar.xz",
+            "sha256": "ba1f21d2bd9d339da2d4aa8780c09df32fea87998b73da24f49ab9df1e36a50f",
+            "url": "https://dbus.freedesktop.org/releases/dbus/dbus-1.14.10.tar.xz"
+        }
+    ],
+    "dependencies": [
+        "*:*-linux-gnu:native/_",
+        "*:*-linux-gnu:native/bash",
+        "*:*-linux-gnu:native/coreutils",
+        "*:*-linux-gnu:native/diffutils",
+        "*:*-linux-gnu:native/grep",
+        "*:*-linux-gnu:native/pkgconf",
+        "*:*-linux-gnu:native/gawk",
+        "*:*-linux-gnu:native/findutils",
+        "*:*-linux-gnu:native/make",
+        "*:*-linux-gnu:native/patch",
+        "*:*-linux-gnu:expat",
+        "*:*-linux-gnu:native/sed"
+    ],
+    "patches": [
+        "remove-DDBUS_STATIC_BUILD.patch"
+    ],
+    "build": {
+        "env": [
+            "*:*-linux-gnu:config_opts=--host=$HOST --prefix=$PREFIX --disable-shared --enable-static --disable-maintainer-mode --disable-xml-docs --disable-doxygen-docs --disable-ducktype-docs"
+        ],
+        "steps": [
+            "*:*-linux-gnu:patch -p1 < $PATCH_DIR/dbus/remove-DDBUS_STATIC_BUILD.patch",
+            "*:*-linux-gnu:bash ./configure $config_opts",
+            "*:*-linux-gnu:make -j$NUM_CORES",
+            "*:*-linux-gnu:make DESTDIR=$STAGING_DIR install",
+            "*:*-linux-gnu:rm -f $STAGING_DIR$PREFIX/lib/*.la"
+        ]
+    }
+}

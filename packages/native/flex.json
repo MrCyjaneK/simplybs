@@ -1,0 +1,34 @@
+{
+    "package": "native/flex",
+    "version": "2.6.4",
+    "type": "native",
+    "download": [
+        {
+            "kind": "tar.gz",
+            "sha256": "e87aae032bf07c26f85ac0ed3250998c37621d95f8bd748b31f15b33c45ee995",
+            "url": "https://github.com/westes/flex/releases/download/v2.6.4/flex-2.6.4.tar.gz"
+        }
+    ],
+    "dependencies": [
+        "*:*:native/_/_",
+        "*:*:native/bash",
+        "*:*:native/gettext",
+        "*:*:native/libiconv",
+        "*:*:native/m4",
+        "*:*:native/make",
+        "*:*:native/unistring"
+    ],
+    "build": {
+        "env": [
+            "*:*:config_opts=--prefix=$NATIVEPREFIX",
+            "*:*:config_opts=$config_opts --with-pic",
+            "*:*:config_opts=$config_opts --enable-shared",
+            "*:*:config_opts=$config_opts --enable-static"
+        ],
+        "steps": [
+            "*:*:bash ./configure  $config_opts",
+            "*:*:make -j$NUM_CORES",
+            "*:*:make DESTDIR=$STAGING_DIR install"
+        ]
+    }
+}

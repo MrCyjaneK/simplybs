@@ -1,0 +1,43 @@
+{
+    "package": "native/binutils@2.46.0",
+    "version": "2.46.0",
+    "type": "native",
+    "download": [
+        {
+            "kind": "tar.bz2",
+            "sha256": "0f3152632a2a9ce066f20963e9bb40af7cf85b9b6c409ed892fd0676e84ecd12",
+            "url": "https://ftpmirror.gnu.org/gnu/binutils/binutils-2.46.0.tar.bz2"
+        }
+    ],
+    "dependencies": [
+        "*:*:native/_/_",
+        "*:*:native/bison",
+        "*:*:native/diffutils",
+        "*:*:native/grep",
+        "*:*:native/libiconv",
+        "*:*:native/libtool",
+        "*:*:native/make",
+        "*:*:native/perl",
+        "*:*:native/pkgconf",
+        "*:*:native/texinfo",
+        "*:*:native/zlib"
+    ],
+    "build": {
+        "env": [
+            "*:*:config_opts=--prefix=$NATIVEPREFIX",
+            "*:*:config_opts=$config_opts --disable-nls",
+            "*:*:config_opts=$config_opts --disable-werror",
+            "*:*:config_opts=$config_opts --with-system-zlib",
+            "*:*:config_opts=$config_opts --enable-targets=all",
+            "*:*:config_opts=$config_opts --disable-gprofng",
+            "*:*:config_opts=$config_opts --libdir=$NATIVEPREFIX/lib",
+            "*:*:config_opts=$config_opts --infodir=$NATIVEPREFIX/share/info"
+        ],
+        "steps": [
+            "*:*:mkdir -p build",
+            "*:*:cd build && ../configure $config_opts",
+            "*:*:cd build && make -j$NUM_CORES",
+            "*:*:cd build && make install DESTDIR=$STAGING_DIR"
+        ]
+    }
+}

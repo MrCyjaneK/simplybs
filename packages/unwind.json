@@ -2,32 +2,33 @@
     "package": "unwind",
     "version": "1.5.0",
     "type": "host",
-    "download": {
-        "kind": "tar.gz",
-        "sha256": "90337653d92d4a13de590781371c604f9031cdb50520366aa1e3a91e1efb1017",
-        "url": "http://download.savannah.nongnu.org/releases/libunwind/libunwind-1.5.0.tar.gz"
-    },
+    "download": [
+        {
+            "kind": "tar.gz",
+            "sha256": "90337653d92d4a13de590781371c604f9031cdb50520366aa1e3a91e1efb1017",
+            "url": "http://download.savannah.nongnu.org/releases/libunwind/libunwind-1.5.0.tar.gz"
+        }
+    ],
     "dependencies": [
-        "*-android*:native/android_ndk",
-        "all:native/config",
-        "all:native/gettext"
+        "*:*:native/_",
+        "*:*:native/config",
+        "*:*:native/gettext"
     ],
     "patches": [
         "fix_obj_order.patch"
     ],
     "build": {
         "env": [
-            "*-linux-gnu:config_opts=--host=$HOST --prefix=$PREFIX",
-            "*-linux-gnu:config_opts=$config_opts --disable-shared --enable-static --disable-tests --disable-documentation",
-            "*-linux-gnu:AR_FLAGS=$ARFLAGS"
+            "*:*-linux-gnu:config_opts=--host=$HOST --prefix=$PREFIX",
+            "*:*-linux-gnu:config_opts=$config_opts --disable-shared --enable-static --disable-tests --disable-documentation"
         ],
         "steps": [
-            "all:cp -f $PREFIX/native/usr/share/config/config.guess config/config.guess",
-            "all:cp -f $PREFIX/native/usr/share/config/config.sub config/config.sub",
-            "*-linux-gnu:patch -p0 < $PATCH_DIR/unwind/fix_obj_order.patch",
-            "*-linux-gnu:./configure $config_opts",
-            "*-linux-gnu:make -j$NUM_CORES",
-            "*-linux-gnu:make -j$NUM_CORES DESTDIR=$STAGING_DIR install"
+            "*:*:cp -f $NATIVEPREFIX/share/config/config.guess config/config.guess",
+            "*:*:cp -f $NATIVEPREFIX/share/config/config.sub config/config.sub",
+            "*:*-linux-gnu:patch -p0 < $PATCH_DIR/unwind/fix_obj_order.patch",
+            "*:*-linux-gnu:./configure $config_opts",
+            "*:*-linux-gnu:make -j$NUM_CORES",
+            "*:*-linux-gnu:make -j$NUM_CORES DESTDIR=$STAGING_DIR install"
         ]
     }
 }

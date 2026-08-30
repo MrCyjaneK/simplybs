@@ -3,6 +3,7 @@ package pack
 import (
 	"encoding/json"
 	"fmt"
+	"maps"
 	"os"
 	"path/filepath"
 	"runtime"
@@ -11,28 +12,39 @@ import (
 	"github.com/mrcyjanek/simplybs/builder"
 	"github.com/mrcyjanek/simplybs/crash"
 	"github.com/mrcyjanek/simplybs/host"
-	"github.com/ryanuber/go-glob"
+	"github.com/mrcyjanek/simplybs/utils"
+	"github.com/mrcyjanek/simplybs/utils/ifstring"
 )
 
+type Download struct {
+	Kind   string `json:"kind"`
+	URL    string `json:"url"`
+	Sha256 string `json:"sha256"`
+	Path   string `json:"path"`
+}
+
+type StepProfile struct {
+	Unset []string `json:"unset,omitempty"`
+	Env   []string `json:"env,omitempty"`
+}
+
 type Package struct {
-	Package  string `json:"package"`
-	Version  string `json:"version"`
-	Type     string `json:"type"`
-	Download struct {
-		Kind   string `json:"kind"`
-		URL    string `json:"url"`
-		Sha256 string `json:"sha256"`
-	} `json:"download"`
-	Build struct {
-		Env   []string `json:"env"`
-		Steps []string `json:"steps"`
+	Package  string      `json:"package"`
+	Version  string      `json:"version"`
+	Type     string      `json:"type"`
+	Download []*Download `json:"download"`
+	Build    struct {
+		Env      []string               `json:"env"`
+		Profiles map[string]StepProfile `json:"profiles,omitempty"`
+		Steps    []string               `json:"steps"`
 	} `json:"build"`
 	Dependencies []string `json:"dependencies"`
+	ExportEnv    []string `json:"export-env"`
 }
 
 type BuiltFile struct {
 	Builder  string `json:"builder"`   // e.g. "darwin_arm64"
-	Target   string `json:"target"`    // e.g. "aarch64-apple-ios"
+	Target   string `json:"target"`    // e.g. "*:aarch64-apple-ios"
 	ID       string `json:"id"`        // short hash
 	InfoPath string `json:"info_path"` // relative path to .info.txt
 	ArchPath string `json:"arch_path"` // relative path to .tar.gz
@@ -45,11 +57,7 @@ type PackageWithBuilds struct {
 }
 
 var bootstrapPackages = []string{
-	"native/bootstrap/perl",
-	"native/bootstrap/cpan/archive-cpio",
-	"native/bootstrap/cpan/archive-zip",
-	"native/bootstrap/cpan/sub-override",
-	"native/bootstrap/strip-nondeterminism",
+	// "*:*:native/bootstrap/strip-nondeterminism",
 }
 
 func FindPackage(name string) (*Package, error) {
@@ -66,16 +74,15 @@ func FindPackage(name string) (*Package, error) {
 
 	if !strings.Contains(pkg.Package, "/bootstrap/") {
 		for _, pkgName := range bootstrapPackages {
-			pkg.Dependencies = append(pkg.Dependencies, "all:"+pkgName)
+			pkg.Dependencies = append(pkg.Dependencies, pkgName)
 		}
-		pkg.Build.Steps = append(pkg.Build.Steps, "all:$PREFIX/native/bootstrap/bin/strip-nondeterminism-recursive --directory $STAGING_DIR")
+		// pkg.Build.Steps = append(pkg.Build.Steps, "*:$NATIVEPREFIX/bootstrap/bin/perl $NATIVEPREFIX/bootstrap/bin/strip-nondeterminism-recursive --directory $STAGING_DIR")
 	}
 	return &pkg, nil
 }
 
 func PrintPackage(pkgName string, host string) {
 	depsByLevel := collectDependenciesByLevel(pkgName, host)
-
 	userPkg, err := FindPackage(pkgName)
 	crash.Handle(err)
 	fmt.Printf("0: %s (version: %s)\n", pkgName, userPkg.Version)
@@ -86,7 +93,7 @@ func PrintPackage(pkgName string, host string) {
 			continue
 		}
 
-		for i := 0; i < len(deps); i++ {
+		for i := range deps {
 			for j := i + 1; j < len(deps); j++ {
 				if deps[i] > deps[j] {
 					deps[i], deps[j] = deps[j], deps[i]
@@ -116,7 +123,8 @@ func ScanBuiltFiles(packageName string, packageVersion string) []BuiltFile {
 
 	for _, builder := range builder.Builders {
 		for _, target := range targets {
-			buildOutputDir := filepath.Join(buildlibDir, builder, "built", target, packageName)
+			safePackageName := strings.ReplaceAll(packageName, "/", "_")
+			buildOutputDir := filepath.Join(buildlibDir, builder, "built", target, safePackageName)
 			buildOutputDir = filepath.Dir(buildOutputDir)
 
 			if _, err := os.Stat(buildOutputDir); os.IsNotExist(err) {
@@ -179,6 +187,7 @@ func Cleanup() {
 	packages := GetAllPackages()
 
 	keepFiles := make(map[string]bool)
+	keepSources := make(map[string]bool)
 
 	builders := []string{runtime.GOOS + "_" + runtime.GOARCH}
 	targets := make([]string, 0, len(host.SupportedHosts))
@@ -192,16 +201,45 @@ func Cleanup() {
 				currentBuildID := pkg.GeneratePackageInfoShortHash(host.SupportedHosts[target])
 
 				currentFileName := fmt.Sprintf("%s-%s-%s", pkg.Package, pkg.Version, currentBuildID)
-				archPath := filepath.Join(builder, "built", target, currentFileName+".tar.gz")
-				infoPath := filepath.Join(builder, "built", target, currentFileName+".info.txt")
+				currentFileName = strings.ReplaceAll(currentFileName, "/", "_")
 
-				keepFiles[archPath] = true
-				keepFiles[infoPath] = true
+				var archPath, archNativePath, infoPath string
+				if pkg.Type == "native" {
+					// Native archives live flat under built/ (no target triplet dir).
+					archPath = filepath.Join(builder, "built", currentFileName+".tar.gz")
+					archNativePath = filepath.Join(builder, "built", currentFileName+"_native.tar.gz")
+					infoPath = filepath.Join(builder, "built", currentFileName+".info.txt")
+				} else {
+					archPath = filepath.Join(builder, "built", target, currentFileName+".tar.gz")
+					archNativePath = filepath.Join(builder, "built", target, currentFileName+"_native.tar.gz")
+					infoPath = filepath.Join(builder, "built", target, currentFileName+".info.txt")
+				}
+
+				// Walk uses ToSlash; keep keys must match on Windows (filepath.Join uses '\').
+				keepFiles[filepath.ToSlash(archPath)] = true
+				keepFiles[filepath.ToSlash(archNativePath)] = true
+				keepFiles[filepath.ToSlash(infoPath)] = true
+			}
+		}
+
+		var keepFilesCopy = make(map[string]bool)
+		maps.Copy(keepFilesCopy, keepFiles)
+		for k := range keepFilesCopy {
+			if strings.HasSuffix(k, ".tar.gz") && !strings.HasSuffix(k, "_native.tar.gz") {
+				keepFiles[strings.TrimSuffix(k, ".tar.gz")+"_native.tar.gz"] = true
+			}
+		}
+
+		for _, download := range pkg.Download {
+			sourcePath := pkg.GenerateSourceBuildPath(download)
+			relPath, err := filepath.Rel(buildlibDir, sourcePath)
+			if err == nil {
+				keepSources[filepath.ToSlash(relPath)] = true
 			}
 		}
 	}
 
-	fmt.Printf("Cleanup: Will keep %d current build files\n", len(keepFiles))
+	fmt.Printf("Cleanup: Will keep %d current build files and %d source files\n", len(keepFiles), len(keepSources))
 
 	for _, builder := range builders {
 		builderDir := filepath.Join(buildlibDir, builder)
@@ -246,9 +284,49 @@ func Cleanup() {
 		for _, dir := range []string{workDir, stagingDir, envDir} {
 			if _, err := os.Stat(dir); !os.IsNotExist(err) {
 				fmt.Printf("Removing directory: %s\n", filepath.Base(dir))
-				os.RemoveAll(dir)
+				utils.RemoveAll(dir)
 			}
 		}
+	}
+
+	sourceDir := filepath.Join(buildlibDir, "source")
+	if _, err := os.Stat(sourceDir); !os.IsNotExist(err) {
+		err := filepath.WalkDir(sourceDir, func(path string, d os.DirEntry, err error) error {
+			if err != nil {
+				return err
+			}
+
+			if d.IsDir() {
+				return nil
+			}
+
+			relPath, err := filepath.Rel(buildlibDir, path)
+			if err != nil {
+				return nil
+			}
+
+			relPath = filepath.ToSlash(relPath)
+
+			if !keepSources[relPath] {
+				fmt.Printf("Removing stale source file: %s\n", relPath)
+				os.Remove(path)
+			}
+
+			return nil
+		})
+		if err != nil {
+			fmt.Printf("Error walking source directory %s: %v\n", sourceDir, err)
+		}
+
+		filepath.WalkDir(sourceDir, func(path string, d os.DirEntry, err error) error {
+			if err != nil {
+				return err
+			}
+			if d.IsDir() && path != sourceDir {
+				os.Remove(path)
+			}
+			return nil
+		})
 	}
 
 	fmt.Println("Cleanup completed!")
@@ -261,10 +339,8 @@ func collectDependenciesByLevel(pkgName string, host string) [][]string {
 	currentLevel := []string{pkgName}
 	visited[pkgName] = true
 	levels = append(levels, []string{})
-
 	for len(currentLevel) > 0 {
 		nextLevel := []string{}
-
 		for _, currentPkg := range currentLevel {
 			pkg, err := FindPackage(currentPkg)
 			if err != nil {
@@ -272,20 +348,14 @@ func collectDependenciesByLevel(pkgName string, host string) [][]string {
 			}
 
 			for _, dep := range pkg.Dependencies {
-				var actualDep string
-				if strings.Contains(dep, ":") {
-					prefix := strings.Split(dep, ":")[0]
-					if !glob.Glob(prefix, host) && prefix != "all" {
-						continue
-					}
-					actualDep = dep[strings.Index(dep, ":")+1:]
-				} else {
-					actualDep = dep
+				is := ifstring.ParseIfString(dep)
+				if !is.Matches(host, builder.GetName()) {
+					continue
 				}
 
-				if !visited[actualDep] {
-					visited[actualDep] = true
-					nextLevel = append(nextLevel, actualDep)
+				if !visited[is.Content] {
+					visited[is.Content] = true
+					nextLevel = append(nextLevel, is.Content)
 				}
 			}
 		}

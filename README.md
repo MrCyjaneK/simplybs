@@ -31,7 +31,7 @@ All package definitions live inside of this repo (this is going to change soon *
   // (soon) "source" indicationg a package that only contains source code (e.g. that was pulled using custom tools such as `repo` or are too complex for the built in system to handle)
   "type": "host",
   // where to find the source code
-  "download": {
+  "download": [{
     // "tar.gz" indicates a (who wouldn't have guessed) .tar.gz archive that will be extracted before build steps occur
     // "tar.bz2" indicares a (no way.. is it gonna be..) .tar.bz2 archive that will be extracted.. you get the drill
     // "git" indicates a Git repository being used
@@ -50,24 +50,24 @@ All package definitions live inside of this repo (this is going to change soon *
     // build all packages recursively but it won't inherit parent dependencies)
     "*-android*:native/android_ndk",
     // all is a magic keyword that works just like *
-    "all:native/make",
-    "all:native/libtool"
+    "*:native/make",
+    "*:native/libtool"
   ],
   "build": {
     "env": [
       // same logic as in dependencies applies, most variables are available during this phase (like $PREFIX or $HOST)
-      "all:CFLAGS=$CFLAGS -fPIC",
-      "all:config_opts=--prefix=$PREFIX --static",
-      "all:LIBTOOL=$PREFIX/native/bin/libtool",
-      "all:CROSS_PREFIX=$HOST-"
+      "*:CFLAGS=$CFLAGS -fPIC",
+      "*:config_opts=--prefix=$PREFIX --static",
+      "*:LIBTOOL=$NATIVEPREFIX/bin/libtool",
+      "*:CROSS_PREFIX=$HOST-"
     ],
     "steps": [
       // step-by-step instructions to build the package.
-      "all:./configure $config_opts",
-      "all:sed -i.bak s\\|^AR=.*\\|AR=$AR\\|g Makefile",
-      "all:sed -i.bak s\\|^ARFLAGS=.*\\|ARFLAGS=$ARFLAGS\\|g Makefile",
-      "all:make -j$NUM_CORES",
-      "all:make DESTDIR=$STAGING_DIR install"
+      "*:./configure $config_opts",
+      "*:sed -i.bak s\\|^AR=.*\\|AR=$AR\\|g Makefile",
+      "*:sed -i.bak s\\|^ARFLAGS=.*\\|ARFLAGS=$ARFLAGS\\|g Makefile",
+      "*:make -j$NUM_CORES",
+      "*:make DESTDIR=$STAGING_DIR install"
     ]
   }
 }
@@ -75,8 +75,54 @@ All package definitions live inside of this repo (this is going to change soon *
 
 ## Usage
 
-In order to build, let's say, `libtor` for armv7a-linux-androideabi you would run the following command (on either a Mac or Linux x64 device).
+In order to build, let's say, `tor` for armv7a-linux-androideabi you would run the following command (on either a Mac or Linux x64 device).
 
 ```
-$ go run . -host armv7a-linux-androideabi -package libtor -build
+$ go run . -host armv7a-linux-androideabi -package tor -build
 ```
+
+## Recommended / "official" cache settings
+
+```bash
+SIMPLYBS_ENV_DIR=/opt/_
+```
+
+## Build cache (GitHub Releases)
+
+Built package archives are content-addressed (`package-version-<8-char-hash>`).
+They can be shared via a rolling GitHub Release without downloading the whole
+cache on every run.
+
+Cache is enabled only when **both** required variables are set:
+
+| Variable | Required | Purpose |
+| --- | --- | --- |
+| `SIMPLYBS_CACHE_TAG` | yes | Release tag (e.g. `v0-sbs-$USER-$GOOS-$GOARCH`) |
+| `SIMPLYBS_CACHE_REPO` | yes | `owner/repo` hosting the release |
+| `SIMPLYBS_GH` | no | Optional path to `gh` |
+
+```bash
+# export SIMPLYBS_CACHE_TAG=v0-sbs-$USER-$(go env GOOS)-$(go env GOARCH)
+# export SIMPLYBS_CACHE_REPO=mrcyjanek/simplybs_private
+```
+
+With those set, `-build` auto-pulls the needed package tree up front, pulls
+per-package inside `EnsureBuilt` as a fallback, pushes each package after a
+successful local build, and runs a final tree push for anything still missing
+on the release:
+
+```bash
+go run . -host x86_64-linux-gnu -package zlib -build
+```
+
+Explicit pull/push still work:
+
+```bash
+go run . -host x86_64-linux-gnu -package zlib -cache-pull
+go run . -cache-push                                          # all local built/
+go run . -host x86_64-linux-gnu -package zlib -cache-push     # that package tree only
+```
+
+Push only uploads local artifacts that are not already on the release (a
+package rebuild with a new hash is a new asset name, so “changed” caches
+upload naturally).

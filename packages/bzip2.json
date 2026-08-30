@@ -1,0 +1,26 @@
+{
+    "package": "bzip2",
+    "version": "1.0.8",
+    "type": "host",
+    "download": [
+        {
+            "kind": "tar.gz",
+            "sha256": "ab5a03176ee106d3f0fa90e381da478ddae405918153cca248e682cd0c4a2269",
+            "url": "https://sourceware.org/pub/bzip2/bzip2-1.0.8.tar.gz"
+        }
+    ],
+    "dependencies": [
+        "*:*:native/_",
+        "*:*:openssl"
+    ],
+    "build": {
+        "steps": [
+            "*:*:sed -i.bak 's|^CC=.*|CC ?= $CC|' Makefile",
+            "*:*:sed -i.bak 's|^AR=.*|AR ?= $AR|' Makefile",
+            "*:*:sed -i.bak 's|^RANLIB=.*|RANLIB ?= $RANLIB|' Makefile",
+            "*:*:sed -i.bak 's|^CFLAGS=.*|CFLAGS ?= $CFLAGS $BIGFILES|' Makefile",
+            "*:*:make libbz2.a bzip2 bzip2recover -j$NUM_CORES",
+            "*:*:make install PREFIX=$STAGING_DIR$PREFIX"
+        ]
+    }
+}

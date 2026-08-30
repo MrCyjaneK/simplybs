@@ -1,0 +1,30 @@
+{
+    "package": "native/tar",
+    "version": "1.35",
+    "type": "native",
+    "download": [
+        {
+            "kind": "tar.xz",
+            "sha256": "4d62ff37342ec7aed748535323930c7cf94acf71c3591882b26a7ea50f3edc16",
+            "url": "http://ftpmirror.gnu.org/gnu/tar/tar-1.35.tar.xz"
+        }
+    ],
+    "dependencies": [
+        "*:*:native/_/_",
+        "*:*:native/bash",
+        "*:*:native/libiconv",
+        "*:*:native/make"
+    ],
+    "build": {
+        "env": [
+            "*:*:config_opts=--prefix=$NATIVEPREFIX",
+            "*:*:LIBS=-liconv",
+            "windows_*:*:config_opts=$config_opts gl_cv_have_weak=no"
+        ],
+        "steps": [
+            "*:*:bash ./configure $config_opts",
+            "*:*:make -j$NUM_CORES",
+            "*:*:make DESTDIR=$STAGING_DIR install"
+        ]
+    }
+}

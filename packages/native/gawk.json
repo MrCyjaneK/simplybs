@@ -2,24 +2,38 @@
     "package": "native/gawk",
     "version": "5.3.2",
     "type": "native",
-    "download": {
-        "kind": "tar.gz",
-        "sha256": "8639a1a88fb411a1be02663739d03e902a6d313b5c6fe024d0bfeb3341a19a11",
-        "url": "http://ftpmirror.gnu.org/gnu/gawk/gawk-5.3.2.tar.gz"
-    },
+    "download": [
+        {
+            "kind": "tar.gz",
+            "sha256": "8639a1a88fb411a1be02663739d03e902a6d313b5c6fe024d0bfeb3341a19a11",
+            "url": "http://ftpmirror.gnu.org/gnu/gawk/gawk-5.3.2.tar.gz"
+        }
+    ],
     "dependencies": [
-        "all:native/make"
+        "*:*:native/_/_",
+        "*:*:native/autoconf",
+        "*:*:native/automake",
+        "*:*:native/bash",
+        "*:*:native/gettext",
+        "*:*:native/libtool",
+        "*:*:native/make",
+        "*:*:native/perl",
+        "*:*:native/pkgconf"
     ],
     "build": {
         "env": [
-            "all:AUTOMAKE=true",
-            "all:ACLOCAL=true",
-            "all:MAKEINFO=true"
+            "*:*:AUTOMAKE=true",
+            "*:*:ACLOCAL=true",
+            "*:*:MAKEINFO=true",
+            "*:*:config_opts=--prefix=$NATIVEPREFIX",
+            "darwin_*:*:CFLAGS=$CFLAGS -include mach-o/dyld.h",
+            "windows_*:*:config_opts=$config_opts gl_cv_have_weak=no"
         ],
         "steps": [
-            "all:./configure --prefix=$PREFIX/native",
-            "all:make -j$NUM_CORES",
-            "all:make DESTDIR=$STAGING_DIR install"
+            "*:*:bash ./configure $config_opts",
+            "windows_*:*:bash $PATCH_DIR/native/_/drop-gnulib-wint-wrappers.sh",
+            "*:*:make -j$NUM_CORES",
+            "*:*:make DESTDIR=$STAGING_DIR install"
         ]
     }
 }

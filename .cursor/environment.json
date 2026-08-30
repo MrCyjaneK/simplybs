@@ -1,0 +1,4 @@
+{
+  "name": "simplybs",
+  "install": "./.cursor/install.sh"
+}

@@ -1,0 +1,69 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -52,10 +52,6 @@ if (POLICY CMP0179)
+     cmake_policy(SET CMP0179 NEW)
+ endif()
+ 
+-if (IOS)
+-    INCLUDE(CmakeLists_IOS.txt)
+-endif()
+-
+ project(monero)
+ 
+ option (USE_COMPILER_CACHE "Use compiler cache if a usable instance is found (sccache/ccache)" ON)
+diff --git a/src/cryptonote_basic/CMakeLists.txt b/src/cryptonote_basic/CMakeLists.txt
+--- a/src/cryptonote_basic/CMakeLists.txt
++++ b/src/cryptonote_basic/CMakeLists.txt
+@@ -28,7 +28,11 @@
+ 
+ if(APPLE)
+   if(DEPENDS)
+-    list(APPEND EXTRA_LIBRARIES "-framework Foundation -framework ApplicationServices -framework AppKit -framework IOKit")
++    if(${CMAKE_SYSTEM_NAME} STREQUAL "iOS")
++      list(APPEND EXTRA_LIBRARIES "-framework Foundation -framework IOKit")
++    else()
++      list(APPEND EXTRA_LIBRARIES "-framework Foundation -framework ApplicationServices -framework AppKit -framework IOKit")
++    endif()
+   else()
+     find_library(IOKIT_LIBRARY IOKit)
+     mark_as_advanced(IOKIT_LIBRARY)
+diff --git a/src/cryptonote_basic/miner.cpp b/src/cryptonote_basic/miner.cpp
+--- a/src/cryptonote_basic/miner.cpp
++++ b/src/cryptonote_basic/miner.cpp
+@@ -46,7 +46,7 @@
+ #include "boost/logic/tribool.hpp"
+ #include <boost/filesystem.hpp>
+ 
+-#ifdef __APPLE__
++#if defined(__APPLE__) && !defined(TARGET_OS_IPHONE)
+   #include <sys/times.h>
+   #include <IOKit/IOKitLib.h>
+   #include <IOKit/ps/IOPSKeys.h>
+@@ -885,7 +885,7 @@ namespace cryptonote
+ 
+       return true;
+ 
+-    #elif defined(__APPLE__)
++    #elif defined(__APPLE__) && !defined(TARGET_OS_IPHONE)
+ 
+       mach_msg_type_number_t count;
+       kern_return_t status;
+@@ -951,7 +951,7 @@ namespace cryptonote
+         return true;
+       }
+ 
+-    #elif (defined(__linux__) && defined(_SC_CLK_TCK)) || defined(__APPLE__) || defined(__FreeBSD__)
++    #elif (defined(__linux__) && defined(_SC_CLK_TCK)) || (defined(__APPLE__) && !defined(TARGET_OS_IPHONE)) || defined(__FreeBSD__)
+ 
+       struct tms tms;
+       if ( times(&tms) != (clock_t)-1 )
+@@ -980,7 +980,7 @@ namespace cryptonote
+         return boost::logic::tribool(power_status.ACLineStatus != 1);
+     	}
+ 
+-    #elif defined(__APPLE__) 
++    #elif defined(__APPLE__) && !defined(TARGET_OS_IPHONE)
+       
+       #if TARGET_OS_MAC && (!defined(MAC_OS_X_VERSION_MIN_REQUIRED) || MAC_OS_X_VERSION_MIN_REQUIRED >= MAC_OS_X_VERSION_10_7)
+         return boost::logic::tribool(IOPSGetTimeRemainingEstimate() != kIOPSTimeRemainingUnlimited);

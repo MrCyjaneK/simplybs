@@ -1,0 +1,145 @@
+{
+    "package": "native/ndk",
+    "version": "r29",
+    "type": "native",
+    "download": [
+        {
+            "kind": "git",
+            "path": ".repo/manifests",
+            "sha256": "82eb8adcaafe02dce4e462db2379fad3ea0b54d8",
+            "url": "https://android.googlesource.com/platform/manifest"
+        },
+        {
+            "kind": "git",
+            "path": ".repo/repo",
+            "sha256": "38d2fe11b9df521727fcca23c9dac086ce8378d3",
+            "url": "https://gerrit.googlesource.com/git-repo"
+        },
+        {
+            "kind": "git",
+            "path": "bionic",
+            "sha256": "a63b21091ada240d92f8ceadb1cabbdedaaab81b",
+            "url": "https://android.googlesource.com/platform/bionic"
+        },
+        {
+            "kind": "git",
+            "path": "development",
+            "sha256": "d84a5b9d746f241c3c77b16e8c6964b0f86f86e2",
+            "url": "https://android.googlesource.com/platform/development"
+        },
+        {
+            "kind": "git",
+            "path": "external/effcee",
+            "sha256": "291037172dcb79318a7d0214a194e985c9ad0d7b",
+            "url": "https://android.googlesource.com/platform/external/effcee"
+        },
+        {
+            "kind": "git",
+            "path": "external/googletest",
+            "sha256": "dc81c03b5db576f5ab8a468b6eebf584b016fa5b",
+            "url": "https://android.googlesource.com/platform/external/googletest"
+        },
+        {
+            "kind": "git",
+            "path": "external/python/astroid",
+            "sha256": "062ae590ebac6acf05a5c7583be35870f0b563ba",
+            "url": "https://android.googlesource.com/platform/external/python/astroid"
+        },
+        {
+            "kind": "git",
+            "path": "external/python/pylint",
+            "sha256": "6169a46fd0a78ed1f3c9fd2c41c1636eb0ed35c5",
+            "url": "https://android.googlesource.com/platform/external/python/pylint"
+        },
+        {
+            "kind": "git",
+            "path": "external/regex-re2",
+            "sha256": "2e598de2ffcec7903d52742d4ecb80f11e7e1b92",
+            "url": "https://android.googlesource.com/platform/external/regex-re2"
+        },
+        {
+            "kind": "git",
+            "path": "external/shaderc/glslang",
+            "sha256": "2222fa5818324771ceb99fd8802e54a50a2fb1a4",
+            "url": "https://android.googlesource.com/platform/external/shaderc/glslang"
+        },
+        {
+            "kind": "git",
+            "path": "external/shaderc/shaderc",
+            "sha256": "8045a61b8c6b79c9fdaa86f36653a824880bab4d",
+            "url": "https://android.googlesource.com/platform/external/shaderc/shaderc"
+        },
+        {
+            "kind": "git",
+            "path": "external/shaderc/spirv-headers",
+            "sha256": "907059dfed550925a45217e1ed9a7bc42ff8d770",
+            "url": "https://android.googlesource.com/platform/external/shaderc/spirv-headers"
+        },
+        {
+            "kind": "git",
+            "path": "external/shaderc/spirv-tools",
+            "sha256": "12f5c853ee9e06ba6565006d8d36ee261a140d91",
+            "url": "https://android.googlesource.com/platform/external/shaderc/spirv-tools"
+        },
+        {
+            "kind": "git",
+            "path": "external/vulkan-headers",
+            "sha256": "062f62b42a62e18a8eaccbce323d4f58548677be",
+            "url": "https://android.googlesource.com/platform/external/vulkan-headers"
+        },
+        {
+            "kind": "git",
+            "path": "ndk",
+            "sha256": "196e0661200bad5361340700fea67be12e1f1684",
+            "url": "https://android.googlesource.com/platform/ndk"
+        },
+        {
+            "kind": "git",
+            "path": "prebuilts/ndk",
+            "sha256": "c0815fea3a8081be6215440de330c63246e6551f",
+            "url": "https://android.googlesource.com/platform/prebuilts/ndk"
+        },
+        {
+            "kind": "git",
+            "path": "prebuilts/simpleperf",
+            "sha256": "c04e1425e49ad7a106bdb5911e7ebbc5ff4afa20",
+            "url": "https://android.googlesource.com/platform/prebuilts/simpleperf"
+        },
+        {
+            "kind": "git",
+            "path": "toolchain/make",
+            "sha256": "44fc4fe66a484b91844c302f03eaa8438e065d17",
+            "url": "https://android.googlesource.com/toolchain/make"
+        },
+        {
+            "kind": "git",
+            "path": "toolchain/yasm",
+            "sha256": "7a28367b72cb1e1667b081d6404afbd063898e70",
+            "url": "https://android.googlesource.com/toolchain/yasm"
+        }
+    ],
+    "dependencies": [
+        "*:*-android*:native/_/_",
+        "*:*-android*:native/cmake",
+        "*:*-android*:native/llvm@google@19.0.1",
+        "*:*-android*:native/make",
+        "*:*-android*:native/ninja",
+        "*:*-android*:native/python@3.11"
+    ],
+    "build": {
+        "steps": [
+            "*:*-android*:mkdir -p prebuilts/clang/host/darwin-x86",
+            "*:*-android*:mkdir -p prebuilts/clang/host/linux-x86",
+            "*:*-android*:mkdir -p prebuilts/clang/host/windows-x86",
+            "*:*-android*:cp -a $NATIVEPREFIX/llvm@google@19.0.1 prebuilts/clang/host/darwin-x86/clang-r563880c",
+            "*:*-android*:cp -a $NATIVEPREFIX/llvm@google@19.0.1 prebuilts/clang/host/linux-x86/clang-r563880c",
+            "*:*-android*:cp -a $NATIVEPREFIX/llvm@google@19.0.1 prebuilts/clang/host/windows-x86/clang-r563880c",
+            "*:*-android*:touch prebuilts/clang/host/darwin-x86/clang-r563880c/NOTICE",
+            "*:*-android*:touch prebuilts/clang/host/linux-x86/clang-r563880c/NOTICE",
+            "*:*-android*:touch prebuilts/clang/host/windows-x86/clang-r563880c/NOTICE",
+            "*:*-android*:mkdir -p prebuilts/simpleperf",
+            "*:*-android*:touch prebuilts/simpleperf/NOTICE",
+            "*:*-android*:cd ndk && python3 checkbuild.py"
+        ]
+    }
+}

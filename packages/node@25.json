@@ -1,0 +1,30 @@
+{
+    "package": "node@25",
+    "version": "25.1.0",
+    "type": "host",
+    "download": [
+        {
+            "kind": "git",
+            "sha256": "1da054d99bb16d35c54d759f36ccc125b90070bd",
+            "url": "https://github.com/nodejs/node.git"
+        }
+    ],
+    "dependencies": [
+        "*:*:native/_",
+        "*:*:native/ninja",
+        "*:*:native/python@3.14"
+    ],
+    "patches": [
+        "fallback.c"
+    ],
+    "build": {
+        "env": [
+            "*:*:config_opts=--ninja",
+            "*:*:config_opts=$config_opts --prefix=$PREFIX"
+        ],
+        "steps": [
+            "*:*:./configure $config_opts",
+            "*:*:ninja -j$NUM_CORES"
+        ]
+    }
+}

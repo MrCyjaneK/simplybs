@@ -2,25 +2,29 @@
     "package": "native/mpfr",
     "version": "4.2.2",
     "type": "native",
-    "download": {
-        "kind": "tar.xz",
-        "sha256": "b67ba0383ef7e8a8563734e2e889ef5ec3c3b898a01d00fa0a6869ad81c6ce01",
-        "url": "http://www.mpfr.org/mpfr-current/mpfr-4.2.2.tar.xz"
-    },
+    "download": [
+        {
+            "kind": "tar.xz",
+            "sha256": "b67ba0383ef7e8a8563734e2e889ef5ec3c3b898a01d00fa0a6869ad81c6ce01",
+            "url": "http://www.mpfr.org/mpfr-current/mpfr-4.2.2.tar.xz"
+        }
+    ],
     "dependencies": [
-        "all:native/gmp",
-        "all:native/make"
+        "*:*:native/_/_",
+        "*:*:native/bash",
+        "*:*:native/gmp_static",
+        "*:*:native/make"
     ],
     "build": {
         "env": [
-            "all:config_opts=--prefix=$PREFIX/native",
-            "all:config_opts=$config_opts --disable-shared",
-            "all:config_opts=$config_opts --enable-static"
+            "*:*:config_opts=--prefix=$NATIVEPREFIX",
+            "*:*:config_opts=$config_opts --disable-shared",
+            "*:*:config_opts=$config_opts --enable-static"
         ],
         "steps": [
-            "all:./configure $config_opts",
-            "all:make -j$NUM_CORES",
-            "all:make DESTDIR=$STAGING_DIR install"
+            "*:*:bash ./configure $config_opts",
+            "*:*:make -j$NUM_CORES",
+            "*:*:make DESTDIR=$STAGING_DIR install"
         ]
     }
 }

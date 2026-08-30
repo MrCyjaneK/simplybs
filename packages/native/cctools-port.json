@@ -1,0 +1,41 @@
+{
+    "package": "native/cctools-port",
+    "version": "986-ld64-711",
+    "type": "native",
+    "download": [
+        {
+            "kind": "git",
+            "sha256": "6e31355ca5babc708681bd906eaaef86c3ac93be",
+            "url": "https://github.com/tpoechtrager/cctools-port.git"
+        }
+    ],
+    "dependencies": [
+        "*:*-apple-*:native/bzip2",
+        "*:*-apple-*:native/libtapi",
+        "*:*-apple-*:native/make",
+        "*:*-apple-*:native/openssl",
+        "*:*-apple-*:native/xar",
+        "*:*-apple-*:native/xz",
+        "*:*-apple-*:native/zlib",
+        "*:*:native/_/_",
+        "linux_*:*-apple-*:native/libc++"
+    ],
+    "build": {
+        "env": [
+            "*:*-apple-*:config_opts=--prefix=$NATIVEPREFIX",
+            "*:*-apple-*:config_opts=$config_opts --with-libtapi=$NATIVEPREFIX",
+            "*:*-apple-*:config_opts=$config_opts --with-libxar=$NATIVEPREFIX",
+            "*:*-apple-*:CC=clang",
+            "*:*-apple-*:CXX=clang++",
+            "linux_*:*-apple-*:CXXFLAGS=$CXXFLAGS -stdlib=libc++ -I$NATIVEPREFIX/include/c++/v1",
+            "linux_*:*-apple-*:LIBS=-L$NATIVEPREFIX/lib -lc++abi"
+        ],
+        "steps": [
+            "*:*-apple-*:sed -i.bak '3182d' cctools/configure",
+            "*:*-apple-*:cd cctools && ./configure $config_opts",
+            "*:*-apple-*:cd cctools && make -j$NUM_CORES",
+            "*:*-apple-*:cd cctools && DESTDIR=$STAGING_DIR make -j$NUM_CORES install",
+            "*:*-apple-*:cd $STAGING_DIR$NATIVEPREFIX/bin; for f in *-*; do ln -s \"$f\" \"${f##*-}\"; done"
+        ]
+    }
+}

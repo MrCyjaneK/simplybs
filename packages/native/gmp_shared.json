@@ -1,0 +1,32 @@
+{
+    "package": "native/gmp_shared",
+    "version": "6.3.0",
+    "type": "native",
+    "download": [
+        {
+            "kind": "tar.xz",
+            "sha256": "a3c2b80201b89e68616f4ad30bc66aee4927c3ce50e33929ca819d5c43538898",
+            "url": "http://ftpmirror.gnu.org/gnu/gmp/gmp-6.3.0.tar.xz"
+        }
+    ],
+    "dependencies": [
+        "*:*:native/_/_",
+        "*:*:native/bash",
+        "*:*:native/m4",
+        "*:*:native/make",
+        "*:*:native/perl"
+    ],
+    "build": {
+        "env": [
+            "*:*:config_opts=--prefix=$NATIVEPREFIX",
+            "*:*:config_opts=$config_opts --enable-shared",
+            "*:*:config_opts=$config_opts --disable-static"
+        ],
+        "steps": [
+            "*:*:bash ./configure $config_opts",
+            "*:*:make -j$NUM_CORES",
+            "*:*:make check",
+            "*:*:make DESTDIR=$STAGING_DIR install"
+        ]
+    }
+}

@@ -2,21 +2,26 @@
     "package": "native/m4",
     "version": "1.4.20",
     "type": "native",
-    "download": {
-        "kind": "tar.gz",
-        "sha256": "6ac4fc31ce440debe63987c2ebbf9d7b6634e67a7c3279257dc7361de8bdb3ef",
-        "url": "http://ftpmirror.gnu.org/gnu/m4/m4-1.4.20.tar.gz"
-    },
+    "download": [
+        {
+            "kind": "tar.gz",
+            "sha256": "6ac4fc31ce440debe63987c2ebbf9d7b6634e67a7c3279257dc7361de8bdb3ef",
+            "url": "http://ftpmirror.gnu.org/gnu/m4/m4-1.4.20.tar.gz"
+        }
+    ],
     "dependencies": [
-        "all:native/make"
+        "*:*:native/_/_",
+        "*:*:native/bash",
+        "*:*:native/make",
+        "*:*:native/sed"
     ],
     "build": {
         "env": [],
         "steps": [
-            "all:./configure --prefix=$PREFIX/native --disable-nls",
-            "all:sed -i.bak 's/^run.*automake.*/exit 0/' build-aux/missing",
-            "all:make -j$NUM_CORES",
-            "all:make DESTDIR=$STAGING_DIR install"
+            "*:*:bash ./configure --prefix=$NATIVEPREFIX --disable-nls",
+            "*:*:sed -i.bak 's/^run.*automake.*/exit 0/' build-aux/missing",
+            "*:*:make -j$NUM_CORES",
+            "*:*:make DESTDIR=$STAGING_DIR install"
         ]
     }
 }

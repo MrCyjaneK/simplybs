@@ -1,0 +1,36 @@
+{
+    "package": "native/qemu",
+    "version": "10.2.1",
+    "type": "native",
+    "download": [
+        {
+            "kind": "tar.xz",
+            "sha256": "a3717477d8e2c84d630bfffbc20f6cd3293eb45aa1e6dac6d0cc27689991c9e1",
+            "url": "https://download.qemu.org/qemu-10.2.1.tar.xz"
+        }
+    ],
+    "dependencies": [
+        "*:*:native/_/_",
+        "*:*:native/bash",
+        "*:*:native/glib2",
+        "*:*:native/make",
+        "*:*:native/ninja",
+        "*:*:native/pcre2",
+        "*:*:native/perl",
+        "*:*:native/pkgconf",
+        "*:*:native/python@3.14",
+        "*:*:native/python@3.14/tomli",
+        "*:*:native/sed"
+    ],
+    "build": {
+        "env": [
+            "*:*:config_opts=--prefix=$NATIVEPREFIX",
+            "*:*:config_opts=$config_opts"
+        ],
+        "steps": [
+            "*:*:bash ./configure $config_opts",
+            "*:*:make -j$NUM_CORES",
+            "*:*:make DESTDIR=$STAGING_DIR install"
+        ]
+    }
+}

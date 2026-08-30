@@ -1,37 +1,51 @@
 {
     "package": "sodium",
-    "version": "1.0.18",
+    "version": "1.0.22",
     "type": "host",
-    "download": {
-        "kind": "tar.gz",
-        "sha256": "6f504490b342a4f8a4c4a02fc9b866cbef8622d5df4e5452b46be121e46636c1",
-        "url": "http://download.libsodium.org/libsodium/releases/libsodium-1.0.18.tar.gz"
-    },
+    "download": [
+        {
+            "kind": "tar.gz",
+            "sha256": "adbdd8f16149e81ac6078a03aca6fc03b592b89ef7b5ed83841c086191be3349",
+            "url": "http://download.libsodium.org/libsodium/releases/libsodium-1.0.22.tar.gz"
+        }
+    ],
     "dependencies": [
-        "*-android*:native/android_ndk",
-        "all:native/config"
+        "*:*:native/_",
+        "*:*:native/autoconf",
+        "*:*:native/automake",
+        "*:*:native/bash",
+        "*:*:native/config",
+        "*:*:native/coreutils",
+        "*:*:native/findutils",
+        "*:*:native/gawk",
+        "*:*:native/grep",
+        "*:*:native/libtool",
+        "*:*:native/make",
+        "*:*:native/m4",
+        "*:*:native/patch",
+        "*:*:native/perl",
+        "*:*:native/sed"
     ],
     "patches": [
         "disable-glibc-getrandom-getentropy.patch",
+        "disable-simd-without-asm.patch",
         "fix-whitespace.patch"
     ],
     "build": {
         "env": [
-            "*-android*:ANDROID_NDK_ROOT=$PREFIX/native",
-            "*-android*:CC=clang",
-            "*-android*:AR=ar",
-            "*-android*:RANLIB=ranlib",
-            "all:config_opts=--host=$HOST --prefix=$PREFIX",
-            "all:config_opts=$config_opts --enable-static --disable-shared --with-pic"
+            "*:aarch64-apple-ios-simulator:HOST=aarch64-apple-ios",
+            "*:*:config_opts=--host=$HOST --prefix=$PREFIX",
+            "*:*:config_opts=$config_opts --enable-static --disable-shared --disable-asm --with-pic"
         ],
         "steps": [
-            "all:cp -f $PREFIX/native/usr/share/config/config.guess build-aux/",
-            "all:cp -f $PREFIX/native/usr/share/config/config.sub build-aux/",
-            "all:patch -p1 < $PATCH_DIR/sodium/disable-glibc-getrandom-getentropy.patch",
-            "all:patch -p1 < $PATCH_DIR/sodium/fix-whitespace.patch",
-            "all:./configure $config_opts",
-            "all:make -j$NUM_CORES",
-            "all:make DESTDIR=$STAGING_DIR install"
+            "*:*:cp -f $NATIVEPREFIX/share/config/config.guess build-aux/",
+            "*:*:cp -f $NATIVEPREFIX/share/config/config.sub build-aux/",
+            "*:*:patch -p1 < $PATCH_DIR/sodium/disable-glibc-getrandom-getentropy.patch",
+            "*:*:patch -p1 < $PATCH_DIR/sodium/disable-simd-without-asm.patch",
+            "*:*:autoreconf --force --install",
+            "*:*:bash ./configure $config_opts",
+            "*:*:make -j$NUM_CORES",
+            "*:*:make DESTDIR=$STAGING_DIR install"
         ]
     }
 }

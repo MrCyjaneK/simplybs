@@ -1,0 +1,39 @@
+{
+    "package": "native/libpsl",
+    "version": "0.21.5",
+    "type": "native",
+    "download": [
+        {
+            "kind": "tar.gz",
+            "sha256": "1dcc9ceae8b128f3c0b3f654decd0e1e891afc6ff81098f227ef260449dae208",
+            "url": "https://github.com/rockdaboot/libpsl/releases/download/0.21.5/libpsl-0.21.5.tar.gz"
+        }
+    ],
+    "dependencies": [
+        "*:*:native/_/_",
+        "*:*:native/bash",
+        "*:*:native/make",
+        "*:*:native/python@3.11",
+        "*:*:native/unistring"
+    ],
+    "build": {
+        "env": [
+            "*:*:config_opts=--prefix=$NATIVEPREFIX",
+            "windows_*:*:config_opts=$config_opts --disable-builtin"
+        ],
+        "steps": [
+            "*:*:bash ./configure $config_opts",
+            "windows_*:*:sed -i.bak -e 's/^BUILT_SOURCES = suffixes_dafsa.h/BUILT_SOURCES =/' -e '/^suffixes_dafsa\\.h:/,/^$/d' src/Makefile",
+            "linux_*:*:make -j$NUM_CORES",
+            "linux_*:*:make DESTDIR=$STAGING_DIR install",
+            "darwin_*:*:make -j$NUM_CORES",
+            "darwin_*:*:make DESTDIR=$STAGING_DIR install",
+            "windows_*:*:make -j$NUM_CORES -C include",
+            "windows_*:*:make -j$NUM_CORES -C src",
+            "windows_*:*:make -j$NUM_CORES -C tools",
+            "windows_*:*:make DESTDIR=$STAGING_DIR -C include install",
+            "windows_*:*:make DESTDIR=$STAGING_DIR -C src install",
+            "windows_*:*:make DESTDIR=$STAGING_DIR -C tools install"
+        ]
+    }
+}

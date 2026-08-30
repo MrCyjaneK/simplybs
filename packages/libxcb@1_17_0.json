@@ -1,0 +1,43 @@
+{
+    "package": "libxcb@1_17_0",
+    "version": "1_17_0",
+    "type": "host",
+    "download": [
+        {
+            "kind": "tar.gz",
+            "sha256": "2c69287424c9e2128cb47ffe92171e10417041ec2963bceafb65cb3fcf8f0b85",
+            "url": "https://xcb.freedesktop.org/dist/libxcb-1.17.0.tar.gz"
+        }
+    ],
+    "dependencies": [
+        "*:*-linux-gnu:native/_",
+        "*:*-linux-gnu:native/bash",
+        "*:*-linux-gnu:native/coreutils",
+        "*:*-linux-gnu:native/grep",
+        "*:*-linux-gnu:native/pkgconf",
+        "*:*-linux-gnu:native/gawk",
+        "*:*-linux-gnu:native/findutils",
+        "*:*-linux-gnu:native/make",
+        "*:*-linux-gnu:native/patch",
+        "*:*-linux-gnu:native/python@3.11",
+        "*:*-linux-gnu:native/sed",
+        "*:*-linux-gnu:xcb_proto@1_17_0",
+        "*:*-linux-gnu:xorgproto@2025_1",
+        "*:*-linux-gnu:libXau@1_0_12"
+    ],
+    "patches": [
+        "remove_pthread_stubs.patch"
+    ],
+    "build": {
+        "env": [
+            "*:*-linux-gnu:config_opts=--host=$HOST --prefix=$PREFIX --disable-shared --enable-static --disable-devel-docs --without-doxygen --without-launchd --disable-dependency-tracking --enable-option-checking --disable-composite --disable-damage --disable-dpms --disable-dri2 --disable-dri3 --disable-glx --disable-present --disable-record --disable-resource --disable-screensaver --disable-xevie --disable-xfree86-dri --disable-xinput --disable-xprint --disable-selinux --disable-xtest --disable-xv --disable-xvmc"
+        ],
+        "steps": [
+            "*:*-linux-gnu:patch -p1 < $PATCH_DIR/libxcb/remove_pthread_stubs.patch",
+            "*:*-linux-gnu:bash ./configure $config_opts",
+            "*:*-linux-gnu:make -j$NUM_CORES",
+            "*:*-linux-gnu:make DESTDIR=$STAGING_DIR install",
+            "*:*-linux-gnu:rm -rf $STAGING_DIR$PREFIX/share $STAGING_DIR$PREFIX/lib/*.la"
+        ]
+    }
+}

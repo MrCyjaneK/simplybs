@@ -2,34 +2,34 @@
     "package": "gtest",
     "version": "1.17.0",
     "type": "host",
-    "download": {
-        "kind": "tar.gz",
-        "sha256": "65fab701d9829d38cb77c14acdc431d2108bfdbf8979e40eb8ae567edf10b27c",
-        "url": "http://github.com/google/googletest/releases/download/v1.17.0/googletest-1.17.0.tar.gz"
-    },
+    "download": [
+        {
+            "kind": "tar.gz",
+            "sha256": "65fab701d9829d38cb77c14acdc431d2108bfdbf8979e40eb8ae567edf10b27c",
+            "url": "http://github.com/google/googletest/releases/download/v1.17.0/googletest-1.17.0.tar.gz"
+        }
+    ],
     "dependencies": [
-        "*-android*:native/android_ndk",
-        "all:native/cmake",
-        "all:native/cmake-toolchain",
-        "all:native/make"
+        "*:*:native/_",
+        "*:*:native/cmake",
+        "*:*:native/cmake-toolchain"
     ],
     "build": {
         "env": [
-            "all:CXXFLAGS=$CXXFLAGS -std=c++11",
-            "*-linux-gnu:CXXFLAGS=$CXXFLAGS -fPIC",
-            "all:config_opts=-DCMAKE_TOOLCHAIN_FILE=$PREFIX/native/toolchain.cmake",
-            "all:config_opts=$config_opts -DGOOGLETEST_VERSION=1.17.0",
-            "all:config_opts=$config_opts -DCMAKE_POLICY_VERSION_MINIMUM=3.5",
-            "all:config_opts=$config_opts -DCMAKE_INSTALL_PREFIX=$PREFIX",
-            "all:config_opts=$config_opts -DCMAKE_CXX_FLAGS_DEBUG=ON"
+            "*:*:CXXFLAGS=$CXXFLAGS -std=c++11",
+            "*:*:config_opts=-DCMAKE_TOOLCHAIN_FILE=$CMAKE_TOOLCHAIN_FILE",
+            "*:*:config_opts=$config_opts -DGOOGLETEST_VERSION=1.17.0",
+            "*:*:config_opts=$config_opts -DCMAKE_POLICY_VERSION_MINIMUM=3.5",
+            "*:*:config_opts=$config_opts -DCMAKE_INSTALL_PREFIX=$PREFIX",
+            "*:*:config_opts=$config_opts -DCMAKE_CXX_FLAGS_DEBUG=ON"
         ],
         "steps": [
-            "all:cd googletest && cmake $config_opts",
-            "all:cd googletest && make -j$NUM_CORES",
-            "all:mkdir $STAGING_DIR$PREFIX/lib $STAGING_DIR$PREFIX/include",
-            "all:cp googletest/lib/libgtest.a $STAGING_DIR$PREFIX/lib",
-            "all:cp googletest/lib/libgtest_main.a $STAGING_DIR$PREFIX/lib",
-            "all:cp -a googletest/include/* $STAGING_DIR$PREFIX/include/"
+            "*:*:cd googletest && cmake $config_opts",
+            "*:*:cd googletest && make -j$NUM_CORES",
+            "*:*:mkdir $STAGING_DIR$PREFIX/lib $STAGING_DIR$PREFIX/include",
+            "*:*:cp googletest/lib/libgtest.a $STAGING_DIR$PREFIX/lib",
+            "*:*:cp googletest/lib/libgtest_main.a $STAGING_DIR$PREFIX/lib",
+            "*:*:cp -a googletest/include/* $STAGING_DIR$PREFIX/include/"
         ]
     }
 }

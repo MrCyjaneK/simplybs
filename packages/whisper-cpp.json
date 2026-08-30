@@ -1,0 +1,55 @@
+{
+    "package": "whisper-cpp",
+    "version": "v1.9.2",
+    "type": "host",
+    "download": [
+        {
+            "kind": "git",
+            "sha256": "306c88f4d1286aec1bf96e544632897886af5501",
+            "url": "https://github.com/ggml-org/whisper.cpp.git"
+        }
+    ],
+    "dependencies": [
+        "*:*:native/_",
+        "*:*:native/cmake",
+        "*:*:native/cmake-toolchain",
+        "*:*:native/make",
+        "*:*:native/coreutils",
+        "*:*:native/bash",
+        "*:*:ffmpeg"
+    ],
+    "build": {
+        "env": [
+            "*:*:config_opts=-DCMAKE_TOOLCHAIN_FILE=$CMAKE_TOOLCHAIN_FILE",
+            "*:*:config_opts=$config_opts -DCMAKE_INSTALL_PREFIX=$PREFIX",
+            "*:*:config_opts=$config_opts -DCMAKE_BUILD_TYPE=Release",
+            "*:*:config_opts=$config_opts -DBUILD_SHARED_LIBS=OFF",
+            "*:*:config_opts=$config_opts -DGGML_NATIVE=OFF",
+            "*:*:config_opts=$config_opts -DGGML_OPENMP=OFF",
+            "*:*:config_opts=$config_opts -DGGML_METAL=OFF",
+            "*:*:config_opts=$config_opts -DGGML_BLAS=OFF",
+            "*:*:config_opts=$config_opts -DGGML_ACCELERATE=OFF",
+            "*:*:config_opts=$config_opts -DGGML_CCACHE=OFF",
+            "*:*:config_opts=$config_opts -DWHISPER_BUILD_TESTS=OFF",
+            "*:*:config_opts=$config_opts -DWHISPER_BUILD_EXAMPLES=OFF",
+            "*:*:config_opts=$config_opts -DWHISPER_BUILD_SERVER=OFF",
+            "*:*:config_opts=$config_opts -DWHISPER_CURL=OFF",
+            "*:*:config_opts=$config_opts -DWHISPER_SDL2=OFF",
+            "*:*:config_opts=$config_opts -DWHISPER_COREML=OFF",
+            "*:*-apple-ios*:config_opts=$config_opts -DCMAKE_MACOSX_BUNDLE=OFF",
+            "*:*-apple-ios*:config_opts=$config_opts -DCMAKE_OSX_DEPLOYMENT_TARGET=14.0",
+            "*:*-apple-ios*:config_opts=$config_opts -DCMAKE_OSX_ARCHITECTURES=arm64",
+            "*:aarch64-apple-ios:IOS_MIN_VERSION=14.0",
+            "*:aarch64-apple-ios-simulator:IOS_MIN_VERSION=14.0",
+            "*:aarch64-apple-ios:CC=$NATIVEPREFIX/bin/aarch64-apple-ios-clang -target aarch64-apple-ios -mios-version-min=14.0 -isysroot $SDK_PATH -I$PREFIX/include",
+            "*:aarch64-apple-ios:CXX=$NATIVEPREFIX/bin/aarch64-apple-ios-clang++ -target aarch64-apple-ios -mios-version-min=14.0 -isysroot $SDK_PATH -I$PREFIX/include",
+            "*:aarch64-apple-ios-simulator:CC=$NATIVEPREFIX/bin/aarch64-apple-ios-simulator-clang -target aarch64-apple-ios-simulator -mios-version-min=14.0 -isysroot $SDK_PATH -I$PREFIX/include",
+            "*:aarch64-apple-ios-simulator:CXX=$NATIVEPREFIX/bin/aarch64-apple-ios-simulator-clang++ -target aarch64-apple-ios-simulator -mios-version-min=14.0 -isysroot $SDK_PATH -I$PREFIX/include"
+        ],
+        "steps": [
+            "*:*:cmake -S . -B build $config_opts",
+            "*:*:cmake --build build -j$NUM_CORES",
+            "*:*:cd build && make DESTDIR=$STAGING_DIR install"
+        ]
+    }
+}

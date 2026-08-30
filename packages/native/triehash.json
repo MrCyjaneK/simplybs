@@ -1,0 +1,24 @@
+{
+    "package": "native/triehash",
+    "version": "1.6.1-patch",
+    "type": "native",
+    "download": [
+        {
+            "kind": "git",
+            "sha256": "e0bd5e08395bcd5ae105ad279d8d3ba67e8b738b",
+            "url": "https://github.com/julian-klode/triehash.git"
+        }
+    ],
+    "dependencies": [
+        "*:*:native/_/_",
+        "*:*:native/sed"
+    ],
+    "build": {
+        "env": [],
+        "steps": [
+            "*:*:mkdir -p $STAGING_DIR$NATIVEPREFIX/bin",
+            "*:*:sed -i.bak '1s|^#!/usr/bin/perl -w|#!'\"$PREFIX\"'/native/bin/perl|' triehash.pl",
+            "*:*:cp triehash.pl $STAGING_DIR$NATIVEPREFIX/bin/triehash"
+        ]
+    }
+}

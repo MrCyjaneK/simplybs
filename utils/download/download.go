@@ -1,0 +1,438 @@
+package download
+
+import (
+	"crypto/sha256"
+	"crypto/tls"
+	"encoding/hex"
+	"errors"
+	"fmt"
+	"io"
+	"log"
+	"net/http"
+	"net/url"
+	"os"
+	"path"
+	"path/filepath"
+	"strconv"
+	"strings"
+	"time"
+)
+
+const maxDownloadRetries = 15
+const downloadRetryDelay = 5 * time.Second
+
+var ErrHashMismatch = errors.New("sha256 hash mismatch")
+
+var defaultHTTPClient = &http.Client{
+	Transport: &http.Transport{
+		// Avoid HTTP/2 stream errors on large mirror downloads.
+		TLSNextProto: make(map[string]func(string, *tls.Conn) http.RoundTripper),
+	},
+}
+
+func downloadTempPath(path string) string {
+	return path + ".download.tmp"
+}
+
+func fileSizeAt(path string) int64 {
+	if info, err := os.Stat(path); err == nil {
+		return info.Size()
+	}
+	return 0
+}
+
+type ProgressWriter struct {
+	writer     io.Writer
+	total      int64
+	offset     int64
+	written    int64
+	lastUpdate time.Time
+	filename   string
+}
+
+func NewProgressWriter(writer io.Writer, total, offset int64, filename string) *ProgressWriter {
+	return &ProgressWriter{
+		writer:     writer,
+		total:      total,
+		offset:     offset,
+		filename:   filename,
+		lastUpdate: time.Now(),
+	}
+}
+
+func (pw *ProgressWriter) downloaded() int64 {
+	return pw.offset + pw.written
+}
+
+func (pw *ProgressWriter) Write(p []byte) (int, error) {
+	n, err := pw.writer.Write(p)
+	if err != nil {
+		return n, err
+	}
+
+	pw.written += int64(n)
+
+	if time.Since(pw.lastUpdate) > 100*time.Millisecond {
+		pw.displayProgress()
+		pw.lastUpdate = time.Now()
+	}
+
+	return n, err
+}
+
+func (pw *ProgressWriter) displayProgress() {
+	downloaded := pw.downloaded()
+	var line string
+	if pw.total <= 0 {
+		line = fmt.Sprintf("%s: Downloaded %s", pw.filename, formatBytes(downloaded))
+	} else {
+		percentage := float64(downloaded) / float64(pw.total) * 100
+		line = fmt.Sprintf("%s: %.1f%% (%s / %s)", pw.filename, percentage, formatBytes(downloaded), formatBytes(pw.total))
+	}
+	// Pad to erase leftover characters from shorter previous lines.
+	fmt.Printf("\r%-80s", line)
+}
+
+func (pw *ProgressWriter) finish() {
+	fmt.Printf("\r%s: Complete (%s)\n", pw.filename, formatBytes(pw.downloaded()))
+}
+
+func copyWithProgress(dst io.Writer, src io.Reader, total, offset int64, filename string) (int64, error) {
+	pw := NewProgressWriter(dst, total, offset, filename)
+	n, err := io.Copy(pw, src)
+	if err != nil {
+		return n, err
+	}
+	pw.finish()
+	return n, nil
+}
+
+func contentLengthTotal(resp *http.Response, existing int64) int64 {
+	if contentLength := resp.Header.Get("Content-Length"); contentLength != "" {
+		if size, err := strconv.ParseInt(contentLength, 10, 64); err == nil {
+			return existing + size
+		}
+	}
+	return 0
+}
+
+func downloadToFileWithResume(destPath, url string) (int64, error) {
+	var fileSize int64
+	var out *os.File
+	var err error
+
+	if info, err := os.Stat(destPath); err == nil {
+		fileSize = info.Size()
+		out, err = os.OpenFile(destPath, os.O_APPEND|os.O_WRONLY, 0644)
+		if err != nil {
+			return 0, fmt.Errorf("failed to open file for append: %v", err)
+		}
+	} else {
+		out, err = os.Create(destPath)
+		if err != nil {
+			return 0, fmt.Errorf("failed to create file: %v", err)
+		}
+	}
+	defer out.Close()
+
+	req, err := http.NewRequest("GET", url, nil)
+	if err != nil {
+		return 0, fmt.Errorf("failed to create request: %v", err)
+	}
+	// req.Header.Set("User-Agent", "simplybs/1.0 (+https://github.com/mrcyjanek/simplybs)")
+
+	if fileSize > 0 {
+		req.Header.Set("Range", fmt.Sprintf("bytes=%d-", fileSize))
+		log.Printf("Resuming download from byte %d", fileSize)
+	}
+
+	resp, err := defaultHTTPClient.Do(req)
+	if err != nil {
+		return 0, fmt.Errorf("failed to download file: %v", err)
+	}
+	defer resp.Body.Close()
+
+	if resp.StatusCode != http.StatusOK && resp.StatusCode != http.StatusPartialContent {
+		return 0, fmt.Errorf("HTTP %d %s", resp.StatusCode, resp.Status)
+	}
+
+	if resp.StatusCode == http.StatusOK && fileSize > 0 {
+		out.Close()
+		out, err = os.Create(destPath)
+		if err != nil {
+			return 0, fmt.Errorf("failed to recreate file: %v", err)
+		}
+		fileSize = 0
+		log.Printf("Server doesn't support resume, starting from beginning")
+	}
+
+	filename := filepath.Base(destPath)
+	if strings.HasSuffix(filename, ".download.tmp") {
+		filename = strings.TrimSuffix(filename, ".download.tmp")
+	}
+	bytesRead, err := copyWithProgress(out, resp.Body, contentLengthTotal(resp, fileSize), fileSize, filename)
+	if err != nil {
+		return fileSize + bytesRead, fmt.Errorf("failed to write file: %v", err)
+	}
+
+	return fileSize + bytesRead, nil
+}
+
+func shouldResetRetryCount(err error, partialPath string, startSize, bytesReceived int64) bool {
+	if bytesReceived <= startSize {
+		return false
+	}
+	if errors.Is(err, ErrHashMismatch) {
+		return false
+	}
+	return fileSizeAt(partialPath) > startSize
+}
+
+// DownloadURLWithRetries downloads url to destPath with progress, resume, and retries.
+func DownloadURLWithRetries(url, destPath string) error {
+	attempt := 0
+	for attempt <= maxDownloadRetries {
+		if attempt > 0 {
+			log.Printf("Retry attempt %d/%d for %s", attempt, maxDownloadRetries, url)
+			time.Sleep(downloadRetryDelay)
+		}
+
+		startSize := fileSizeAt(destPath)
+		bytesReceived, err := downloadToFileWithResume(destPath, url)
+		if err == nil {
+			return nil
+		}
+
+		if bytesReceived == 0 && attempt == 0 {
+			return fmt.Errorf("no data received from server: %v", err)
+		}
+
+		log.Printf("Download failed: %v", err)
+
+		if shouldResetRetryCount(err, destPath, startSize, bytesReceived) {
+			log.Printf("Made progress (%s), resetting retry count", formatBytes(bytesReceived-startSize))
+			attempt = 0
+			continue
+		}
+
+		attempt++
+		if attempt > maxDownloadRetries {
+			return fmt.Errorf("failed after %d retries: %v", maxDownloadRetries, err)
+		}
+	}
+	return fmt.Errorf("download failed after all retries")
+}
+
+func formatBytes(bytes int64) string {
+	const unit = 1024
+	if bytes < unit {
+		return fmt.Sprintf("%d B", bytes)
+	}
+	div, exp := int64(unit), 0
+	for n := bytes / unit; n >= unit; n /= unit {
+		div *= unit
+		exp++
+	}
+	return fmt.Sprintf("%.1f %cB", float64(bytes)/float64(div), "KMGTPE"[exp%len("KMGTPE")])
+}
+
+func GetMirrors() []string {
+	mirrors := []string{
+		"http://static.mrcyjanek.net/lfs/simplybs/source/",
+	}
+	if customMirror := os.Getenv("SIMPLYBS_MIRROR"); customMirror != "" {
+		mirrors = append([]string{customMirror}, mirrors...)
+	}
+	return mirrors
+}
+
+func URLToPath(urlStr string) (string, error) {
+	parsedURL, err := url.Parse(urlStr)
+	if err != nil {
+		return "", fmt.Errorf("failed to parse URL: %v", err)
+	}
+
+	// Always slash-separated: used as a mirror URL suffix and as a relative
+	// cache key. Callers that need a filesystem path must filepath.FromSlash.
+	rel := strings.TrimPrefix(parsedURL.Path, "/")
+	return path.Join(parsedURL.Host, rel), nil
+}
+
+func DownloadFile(packageName, path, url, expectedSha256 string, isMirror bool) error {
+	log.Printf("Downloading %s to %s", url, path)
+
+	if !isMirror {
+		urlPath, err := URLToPath(url)
+		if err != nil {
+			log.Printf("Failed to convert URL to path: %v", err)
+		} else {
+			mirrors := GetMirrors()
+			for _, mirror := range mirrors {
+				mirrorURL := mirror + urlPath
+				err := DownloadFile(packageName, path, mirrorURL, expectedSha256, true)
+				if err != nil {
+					log.Printf("Failed to download file from mirror %s: %v", mirror, err)
+					continue
+				}
+				log.Printf("Downloaded file from mirror: %s", path)
+				return nil
+			}
+			log.Printf("All mirrors failed, trying original URL")
+		}
+	}
+
+	os.MkdirAll(filepath.Dir(path), 0755)
+
+	candidates := []string{url}
+	if alt := gnuFtpFallbackURL(url); alt != "" && alt != url {
+		// Prefer mirrors.kernel.org when ftpmirror is flaky (502 / timeouts).
+		candidates = []string{alt, url}
+	}
+
+	var lastErr error
+	for _, candidate := range candidates {
+		attempt := 0
+		for attempt <= maxDownloadRetries {
+			if attempt > 0 {
+				log.Printf("Retry attempt %d/%d for %s", attempt, maxDownloadRetries, candidate)
+				time.Sleep(downloadRetryDelay)
+			}
+
+			startSize := fileSizeAt(downloadTempPath(path))
+			bytesReceived, err := downloadWithResume(path, candidate, expectedSha256)
+			if err == nil {
+				log.Printf("Successfully downloaded and verified %s", path)
+				return nil
+			}
+			lastErr = err
+
+			if bytesReceived == 0 && attempt == 0 {
+				log.Printf("No data from %s: %v", candidate, err)
+				break
+			}
+
+			log.Printf("Download failed: %v", err)
+
+			if shouldResetRetryCount(err, downloadTempPath(path), startSize, bytesReceived) {
+				log.Printf("Made progress (%s), resetting retry count", formatBytes(bytesReceived-startSize))
+				attempt = 0
+				continue
+			}
+
+			attempt++
+			if attempt > maxDownloadRetries {
+				log.Printf("Failed after %d retries for %s: %v", maxDownloadRetries, candidate, err)
+				break
+			}
+		}
+	}
+
+	if lastErr != nil {
+		return fmt.Errorf("download failed after all retries: %v", lastErr)
+	}
+	return fmt.Errorf("download failed after all retries")
+}
+
+// gnuFtpFallbackURL maps flaky GNU FTP hosts to mirrors.kernel.org.
+func gnuFtpFallbackURL(raw string) string {
+	u, err := url.Parse(raw)
+	if err != nil {
+		return ""
+	}
+	host := strings.ToLower(u.Host)
+	switch host {
+	case "ftpmirror.gnu.org", "www.ftpmirror.gnu.org", "ftp.gnu.org", "www.gnu.org":
+	default:
+		return ""
+	}
+	u.Scheme = "https"
+	u.Host = "mirrors.kernel.org"
+	// www.gnu.org paths are under /software/...; kernel mirror only has /gnu/.
+	if host == "www.gnu.org" {
+		return ""
+	}
+	return u.String()
+}
+
+func downloadWithResume(path, url, expectedSha256 string) (int64, error) {
+	tempPath := downloadTempPath(path)
+
+	bytesRead, err := downloadToFileWithResume(tempPath, url)
+	if err != nil {
+		return bytesRead, err
+	}
+
+	file, err := os.Open(tempPath)
+	if err != nil {
+		return bytesRead, fmt.Errorf("failed to open file for verification: %v", err)
+	}
+
+	hasher := sha256.New()
+	if _, err := io.Copy(hasher, file); err != nil {
+		file.Close()
+		return bytesRead, fmt.Errorf("failed to calculate hash: %v", err)
+	}
+	file.Close()
+
+	actualHash := hex.EncodeToString(hasher.Sum(nil))
+	if actualHash != expectedSha256 {
+		os.Remove(tempPath)
+		return bytesRead, fmt.Errorf("%w: expected %s, got %s", ErrHashMismatch, expectedSha256, actualHash)
+	}
+
+	if err := os.Rename(tempPath, path); err != nil {
+		// Windows can refuse rename if AV still has a handle; fall back to copy.
+		if copyErr := copyFile(tempPath, path); copyErr != nil {
+			os.Remove(tempPath)
+			return bytesRead, fmt.Errorf("failed to move download into place: %v (copy fallback: %v)", err, copyErr)
+		}
+		os.Remove(tempPath)
+	}
+
+	return bytesRead, nil
+}
+
+func copyFile(src, dst string) error {
+	in, err := os.Open(src)
+	if err != nil {
+		return err
+	}
+	defer in.Close()
+	out, err := os.OpenFile(dst, os.O_CREATE|os.O_WRONLY|os.O_TRUNC, 0644)
+	if err != nil {
+		return err
+	}
+	defer out.Close()
+	if _, err := io.Copy(out, in); err != nil {
+		return err
+	}
+	return out.Close()
+}
+
+func FileSHA256(path string) (string, error) {
+	file, err := os.Open(path)
+	if err != nil {
+		return "", err
+	}
+	defer file.Close()
+
+	hasher := sha256.New()
+	if _, err := io.Copy(hasher, file); err != nil {
+		return "", err
+	}
+	return hex.EncodeToString(hasher.Sum(nil)), nil
+}
+
+func EnsureDownloadFile(packageName, path, url, expectedSha256 string) error {
+	if actualHash, err := FileSHA256(path); err == nil {
+		if actualHash == expectedSha256 {
+			log.Printf("File already exists with correct hash: %s", path)
+			return nil
+		}
+		log.Printf("File exists but hash mismatch (expected %s, got %s), re-downloading: %s", expectedSha256, actualHash, path)
+		os.Remove(path)
+		os.Remove(downloadTempPath(path))
+	}
+
+	return DownloadFile(packageName, path, url, expectedSha256, false)
+}
