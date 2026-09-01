@@ -269,6 +269,7 @@ func (p *Package) buildPackageInternal(h *host.Host, buildDependencies bool) {
 		for k, v := range env {
 			overrides[k] = v
 		}
+		applyRootBuildOverrides(overrides, os.Geteuid())
 		cmd.Env = utils.ProcessEnv(overrides)
 
 		writeDotEnv(path.Join(buildPath, "_source_me"), cmd.Env)
@@ -308,6 +309,16 @@ func (p *Package) buildPackageInternal(h *host.Host, buildDependencies bool) {
 
 	log.Printf("Package built successfully: %s", builtArchivePath)
 	TryPushPackageCache(p, h)
+}
+
+// applyRootBuildOverrides sets GNU autotools' root bypass when the builder
+// process is uid 0. GitHub Actions container jobs run as root; coreutils/tar
+// configure otherwise fail with "you should not run configure as root".
+// This is not part of GetEnv / package info, so it does not change cache hashes.
+func applyRootBuildOverrides(overrides map[string]string, euid int) {
+	if euid == 0 {
+		overrides["FORCE_UNSAFE_CONFIGURE"] = "1"
+	}
 }
 
 func writeDotEnv(path string, env []string) {
@@ -444,6 +455,7 @@ func (p *Package) StartShell(h *host.Host) {
 	for k, v := range env {
 		overrides[k] = v
 	}
+	applyRootBuildOverrides(overrides, os.Geteuid())
 	cmd.Env = utils.ProcessEnv(overrides)
 	writeDotEnv(path.Join(buildPath, "_source_me"), cmd.Env)
 

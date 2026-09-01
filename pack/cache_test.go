@@ -84,6 +84,18 @@ func TestCacheEnabledRequiresTagAndRepo(t *testing.T) {
 	}
 }
 
+func TestPackageCacheOnReleaseDisabled(t *testing.T) {
+	t.Setenv("SIMPLYBS_CACHE_TAG", "")
+	t.Setenv("SIMPLYBS_CACHE_REPO", "")
+	ok, err := PackageCacheOnRelease(&Package{Package: "zlib", Version: "1.3.1"}, host.SupportedHosts["x86_64-linux-gnu"])
+	if err != nil {
+		t.Fatal(err)
+	}
+	if ok {
+		t.Fatal("expected miss when cache is disabled")
+	}
+}
+
 func TestRequireCacheConfig(t *testing.T) {
 	t.Setenv("SIMPLYBS_CACHE_TAG", "")
 	t.Setenv("SIMPLYBS_CACHE_REPO", "owner/repo")

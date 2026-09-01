@@ -1,0 +1,32 @@
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-go@v5
+        with:
+          go-version-file: go.mod
+      - name: Test
+        run: go test ./...
+      - name: Lint packages
+        run: |
+          go run . -lint
+          git diff --exit-code -- packages sources.json
+      - name: CLI smoke
+        run: go run . -host x86_64-linux-gnu -package zlib -list
+      - name: ciqueue smoke (no package changes)
+        run: |
+          : > /tmp/changed
+          go run ./cmd/ciqueue next -changed-files /tmp/changed | tee /tmp/ciqueue.json
+          python3 -c 'import json,sys; s=json.load(open("/tmp/ciqueue.json")); assert s["status"]=="done", s'

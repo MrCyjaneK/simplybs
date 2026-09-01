@@ -25,6 +25,7 @@
             "*:*:CROSS_PREFIX=$HOST-"
         ],
         "steps": [
+            "*:*:echo simplybs-ci-queue",
             "*:*:bash ./configure $config_opts",
             "*:*-android*:sed -i.bak s\\|^AR=.\\*$\\|AR=\"llvm-ar\"\\| Makefile",
             "*:*-android*:sed -i.bak s\\|^ARFLAGS=.\\*$\\|ARFLAGS=\"rcs\"\\| Makefile",

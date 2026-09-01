@@ -1,0 +1,221 @@
+name: packages
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+  workflow_dispatch:
+    inputs:
+      sha:
+        description: commit SHA to build
+        required: false
+        type: string
+      base:
+        description: git diff base SHA
+        required: false
+        type: string
+      pr:
+        description: pull request number for the sticky comment
+        required: false
+        type: string
+      package:
+        description: extra dirty package root (e.g. zlib)
+        required: false
+        type: string
+
+# One package-build at a time across the whole repo (shared natives, one runner).
+# Three batches of 24 slots (72 packages per run) so a zlib-tree cold fill
+# fits without failing the finish job on the old 24-slot cap.
+# Release cache tag is CI-only (v0-sbs-ci-linux-amd64). Do not use the
+# human/cloud-agent tag (v0-sbs-ubuntu-linux-amd64); CI reuses its own
+# Release across runs after the first cold fill.
+concurrency:
+  group: simplybs-packages
+  cancel-in-progress: false
+
+permissions:
+  contents: write
+  packages: write
+  pull-requests: write
+  issues: write
+  statuses: write
+  actions: read
+
+jobs:
+  image:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    outputs:
+      image: ${{ steps.out.outputs.image }}
+      sha: ${{ steps.meta.outputs.sha }}
+      base: ${{ steps.meta.outputs.base }}
+      pr: ${{ steps.meta.outputs.pr }}
+      extra_package: ${{ steps.meta.outputs.extra_package }}
+      cache_tag: ${{ steps.meta.outputs.cache_tag }}
+    steps:
+      - name: Resolve refs
+        id: meta
+        env:
+          EVENT_NAME: ${{ github.event_name }}
+        run: |
+          case "$EVENT_NAME" in
+            workflow_dispatch)
+              sha="${{ inputs.sha }}"
+              base="${{ inputs.base }}"
+              pr="${{ inputs.pr }}"
+              extra="${{ inputs.package }}"
+              ;;
+            pull_request)
+              sha="${{ github.event.pull_request.head.sha }}"
+              base="${{ github.event.pull_request.base.sha }}"
+              pr="${{ github.event.pull_request.number }}"
+              extra=""
+              ;;
+            *)
+              sha="${{ github.sha }}"
+              base="${{ github.event.before }}"
+              pr=""
+              extra=""
+              ;;
+          esac
+          sha="${sha:-${{ github.sha }}}"
+          if [ -z "$base" ] || [ "$base" = "0000000000000000000000000000000000000000" ]; then
+            base="${{ github.event.pull_request.base.sha || github.sha }}"
+          fi
+          echo "sha=$sha" >> "$GITHUB_OUTPUT"
+          echo "base=$base" >> "$GITHUB_OUTPUT"
+          echo "pr=$pr" >> "$GITHUB_OUTPUT"
+          echo "extra_package=$extra" >> "$GITHUB_OUTPUT"
+          echo "cache_tag=v0-sbs-ci-linux-amd64" >> "$GITHUB_OUTPUT"
+          echo "Resolved sha=$sha base=$base pr=$pr extra=$extra cache_tag=v0-sbs-ci-linux-amd64"
+
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ steps.meta.outputs.sha }}
+
+      - name: Image name
+        id: img
+        run: echo "name=ghcr.io/$(echo '${{ github.repository }}' | tr '[:upper:]' '[:lower:]')/ci" >> "$GITHUB_OUTPUT"
+
+      - uses: docker/setup-buildx-action@v3
+
+      - uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - uses: docker/build-push-action@v6
+        id: push
+        with:
+          context: ./ci
+          file: ./ci/Dockerfile
+          push: true
+          provenance: false
+          sbom: false
+          tags: ${{ steps.img.outputs.name }}:${{ steps.meta.outputs.sha }}
+          cache-from: type=registry,ref=${{ steps.img.outputs.name }}:buildcache
+          cache-to: type=registry,ref=${{ steps.img.outputs.name }}:buildcache,mode=max
+
+      - name: Output image
+        id: out
+        run: echo "image=${{ steps.img.outputs.name }}:${{ steps.meta.outputs.sha }}" >> "$GITHUB_OUTPUT"
+
+      - name: Mark commit pending
+        env:
+          SHA: ${{ steps.meta.outputs.sha }}
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh api "repos/${GITHUB_REPOSITORY}/statuses/${SHA}" \
+            -f state=pending \
+            -f context=simplybs-packages \
+            -f description="package queue running" \
+            -f target_url="${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID}"
+
+  batch1:
+    needs: [image]
+    uses: ./.github/workflows/package-batch.yml
+    secrets: inherit
+    with:
+      image: ${{ needs.image.outputs.image }}
+      sha: ${{ needs.image.outputs.sha }}
+      base: ${{ needs.image.outputs.base }}
+      pr: ${{ needs.image.outputs.pr }}
+      cache_tag: ${{ needs.image.outputs.cache_tag }}
+      cache_repo: ${{ github.repository }}
+      hosts: x86_64-linux-gnu,aarch64-linux-android
+      extra_package: ${{ needs.image.outputs.extra_package }}
+  batch2:
+    needs: [image, batch1]
+    if: needs.batch1.outputs.continue == 'true'
+    uses: ./.github/workflows/package-batch.yml
+    secrets: inherit
+    with:
+      image: ${{ needs.image.outputs.image }}
+      sha: ${{ needs.image.outputs.sha }}
+      base: ${{ needs.image.outputs.base }}
+      pr: ${{ needs.image.outputs.pr }}
+      cache_tag: ${{ needs.image.outputs.cache_tag }}
+      cache_repo: ${{ github.repository }}
+      hosts: x86_64-linux-gnu,aarch64-linux-android
+      extra_package: ${{ needs.image.outputs.extra_package }}
+  batch3:
+    needs: [image, batch2]
+    if: needs.batch2.outputs.continue == 'true'
+    uses: ./.github/workflows/package-batch.yml
+    secrets: inherit
+    with:
+      image: ${{ needs.image.outputs.image }}
+      sha: ${{ needs.image.outputs.sha }}
+      base: ${{ needs.image.outputs.base }}
+      pr: ${{ needs.image.outputs.pr }}
+      cache_tag: ${{ needs.image.outputs.cache_tag }}
+      cache_repo: ${{ github.repository }}
+      hosts: x86_64-linux-gnu,aarch64-linux-android
+      extra_package: ${{ needs.image.outputs.extra_package }}
+  finish:
+    if: always()
+    needs: [image, batch1, batch2, batch3]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Set commit status
+        env:
+          SHA: ${{ needs.image.outputs.sha }}
+          C1: ${{ needs.batch1.outputs.continue }}
+          C2: ${{ needs.batch2.outputs.continue }}
+          C3: ${{ needs.batch3.outputs.continue }}
+          R1: ${{ needs.batch1.result }}
+          R2: ${{ needs.batch2.result }}
+          R3: ${{ needs.batch3.result }}
+          IMG: ${{ needs.image.result }}
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          failed=0
+          if [ "$IMG" = "failure" ]; then failed=1; fi
+          for r in "$R1" "$R2" "$R3"; do
+            if [ "$r" = "failure" ]; then failed=1; fi
+          done
+          last=""
+          for v in "$C3" "$C2" "$C1"; do
+            if [ -n "$v" ]; then last=$v; break; fi
+          done
+          url="${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
+          if [ "$failed" = 1 ]; then
+            state=failure
+            desc="package queue failed"
+          elif [ "$last" = "true" ]; then
+            state=failure
+            desc="package queue hit slot cap; re-run workflow"
+          else
+            state=success
+            desc="package queue complete"
+          fi
+          gh api "repos/${{ github.repository }}/statuses/${SHA}" \
+            -f state="$state" \
+            -f context=simplybs-packages \
+            -f description="$desc" \
+            -f target_url="$url"
+          if [ "$state" != "success" ]; then
+            exit 1
+          fi
+

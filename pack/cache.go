@@ -254,6 +254,25 @@ func copyFile(src, dst string) error {
 	return err
 }
 
+// PackageCacheOnRelease reports whether all built artifacts for p on host h
+// already exist on the configured GitHub Release cache. When cache is
+// disabled, it returns false.
+func PackageCacheOnRelease(p *Package, h *host.Host) (bool, error) {
+	if !CacheEnabled() {
+		return false, nil
+	}
+	assets, err := loadRemoteAssets(CacheTag())
+	if err != nil {
+		return false, err
+	}
+	for _, rel := range p.BuiltRelPaths(h) {
+		if !assets[AssetNameForRel(rel)] {
+			return false, nil
+		}
+	}
+	return true, nil
+}
+
 // TryPullPackageCache downloads missing built artifacts for one package from
 // the GitHub release cache. Returns true when a complete local cache is present
 // afterwards (either already was, or was fetched).

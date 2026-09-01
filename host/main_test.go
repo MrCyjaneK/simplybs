@@ -58,7 +58,7 @@ func assertEnv(t *testing.T, triplet string, exportEnv []string) {
 		keys = append(keys, key)
 	}
 	var required = []string{
-		"TARGET",
+		// HOST/TARGET are injected by pack.ExportEnv, not package JSON.
 		"CC",
 		"CXX",
 		"CFLAGS",
