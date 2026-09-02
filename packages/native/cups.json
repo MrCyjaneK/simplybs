@@ -1,0 +1,34 @@
+{
+    "package": "native/cups",
+    "version": "2.4.19",
+    "type": "native",
+    "download": [
+        {
+            "kind": "tar.gz",
+            "sha256": "820984b12a67f98705785aae2dd1347fe0ac097828001d4583ff64574aed6389",
+            "url": "https://github.com/OpenPrinting/cups/releases/download/v2.4.19/cups-2.4.19-source.tar.gz"
+        }
+    ],
+    "dependencies": [
+        "linux_*:*:native/_/_",
+        "linux_*:*:native/bash",
+        "linux_*:*:native/coreutils",
+        "linux_*:*:native/findutils",
+        "linux_*:*:native/gawk",
+        "linux_*:*:native/grep",
+        "linux_*:*:native/make",
+        "linux_*:*:native/pkgconf",
+        "linux_*:*:native/sed",
+        "linux_*:*:native/zlib"
+    ],
+    "build": {
+        "env": [],
+        "steps": [
+            "linux_*:*:bash ./configure --prefix=$NATIVEPREFIX --libdir=$NATIVEPREFIX/lib --with-pkgconfpath=$NATIVEPREFIX/lib/pkgconfig --with-components=libcups --with-tls=no --with-dnssd=no --with-ondemand=no --with-rcdir=no --with-xinetd=no --with-languages=none --disable-dbus --disable-pam --disable-gssapi --disable-libusb --disable-libpaper --enable-option-checking",
+            "linux_*:*:make -j$NUM_CORES",
+            "linux_*:*:make DESTDIR=$STAGING_DIR install",
+            "linux_*:*:mkdir -p $STAGING_DIR$NATIVEPREFIX/lib/pkgconfig && if [ -d $STAGING_DIR$NATIVEPREFIX/share/pkgconfig ]; then mv $STAGING_DIR$NATIVEPREFIX/share/pkgconfig/*.pc $STAGING_DIR$NATIVEPREFIX/lib/pkgconfig/ 2>/dev/null || true; fi",
+            "linux_*:*:rm -rf $STAGING_DIR$NATIVEPREFIX/share/doc $STAGING_DIR$NATIVEPREFIX/share/man $STAGING_DIR$NATIVEPREFIX/lib/*.la"
+        ]
+    }
+}

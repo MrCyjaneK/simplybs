@@ -1,0 +1,35 @@
+{
+    "package": "native/freetype",
+    "version": "2.14.1",
+    "type": "native",
+    "download": [
+        {
+            "kind": "tar.gz",
+            "sha256": "174d9e53402e1bf9ec7277e22ec199ba3e55a6be2c0740cb18c0ee9850fc8c34",
+            "url": "https://downloads.sourceforge.net/project/freetype/freetype2/2.14.1/freetype-2.14.1.tar.gz"
+        }
+    ],
+    "dependencies": [
+        "linux_*:*:native/_/_",
+        "linux_*:*:native/bash",
+        "linux_*:*:native/coreutils",
+        "linux_*:*:native/diffutils",
+        "linux_*:*:native/findutils",
+        "linux_*:*:native/gawk",
+        "linux_*:*:native/grep",
+        "linux_*:*:native/make",
+        "linux_*:*:native/pkgconf",
+        "linux_*:*:native/sed"
+    ],
+    "build": {
+        "env": [],
+        "steps": [
+            "linux_*:*:rm -rf docs",
+            "linux_*:*:bash ./configure --prefix=$NATIVEPREFIX --enable-shared --disable-static --without-zlib --without-png --without-harfbuzz --without-bzip2 --without-brotli --with-pic --enable-option-checking",
+            "linux_*:*:make -j$NUM_CORES",
+            "linux_*:*:make DESTDIR=$STAGING_DIR install",
+            "linux_*:*:mkdir -p $STAGING_DIR$NATIVEPREFIX/lib/pkgconfig && if [ -d $STAGING_DIR$NATIVEPREFIX/share/pkgconfig ]; then mv $STAGING_DIR$NATIVEPREFIX/share/pkgconfig/*.pc $STAGING_DIR$NATIVEPREFIX/lib/pkgconfig/ 2>/dev/null || true; fi",
+            "linux_*:*:rm -rf $STAGING_DIR$NATIVEPREFIX/share/man $STAGING_DIR$NATIVEPREFIX/lib/*.la"
+        ]
+    }
+}

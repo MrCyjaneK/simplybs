@@ -1,0 +1,44 @@
+{
+    "package": "native/jdk@11-bin",
+    "version": "11.0.32.1",
+    "type": "native",
+    "download": [
+        {
+            "kind": "blob",
+            "path": "./OpenJDK11U-jdk_x64_linux_hotspot_11.0.32.1_1.tar.gz",
+            "sha256": "5c3f68887c325d36d852ba534303e1f5f1f5cae7d6cc1e951d73e0d8e98a058d",
+            "url": "https://github.com/adoptium/temurin11-binaries/releases/download/jdk-11.0.32.1%2B1/OpenJDK11U-jdk_x64_linux_hotspot_11.0.32.1_1.tar.gz"
+        },
+        {
+            "kind": "blob",
+            "path": "./OpenJDK11U-jdk_aarch64_linux_hotspot_11.0.32.1_1.tar.gz",
+            "sha256": "f27033e6f7523c1b0b2565a78e9c0e0abe5596a854ce00ca04ec1b06ece7a935",
+            "url": "https://github.com/adoptium/temurin11-binaries/releases/download/jdk-11.0.32.1%2B1/OpenJDK11U-jdk_aarch64_linux_hotspot_11.0.32.1_1.tar.gz"
+        },
+        {
+            "kind": "blob",
+            "path": "./OpenJDK11U-jdk_aarch64_mac_hotspot_11.0.32.1_1.tar.gz",
+            "sha256": "c487a1c3a56588b3a32d0d07cdd526bf3d401c4b8422be772ca178bfcd647f3f",
+            "url": "https://github.com/adoptium/temurin11-binaries/releases/download/jdk-11.0.32.1%2B1/OpenJDK11U-jdk_aarch64_mac_hotspot_11.0.32.1_1.tar.gz"
+        }
+    ],
+    "dependencies": [
+        "*:*:native/_/_",
+        "*:*:native/bash",
+        "*:*:native/coreutils",
+        "*:*:native/gzip",
+        "*:*:native/sed",
+        "*:*:native/tar"
+    ],
+    "build": {
+        "env": [
+            "*:*:JDK_VERSION=11"
+        ],
+        "steps": [
+            "linux_amd64:*:tar -xzf OpenJDK11U-jdk_x64_linux_hotspot_11.0.32.1_1.tar.gz",
+            "linux_arm64:*:tar -xzf OpenJDK11U-jdk_aarch64_linux_hotspot_11.0.32.1_1.tar.gz",
+            "darwin_arm64:*:tar -xzf OpenJDK11U-jdk_aarch64_mac_hotspot_11.0.32.1_1.tar.gz",
+            "*:*:bash $PATCH_DIR/jdk/stage.sh jdk-11.0.32.1+1"
+        ]
+    }
+}

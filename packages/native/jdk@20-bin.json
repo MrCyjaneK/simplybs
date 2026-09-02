@@ -1,0 +1,44 @@
+{
+    "package": "native/jdk@20-bin",
+    "version": "20.0.2",
+    "type": "native",
+    "download": [
+        {
+            "kind": "blob",
+            "path": "./OpenJDK20U-jdk_x64_linux_hotspot_20.0.2_9.tar.gz",
+            "sha256": "3d91842e9c172967ac397076523249d05a82ead51b0006838f5f0315ad52222c",
+            "url": "https://github.com/adoptium/temurin20-binaries/releases/download/jdk-20.0.2%2B9/OpenJDK20U-jdk_x64_linux_hotspot_20.0.2_9.tar.gz"
+        },
+        {
+            "kind": "blob",
+            "path": "./OpenJDK20U-jdk_aarch64_linux_hotspot_20.0.2_9.tar.gz",
+            "sha256": "b475bcc23db0bd618c815bb8f11d8e084dc58288ea3bcdf4e7f389ed41c89f56",
+            "url": "https://github.com/adoptium/temurin20-binaries/releases/download/jdk-20.0.2%2B9/OpenJDK20U-jdk_aarch64_linux_hotspot_20.0.2_9.tar.gz"
+        },
+        {
+            "kind": "blob",
+            "path": "./OpenJDK20U-jdk_aarch64_mac_hotspot_20.0.2_9.tar.gz",
+            "sha256": "6ef42b63581c0265c5a6b734e203bb922ee720571a8de46532ecca50a804c596",
+            "url": "https://github.com/adoptium/temurin20-binaries/releases/download/jdk-20.0.2%2B9/OpenJDK20U-jdk_aarch64_mac_hotspot_20.0.2_9.tar.gz"
+        }
+    ],
+    "dependencies": [
+        "*:*:native/_/_",
+        "*:*:native/bash",
+        "*:*:native/coreutils",
+        "*:*:native/gzip",
+        "*:*:native/sed",
+        "*:*:native/tar"
+    ],
+    "build": {
+        "env": [
+            "*:*:JDK_VERSION=20"
+        ],
+        "steps": [
+            "linux_amd64:*:tar -xzf OpenJDK20U-jdk_x64_linux_hotspot_20.0.2_9.tar.gz",
+            "linux_arm64:*:tar -xzf OpenJDK20U-jdk_aarch64_linux_hotspot_20.0.2_9.tar.gz",
+            "darwin_arm64:*:tar -xzf OpenJDK20U-jdk_aarch64_mac_hotspot_20.0.2_9.tar.gz",
+            "*:*:bash $PATCH_DIR/jdk/stage.sh jdk-20.0.2+9"
+        ]
+    }
+}

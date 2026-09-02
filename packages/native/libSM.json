@@ -1,0 +1,38 @@
+{
+    "package": "native/libSM",
+    "version": "1.2.6",
+    "type": "native",
+    "download": [
+        {
+            "kind": "tar.gz",
+            "sha256": "166b4b50d606cdd83f1ddc61b5b9162600034f848b3e32ccbb0e63536b7d6cdd",
+            "url": "https://www.x.org/releases/individual/lib/libSM-1.2.6.tar.gz"
+        }
+    ],
+    "dependencies": [
+        "linux_*:*:native/_/_",
+        "linux_*:*:native/bash",
+        "linux_*:*:native/coreutils",
+        "linux_*:*:native/findutils",
+        "linux_*:*:native/gawk",
+        "linux_*:*:native/grep",
+        "linux_*:*:native/make",
+        "linux_*:*:native/pkgconf",
+        "linux_*:*:native/sed",
+        "linux_*:*:native/xorgproto",
+        "linux_*:*:native/xtrans",
+        "linux_*:*:native/libICE"
+    ],
+    "build": {
+        "env": [
+            "linux_*:*:RAWCPP=$PATCH_DIR/native/x11/cpp"
+        ],
+        "steps": [
+            "linux_*:*:bash ./configure --prefix=$NATIVEPREFIX --enable-shared --disable-static --disable-dependency-tracking --enable-option-checking --without-libuuid",
+            "linux_*:*:make -j$NUM_CORES",
+            "linux_*:*:make DESTDIR=$STAGING_DIR install",
+            "linux_*:*:mkdir -p $STAGING_DIR$NATIVEPREFIX/lib/pkgconfig && if [ -d $STAGING_DIR$NATIVEPREFIX/share/pkgconfig ]; then mv $STAGING_DIR$NATIVEPREFIX/share/pkgconfig/*.pc $STAGING_DIR$NATIVEPREFIX/lib/pkgconfig/ 2>/dev/null || true; fi",
+            "linux_*:*:rm -rf $STAGING_DIR$NATIVEPREFIX/share/doc $STAGING_DIR$NATIVEPREFIX/share/man $STAGING_DIR$NATIVEPREFIX/lib/*.la"
+        ]
+    }
+}

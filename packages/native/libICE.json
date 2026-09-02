@@ -1,0 +1,37 @@
+{
+    "package": "native/libICE",
+    "version": "1.1.2",
+    "type": "native",
+    "download": [
+        {
+            "kind": "tar.gz",
+            "sha256": "1da62f732f8679c20045708a29372b82dff9e7eceee543ed488b845002b3b0ff",
+            "url": "https://www.x.org/releases/individual/lib/libICE-1.1.2.tar.gz"
+        }
+    ],
+    "dependencies": [
+        "linux_*:*:native/_/_",
+        "linux_*:*:native/bash",
+        "linux_*:*:native/coreutils",
+        "linux_*:*:native/findutils",
+        "linux_*:*:native/gawk",
+        "linux_*:*:native/grep",
+        "linux_*:*:native/make",
+        "linux_*:*:native/pkgconf",
+        "linux_*:*:native/sed",
+        "linux_*:*:native/xorgproto",
+        "linux_*:*:native/xtrans"
+    ],
+    "build": {
+        "env": [
+            "linux_*:*:RAWCPP=$PATCH_DIR/native/x11/cpp"
+        ],
+        "steps": [
+            "linux_*:*:bash ./configure --prefix=$NATIVEPREFIX --enable-shared --disable-static --disable-dependency-tracking --enable-option-checking",
+            "linux_*:*:make -j$NUM_CORES",
+            "linux_*:*:make DESTDIR=$STAGING_DIR install",
+            "linux_*:*:mkdir -p $STAGING_DIR$NATIVEPREFIX/lib/pkgconfig && if [ -d $STAGING_DIR$NATIVEPREFIX/share/pkgconfig ]; then mv $STAGING_DIR$NATIVEPREFIX/share/pkgconfig/*.pc $STAGING_DIR$NATIVEPREFIX/lib/pkgconfig/ 2>/dev/null || true; fi",
+            "linux_*:*:rm -rf $STAGING_DIR$NATIVEPREFIX/share/doc $STAGING_DIR$NATIVEPREFIX/share/man $STAGING_DIR$NATIVEPREFIX/lib/*.la"
+        ]
+    }
+}

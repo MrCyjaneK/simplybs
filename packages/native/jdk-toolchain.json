@@ -1,0 +1,20 @@
+{
+    "package": "native/jdk-toolchain",
+    "version": "22.0.2",
+    "type": "native",
+    "dependencies": [
+        "*:*:native/coreutils",
+        "*:*:native/jdk"
+    ],
+    "build": {
+        "env": [
+            "*:*:JDK_VERSION=22"
+        ],
+        "steps": [
+            "*:*:$NATIVEPREFIX/bin/mkdir -p $STAGING_DIR$NATIVEPREFIX/bin",
+            "*:*:cp -a $NATIVEPREFIX/jdk-22 $STAGING_DIR$NATIVEPREFIX/",
+            "*:*:cp -a $NATIVEPREFIX/jre-22 $STAGING_DIR$NATIVEPREFIX/",
+            "*:*:cp -a $NATIVEPREFIX/bin/java $NATIVEPREFIX/bin/javac $STAGING_DIR$NATIVEPREFIX/bin/"
+        ]
+    }
+}

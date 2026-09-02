@@ -1,0 +1,34 @@
+{
+    "package": "native/xcb_proto",
+    "version": "1.17.0",
+    "type": "native",
+    "download": [
+        {
+            "kind": "tar.gz",
+            "sha256": "392d3c9690f8c8202a68fdb89c16fd55159ab8d65000a6da213f4a1576e97a16",
+            "url": "https://xorg.freedesktop.org/archive/individual/proto/xcb-proto-1.17.0.tar.gz"
+        }
+    ],
+    "dependencies": [
+        "linux_*:*:native/_/_",
+        "linux_*:*:native/bash",
+        "linux_*:*:native/coreutils",
+        "linux_*:*:native/findutils",
+        "linux_*:*:native/gawk",
+        "linux_*:*:native/grep",
+        "linux_*:*:native/make",
+        "linux_*:*:native/pkgconf",
+        "linux_*:*:native/sed",
+        "linux_*:*:native/python@3.11"
+    ],
+    "build": {
+        "env": [],
+        "steps": [
+            "linux_*:*:bash ./configure --prefix=$NATIVEPREFIX --disable-dependency-tracking --enable-option-checking",
+            "linux_*:*:make -j$NUM_CORES",
+            "linux_*:*:make DESTDIR=$STAGING_DIR install",
+            "linux_*:*:mkdir -p $STAGING_DIR$NATIVEPREFIX/lib/pkgconfig && if [ -d $STAGING_DIR$NATIVEPREFIX/share/pkgconfig ]; then mv $STAGING_DIR$NATIVEPREFIX/share/pkgconfig/*.pc $STAGING_DIR$NATIVEPREFIX/lib/pkgconfig/ 2>/dev/null || true; fi",
+            "linux_*:*:rm -rf $STAGING_DIR$NATIVEPREFIX/share/doc $STAGING_DIR$NATIVEPREFIX/share/man $STAGING_DIR$NATIVEPREFIX/lib/*.la"
+        ]
+    }
+}

@@ -1,0 +1,34 @@
+{
+    "package": "native/xtrans",
+    "version": "1.6.0",
+    "type": "native",
+    "download": [
+        {
+            "kind": "tar.gz",
+            "sha256": "936b74c60b19c317c3f3cb1b114575032528dbdaf428740483200ea874c2ca0a",
+            "url": "https://www.x.org/releases/individual/lib/xtrans-1.6.0.tar.gz"
+        }
+    ],
+    "dependencies": [
+        "linux_*:*:native/_/_",
+        "linux_*:*:native/bash",
+        "linux_*:*:native/coreutils",
+        "linux_*:*:native/findutils",
+        "linux_*:*:native/gawk",
+        "linux_*:*:native/grep",
+        "linux_*:*:native/make",
+        "linux_*:*:native/pkgconf",
+        "linux_*:*:native/sed",
+        "linux_*:*:native/xorgproto"
+    ],
+    "build": {
+        "env": [],
+        "steps": [
+            "linux_*:*:bash ./configure --prefix=$NATIVEPREFIX --disable-dependency-tracking --enable-option-checking --without-xmlto --without-fop --disable-docs",
+            "linux_*:*:make -j$NUM_CORES",
+            "linux_*:*:make DESTDIR=$STAGING_DIR install",
+            "linux_*:*:mkdir -p $STAGING_DIR$NATIVEPREFIX/lib/pkgconfig && if [ -d $STAGING_DIR$NATIVEPREFIX/share/pkgconfig ]; then mv $STAGING_DIR$NATIVEPREFIX/share/pkgconfig/*.pc $STAGING_DIR$NATIVEPREFIX/lib/pkgconfig/ 2>/dev/null || true; fi",
+            "linux_*:*:rm -rf $STAGING_DIR$NATIVEPREFIX/share/doc $STAGING_DIR$NATIVEPREFIX/share/man $STAGING_DIR$NATIVEPREFIX/lib/*.la"
+        ]
+    }
+}

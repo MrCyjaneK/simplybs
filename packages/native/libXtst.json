@@ -1,0 +1,43 @@
+{
+    "package": "native/libXtst",
+    "version": "1.2.5",
+    "type": "native",
+    "download": [
+        {
+            "kind": "tar.gz",
+            "sha256": "244ba6e1c5ffa44f1ba251affdfa984d55d99c94bb925a342657e5e7aaf6d39c",
+            "url": "https://www.x.org/releases/individual/lib/libXtst-1.2.5.tar.gz"
+        }
+    ],
+    "dependencies": [
+        "linux_*:*:native/_/_",
+        "linux_*:*:native/bash",
+        "linux_*:*:native/coreutils",
+        "linux_*:*:native/findutils",
+        "linux_*:*:native/gawk",
+        "linux_*:*:native/grep",
+        "linux_*:*:native/make",
+        "linux_*:*:native/pkgconf",
+        "linux_*:*:native/sed",
+        "linux_*:*:native/xorgproto",
+        "linux_*:*:native/libX11",
+        "linux_*:*:native/libXext",
+        "linux_*:*:native/libXi",
+        "linux_*:*:native/libXfixes",
+        "linux_*:*:native/libxcb",
+        "linux_*:*:native/libXau",
+        "linux_*:*:native/libXdmcp"
+    ],
+    "build": {
+        "env": [
+            "linux_*:*:RAWCPP=$PATCH_DIR/native/x11/cpp"
+        ],
+        "steps": [
+            "linux_*:*:bash ./configure --prefix=$NATIVEPREFIX --enable-shared --disable-static --disable-dependency-tracking --enable-option-checking",
+            "linux_*:*:make -j$NUM_CORES",
+            "linux_*:*:make DESTDIR=$STAGING_DIR install",
+            "linux_*:*:mkdir -p $STAGING_DIR$NATIVEPREFIX/lib/pkgconfig && if [ -d $STAGING_DIR$NATIVEPREFIX/share/pkgconfig ]; then mv $STAGING_DIR$NATIVEPREFIX/share/pkgconfig/*.pc $STAGING_DIR$NATIVEPREFIX/lib/pkgconfig/ 2>/dev/null || true; fi",
+            "linux_*:*:rm -rf $STAGING_DIR$NATIVEPREFIX/share/doc $STAGING_DIR$NATIVEPREFIX/share/man $STAGING_DIR$NATIVEPREFIX/lib/*.la"
+        ]
+    }
+}

@@ -937,6 +937,26 @@
                 "413789501269f0f258a6716c6fa3edae178ba4a3"
             ]
         },
+        "https://git.openjdk.org/jdk11u": {
+            "refs": [
+                "30abc58ea74716e0d260bad1e5d6f3545f9a9332"
+            ]
+        },
+        "https://git.openjdk.org/jdk20u": {
+            "refs": [
+                "9ced461a4d8cb2ecfe2d6a74ec218ec589dcd617"
+            ]
+        },
+        "https://git.openjdk.org/jdk21u": {
+            "refs": [
+                "eac07229cf6cacc8a22eb79f4929e7fed61338b7"
+            ]
+        },
+        "https://git.openjdk.org/jdk22u": {
+            "refs": [
+                "8153097cea2076988d8ad355d35ff08b04a89875"
+            ]
+        },
         "https://github.com/Cyan4973/xxHash.git": {
             "refs": [
                 "66979328cf3f15cecdc61ea58c9f81e6071f8983"
@@ -950,6 +970,11 @@
         "https://github.com/MrCyjaneK/7zz_unzip.git": {
             "refs": [
                 "f802bc7b20bf0626d765ff3fe0ef0adb3fd93b26"
+            ]
+        },
+        "https://github.com/MrCyjaneK/7zz_zip.git": {
+            "refs": [
+                "e378609759eb7e94b15cdba0b0fed2eee6cdf693"
             ]
         },
         "https://github.com/MrCyjaneK/cmake-toolchain.git": {
@@ -1515,6 +1540,42 @@
         },
         {
             "kind": "blob",
+            "url": "https://github.com/adoptium/temurin11-binaries/releases/download/jdk-11.0.32.1%2B1/OpenJDK11U-jdk_aarch64_linux_hotspot_11.0.32.1_1.tar.gz",
+            "sha256": "f27033e6f7523c1b0b2565a78e9c0e0abe5596a854ce00ca04ec1b06ece7a935",
+            "path": "./OpenJDK11U-jdk_aarch64_linux_hotspot_11.0.32.1_1.tar.gz"
+        },
+        {
+            "kind": "blob",
+            "url": "https://github.com/adoptium/temurin11-binaries/releases/download/jdk-11.0.32.1%2B1/OpenJDK11U-jdk_aarch64_mac_hotspot_11.0.32.1_1.tar.gz",
+            "sha256": "c487a1c3a56588b3a32d0d07cdd526bf3d401c4b8422be772ca178bfcd647f3f",
+            "path": "./OpenJDK11U-jdk_aarch64_mac_hotspot_11.0.32.1_1.tar.gz"
+        },
+        {
+            "kind": "blob",
+            "url": "https://github.com/adoptium/temurin11-binaries/releases/download/jdk-11.0.32.1%2B1/OpenJDK11U-jdk_x64_linux_hotspot_11.0.32.1_1.tar.gz",
+            "sha256": "5c3f68887c325d36d852ba534303e1f5f1f5cae7d6cc1e951d73e0d8e98a058d",
+            "path": "./OpenJDK11U-jdk_x64_linux_hotspot_11.0.32.1_1.tar.gz"
+        },
+        {
+            "kind": "blob",
+            "url": "https://github.com/adoptium/temurin20-binaries/releases/download/jdk-20.0.2%2B9/OpenJDK20U-jdk_aarch64_linux_hotspot_20.0.2_9.tar.gz",
+            "sha256": "b475bcc23db0bd618c815bb8f11d8e084dc58288ea3bcdf4e7f389ed41c89f56",
+            "path": "./OpenJDK20U-jdk_aarch64_linux_hotspot_20.0.2_9.tar.gz"
+        },
+        {
+            "kind": "blob",
+            "url": "https://github.com/adoptium/temurin20-binaries/releases/download/jdk-20.0.2%2B9/OpenJDK20U-jdk_aarch64_mac_hotspot_20.0.2_9.tar.gz",
+            "sha256": "6ef42b63581c0265c5a6b734e203bb922ee720571a8de46532ecca50a804c596",
+            "path": "./OpenJDK20U-jdk_aarch64_mac_hotspot_20.0.2_9.tar.gz"
+        },
+        {
+            "kind": "blob",
+            "url": "https://github.com/adoptium/temurin20-binaries/releases/download/jdk-20.0.2%2B9/OpenJDK20U-jdk_x64_linux_hotspot_20.0.2_9.tar.gz",
+            "sha256": "3d91842e9c172967ac397076523249d05a82ead51b0006838f5f0315ad52222c",
+            "path": "./OpenJDK20U-jdk_x64_linux_hotspot_20.0.2_9.tar.gz"
+        },
+        {
+            "kind": "blob",
             "url": "https://github.com/apple/llvm-project/archive/refs/heads/stable/20250402.zip",
             "sha256": "b8e87f026e19259e6eac347746661e11592e0ff8bcdb657e177800223d7438ce",
             "path": "tarballs/20250402.zip"
@@ -1765,6 +1826,11 @@
             "kind": "tar.bz2",
             "url": "https://salsa.debian.org/reproducible-builds/reproducible-lfs/-/raw/master/releases/strip-nondeterminism/strip-nondeterminism_1.13.0.tar.bz2",
             "sha256": "a70cdad5d728ea78b75d09880c4b51c7d887e89d0b610149b10cfb2abc70b4fc"
+        },
+        {
+            "kind": "tar.bz2",
+            "url": "https://www.alsa-project.org/files/pub/lib/alsa-lib-1.2.14.tar.bz2",
+            "sha256": "be9c88a0b3604367dd74167a2b754a35e142f670292ae47a2fdef27a2ee97a32"
         },
         {
             "kind": "tar.gz",
@@ -2183,6 +2249,21 @@
         },
         {
             "kind": "tar.gz",
+            "url": "http://static.rust-lang.org/dist/rustc-1.96.0-src.tar.gz",
+            "sha256": "e90a9eb153b2948afac840dbe9d77b64e376706f2864387ee7717f7450043b44"
+        },
+        {
+            "kind": "tar.gz",
+            "url": "http://static.rust-lang.org/dist/rustc-1.97.0-src.tar.gz",
+            "sha256": "1c0855d8982a0fb1d0321b6054b55b732d3b1d17c846841eb7fd0ab37bf276f8"
+        },
+        {
+            "kind": "tar.gz",
+            "url": "http://static.rust-lang.org/dist/rustc-1.98.0-src.tar.gz",
+            "sha256": "b226aef375ffbe9fbe2b85fde996b50716d59d55268e240d052396534b75e929"
+        },
+        {
+            "kind": "tar.gz",
             "url": "http://www.cpan.org/src/5.0/perl-5.42.0.tar.gz",
             "sha256": "e093ef184d7f9a1b9797e2465296f55510adb6dab8842b0c3ed53329663096dc"
         },
@@ -2258,6 +2339,11 @@
         },
         {
             "kind": "tar.gz",
+            "url": "https://downloads.sourceforge.net/project/freetype/freetype2/2.14.1/freetype-2.14.1.tar.gz",
+            "sha256": "174d9e53402e1bf9ec7277e22ec199ba3e55a6be2c0740cb18c0ee9850fc8c34"
+        },
+        {
+            "kind": "tar.gz",
             "url": "https://ftp.gnu.org/gnu/bash/bash-5.3.tar.gz",
             "sha256": "0d5cd86965f869a26cf64f4b71be7b96f90a3ba8b3d74e27e8e9d9d5550f31ba"
         },
@@ -2266,6 +2352,11 @@
             "url": "https://github.com/HowardHinnant/date/archive/refs/tags/v3.0.1.tar.gz",
             "sha256": "7a390f200f0ccd207e8cff6757e04817c1a0aec3e327b006b7eb451c57ee3538",
             "path": "deps/date"
+        },
+        {
+            "kind": "tar.gz",
+            "url": "https://github.com/OpenPrinting/cups/releases/download/v2.4.19/cups-2.4.19-source.tar.gz",
+            "sha256": "820984b12a67f98705785aae2dd1347fe0ac097828001d4583ff64574aed6389"
         },
         {
             "kind": "tar.gz",
@@ -2483,6 +2574,71 @@
             "kind": "tar.gz",
             "url": "https://www.sqlite.org/2025/sqlite-autoconf-3510100.tar.gz",
             "sha256": "4f2445cd70479724d32ad015ec7fd37fbb6f6130013bd4bfbc80c32beb42b7e0"
+        },
+        {
+            "kind": "tar.gz",
+            "url": "https://www.x.org/releases/individual/lib/libICE-1.1.2.tar.gz",
+            "sha256": "1da62f732f8679c20045708a29372b82dff9e7eceee543ed488b845002b3b0ff"
+        },
+        {
+            "kind": "tar.gz",
+            "url": "https://www.x.org/releases/individual/lib/libSM-1.2.6.tar.gz",
+            "sha256": "166b4b50d606cdd83f1ddc61b5b9162600034f848b3e32ccbb0e63536b7d6cdd"
+        },
+        {
+            "kind": "tar.gz",
+            "url": "https://www.x.org/releases/individual/lib/libX11-1.8.13.tar.gz",
+            "sha256": "acf0e7cd7541110e6330ecb539441a2d53061f386ec7be6906dfde0de2598470"
+        },
+        {
+            "kind": "tar.gz",
+            "url": "https://www.x.org/releases/individual/lib/libXau-1.0.12.tar.gz",
+            "sha256": "2402dd938da4d0a332349ab3d3586606175e19cb32cb9fe013c19f1dc922dcee"
+        },
+        {
+            "kind": "tar.gz",
+            "url": "https://www.x.org/releases/individual/lib/libXdmcp-1.1.5.tar.gz",
+            "sha256": "31a7abc4f129dcf6f27ae912c3eedcb94d25ad2e8f317f69df6eda0bc4e4f2f3"
+        },
+        {
+            "kind": "tar.gz",
+            "url": "https://www.x.org/releases/individual/lib/libXext-1.3.7.tar.gz",
+            "sha256": "6564608dc3b816b0cfddf0c7ddc62bc579055dd70b2f28113a618df2acb64189"
+        },
+        {
+            "kind": "tar.gz",
+            "url": "https://www.x.org/releases/individual/lib/libXfixes-6.0.2.tar.gz",
+            "sha256": "041331b8e6e36038b3bf836785b6b175ec8515f964c9e4e3316b3bfed0f53ac7"
+        },
+        {
+            "kind": "tar.gz",
+            "url": "https://www.x.org/releases/individual/lib/libXi-1.8.3.tar.gz",
+            "sha256": "6648c44127e4585f4e7842c0802d265008fa6f9741df0ea6ee7934a5267adf63"
+        },
+        {
+            "kind": "tar.gz",
+            "url": "https://www.x.org/releases/individual/lib/libXrandr-1.5.5.tar.gz",
+            "sha256": "23faedab4675890ba579b8103399132a139527306b18b500c6fe28e090e2a056"
+        },
+        {
+            "kind": "tar.gz",
+            "url": "https://www.x.org/releases/individual/lib/libXrender-0.9.12.tar.gz",
+            "sha256": "0fff64125819c02d1102b6236f3d7d861a07b5216d8eea336c3811d31494ecf7"
+        },
+        {
+            "kind": "tar.gz",
+            "url": "https://www.x.org/releases/individual/lib/libXt-1.3.1.tar.gz",
+            "sha256": "cf2212189869adb94ffd58c7d9a545a369b83d2274930bfbe148da354030b355"
+        },
+        {
+            "kind": "tar.gz",
+            "url": "https://www.x.org/releases/individual/lib/libXtst-1.2.5.tar.gz",
+            "sha256": "244ba6e1c5ffa44f1ba251affdfa984d55d99c94bb925a342657e5e7aaf6d39c"
+        },
+        {
+            "kind": "tar.gz",
+            "url": "https://www.x.org/releases/individual/lib/xtrans-1.6.0.tar.gz",
+            "sha256": "936b74c60b19c317c3f3cb1b114575032528dbdaf428740483200ea874c2ca0a"
         },
         {
             "kind": "tar.gz",

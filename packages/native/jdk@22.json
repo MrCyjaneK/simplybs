@@ -1,0 +1,63 @@
+{
+    "package": "native/jdk@22",
+    "version": "22.0.2",
+    "type": "native",
+    "download": [
+        {
+            "kind": "git",
+            "sha256": "8153097cea2076988d8ad355d35ff08b04a89875",
+            "url": "https://git.openjdk.org/jdk22u"
+        }
+    ],
+    "dependencies": [
+        "*:*:native/_/_",
+        "*:*:native/7zip",
+        "*:*:native/autoconf",
+        "*:*:native/m4",
+        "*:*:native/perl",
+        "*:*:native/bash",
+        "*:*:native/coreutils",
+        "*:*:native/file",
+        "*:*:native/findutils",
+        "*:*:native/gawk",
+        "*:*:native/grep",
+        "*:*:native/gzip",
+        "*:*:native/tar",
+        "*:*:native/make",
+        "*:*:native/pkgconf",
+        "*:*:native/sed",
+        "*:*:native/unzip",
+        "*:*:native/zip",
+        "*:*:native/zlib",
+        "*:*:native/jdk@21",
+        "linux_*:*:native/xorgproto",
+        "linux_*:*:native/xtrans",
+        "linux_*:*:native/libXau",
+        "linux_*:*:native/libXdmcp",
+        "linux_*:*:native/libxcb",
+        "linux_*:*:native/libX11",
+        "linux_*:*:native/libXext",
+        "linux_*:*:native/libXfixes",
+        "linux_*:*:native/libXrender",
+        "linux_*:*:native/libXrandr",
+        "linux_*:*:native/libXi",
+        "linux_*:*:native/libXtst",
+        "linux_*:*:native/libICE",
+        "linux_*:*:native/libSM",
+        "linux_*:*:native/libXt",
+        "linux_*:*:native/cups",
+        "linux_*:*:native/freetype",
+        "linux_*:*:native/fontconfig",
+        "linux_*:*:native/alsa"
+    ],
+    "build": {
+        "env": [
+            "*:*:JDK_VERSION=22",
+            "*:*:BOOT_JDK=$NATIVEPREFIX/jdk-21"
+        ],
+        "steps": [
+            "*:*:bash $PATCH_DIR/jdk/build.sh",
+            "*:*:bash $PATCH_DIR/jdk/stage.sh"
+        ]
+    }
+}

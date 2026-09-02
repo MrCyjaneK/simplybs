@@ -1,0 +1,4 @@
+#!/bin/sh
+# xorg configure runs: $RAWCPP [flags] < conftest.c
+# clang-cpp does not read stdin unless given "-".
+exec "${CC}" -E "$@" -

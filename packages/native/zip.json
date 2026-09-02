@@ -1,0 +1,24 @@
+{
+    "package": "native/zip",
+    "version": "1.0.2",
+    "type": "native",
+    "download": [
+        {
+            "kind": "git",
+            "sha256": "e378609759eb7e94b15cdba0b0fed2eee6cdf693",
+            "url": "https://github.com/MrCyjaneK/7zz_zip.git"
+        }
+    ],
+    "dependencies": [
+        "*:*:native/_/_",
+        "*:*:native/bzip2",
+        "*:*:native/make",
+        "*:*:native/sed"
+    ],
+    "build": {
+        "steps": [
+            "*:*:mkdir -p $STAGING_DIR$NATIVEPREFIX/bin",
+            "*:*:$CC main.c -o $STAGING_DIR$NATIVEPREFIX/bin/zip"
+        ]
+    }
+}

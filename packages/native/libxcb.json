@@ -1,0 +1,37 @@
+{
+    "package": "native/libxcb",
+    "version": "1.17.0",
+    "type": "native",
+    "download": [
+        {
+            "kind": "tar.gz",
+            "sha256": "2c69287424c9e2128cb47ffe92171e10417041ec2963bceafb65cb3fcf8f0b85",
+            "url": "https://xcb.freedesktop.org/dist/libxcb-1.17.0.tar.gz"
+        }
+    ],
+    "dependencies": [
+        "linux_*:*:native/_/_",
+        "linux_*:*:native/bash",
+        "linux_*:*:native/coreutils",
+        "linux_*:*:native/findutils",
+        "linux_*:*:native/gawk",
+        "linux_*:*:native/grep",
+        "linux_*:*:native/make",
+        "linux_*:*:native/pkgconf",
+        "linux_*:*:native/sed",
+        "linux_*:*:native/python@3.11",
+        "linux_*:*:native/xcb_proto",
+        "linux_*:*:native/xorgproto",
+        "linux_*:*:native/libXau"
+    ],
+    "build": {
+        "env": [],
+        "steps": [
+            "linux_*:*:bash ./configure --prefix=$NATIVEPREFIX --enable-shared --disable-static --disable-dependency-tracking --enable-option-checking --disable-devel-docs --without-doxygen",
+            "linux_*:*:make -j$NUM_CORES",
+            "linux_*:*:make DESTDIR=$STAGING_DIR install",
+            "linux_*:*:mkdir -p $STAGING_DIR$NATIVEPREFIX/lib/pkgconfig && if [ -d $STAGING_DIR$NATIVEPREFIX/share/pkgconfig ]; then mv $STAGING_DIR$NATIVEPREFIX/share/pkgconfig/*.pc $STAGING_DIR$NATIVEPREFIX/lib/pkgconfig/ 2>/dev/null || true; fi",
+            "linux_*:*:rm -rf $STAGING_DIR$NATIVEPREFIX/share/doc $STAGING_DIR$NATIVEPREFIX/share/man $STAGING_DIR$NATIVEPREFIX/lib/*.la"
+        ]
+    }
+}
