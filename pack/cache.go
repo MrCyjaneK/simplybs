@@ -20,9 +20,12 @@ import (
 //	x86_64-linux-gnu/zlib-1.3.1-deadbeef.tar.gz
 //	  -> x86_64-linux-gnu+zlib-1.3.1-deadbeef.tar.gz
 //
-// Pull only requests assets for the packages needed by the current build
-// (by short-hash filename). Push only uploads local files that are missing
-// from the release (content changes produce a new short-hash name).
+// Pull requests artifacts for packages that will actually be extracted or
+// rebuilt. Walking stops at a package whose current-hash files are already
+// local or fully present on the release: BuildPackage only extracts direct
+// dependencies, so a cache hit (e.g. rust@1_96_0) does not download that
+// package's own bootstrap chain. Push only uploads local files that are
+// missing from the release (content changes produce a new short-hash name).
 //
 // Cache is enabled only when both SIMPLYBS_CACHE_TAG and SIMPLYBS_CACHE_REPO
 // are set; EnsureBuilt then auto-pulls missing artifacts.
@@ -106,6 +109,23 @@ func (p *Package) BuiltRelPaths(h *host.Host) []string {
 
 // CollectNeededPackages returns pkg plus its transitive dependencies for h.
 func CollectNeededPackages(pkgs []*Package, h *host.Host) []*Package {
+	return collectPackages(pkgs, h, nil)
+}
+
+// collectCachePullPackages returns packages whose artifacts should be
+// downloaded for pkgs on h. A package whose current-hash artifacts are
+// already local or complete on the release is included (so it can be
+// fetched), but its dependencies are not: those are only needed to rebuild
+// it, and a cache hit means it will not be rebuilt.
+func collectCachePullPackages(pkgs []*Package, h *host.Host, remote map[string]bool) []*Package {
+	return collectPackages(pkgs, h, remote)
+}
+
+// collectPackages walks pkgs and their dependencies. When remote is non-nil
+// (cache pull), walking stops at a package that is already usable locally or
+// fully present on the release. When remote is nil (push / CI queue), the
+// full transitive tree is returned.
+func collectPackages(pkgs []*Package, h *host.Host, remote map[string]bool) []*Package {
 	seen := map[string]*Package{}
 	var walk func(*Package)
 	walk = func(p *Package) {
@@ -116,6 +136,12 @@ func CollectNeededPackages(pkgs []*Package, h *host.Host) []*Package {
 			return
 		}
 		seen[p.Package] = p
+		if remote != nil {
+			localOK, remoteOK := packageCacheState(p, h, remote)
+			if localOK || remoteOK {
+				return
+			}
+		}
 		for _, dep := range filteredDependencyPackages(p.Dependencies, h) {
 			walk(dep)
 		}
@@ -130,15 +156,38 @@ func CollectNeededPackages(pkgs []*Package, h *host.Host) []*Package {
 	return out
 }
 
-func neededAssetNames(pkgs []*Package, h *host.Host) []string {
-	needed := CollectNeededPackages(pkgs, h)
-	names := make([]string, 0, len(needed)*cacheAssetSuffixes)
-	for _, p := range needed {
+func packageCacheState(p *Package, h *host.Host, remote map[string]bool) (localComplete, remoteComplete bool) {
+	builtRoot := filepath.Join(host.DataDir(), "built")
+	localComplete = true
+	remoteComplete = true
+	for _, rel := range p.BuiltRelPaths(h) {
+		dest := filepath.Join(builtRoot, filepath.FromSlash(rel))
+		if _, err := os.Stat(dest); err != nil {
+			localComplete = false
+		}
+		if !remote[AssetNameForRel(rel)] {
+			remoteComplete = false
+		}
+	}
+	return localComplete, remoteComplete
+}
+
+func assetNamesFor(pkgs []*Package, h *host.Host) []string {
+	names := make([]string, 0, len(pkgs)*cacheAssetSuffixes)
+	for _, p := range pkgs {
 		for _, rel := range p.BuiltRelPaths(h) {
 			names = append(names, AssetNameForRel(rel))
 		}
 	}
 	return names
+}
+
+func neededAssetNames(pkgs []*Package, h *host.Host) []string {
+	return assetNamesFor(CollectNeededPackages(pkgs, h), h)
+}
+
+func neededPullAssetNames(pkgs []*Package, h *host.Host, remote map[string]bool) []string {
+	return assetNamesFor(collectCachePullPackages(pkgs, h, remote), h)
 }
 
 func loadRemoteAssets(tag string) (map[string]bool, error) {
@@ -307,7 +356,9 @@ func TryPullPackageCache(p *Package, h *host.Host) bool {
 	return ok
 }
 
-// CachePull downloads only the built artifacts needed for pkgs on host h.
+// CachePull downloads built artifacts needed for pkgs on host h.
+// It does not fetch dependency trees of packages that are already
+// complete locally or on the release.
 func CachePull(pkgs []*Package, h *host.Host) error {
 	tag, _, err := requireCacheConfig()
 	if err != nil {
@@ -319,7 +370,7 @@ func CachePull(pkgs []*Package, h *host.Host) error {
 	}
 
 	builtRoot := filepath.Join(host.DataDir(), "built")
-	names := neededAssetNames(pkgs, h)
+	names := neededPullAssetNames(pkgs, h, assets)
 	toDownload := 0
 	skippedLocal := 0
 	missingRemote := 0

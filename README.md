@@ -106,10 +106,12 @@ Cache is enabled only when **both** required variables are set:
 # export SIMPLYBS_CACHE_REPO=mrcyjanek/simplybs_private
 ```
 
-With those set, `-build` auto-pulls the needed package tree up front, pulls
-per-package inside `EnsureBuilt` as a fallback, pushes each package after a
-successful local build, and runs a final tree push for anything still missing
-on the release:
+With those set, `-build` auto-pulls artifacts up front, pulls per-package
+inside `EnsureBuilt` as a fallback, pushes each package after a successful
+local build, and runs a final tree push for anything still missing on the
+release. The up-front pull stops at a cache hit: if `native/rust@1_96_0`
+is on the release, older rust bootstraps used only to *build* that compiler
+are not downloaded.
 
 ```bash
 go run . -host x86_64-linux-gnu -package zlib -build
