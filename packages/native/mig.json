@@ -32,6 +32,7 @@
         ],
         "steps": [
             "*:*:patch -p1 < $PATCH_DIR/native/mig/bison-yyerror-const.patch",
+            "*:*:patch -p1 < $PATCH_DIR/native/mig/hermetic-migsh.patch",
             "*:*:mkdir -p autotools",
             "*:*:autoreconf -f -i",
             "*:*:bash ./configure --prefix=$NATIVEPREFIX",

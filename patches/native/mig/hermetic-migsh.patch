@@ -1,0 +1,37 @@
+--- a/migcom.tproj/mig.sh
++++ b/migcom.tproj/mig.sh
+@@ -78,10 +78,8 @@
+ fi
+ 
+ if [ -z "${MIGCC}" ]; then
+-  xcrunPath="/usr/bin/xcrun"
+-  if [ -x "${xcrunPath}" ]; then
+-    MIGCC=`"${xcrunPath}" -sdk "$sdkRoot" -find cc`
+-  elif [[ -x "${scriptRoot}/cc" ]]; then
++  # Hermetic: never exec host xcrun. Prefer PATH clang from native/_/_.
++  if [[ -x "${scriptRoot}/cc" ]]; then
+     MIGCC=$(realpath "${scriptRoot}/cc")
+   elif type clang >& /dev/null; then
+     MIGCC=clang
+@@ -104,7 +102,12 @@
+ uname_s=$(uname -s)
+ case "${uname_s}" in
+   Darwin)
+-    arch=(-arch "$(/usr/bin/arch)")
++    # uname -m is on PATH (coreutils). Apple -arch wants arm64, not aarch64.
++    mach=$(uname -m)
++    case "$mach" in
++      aarch64) mach=arm64 ;;
++    esac
++    arch=(-arch "$mach")
+     ;;
+   *)
+     arch=()
+@@ -259,6 +262,6 @@
+     rm -f "${temp}.c"
+ done
+ 
+-/bin/rmdir "${WORKTMP}"
++rmdir "${WORKTMP}"
+ exit 0
+ 
