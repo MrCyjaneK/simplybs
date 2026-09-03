@@ -64,8 +64,13 @@ if [ "${GRAAL_STATIC_LIBS:-}" = 1 ]; then
 		*) graal_arch=$machine ;;
 	esac
 	graal_os=$(uname -s | tr '[:upper:]' '[:lower:]')
-	graal_libc=glibc
-	static_dest="$dest/lib/static/${graal_os}-${graal_arch}/${graal_libc}"
+	# Graal native-image looks under lib/static/<os>-<arch>/<libc> on
+	# Linux and lib/static/<os>-<arch> on Darwin.
+	if [ "$graal_os" = linux ]; then
+		static_dest="$dest/lib/static/${graal_os}-${graal_arch}/glibc"
+	else
+		static_dest="$dest/lib/static/${graal_os}-${graal_arch}"
+	fi
 	mkdir -p "$static_dest"
 	cp -a "$static_src"/*.a "$static_dest/"
 	echo "jdk: staged static libs in $static_dest"

@@ -27,6 +27,17 @@ fi
 export PATH="$NATIVEPREFIX/bin:$tools:$NATIVEPREFIX/_/bin:$PATH"
 export AUTOCONF="${AUTOCONF:-$NATIVEPREFIX/bin/autoconf}"
 
+os=$(uname -s)
+# OpenJDK has --with-macosx-version-max only; MACOSX_VERSION_MIN is hardcoded.
+# Honor simplybs OSX_MIN_VERSION via extra flags (JDK 20 configure rejects
+# --with-macosx-version-min).
+if [ "$os" = Darwin ] && [ -n "${OSX_MIN_VERSION:-}" ]; then
+	min="-mmacosx-version-min=$OSX_MIN_VERSION"
+	CFLAGS="${CFLAGS:+$CFLAGS }$min"
+	CXXFLAGS="${CXXFLAGS:+$CXXFLAGS }$min"
+	LDFLAGS="${LDFLAGS:+$LDFLAGS }$min"
+fi
+
 config=(
 	--with-boot-jdk="$BOOT_JDK"
 	--with-toolchain-type=clang
@@ -49,7 +60,6 @@ case "$JDK_VERSION" in
 	;;
 esac
 
-os=$(uname -s)
 extra_ldflags="${LDFLAGS:-}"
 if [ "$os" = Linux ]; then
 	# LLD 17+ errors on local symbols listed in Hotspot's generated mapfile.
@@ -68,9 +78,6 @@ fi
 if [ "$os" = Darwin ]; then
 	if [ -n "${SDK_PATH:-}" ]; then
 		config+=(--with-sysroot="$SDK_PATH")
-	fi
-	if [ -n "${OSX_MIN_VERSION:-}" ]; then
-		config+=(--with-macosx-version-min="$OSX_MIN_VERSION")
 	fi
 fi
 
