@@ -1,18 +1,55 @@
 #!/usr/bin/env bash
-case "$*" in
-  *--show-sdk-path*)
-    if [ -n "$SDK_PATH" ]; then
-      echo "$SDK_PATH"
-      exit 0
-    fi
-    ;;
-  *--version*)
-    echo "xcrun version 72."
-    exit 0
-    ;;
-esac
-if [ -x "$NATIVEPREFIX/bin/xcrun.real" ]; then
-  exec -a xcrun "$NATIVEPREFIX/bin/xcrun.real" "$@"
+# Hermetic xcrun. Reports SDK_PATH and resolves --find via PATH.
+# Never exec host /usr/bin/xcrun unless simplybs staged xcrun.real.
+show_sdk=0
+find_tool=""
+i=0
+args=("$@")
+while [ $i -lt ${#args[@]} ]; do
+	a=${args[$i]}
+	case "$a" in
+	--show-sdk-path)
+		show_sdk=1
+		;;
+	--version)
+		echo "xcrun version 72."
+		exit 0
+		;;
+	--find | -f)
+		i=$((i + 1))
+		find_tool=${args[$i]:-}
+		;;
+	--sdk | -sdk)
+		i=$((i + 1))
+		;;
+	esac
+	i=$((i + 1))
+done
+
+if [ "$show_sdk" -eq 1 ]; then
+	if [ -n "${SDK_PATH:-}" ]; then
+		echo "$SDK_PATH"
+		exit 0
+	fi
+	echo "xcrun: SDK_PATH is not set" >&2
+	exit 1
+fi
+
+if [ -n "$find_tool" ]; then
+	case "$find_tool" in
+	cc) find_tool=clang ;;
+	c++) find_tool=clang++ ;;
+	esac
+	if p=$(command -v "$find_tool" 2>/dev/null); then
+		echo "$p"
+		exit 0
+	fi
+	echo "xcrun: cannot find '$find_tool' in PATH" >&2
+	exit 1
+fi
+
+if [ -x "${NATIVEPREFIX:-}/bin/xcrun.real" ]; then
+	exec -a xcrun "$NATIVEPREFIX/bin/xcrun.real" "$@"
 fi
 echo "xcrun: unsupported invocation: $*" >&2
 exit 1

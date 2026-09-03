@@ -1,0 +1,189 @@
+#!/usr/bin/env bash
+# Hermetic Mach Interface Generator frontend.
+# OpenJDK requires `mig` on Darwin. Apple's /usr/bin/mig calls /usr/bin/xcrun;
+# cctools-port does not install mig. This wrapper drives migcom + hermetic clang.
+set -euo pipefail
+
+here=$(CDPATH= cd -- "$(dirname "$0")" && pwd)
+
+find_migcom() {
+	if [ -n "${MIGCOM:-}" ] && [ -x "$MIGCOM" ]; then
+		echo "$MIGCOM"
+		return 0
+	fi
+	local cand
+	for cand in \
+		"$here/migcom" \
+		"${NATIVEPREFIX:-}/bin/migcom" \
+		"${NATIVEPREFIX:-}/libexec/migcom" \
+		"${NATIVEPREFIX:-}/_/libexec/migcom" \
+		"${NATIVEPREFIX:-}/_/bin/migcom"; do
+		if [ -x "$cand" ]; then
+			echo "$cand"
+			return 0
+		fi
+	done
+	return 1
+}
+
+if [ $# -eq 1 ] && [ "$1" = "-version" ]; then
+	M=$(find_migcom) || {
+		echo "mig: migcom not found (set MIGCOM)" >&2
+		exit 1
+	}
+	exec "$M" "$@"
+fi
+
+M=$(find_migcom) || {
+	echo "mig: migcom not found (need staged CLT migcom or MIGCOM)" >&2
+	exit 1
+}
+
+C=${MIGCC:-}
+if [ -z "$C" ]; then
+	C=$(command -v clang || true)
+fi
+if [ -z "$C" ] || [ ! -x "$C" ]; then
+	echo "mig: clang not on PATH (set MIGCC)" >&2
+	exit 1
+fi
+
+sdkRoot=${SDKROOT:-${SDK_PATH:-}}
+arch=$(uname -m)
+case "$arch" in
+aarch64) arch=arm64 ;;
+esac
+
+cppflags=(-D__MACH30__)
+migflags=()
+target=()
+user=""
+server=""
+header=""
+sheader=""
+iheader=""
+dheader=""
+sawI=""
+sawMD=""
+
+until [ $# -eq 0 ]; do
+	case "$1" in
+	-[dtqkKQvVtTrRsSlLxXnN])
+		migflags+=("$1")
+		shift
+		;;
+	-i)
+		sawI=1
+		migflags+=("$1" "$2")
+		shift 2
+		;;
+	-user)
+		user=$2
+		if [ -z "${sawI:-}" ]; then
+			migflags+=("$1" "$2")
+		fi
+		shift 2
+		;;
+	-server)
+		server=$2
+		migflags+=("$1" "$2")
+		shift 2
+		;;
+	-header)
+		header=$2
+		migflags+=("$1" "$2")
+		shift 2
+		;;
+	-sheader)
+		sheader=$2
+		migflags+=("$1" "$2")
+		shift 2
+		;;
+	-iheader)
+		iheader=$2
+		migflags+=("$1" "$2")
+		shift 2
+		;;
+	-dheader)
+		dheader=$2
+		migflags+=("$1" "$2")
+		shift 2
+		;;
+	-arch)
+		arch=$2
+		shift 2
+		;;
+	-target)
+		target=("$1" "$2")
+		shift 2
+		;;
+	-maxonstack | -max_descrs | -max_reply_descrs)
+		migflags+=("$1" "$2")
+		shift 2
+		;;
+	-split | -novouchers | -mach_msg2)
+		migflags+=("$1")
+		shift
+		;;
+	-MD)
+		sawMD=1
+		cppflags+=("$1")
+		shift
+		;;
+	-cpp)
+		shift 2
+		;;
+	-cc)
+		C=$2
+		shift 2
+		;;
+	-migcom)
+		M=$2
+		shift 2
+		;;
+	-isysroot)
+		sdkRoot=$2
+		shift 2
+		;;
+	-*)
+		cppflags+=("$1")
+		shift
+		;;
+	*)
+		break
+		;;
+	esac
+done
+
+WORKTMP=$(mktemp -d "${TMPDIR:-/tmp}/mig.XXXXXX")
+trap 'rm -rf "$WORKTMP"' EXIT
+
+until [ $# -eq 0 ]; do
+	file=$1
+	shift
+	base=$(basename "$file" .defs)
+	temp="$WORKTMP/${base}.$$"
+	sourcedir=$(dirname "$file")
+	iSysRootParm=()
+	if [ -n "$sdkRoot" ]; then
+		iSysRootParm=(-isysroot "$sdkRoot")
+	fi
+	if [ ! -r "$file" ]; then
+		echo "mig: cannot read $file" >&2
+		exit 1
+	fi
+	{
+		printf '#line 1 "%s"\n' "$file"
+		cat "$file"
+	} >"${temp}.c"
+	if ! "$C" -E -arch "$arch" "${target[@]}" "${cppflags[@]}" -I "$sourcedir" "${iSysRootParm[@]}" "${temp}.c" | "$M" "${migflags[@]}"; then
+		echo "mig: failed on $file" >&2
+		exit 1
+	fi
+	if [ -n "$sawMD" ] && [ -f "${temp}.d" ]; then
+		rm -f "${temp}.d"
+	fi
+	# silence unused-var warnings for Apple-compatible flag parsing
+	: "${user:-}" "${server:-}" "${header:-}" "${sheader:-}" "${iheader:-}" "${dheader:-}"
+done
+exit 0
