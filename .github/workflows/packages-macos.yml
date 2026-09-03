@@ -37,7 +37,7 @@ permissions:
 
 jobs:
   meta:
-    runs-on: puzl-ubuntu-latest
+    runs-on: ubuntu-latest
     timeout-minutes: 10
     outputs:
       sha: ${{ steps.meta.outputs.sha }}
@@ -140,7 +140,7 @@ jobs:
   finish:
     if: always()
     needs: [meta, batch1, batch2, batch3]
-    runs-on: puzl-ubuntu-latest
+    runs-on: ubuntu-latest
     steps:
       - name: Set commit status
         env:

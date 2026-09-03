@@ -9,10 +9,10 @@ on:
         type: string
         default: ""
       runner:
-        description: Runner label (linux-amd64 uses puzl-ubuntu-latest)
+        description: GitHub-hosted runner label
         required: false
         type: string
-        default: puzl-ubuntu-latest
+        default: ubuntu-latest
       sha:
         required: true
         type: string

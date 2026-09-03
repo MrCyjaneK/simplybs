@@ -40,7 +40,7 @@ permissions:
 
 jobs:
   image:
-    runs-on: puzl-ubuntu-latest
+    runs-on: ubuntu-latest
     timeout-minutes: 30
     outputs:
       image: ${{ steps.out.outputs.image }}
@@ -182,7 +182,7 @@ jobs:
   finish:
     if: always()
     needs: [image, batch1, batch2, batch3]
-    runs-on: puzl-ubuntu-latest
+    runs-on: ubuntu-latest
     steps:
       - name: Set commit status
         env:

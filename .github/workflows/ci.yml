@@ -14,7 +14,7 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - os: puzl-ubuntu-latest
+          - os: ubuntu-latest
             host: x86_64-linux-gnu
           - os: macos-latest
             host: aarch64-apple-darwin
