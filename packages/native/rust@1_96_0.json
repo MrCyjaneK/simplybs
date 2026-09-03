@@ -1,24 +1,24 @@
 {
-    "package": "native/rust",
-    "version": "1.98.0",
+    "package": "native/rust@1_96_0",
+    "version": "1.96.0",
     "type": "native",
     "download": [
         {
             "kind": "tar.gz",
-            "sha256": "b226aef375ffbe9fbe2b85fde996b50716d59d55268e240d052396534b75e929",
-            "url": "http://static.rust-lang.org/dist/rustc-1.98.0-src.tar.gz"
+            "sha256": "e90a9eb153b2948afac840dbe9d77b64e376706f2864387ee7717f7450043b44",
+            "url": "http://static.rust-lang.org/dist/rustc-1.96.0-src.tar.gz"
         }
     ],
     "dependencies": [
         "*:*:native/_/_",
-        "*:*:native/bash",
         "*:*:native/cmake",
+        "*:*:native/bash",
         "*:*:native/make",
         "*:*:native/ninja",
         "*:*:native/openssl",
         "*:*:native/pkgconf",
         "*:*:native/python@3.11",
-        "*:*:native/rust@1_97_0"
+        "*:*:native/rust@1_95_0"
     ],
     "build": {
         "env": [

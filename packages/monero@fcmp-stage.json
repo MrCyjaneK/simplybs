@@ -94,6 +94,7 @@
             "*:*-android*:config_opts=$config_opts -DANDROID=ON"
         ],
         "steps": [
+            "*:*:echo simplybs-ci-queue",
             "*:*:patch -p1 < $PATCH_DIR/monero@fcmp-stage/dummy_rt.patch",
             "*:*:patch -p1 < $PATCH_DIR/monero@fcmp-stage/drop_translations.patch",
             "*:*:patch -p1 < $PATCH_DIR/monero@fcmp-stage/remove_icu4c.patch",
