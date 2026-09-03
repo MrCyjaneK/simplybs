@@ -22,7 +22,7 @@ go build ./...
 #     expansion allowed, so we write resolved values).
 #   * /etc/profile.d/   -> sourced by login shells (keeps the dynamic form).
 configure_cache_env() {
-  local repo="mrcyjanek/simplybs_private"
+  local repo="mrcyjanex/simplybs_private"
   local tag="v0-sbs-${USER}-$(go env GOOS)-$(go env GOARCH)"
 
   echo "==> configuring SIMPLYBS_CACHE_* (tag=${tag}, repo=${repo})"
@@ -35,7 +35,7 @@ configure_cache_env() {
 
   # /etc/profile.d: dynamic exports for login shells (safe if go is missing).
   sudo tee /etc/profile.d/simplybs-cache.sh >/dev/null <<'EOF'
-export SIMPLYBS_CACHE_REPO=mrcyjanek/simplybs_private
+export SIMPLYBS_CACHE_REPO=mrcyjanex/simplybs_private
 if command -v go >/dev/null 2>&1; then
   export SIMPLYBS_CACHE_TAG="v0-sbs-${USER}-$(go env GOOS)-$(go env GOARCH)"
 else

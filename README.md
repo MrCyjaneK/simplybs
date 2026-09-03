@@ -103,7 +103,7 @@ Cache is enabled only when **both** required variables are set:
 
 ```bash
 # export SIMPLYBS_CACHE_TAG=v0-sbs-$USER-$(go env GOOS)-$(go env GOARCH)
-# export SIMPLYBS_CACHE_REPO=mrcyjanek/simplybs_private
+# export SIMPLYBS_CACHE_REPO=mrcyjanex/simplybs_private
 ```
 
 With those set, `-build` auto-pulls artifacts up front, pulls per-package
