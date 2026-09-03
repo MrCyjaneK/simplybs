@@ -12,8 +12,13 @@ fi
 
 tools="$PWD/.jdk-tools"
 mkdir -p "$tools"
-cp "$PATCH_DIR/rust-std/xcrun" "$tools/xcrun"
-chmod +x "$tools/xcrun"
+os=$(uname -s)
+# rust-std/xcrun is an osx-cross stub. On Darwin it shadows /usr/bin/xcrun
+# and OpenJDK configure fails with "no system headers found".
+if [ "$os" != Darwin ]; then
+	cp "$PATCH_DIR/rust-std/xcrun" "$tools/xcrun"
+	chmod +x "$tools/xcrun"
+fi
 if [ -x "$NATIVEPREFIX/_/bin/llvm-cxxfilt" ]; then
 	ln -sf "$NATIVEPREFIX/_/bin/llvm-cxxfilt" "$tools/c++filt"
 fi
@@ -27,7 +32,6 @@ fi
 export PATH="$NATIVEPREFIX/bin:$tools:$NATIVEPREFIX/_/bin:$PATH"
 export AUTOCONF="${AUTOCONF:-$NATIVEPREFIX/bin/autoconf}"
 
-os=$(uname -s)
 # OpenJDK has --with-macosx-version-max only; MACOSX_VERSION_MIN is hardcoded.
 # Honor simplybs OSX_MIN_VERSION via extra flags (JDK 20 configure rejects
 # --with-macosx-version-min).
@@ -36,6 +40,22 @@ if [ "$os" = Darwin ] && [ -n "${OSX_MIN_VERSION:-}" ]; then
 	CFLAGS="${CFLAGS:+$CFLAGS }$min"
 	CXXFLAGS="${CXXFLAGS:+$CXXFLAGS }$min"
 	LDFLAGS="${LDFLAGS:+$LDFLAGS }$min"
+fi
+if [ "$os" = Darwin ] && [ -z "${SDK_PATH:-}" ]; then
+	if [ -x /usr/bin/xcrun ]; then
+		SDK_PATH=$(/usr/bin/xcrun --show-sdk-path 2>/dev/null || true)
+	fi
+	for cand in \
+		"$NATIVEPREFIX/_/SDK/MacOSX${SDK_VERSION:-26.1}.sdk" \
+		"$NATIVEPREFIX/SDK/MacOSX${SDK_VERSION:-26.1}.sdk"; do
+		if [ -z "${SDK_PATH:-}" ] && [ -d "$cand" ]; then
+			SDK_PATH=$cand
+			break
+		fi
+	done
+	if [ -n "${SDK_PATH:-}" ]; then
+		echo "jdk: Darwin SDK_PATH=$SDK_PATH"
+	fi
 fi
 
 config=(
