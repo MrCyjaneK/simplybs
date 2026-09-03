@@ -86,19 +86,13 @@ already fail on a clean checkout — unrelated to environment setup.
 
 `go` and `gh` are provided by the base image; there is nothing else to install.
 
-## Cache environment variables
+## Cache
 
-`install.sh` exports the shared cache settings box-wide (via `/etc/environment`
-and `/etc/profile.d/simplybs-cache.sh`), so every command sees them:
-
-- `SIMPLYBS_CACHE_TAG=v0-sbs-<user>-<goos>-<goarch>` (e.g. `v0-sbs-ubuntu-linux-amd64`)
-- `SIMPLYBS_CACHE_REPO=mrcyjanek/simplybs_private`
-
-When both are set, cache is enabled: `-build` auto-pulls needed artifacts and
-auto-pushes new/changed ones (see README). Explicit flags:
+Cache is on. Do not dig for it. No `gh release`, no listing assets, no
+inspecting tags, no probing `SIMPLYBS_CACHE_*`. `install.sh` already exports
+`SIMPLYBS_CACHE_TAG` and `SIMPLYBS_CACHE_REPO` box-wide; `-build` auto-pulls
+what it needs and auto-pushes what it built. It just works. Run the command:
 
 ```bash
-go run . -host x86_64-linux-gnu -package zlib -cache-pull
 go run . -host x86_64-linux-gnu -package zlib -build
-go run . -host x86_64-linux-gnu -package zlib -cache-push
 ```

@@ -53,7 +53,8 @@
     "build": {
         "env": [
             "*:*:JDK_VERSION=22",
-            "*:*:BOOT_JDK=$NATIVEPREFIX/jdk-22"
+            "*:*:BOOT_JDK=$NATIVEPREFIX/jdk-22",
+            "*:*:GRAAL_STATIC_LIBS=1"
         ],
         "steps": [
             "*:*:bash $PATCH_DIR/jdk/build.sh",

@@ -1,0 +1,28 @@
+{
+    "package": "graalvm-clibraries",
+    "version": "22.0.2",
+    "type": "host",
+    "download": [
+        {
+            "kind": "git",
+            "sha256": "1f72d5384cbf5a744b8284f874ad77947d2710bc",
+            "url": "https://github.com/oracle/graal.git"
+        }
+    ],
+    "dependencies": [
+        "*:*:native/_",
+        "*:*:native/bash",
+        "*:*:native/coreutils",
+        "*:*:native/graalvm",
+        "*:*:native/grep",
+        "*:*:native/sed"
+    ],
+    "build": {
+        "env": [],
+        "steps": [
+            "*:*:$NATIVEPREFIX/bin/mkdir -p $STAGING_DIR$NATIVEPREFIX/bin",
+            "*:*:touch $STAGING_DIR$NATIVEPREFIX/bin/.graalvm-clibraries",
+            "*:*:bash $PATCH_DIR/graalvm-clibraries/build.sh"
+        ]
+    }
+}

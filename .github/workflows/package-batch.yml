@@ -11,10 +11,10 @@ on:
         type: string
         default: ""
       runner:
-        description: GitHub-hosted runner label
+        description: Runner label (linux-amd64 uses puzl-ubuntu-latest)
         required: false
         type: string
-        default: ubuntu-latest
+        default: puzl-ubuntu-latest
       sha:
         required: true
         type: string
@@ -434,7 +434,7 @@ jobs:
   summarize:
     if: always()
     needs: [slot01, slot02, slot03, slot04, slot05, slot06, slot07, slot08, slot09, slot10, slot11, slot12, slot13, slot14, slot15, slot16, slot17, slot18, slot19, slot20, slot21, slot22, slot23, slot24]
-    runs-on: ubuntu-latest
+    runs-on: puzl-ubuntu-latest
     outputs:
       continue: ${{ steps.out.outputs.continue }}
     steps:

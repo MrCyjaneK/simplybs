@@ -10,10 +10,20 @@ import (
 	"github.com/mrcyjanek/simplybs/pack"
 )
 
-// DefaultHosts are the first targets the package worker builds.
+// DefaultHosts is the Linux CI host list, in queue order.
+// Keep x86_64-linux-gnu first (native-ish on the GHA amd64 runner).
+// 32-bit Android (armv7a-linux-androideabi) stays in host.SupportedHosts
+// but is omitted from CI for now.
 var DefaultHosts = []string{
 	"x86_64-linux-gnu",
+	"aarch64-linux-gnu",
 	"aarch64-linux-android",
+	"x86_64-linux-android",
+	"x86_64-w64-mingw32",
+	"aarch64-apple-darwin",
+	"x86_64-apple-darwin",
+	"aarch64-apple-ios",
+	"aarch64-apple-ios-simulator",
 }
 
 // Item is one (package, host) node in the build queue.

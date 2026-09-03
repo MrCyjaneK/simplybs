@@ -1,6 +1,7 @@
 package main
 
 import (
+	"bytes"
 	"os"
 	"path/filepath"
 	"strings"
@@ -137,8 +138,51 @@ func TestNextQueueZlibSecondHostAfterFirstCached(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	if res.Status != "next" || res.Package != "zlib" || res.Host != "aarch64-linux-android" {
+	if res.Status != "next" || res.Package != "zlib" || res.Host != "aarch64-linux-gnu" {
 		t.Fatalf("got %+v", res)
+	}
+}
+
+func TestDefaultHostsAreLinuxCIHosts(t *testing.T) {
+	skip := map[string]bool{"armv7a-linux-androideabi": true}
+	if DefaultHosts[0] != "x86_64-linux-gnu" {
+		t.Fatalf("linux-gnu should stay first, got %s", DefaultHosts[0])
+	}
+	seen := map[string]bool{}
+	for i, h := range DefaultHosts {
+		if skip[h] {
+			t.Fatalf("DefaultHosts[%d]=%q should not be in Linux CI yet", i, h)
+		}
+		if host.SupportedHosts[h] == nil {
+			t.Fatalf("DefaultHosts[%d]=%q is not in SupportedHosts", i, h)
+		}
+		if seen[h] {
+			t.Fatalf("duplicate host %q", h)
+		}
+		seen[h] = true
+	}
+	for triplet := range host.SupportedHosts {
+		if skip[triplet] {
+			continue
+		}
+		if !seen[triplet] {
+			t.Fatalf("SupportedHosts %q missing from DefaultHosts", triplet)
+		}
+	}
+}
+
+func TestPackagesYmlHostsMatchDefaultHosts(t *testing.T) {
+	chdirRepoRoot(t)
+	b, err := os.ReadFile(filepath.Join(".github", "workflows", "packages.yml"))
+	if err != nil {
+		t.Fatal(err)
+	}
+	want := "hosts: " + strings.Join(DefaultHosts, ",")
+	if !bytes.Contains(b, []byte(want)) {
+		t.Fatalf("packages.yml missing %q", want)
+	}
+	if n := bytes.Count(b, []byte(want)); n != 3 {
+		t.Fatalf("expected 3 batch host lists, found %d", n)
 	}
 }
 

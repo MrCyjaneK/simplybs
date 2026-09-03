@@ -1,0 +1,50 @@
+{
+    "package": "native/graalvm",
+    "version": "22.0.2",
+    "type": "native",
+    "download": [
+        {
+            "kind": "git",
+            "sha256": "1f72d5384cbf5a744b8284f874ad77947d2710bc",
+            "url": "https://github.com/oracle/graal.git"
+        },
+        {
+            "kind": "git",
+            "path": "mx",
+            "sha256": "5eb6d6f73d16a37f52c9d69815af479523513bdd",
+            "url": "https://github.com/graalvm/mx.git"
+        }
+    ],
+    "dependencies": [
+        "*:*:native/_/_",
+        "*:*:native/bash",
+        "*:*:native/coreutils",
+        "*:*:native/git",
+        "*:*:native/grep",
+        "*:*:native/make",
+        "*:*:native/ninja",
+        "*:*:native/pkgconf",
+        "*:*:native/python@3.14",
+        "*:*:native/sed",
+        "*:*:native/unzip",
+        "*:*:native/zip",
+        "*:*:native/zlib",
+        "*:*:native/jdk"
+    ],
+    "export-env": [
+        "*:*:JAVA_HOME=$NATIVEPREFIX/graalvm",
+        "*:*:GRAALVM_HOME=$NATIVEPREFIX/graalvm"
+    ],
+    "build": {
+        "env": [
+            "*:*:JAVA_HOME=$NATIVEPREFIX/jdk-22",
+            "*:*:GRAALVM_HOME=$NATIVEPREFIX/graalvm",
+            "*:*:MX_PYTHON=$NATIVEPREFIX/bin/python3.14",
+            "*:*:JVMCI_VERSION_CHECK=ignore"
+        ],
+        "steps": [
+            "*:*:bash $PATCH_DIR/graalvm/build.sh",
+            "*:*:bash $PATCH_DIR/graalvm/stage.sh"
+        ]
+    }
+}

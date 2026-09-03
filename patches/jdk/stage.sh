@@ -44,6 +44,34 @@ bindir="$STAGING_DIR$NATIVEPREFIX/bin"
 mkdir -p "$dest" "$bindir"
 cp -a "$src/." "$dest/"
 
+if [ "${GRAAL_STATIC_LIBS:-}" = 1 ]; then
+	static_src=""
+	for cand in build/*/images/static-libs/lib build/*/images/static-libs; do
+		if [ -d "$cand" ] && ls "$cand"/*.a >/dev/null 2>&1; then
+			static_src=$cand
+			break
+		fi
+	done
+	if [ -z "$static_src" ]; then
+		echo "jdk: GRAAL_STATIC_LIBS=1 but no static-libs image" >&2
+		ls -la build/*/images 2>/dev/null || true
+		exit 1
+	fi
+	machine=$(uname -m)
+	case "$machine" in
+		x86_64) graal_arch=amd64 ;;
+		aarch64|arm64) graal_arch=aarch64 ;;
+		*) graal_arch=$machine ;;
+	esac
+	graal_os=$(uname -s | tr '[:upper:]' '[:lower:]')
+	graal_libc=glibc
+	static_dest="$dest/lib/static/${graal_os}-${graal_arch}/${graal_libc}"
+	mkdir -p "$static_dest"
+	cp -a "$static_src"/*.a "$static_dest/"
+	echo "jdk: staged static libs in $static_dest"
+	ls "$static_dest"
+fi
+
 if [ "${1:-}" = "" ]; then
 	for cand in build/*/images/jre; do
 		if [ -x "$cand/bin/java" ]; then

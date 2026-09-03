@@ -76,3 +76,7 @@ fi
 
 bash configure "${config[@]}"
 make JOBS="$NUM_CORES" images
+if [ "${GRAAL_STATIC_LIBS:-}" = 1 ]; then
+	# Graal native-image needs $JAVA_HOME/lib/static/<os>-<arch>/<libc>/*.a
+	make JOBS="$NUM_CORES" static-libs-image
+fi

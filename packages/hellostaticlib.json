@@ -1,0 +1,27 @@
+{
+    "package": "hellostaticlib",
+    "version": "1.0.1",
+    "type": "host",
+    "download": [
+        {
+            "kind": "git",
+            "sha256": "5a362bdf5b6a407b382c4fb3d759664bb4282ce0",
+            "url": "https://github.com/gluonhq/gluon-samples.git"
+        }
+    ],
+    "dependencies": [
+        "*:*:native/_",
+        "*:*:native/bash",
+        "*:*:native/coreutils",
+        "*:*:native/graalvm",
+        "*:*:native/grep",
+        "*:*:native/sed",
+        "*:*:graalvm-clibraries"
+    ],
+    "build": {
+        "env": [],
+        "steps": [
+            "*:*:bash $PATCH_DIR/hellostaticlib/build.sh"
+        ]
+    }
+}
