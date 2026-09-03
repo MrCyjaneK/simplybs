@@ -13,12 +13,9 @@ fi
 tools="$PWD/.jdk-tools"
 mkdir -p "$tools"
 os=$(uname -s)
-# rust-std/xcrun is an osx-cross stub. On Darwin it shadows /usr/bin/xcrun
-# and OpenJDK configure fails with "no system headers found".
-if [ "$os" != Darwin ]; then
-	cp "$PATCH_DIR/rust-std/xcrun" "$tools/xcrun"
-	chmod +x "$tools/xcrun"
-fi
+# Hermetic xcrun: reports SDK_PATH. Never fall through to host /usr/bin.
+cp "$PATCH_DIR/rust-std/xcrun" "$tools/xcrun"
+chmod +x "$tools/xcrun"
 if [ -x "$NATIVEPREFIX/_/bin/llvm-cxxfilt" ]; then
 	ln -sf "$NATIVEPREFIX/_/bin/llvm-cxxfilt" "$tools/c++filt"
 fi
@@ -42,32 +39,35 @@ if [ "$os" = Darwin ] && [ -n "${OSX_MIN_VERSION:-}" ]; then
 	LDFLAGS="${LDFLAGS:+$LDFLAGS }$min"
 fi
 if [ "$os" = Darwin ] && [ -z "${SDK_PATH:-}" ]; then
-	if [ -x /usr/bin/xcrun ]; then
-		SDK_PATH=$(/usr/bin/xcrun --show-sdk-path 2>/dev/null || true)
-	fi
+	ver="${SDK_VERSION:-26.1}"
 	for cand in \
-		"$NATIVEPREFIX/_/SDK/MacOSX${SDK_VERSION:-26.1}.sdk" \
-		"$NATIVEPREFIX/SDK/MacOSX${SDK_VERSION:-26.1}.sdk"; do
-		if [ -z "${SDK_PATH:-}" ] && [ -d "$cand" ]; then
+		"$NATIVEPREFIX/SDK/MacOSX${ver}.sdk" \
+		"$NATIVEPREFIX/_/SDK/MacOSX${ver}.sdk"; do
+		if [ -d "$cand" ]; then
 			SDK_PATH=$cand
 			break
 		fi
 	done
-	if [ -n "${SDK_PATH:-}" ]; then
-		echo "jdk: Darwin SDK_PATH=$SDK_PATH"
+	if [ -z "${SDK_PATH:-}" ]; then
+		for cand in "$NATIVEPREFIX"/SDK/MacOSX*.sdk "$NATIVEPREFIX"/_/SDK/MacOSX*.sdk; do
+			if [ -d "$cand" ]; then
+				SDK_PATH=$cand
+				break
+			fi
+		done
 	fi
 fi
 if [ "$os" = Darwin ]; then
-	# Build-step PATH is hermetic (GetHostPath is empty). OpenJDK still
-	# needs Apple mig/xcodebuild; keep them after the simplybs toolchain.
-	export PATH="$PATH:/usr/bin:/bin"
-	if [ -n "${SDK_PATH:-}" ]; then
-		dev=${SDK_PATH%%/Platforms/*}
-		if [ -d "$dev/usr/bin" ]; then
-			export DEVELOPER_DIR=$dev
-			export PATH="$PATH:$dev/usr/bin"
-		fi
+	if [ -z "${SDK_PATH:-}" ]; then
+		echo "jdk: hermetic MacOSX SDK not found under $NATIVEPREFIX/SDK or $NATIVEPREFIX/_/SDK (need native/_ / osx-cross)" >&2
+		exit 1
 	fi
+	if ! command -v mig >/dev/null 2>&1; then
+		echo "jdk: hermetic mig not on PATH (need native/_ / cctools-port); PATH=$PATH" >&2
+		exit 1
+	fi
+	echo "jdk: Darwin SDK_PATH=$SDK_PATH mig=$(command -v mig)"
+	export SDK_PATH
 fi
 
 config=(
