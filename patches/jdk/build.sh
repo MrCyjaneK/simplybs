@@ -57,6 +57,18 @@ if [ "$os" = Darwin ] && [ -z "${SDK_PATH:-}" ]; then
 		echo "jdk: Darwin SDK_PATH=$SDK_PATH"
 	fi
 fi
+if [ "$os" = Darwin ]; then
+	# Build-step PATH is hermetic (GetHostPath is empty). OpenJDK still
+	# needs Apple mig/xcodebuild; keep them after the simplybs toolchain.
+	export PATH="$PATH:/usr/bin:/bin"
+	if [ -n "${SDK_PATH:-}" ]; then
+		dev=${SDK_PATH%%/Platforms/*}
+		if [ -d "$dev/usr/bin" ]; then
+			export DEVELOPER_DIR=$dev
+			export PATH="$PATH:$dev/usr/bin"
+		fi
+	fi
+fi
 
 config=(
 	--with-boot-jdk="$BOOT_JDK"
