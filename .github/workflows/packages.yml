@@ -135,7 +135,6 @@ jobs:
     secrets: inherit
     with:
       image: ${{ needs.image.outputs.image }}
-      runner: puzl-ubuntu-latest
       sha: ${{ needs.image.outputs.sha }}
       base: ${{ needs.image.outputs.base }}
       pr: ${{ needs.image.outputs.pr }}
@@ -152,7 +151,6 @@ jobs:
     secrets: inherit
     with:
       image: ${{ needs.image.outputs.image }}
-      runner: puzl-ubuntu-latest
       sha: ${{ needs.image.outputs.sha }}
       base: ${{ needs.image.outputs.base }}
       pr: ${{ needs.image.outputs.pr }}
@@ -169,7 +167,6 @@ jobs:
     secrets: inherit
     with:
       image: ${{ needs.image.outputs.image }}
-      runner: puzl-ubuntu-latest
       sha: ${{ needs.image.outputs.sha }}
       base: ${{ needs.image.outputs.base }}
       pr: ${{ needs.image.outputs.pr }}
