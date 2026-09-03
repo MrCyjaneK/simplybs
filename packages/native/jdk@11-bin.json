@@ -38,7 +38,12 @@
             "linux_amd64:*:tar -xzf OpenJDK11U-jdk_x64_linux_hotspot_11.0.32.1_1.tar.gz",
             "linux_arm64:*:tar -xzf OpenJDK11U-jdk_aarch64_linux_hotspot_11.0.32.1_1.tar.gz",
             "darwin_arm64:*:tar -xzf OpenJDK11U-jdk_aarch64_mac_hotspot_11.0.32.1_1.tar.gz",
-            "*:*:bash $PATCH_DIR/jdk/stage.sh jdk-11.0.32.1+1"
+            "*:*:mkdir -p $STAGING_DIR$NATIVEPREFIX/jdk-11 $STAGING_DIR$NATIVEPREFIX/bin",
+            "linux_*:*:cp -a jdk-11.0.32.1+1/. $STAGING_DIR$NATIVEPREFIX/jdk-11/",
+            "darwin_arm64:*:cp -a jdk-11.0.32.1+1/Contents/Home/. $STAGING_DIR$NATIVEPREFIX/jdk-11/",
+            "*:*:for tool in java javac jar javadoc javap jlink jmod jdeps keytool; do test -x $STAGING_DIR$NATIVEPREFIX/jdk-11/bin/$tool || continue; sed -e s/@JDK_VERSION@/11/g -e s/@TOOL@/$tool/g $PATCH_DIR/jdk/wrapper.sh > $STAGING_DIR$NATIVEPREFIX/bin/$tool; chmod +x $STAGING_DIR$NATIVEPREFIX/bin/$tool; cp $STAGING_DIR$NATIVEPREFIX/bin/$tool $STAGING_DIR$NATIVEPREFIX/bin/${tool}11; done",
+            "*:*:$STAGING_DIR$NATIVEPREFIX/jdk-11/bin/jlink --module-path $STAGING_DIR$NATIVEPREFIX/jdk-11/jmods --add-modules ALL-MODULE-PATH --strip-debug --no-header-files --no-man-pages --output $STAGING_DIR$NATIVEPREFIX/jre-11",
+            "*:*:$STAGING_DIR$NATIVEPREFIX/jdk-11/bin/java -version"
         ]
     }
 }

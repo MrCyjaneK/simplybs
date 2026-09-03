@@ -1,0 +1,10 @@
+#!/bin/sh
+for arg in "$@"; do
+	case "$arg" in
+		-print-multi-os-directory) echo ../lib; exit 0 ;;
+		-print-multi-directory) echo .; exit 0 ;;
+		-print-sysroot-headers-suffix) echo; exit 0 ;;
+		-dumpmachine) echo @DUMPMACHINE@; exit 0 ;;
+	esac
+done
+exec @CLANG21@ @DRV@ -Qunused-arguments -target @DUMPMACHINE@ --sysroot=@SYSROOT@ -fuse-ld=lld "$@"

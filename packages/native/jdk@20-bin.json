@@ -38,7 +38,12 @@
             "linux_amd64:*:tar -xzf OpenJDK20U-jdk_x64_linux_hotspot_20.0.2_9.tar.gz",
             "linux_arm64:*:tar -xzf OpenJDK20U-jdk_aarch64_linux_hotspot_20.0.2_9.tar.gz",
             "darwin_arm64:*:tar -xzf OpenJDK20U-jdk_aarch64_mac_hotspot_20.0.2_9.tar.gz",
-            "*:*:bash $PATCH_DIR/jdk/stage.sh jdk-20.0.2+9"
+            "*:*:mkdir -p $STAGING_DIR$NATIVEPREFIX/jdk-20 $STAGING_DIR$NATIVEPREFIX/bin",
+            "linux_*:*:cp -a jdk-20.0.2+9/. $STAGING_DIR$NATIVEPREFIX/jdk-20/",
+            "darwin_arm64:*:cp -a jdk-20.0.2+9/Contents/Home/. $STAGING_DIR$NATIVEPREFIX/jdk-20/",
+            "*:*:for tool in java javac jar javadoc javap jlink jmod jdeps keytool; do test -x $STAGING_DIR$NATIVEPREFIX/jdk-20/bin/$tool || continue; sed -e s/@JDK_VERSION@/20/g -e s/@TOOL@/$tool/g $PATCH_DIR/jdk/wrapper.sh > $STAGING_DIR$NATIVEPREFIX/bin/$tool; chmod +x $STAGING_DIR$NATIVEPREFIX/bin/$tool; cp $STAGING_DIR$NATIVEPREFIX/bin/$tool $STAGING_DIR$NATIVEPREFIX/bin/${tool}20; done",
+            "*:*:$STAGING_DIR$NATIVEPREFIX/jdk-20/bin/jlink --module-path $STAGING_DIR$NATIVEPREFIX/jdk-20/jmods --add-modules ALL-MODULE-PATH --strip-debug --no-header-files --no-man-pages --output $STAGING_DIR$NATIVEPREFIX/jre-20",
+            "*:*:$STAGING_DIR$NATIVEPREFIX/jdk-20/bin/java -version"
         ]
     }
 }

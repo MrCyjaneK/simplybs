@@ -1,0 +1,10 @@
+--- a/truffle/mx.truffle/mx_truffle.py
++++ b/truffle/mx.truffle/mx_truffle.py
+@@ -1072,6 +1072,7 @@
+                                                  mx.join(self.out_dir, 'libffi-3.4.4'))
+             configure_args = ['--disable-dependency-tracking',
+                               '--disable-shared',
++                              '--disable-exec-static-tramp',
+                               '--with-pic',
+                               ' CFLAGS="{}"'.format(' '.join(['-g', '-O3'] + (['-m64'] if mx.get_os() == 'solaris' else []))),
+                               'CPPFLAGS="-DNO_JAVA_RAW_API"',

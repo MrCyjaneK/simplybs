@@ -19,9 +19,29 @@
         "*:*:graalvm-clibraries"
     ],
     "build": {
-        "env": [],
+        "env": [
+            "*:x86_64-linux-gnu:GRAAL_TARGET=linux-amd64",
+            "*:x86_64-linux-gnu:GRAAL_LIBC_OPT=--libc=glibc",
+            "*:aarch64-linux-gnu:GRAAL_TARGET=linux-aarch64",
+            "*:aarch64-linux-gnu:GRAAL_LIBC_OPT=--libc=glibc",
+            "*:aarch64-linux-android:GRAAL_TARGET=android-aarch64",
+            "*:aarch64-linux-android:GRAAL_LIBC_OPT=--libc=bionic",
+            "*:x86_64-linux-android:GRAAL_TARGET=linux-amd64",
+            "*:x86_64-linux-android:GRAAL_LIBC_OPT=--libc=bionic",
+            "*:x86_64-w64-mingw32:GRAAL_TARGET=windows-amd64",
+            "*:aarch64-apple-darwin:GRAAL_TARGET=darwin-aarch64",
+            "*:x86_64-apple-darwin:GRAAL_TARGET=darwin-amd64",
+            "*:aarch64-apple-ios:GRAAL_TARGET=ios-aarch64",
+            "*:aarch64-apple-ios-simulator:GRAAL_TARGET=ios-aarch64"
+        ],
         "steps": [
-            "*:*:bash $PATCH_DIR/hellostaticlib/build.sh"
+            "*:*:mkdir -p HelloStaticLib/build/classes HelloStaticLib/gvm/tmp $STAGING_DIR$PREFIX/lib $STAGING_DIR$PREFIX/include/hellostaticlib",
+            "*:*:cp $PATCH_DIR/hellostaticlib/cc ni-cc",
+            "*:*:chmod +x ni-cc",
+            "*:*:$JAVA_HOME/bin/javac -cp $JAVA_HOME/lib/svm/library-support.jar -d HelloStaticLib/build/classes HelloStaticLib/src/main/java/hello/HelloStaticLib.java",
+            "*:*:$JAVA_HOME/bin/native-image --shared --no-fallback --target=$GRAAL_TARGET $GRAAL_LIBC_OPT --native-compiler-path=$PWD/ni-cc -H:+UnlockExperimentalVMOptions -H:+ExitAfterRelocatableImageWrite -H:+GenerateBuildArtifactsFile -H:Path=$PWD/HelloStaticLib/gvm -H:TempDirectory=$PWD/HelloStaticLib/gvm/tmp -H:Name=HelloStaticLib -H:NumberOfThreads=$NUM_CORES -cp HelloStaticLib/build/classes:$JAVA_HOME/lib/svm/library-support.jar hello.HelloStaticLib",
+            "*:*:shopt -s nullglob; $AR rcs $STAGING_DIR$PREFIX/lib/libHelloStaticLib.a HelloStaticLib/gvm/*.o HelloStaticLib/gvm/tmp/SVM-*/*.o HelloStaticLib/gvm/*.obj HelloStaticLib/gvm/tmp/SVM-*/*.obj",
+            "*:*:shopt -s nullglob; cp HelloStaticLib/gvm/*.h $STAGING_DIR$PREFIX/include/hellostaticlib/ || true"
         ]
     }
 }

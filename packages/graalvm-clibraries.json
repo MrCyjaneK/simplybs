@@ -18,11 +18,52 @@
         "*:*:native/sed"
     ],
     "build": {
-        "env": [],
+        "env": [
+            "*:x86_64-linux-gnu:GRAAL_TARGET=linux-amd64",
+            "*:aarch64-linux-gnu:GRAAL_TARGET=linux-aarch64",
+            "*:aarch64-linux-android:GRAAL_TARGET=android-aarch64",
+            "*:x86_64-linux-android:GRAAL_TARGET=linux-amd64",
+            "*:x86_64-w64-mingw32:GRAAL_TARGET=windows-amd64",
+            "*:aarch64-apple-darwin:GRAAL_TARGET=darwin-aarch64",
+            "*:x86_64-apple-darwin:GRAAL_TARGET=darwin-amd64",
+            "*:aarch64-apple-ios:GRAAL_TARGET=ios-aarch64",
+            "*:aarch64-apple-ios-simulator:GRAAL_TARGET=ios-aarch64",
+            "*:*-linux-gnu:JNI_OS=linux",
+            "*:*-android*:JNI_OS=linux",
+            "*:*-apple-*:JNI_OS=darwin",
+            "*:*-w64-mingw32:JNI_OS=win32",
+            "*:*-linux-gnu:HELPER_CFLAGS=-g -gdwarf-4 -fPIC -O2 -D_LITTLE_ENDIAN -ffunction-sections -fdata-sections -fvisibility=hidden -D_FORTIFY_SOURCE=0",
+            "*:*-android*:HELPER_CFLAGS=-g -gdwarf-4 -fPIC -O2 -D_LITTLE_ENDIAN -ffunction-sections -fdata-sections -fvisibility=hidden -D_FORTIFY_SOURCE=0",
+            "*:*-apple-*:HELPER_CFLAGS=-g -fPIC -O2 -D_LITTLE_ENDIAN -ffunction-sections -fdata-sections -fvisibility=hidden -D_FORTIFY_SOURCE=0",
+            "*:*-w64-mingw32:HELPER_CFLAGS=-g -O2 -D_LITTLE_ENDIAN",
+            "*:*-linux-gnu:JVM_CFLAGS=-g -gdwarf-4 -fPIC -O2 -ffunction-sections -fdata-sections -fvisibility=hidden -D_FORTIFY_SOURCE=0 -D_GNU_SOURCE",
+            "*:*-android*:JVM_CFLAGS=-g -gdwarf-4 -fPIC -O2 -ffunction-sections -fdata-sections -fvisibility=hidden -D_FORTIFY_SOURCE=0 -D_GNU_SOURCE",
+            "*:*-apple-*:JVM_CFLAGS=-g -fPIC -O2 -ffunction-sections -fdata-sections -fvisibility=hidden",
+            "*:*-w64-mingw32:JVM_CFLAGS=-g -O2 -DJNIEXPORT=",
+            "*:*-apple-*:DARWIN_CFLAGS=-x objective-c -fPIC -O1 -D_LITTLE_ENDIAN -ffunction-sections -fdata-sections -fvisibility=hidden -D_FORTIFY_SOURCE=0",
+            "*:*-linux-gnu:JVM_SRC=substratevm/src/com.oracle.svm.native.jvm.posix/src/JvmFuncs.c",
+            "*:*-android*:JVM_SRC=substratevm/src/com.oracle.svm.native.jvm.posix/src/JvmFuncs.c",
+            "*:*-apple-*:JVM_SRC=substratevm/src/com.oracle.svm.native.jvm.posix/src/JvmFuncs.c",
+            "*:*-w64-mingw32:JVM_SRC=substratevm/src/com.oracle.svm.native.jvm.windows/src/JvmFuncs.c"
+        ],
         "steps": [
-            "*:*:$NATIVEPREFIX/bin/mkdir -p $STAGING_DIR$NATIVEPREFIX/bin",
+            "*:*:mkdir -p $STAGING_DIR$NATIVEPREFIX/bin $STAGING_DIR$NATIVEPREFIX/graalvm/lib/svm/clibraries/$GRAAL_TARGET/include .clib-build",
             "*:*:touch $STAGING_DIR$NATIVEPREFIX/bin/.graalvm-clibraries",
-            "*:*:bash $PATCH_DIR/graalvm-clibraries/build.sh"
+            "*:*:cp -a substratevm/src/com.oracle.svm.native.libchelper/include/. $STAGING_DIR$NATIVEPREFIX/graalvm/lib/svm/clibraries/$GRAAL_TARGET/include/",
+            "*:*:$CC $CFLAGS $CPPFLAGS $HELPER_CFLAGS -Isubstratevm/src/com.oracle.svm.native.libchelper/include -I$JAVA_HOME/include -I$JAVA_HOME/include/$JNI_OS -c substratevm/src/com.oracle.svm.native.libchelper/src/cSunMiscSignal.c -o .clib-build/cSunMiscSignal.o",
+            "*:*:$CC $CFLAGS $CPPFLAGS $HELPER_CFLAGS -Isubstratevm/src/com.oracle.svm.native.libchelper/include -I$JAVA_HOME/include -I$JAVA_HOME/include/$JNI_OS -c substratevm/src/com.oracle.svm.native.libchelper/src/codeSynchronization.c -o .clib-build/codeSynchronization.o",
+            "*:*:$CC $CFLAGS $CPPFLAGS $HELPER_CFLAGS -Isubstratevm/src/com.oracle.svm.native.libchelper/include -I$JAVA_HOME/include -I$JAVA_HOME/include/$JNI_OS -c substratevm/src/com.oracle.svm.native.libchelper/src/cpuid.c -o .clib-build/cpuid.o",
+            "*:*:$CC $CFLAGS $CPPFLAGS $HELPER_CFLAGS -Isubstratevm/src/com.oracle.svm.native.libchelper/include -I$JAVA_HOME/include -I$JAVA_HOME/include/$JNI_OS -c substratevm/src/com.oracle.svm.native.libchelper/src/getEnviron.c -o .clib-build/getEnviron.o",
+            "*:*:$CC $CFLAGS $CPPFLAGS $HELPER_CFLAGS -Isubstratevm/src/com.oracle.svm.native.libchelper/include -I$JAVA_HOME/include -I$JAVA_HOME/include/$JNI_OS -c substratevm/src/com.oracle.svm.native.libchelper/src/getThreadId.c -o .clib-build/getThreadId.o",
+            "*:*:$CC $CFLAGS $CPPFLAGS $HELPER_CFLAGS -Isubstratevm/src/com.oracle.svm.native.libchelper/include -I$JAVA_HOME/include -I$JAVA_HOME/include/$JNI_OS -c substratevm/src/com.oracle.svm.native.libchelper/src/getThreadUserTime.c -o .clib-build/getThreadUserTime.o",
+            "*:*:$CC $CFLAGS $CPPFLAGS $HELPER_CFLAGS -Isubstratevm/src/com.oracle.svm.native.libchelper/include -I$JAVA_HOME/include -I$JAVA_HOME/include/$JNI_OS -c substratevm/src/com.oracle.svm.native.libchelper/src/macrosAsFunctions.c -o .clib-build/macrosAsFunctions.o",
+            "*:*:$CC $CFLAGS $CPPFLAGS $HELPER_CFLAGS -Isubstratevm/src/com.oracle.svm.native.libchelper/include -I$JAVA_HOME/include -I$JAVA_HOME/include/$JNI_OS -c substratevm/src/com.oracle.svm.native.libchelper/src/timeZone.c -o .clib-build/timeZone.o",
+            "*:*:$CC $CFLAGS $CPPFLAGS $HELPER_CFLAGS -Isubstratevm/src/com.oracle.svm.native.libchelper/include -I$JAVA_HOME/include -I$JAVA_HOME/include/$JNI_OS -c substratevm/src/com.oracle.svm.native.libchelper/src/varargs_helper.c -o .clib-build/varargs_helper.o",
+            "*:*:$AR rcs $STAGING_DIR$NATIVEPREFIX/graalvm/lib/svm/clibraries/$GRAAL_TARGET/liblibchelper.a .clib-build/cSunMiscSignal.o .clib-build/codeSynchronization.o .clib-build/cpuid.o .clib-build/getEnviron.o .clib-build/getThreadId.o .clib-build/getThreadUserTime.o .clib-build/macrosAsFunctions.o .clib-build/timeZone.o .clib-build/varargs_helper.o",
+            "*:*:$CC $CFLAGS $CPPFLAGS $JVM_CFLAGS -I$JAVA_HOME/include -I$JAVA_HOME/include/$JNI_OS -c $JVM_SRC -o .clib-build/JvmFuncs.o",
+            "*:*:$AR rcs $STAGING_DIR$NATIVEPREFIX/graalvm/lib/svm/clibraries/$GRAAL_TARGET/libjvm.a .clib-build/JvmFuncs.o",
+            "*:*-apple-*:$CC $CFLAGS $CPPFLAGS $DARWIN_CFLAGS -Isubstratevm/src/com.oracle.svm.native.libchelper/include -I$JAVA_HOME/include -I$JAVA_HOME/include/$JNI_OS -c substratevm/src/com.oracle.svm.native.darwin/src/foundation.c -o .clib-build/foundation.o",
+            "*:*-apple-*:$AR rcs $STAGING_DIR$NATIVEPREFIX/graalvm/lib/svm/clibraries/$GRAAL_TARGET/libdarwin.a .clib-build/foundation.o"
         ]
     }
 }

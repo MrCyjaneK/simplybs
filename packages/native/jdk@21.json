@@ -54,11 +54,37 @@
     "build": {
         "env": [
             "*:*:JDK_VERSION=21",
-            "*:*:BOOT_JDK=$NATIVEPREFIX/jdk-20"
+            "*:*:BOOT_JDK=$NATIVEPREFIX/jdk-20",
+            "*:*:AUTOCONF=$NATIVEPREFIX/bin/autoconf",
+            "*:*:PATH=./.jdk-tools:$NATIVEPREFIX/bin:$NATIVEPREFIX/_/bin",
+            "darwin_arm64:*:SDK_PATH=$NATIVEPREFIX/_/SDK/MacOSX26.1.sdk",
+            "darwin_arm64:*:SDKROOT=$NATIVEPREFIX/_/SDK/MacOSX26.1.sdk",
+            "darwin_arm64:*:MIGCC=$NATIVEPREFIX/_/bin/clang",
+            "darwin_arm64:*:CFLAGS=$CFLAGS -mmacosx-version-min=$OSX_MIN_VERSION",
+            "darwin_arm64:*:CXXFLAGS=$CXXFLAGS -mmacosx-version-min=$OSX_MIN_VERSION",
+            "darwin_arm64:*:LDFLAGS=$LDFLAGS -mmacosx-version-min=$OSX_MIN_VERSION"
         ],
         "steps": [
-            "*:*:bash $PATCH_DIR/jdk/build.sh",
-            "*:*:bash $PATCH_DIR/jdk/stage.sh"
+            "*:*:mkdir -p .jdk-tools $STAGING_DIR$NATIVEPREFIX/jdk-$JDK_VERSION $STAGING_DIR$NATIVEPREFIX/bin",
+            "*:*:cp $PATCH_DIR/jdk/which .jdk-tools/which",
+            "*:*:chmod +x .jdk-tools/which",
+            "*:*:test -x $NATIVEPREFIX/_/bin/llvm-cxxfilt && ln -sf $NATIVEPREFIX/_/bin/llvm-cxxfilt .jdk-tools/c++filt || true",
+            "*:*:test -x $NATIVEPREFIX/_/bin/llvm-objdump && ln -sf $NATIVEPREFIX/_/bin/llvm-objdump .jdk-tools/objdump || true",
+            "darwin_arm64:*:cp $PATCH_DIR/rust-std/xcrun .jdk-tools/xcrun",
+            "darwin_arm64:*:cp $PATCH_DIR/jdk/true.sh .jdk-tools/xattr",
+            "darwin_arm64:*:cp $PATCH_DIR/jdk/true.sh .jdk-tools/SetFile",
+            "darwin_arm64:*:ln -sf $NATIVEPREFIX/_/bin/llvm-dsymutil .jdk-tools/dsymutil || ln -sf $NATIVEPREFIX/_/bin/llvm-dsymutil-21 .jdk-tools/dsymutil",
+            "darwin_arm64:*:chmod +x .jdk-tools/xcrun .jdk-tools/xattr .jdk-tools/SetFile",
+            "linux_*:*:bash configure --with-boot-jdk=$BOOT_JDK --with-toolchain-type=clang --disable-warnings-as-errors --enable-headless-only --with-native-debug-symbols=none --with-jvm-variants=server --with-debug-level=release --with-num-cores=$NUM_CORES --with-jobs=$NUM_CORES --with-zlib=system --with-extra-cflags=\"$CFLAGS\" --with-extra-cxxflags=\"$CXXFLAGS\" --with-extra-ldflags=\"$LDFLAGS -Wl,--undefined-version\" --with-alsa=$NATIVEPREFIX --with-cups=$NATIVEPREFIX --with-fontconfig=$NATIVEPREFIX --with-fontconfig-include=$NATIVEPREFIX/include --with-x=$NATIVEPREFIX --x-includes=$NATIVEPREFIX/include --x-libraries=$NATIVEPREFIX/lib",
+            "darwin_arm64:*:bash configure --with-boot-jdk=$BOOT_JDK --with-toolchain-type=clang --disable-warnings-as-errors --enable-headless-only --with-native-debug-symbols=none --with-jvm-variants=server --with-debug-level=release --with-num-cores=$NUM_CORES --with-jobs=$NUM_CORES --with-zlib=system --with-extra-cflags=\"$CFLAGS\" --with-extra-cxxflags=\"$CXXFLAGS\" --with-extra-ldflags=\"$LDFLAGS\" --with-sysroot=$SDK_PATH",
+            "*:*:make JOBS=$NUM_CORES images",
+            "linux_*:*:cp -a build/*/images/jdk/. $STAGING_DIR$NATIVEPREFIX/jdk-$JDK_VERSION/",
+            "darwin_arm64:*:cp -a build/*/images/jdk/. $STAGING_DIR$NATIVEPREFIX/jdk-$JDK_VERSION/",
+            "darwin_arm64:*:test -x $STAGING_DIR$NATIVEPREFIX/jdk-$JDK_VERSION/bin/java || cp -a build/*/images/jdk-bundle/*.jdk/Contents/Home/. $STAGING_DIR$NATIVEPREFIX/jdk-$JDK_VERSION/",
+            "*:*:for tool in java javac jar javadoc javap jlink jmod jdeps keytool; do test -x $STAGING_DIR$NATIVEPREFIX/jdk-$JDK_VERSION/bin/$tool || continue; sed -e s/@JDK_VERSION@/$JDK_VERSION/g -e s/@TOOL@/$tool/g $PATCH_DIR/jdk/wrapper.sh > $STAGING_DIR$NATIVEPREFIX/bin/$tool; chmod +x $STAGING_DIR$NATIVEPREFIX/bin/$tool; cp $STAGING_DIR$NATIVEPREFIX/bin/$tool $STAGING_DIR$NATIVEPREFIX/bin/${tool}$JDK_VERSION; done",
+            "*:*:$STAGING_DIR$NATIVEPREFIX/jdk-$JDK_VERSION/bin/jlink --module-path $STAGING_DIR$NATIVEPREFIX/jdk-$JDK_VERSION/jmods --add-modules ALL-MODULE-PATH --strip-debug --no-header-files --no-man-pages --output $STAGING_DIR$NATIVEPREFIX/jre-$JDK_VERSION",
+            "*:*:$STAGING_DIR$NATIVEPREFIX/jdk-$JDK_VERSION/bin/java -version",
+            "*:*:$STAGING_DIR$NATIVEPREFIX/jdk-$JDK_VERSION/bin/javac -version"
         ]
     }
 }
