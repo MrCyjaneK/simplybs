@@ -6,8 +6,15 @@ on:
   workflow_call:
     inputs:
       image:
-        required: true
+        description: GHCR image for Linux container slots; empty = bare runner
+        required: false
         type: string
+        default: ""
+      runner:
+        description: GitHub-hosted runner label
+        required: false
+        type: string
+        default: ubuntu-latest
       sha:
         required: true
         type: string
@@ -31,6 +38,11 @@ on:
         required: false
         type: string
         default: ""
+      comment_queue:
+        description: sticky-comment id (empty = linux)
+        required: false
+        type: string
+        default: ""
     outputs:
       continue:
         description: whether another batch should run
@@ -42,6 +54,7 @@ jobs:
     secrets: inherit
     with:
       image: ${{ inputs.image }}
+      runner: ${{ inputs.runner }}
       sha: ${{ inputs.sha }}
       base: ${{ inputs.base }}
       pr: ${{ inputs.pr }}
@@ -49,6 +62,7 @@ jobs:
       cache_repo: ${{ inputs.cache_repo }}
       hosts: ${{ inputs.hosts }}
       extra_package: ${{ inputs.extra_package }}
+      comment_queue: ${{ inputs.comment_queue }}
   slot02:
     needs: [slot01]
     if: needs.slot01.outputs.continue == 'true'
@@ -56,6 +70,7 @@ jobs:
     secrets: inherit
     with:
       image: ${{ inputs.image }}
+      runner: ${{ inputs.runner }}
       sha: ${{ inputs.sha }}
       base: ${{ inputs.base }}
       pr: ${{ inputs.pr }}
@@ -63,6 +78,7 @@ jobs:
       cache_repo: ${{ inputs.cache_repo }}
       hosts: ${{ inputs.hosts }}
       extra_package: ${{ inputs.extra_package }}
+      comment_queue: ${{ inputs.comment_queue }}
   slot03:
     needs: [slot02]
     if: needs.slot02.outputs.continue == 'true'
@@ -70,6 +86,7 @@ jobs:
     secrets: inherit
     with:
       image: ${{ inputs.image }}
+      runner: ${{ inputs.runner }}
       sha: ${{ inputs.sha }}
       base: ${{ inputs.base }}
       pr: ${{ inputs.pr }}
@@ -77,6 +94,7 @@ jobs:
       cache_repo: ${{ inputs.cache_repo }}
       hosts: ${{ inputs.hosts }}
       extra_package: ${{ inputs.extra_package }}
+      comment_queue: ${{ inputs.comment_queue }}
   slot04:
     needs: [slot03]
     if: needs.slot03.outputs.continue == 'true'
@@ -84,6 +102,7 @@ jobs:
     secrets: inherit
     with:
       image: ${{ inputs.image }}
+      runner: ${{ inputs.runner }}
       sha: ${{ inputs.sha }}
       base: ${{ inputs.base }}
       pr: ${{ inputs.pr }}
@@ -91,6 +110,7 @@ jobs:
       cache_repo: ${{ inputs.cache_repo }}
       hosts: ${{ inputs.hosts }}
       extra_package: ${{ inputs.extra_package }}
+      comment_queue: ${{ inputs.comment_queue }}
   slot05:
     needs: [slot04]
     if: needs.slot04.outputs.continue == 'true'
@@ -98,6 +118,7 @@ jobs:
     secrets: inherit
     with:
       image: ${{ inputs.image }}
+      runner: ${{ inputs.runner }}
       sha: ${{ inputs.sha }}
       base: ${{ inputs.base }}
       pr: ${{ inputs.pr }}
@@ -105,6 +126,7 @@ jobs:
       cache_repo: ${{ inputs.cache_repo }}
       hosts: ${{ inputs.hosts }}
       extra_package: ${{ inputs.extra_package }}
+      comment_queue: ${{ inputs.comment_queue }}
   slot06:
     needs: [slot05]
     if: needs.slot05.outputs.continue == 'true'
@@ -112,6 +134,7 @@ jobs:
     secrets: inherit
     with:
       image: ${{ inputs.image }}
+      runner: ${{ inputs.runner }}
       sha: ${{ inputs.sha }}
       base: ${{ inputs.base }}
       pr: ${{ inputs.pr }}
@@ -119,6 +142,7 @@ jobs:
       cache_repo: ${{ inputs.cache_repo }}
       hosts: ${{ inputs.hosts }}
       extra_package: ${{ inputs.extra_package }}
+      comment_queue: ${{ inputs.comment_queue }}
   slot07:
     needs: [slot06]
     if: needs.slot06.outputs.continue == 'true'
@@ -126,6 +150,7 @@ jobs:
     secrets: inherit
     with:
       image: ${{ inputs.image }}
+      runner: ${{ inputs.runner }}
       sha: ${{ inputs.sha }}
       base: ${{ inputs.base }}
       pr: ${{ inputs.pr }}
@@ -133,6 +158,7 @@ jobs:
       cache_repo: ${{ inputs.cache_repo }}
       hosts: ${{ inputs.hosts }}
       extra_package: ${{ inputs.extra_package }}
+      comment_queue: ${{ inputs.comment_queue }}
   slot08:
     needs: [slot07]
     if: needs.slot07.outputs.continue == 'true'
@@ -140,6 +166,7 @@ jobs:
     secrets: inherit
     with:
       image: ${{ inputs.image }}
+      runner: ${{ inputs.runner }}
       sha: ${{ inputs.sha }}
       base: ${{ inputs.base }}
       pr: ${{ inputs.pr }}
@@ -147,6 +174,7 @@ jobs:
       cache_repo: ${{ inputs.cache_repo }}
       hosts: ${{ inputs.hosts }}
       extra_package: ${{ inputs.extra_package }}
+      comment_queue: ${{ inputs.comment_queue }}
   slot09:
     needs: [slot08]
     if: needs.slot08.outputs.continue == 'true'
@@ -154,6 +182,7 @@ jobs:
     secrets: inherit
     with:
       image: ${{ inputs.image }}
+      runner: ${{ inputs.runner }}
       sha: ${{ inputs.sha }}
       base: ${{ inputs.base }}
       pr: ${{ inputs.pr }}
@@ -161,6 +190,7 @@ jobs:
       cache_repo: ${{ inputs.cache_repo }}
       hosts: ${{ inputs.hosts }}
       extra_package: ${{ inputs.extra_package }}
+      comment_queue: ${{ inputs.comment_queue }}
   slot10:
     needs: [slot09]
     if: needs.slot09.outputs.continue == 'true'
@@ -168,6 +198,7 @@ jobs:
     secrets: inherit
     with:
       image: ${{ inputs.image }}
+      runner: ${{ inputs.runner }}
       sha: ${{ inputs.sha }}
       base: ${{ inputs.base }}
       pr: ${{ inputs.pr }}
@@ -175,6 +206,7 @@ jobs:
       cache_repo: ${{ inputs.cache_repo }}
       hosts: ${{ inputs.hosts }}
       extra_package: ${{ inputs.extra_package }}
+      comment_queue: ${{ inputs.comment_queue }}
   slot11:
     needs: [slot10]
     if: needs.slot10.outputs.continue == 'true'
@@ -182,6 +214,7 @@ jobs:
     secrets: inherit
     with:
       image: ${{ inputs.image }}
+      runner: ${{ inputs.runner }}
       sha: ${{ inputs.sha }}
       base: ${{ inputs.base }}
       pr: ${{ inputs.pr }}
@@ -189,6 +222,7 @@ jobs:
       cache_repo: ${{ inputs.cache_repo }}
       hosts: ${{ inputs.hosts }}
       extra_package: ${{ inputs.extra_package }}
+      comment_queue: ${{ inputs.comment_queue }}
   slot12:
     needs: [slot11]
     if: needs.slot11.outputs.continue == 'true'
@@ -196,6 +230,7 @@ jobs:
     secrets: inherit
     with:
       image: ${{ inputs.image }}
+      runner: ${{ inputs.runner }}
       sha: ${{ inputs.sha }}
       base: ${{ inputs.base }}
       pr: ${{ inputs.pr }}
@@ -203,6 +238,7 @@ jobs:
       cache_repo: ${{ inputs.cache_repo }}
       hosts: ${{ inputs.hosts }}
       extra_package: ${{ inputs.extra_package }}
+      comment_queue: ${{ inputs.comment_queue }}
   slot13:
     needs: [slot12]
     if: needs.slot12.outputs.continue == 'true'
@@ -210,6 +246,7 @@ jobs:
     secrets: inherit
     with:
       image: ${{ inputs.image }}
+      runner: ${{ inputs.runner }}
       sha: ${{ inputs.sha }}
       base: ${{ inputs.base }}
       pr: ${{ inputs.pr }}
@@ -217,6 +254,7 @@ jobs:
       cache_repo: ${{ inputs.cache_repo }}
       hosts: ${{ inputs.hosts }}
       extra_package: ${{ inputs.extra_package }}
+      comment_queue: ${{ inputs.comment_queue }}
   slot14:
     needs: [slot13]
     if: needs.slot13.outputs.continue == 'true'
@@ -224,6 +262,7 @@ jobs:
     secrets: inherit
     with:
       image: ${{ inputs.image }}
+      runner: ${{ inputs.runner }}
       sha: ${{ inputs.sha }}
       base: ${{ inputs.base }}
       pr: ${{ inputs.pr }}
@@ -231,6 +270,7 @@ jobs:
       cache_repo: ${{ inputs.cache_repo }}
       hosts: ${{ inputs.hosts }}
       extra_package: ${{ inputs.extra_package }}
+      comment_queue: ${{ inputs.comment_queue }}
   slot15:
     needs: [slot14]
     if: needs.slot14.outputs.continue == 'true'
@@ -238,6 +278,7 @@ jobs:
     secrets: inherit
     with:
       image: ${{ inputs.image }}
+      runner: ${{ inputs.runner }}
       sha: ${{ inputs.sha }}
       base: ${{ inputs.base }}
       pr: ${{ inputs.pr }}
@@ -245,6 +286,7 @@ jobs:
       cache_repo: ${{ inputs.cache_repo }}
       hosts: ${{ inputs.hosts }}
       extra_package: ${{ inputs.extra_package }}
+      comment_queue: ${{ inputs.comment_queue }}
   slot16:
     needs: [slot15]
     if: needs.slot15.outputs.continue == 'true'
@@ -252,6 +294,7 @@ jobs:
     secrets: inherit
     with:
       image: ${{ inputs.image }}
+      runner: ${{ inputs.runner }}
       sha: ${{ inputs.sha }}
       base: ${{ inputs.base }}
       pr: ${{ inputs.pr }}
@@ -259,6 +302,7 @@ jobs:
       cache_repo: ${{ inputs.cache_repo }}
       hosts: ${{ inputs.hosts }}
       extra_package: ${{ inputs.extra_package }}
+      comment_queue: ${{ inputs.comment_queue }}
   slot17:
     needs: [slot16]
     if: needs.slot16.outputs.continue == 'true'
@@ -266,6 +310,7 @@ jobs:
     secrets: inherit
     with:
       image: ${{ inputs.image }}
+      runner: ${{ inputs.runner }}
       sha: ${{ inputs.sha }}
       base: ${{ inputs.base }}
       pr: ${{ inputs.pr }}
@@ -273,6 +318,7 @@ jobs:
       cache_repo: ${{ inputs.cache_repo }}
       hosts: ${{ inputs.hosts }}
       extra_package: ${{ inputs.extra_package }}
+      comment_queue: ${{ inputs.comment_queue }}
   slot18:
     needs: [slot17]
     if: needs.slot17.outputs.continue == 'true'
@@ -280,6 +326,7 @@ jobs:
     secrets: inherit
     with:
       image: ${{ inputs.image }}
+      runner: ${{ inputs.runner }}
       sha: ${{ inputs.sha }}
       base: ${{ inputs.base }}
       pr: ${{ inputs.pr }}
@@ -287,6 +334,7 @@ jobs:
       cache_repo: ${{ inputs.cache_repo }}
       hosts: ${{ inputs.hosts }}
       extra_package: ${{ inputs.extra_package }}
+      comment_queue: ${{ inputs.comment_queue }}
   slot19:
     needs: [slot18]
     if: needs.slot18.outputs.continue == 'true'
@@ -294,6 +342,7 @@ jobs:
     secrets: inherit
     with:
       image: ${{ inputs.image }}
+      runner: ${{ inputs.runner }}
       sha: ${{ inputs.sha }}
       base: ${{ inputs.base }}
       pr: ${{ inputs.pr }}
@@ -301,6 +350,7 @@ jobs:
       cache_repo: ${{ inputs.cache_repo }}
       hosts: ${{ inputs.hosts }}
       extra_package: ${{ inputs.extra_package }}
+      comment_queue: ${{ inputs.comment_queue }}
   slot20:
     needs: [slot19]
     if: needs.slot19.outputs.continue == 'true'
@@ -308,6 +358,7 @@ jobs:
     secrets: inherit
     with:
       image: ${{ inputs.image }}
+      runner: ${{ inputs.runner }}
       sha: ${{ inputs.sha }}
       base: ${{ inputs.base }}
       pr: ${{ inputs.pr }}
@@ -315,6 +366,7 @@ jobs:
       cache_repo: ${{ inputs.cache_repo }}
       hosts: ${{ inputs.hosts }}
       extra_package: ${{ inputs.extra_package }}
+      comment_queue: ${{ inputs.comment_queue }}
   slot21:
     needs: [slot20]
     if: needs.slot20.outputs.continue == 'true'
@@ -322,6 +374,7 @@ jobs:
     secrets: inherit
     with:
       image: ${{ inputs.image }}
+      runner: ${{ inputs.runner }}
       sha: ${{ inputs.sha }}
       base: ${{ inputs.base }}
       pr: ${{ inputs.pr }}
@@ -329,6 +382,7 @@ jobs:
       cache_repo: ${{ inputs.cache_repo }}
       hosts: ${{ inputs.hosts }}
       extra_package: ${{ inputs.extra_package }}
+      comment_queue: ${{ inputs.comment_queue }}
   slot22:
     needs: [slot21]
     if: needs.slot21.outputs.continue == 'true'
@@ -336,6 +390,7 @@ jobs:
     secrets: inherit
     with:
       image: ${{ inputs.image }}
+      runner: ${{ inputs.runner }}
       sha: ${{ inputs.sha }}
       base: ${{ inputs.base }}
       pr: ${{ inputs.pr }}
@@ -343,6 +398,7 @@ jobs:
       cache_repo: ${{ inputs.cache_repo }}
       hosts: ${{ inputs.hosts }}
       extra_package: ${{ inputs.extra_package }}
+      comment_queue: ${{ inputs.comment_queue }}
   slot23:
     needs: [slot22]
     if: needs.slot22.outputs.continue == 'true'
@@ -350,6 +406,7 @@ jobs:
     secrets: inherit
     with:
       image: ${{ inputs.image }}
+      runner: ${{ inputs.runner }}
       sha: ${{ inputs.sha }}
       base: ${{ inputs.base }}
       pr: ${{ inputs.pr }}
@@ -357,6 +414,7 @@ jobs:
       cache_repo: ${{ inputs.cache_repo }}
       hosts: ${{ inputs.hosts }}
       extra_package: ${{ inputs.extra_package }}
+      comment_queue: ${{ inputs.comment_queue }}
   slot24:
     needs: [slot23]
     if: needs.slot23.outputs.continue == 'true'
@@ -364,6 +422,7 @@ jobs:
     secrets: inherit
     with:
       image: ${{ inputs.image }}
+      runner: ${{ inputs.runner }}
       sha: ${{ inputs.sha }}
       base: ${{ inputs.base }}
       pr: ${{ inputs.pr }}
@@ -371,6 +430,7 @@ jobs:
       cache_repo: ${{ inputs.cache_repo }}
       hosts: ${{ inputs.hosts }}
       extra_package: ${{ inputs.extra_package }}
+      comment_queue: ${{ inputs.comment_queue }}
   summarize:
     if: always()
     needs: [slot01, slot02, slot03, slot04, slot05, slot06, slot07, slot08, slot09, slot10, slot11, slot12, slot13, slot14, slot15, slot16, slot17, slot18, slot19, slot20, slot21, slot22, slot23, slot24]

@@ -1,0 +1,177 @@
+name: package-slot
+description: Pick the next uncached package and build it
+inputs:
+  sha:
+    required: true
+  base:
+    required: true
+  pr:
+    required: false
+    default: ""
+  hosts:
+    required: true
+  extra_package:
+    required: false
+    default: ""
+  comment_queue:
+    description: sticky-comment id (empty = linux)
+    required: false
+    default: ""
+outputs:
+  continue:
+    description: whether another slot should run
+    value: ${{ steps.decide.outputs.continue }}
+
+runs:
+  using: composite
+  steps:
+    - name: Git safe.directory
+      shell: bash
+      run: git config --global --add safe.directory "$GITHUB_WORKSPACE"
+
+    - name: Assert non-root
+      shell: bash
+      run: |
+        uid=$(id -u)
+        echo "uid=$uid user=$(id -un) os=$(uname -s)"
+        if [ "$uid" = 0 ]; then
+          echo "package slots must not run as root (crosstool-NG refuses uid 0)"
+          exit 1
+        fi
+
+    - name: Writable Go dirs
+      shell: bash
+      run: mkdir -p "$GOCACHE" "$GOMODCACHE" "$GOTMPDIR"
+
+    - name: Abort if SHA is no longer HEAD
+      id: stale
+      if: ${{ inputs.pr != '' }}
+      env:
+        PR: ${{ inputs.pr }}
+        SHA: ${{ inputs.sha }}
+      shell: bash
+      run: |
+        head=$(gh api "repos/${GITHUB_REPOSITORY}/pulls/${PR}" --jq .head.sha)
+        if [ "$head" != "$SHA" ]; then
+          echo "stale=true" >> "$GITHUB_OUTPUT"
+          echo "PR head is $head, this slot is $SHA — skipping"
+        else
+          echo "stale=false" >> "$GITHUB_OUTPUT"
+        fi
+
+    - name: Fetch diff base
+      if: ${{ steps.stale.outputs.stale != 'true' }}
+      env:
+        BASE: ${{ inputs.base }}
+      shell: bash
+      run: git fetch origin "$BASE" --depth=50 || git fetch origin "$BASE" || true
+
+    - name: Next package
+      id: next
+      if: ${{ steps.stale.outputs.stale != 'true' }}
+      env:
+        BASE: ${{ inputs.base }}
+        SHA: ${{ inputs.sha }}
+        HOSTS: ${{ inputs.hosts }}
+        EXTRA: ${{ inputs.extra_package }}
+      shell: bash
+      run: |
+        extra=()
+        if [ -n "$EXTRA" ]; then
+          extra=(-package "$EXTRA")
+        fi
+        set -o pipefail
+        go run ./cmd/ciqueue next -base "$BASE" -sha "$SHA" -hosts "$HOSTS" "${extra[@]}" | tee /tmp/ciqueue.json
+
+    - name: Build package
+      id: build
+      if: ${{ steps.stale.outputs.stale != 'true' && steps.next.outputs.status == 'next' }}
+      env:
+        PKG: ${{ steps.next.outputs.package }}
+        HOST: ${{ steps.next.outputs.host }}
+      shell: bash
+      run: |
+        if command -v nproc >/dev/null 2>&1; then
+          export NUM_CORES="$(nproc)"
+        else
+          export NUM_CORES="$(getconf _NPROCESSORS_ONLN)"
+        fi
+        go run . -host "$HOST" -package "$PKG" -build
+
+    - name: Update PR comment
+      if: ${{ always() && inputs.pr != '' && steps.stale.outputs.stale != 'true' }}
+      env:
+        PR: ${{ inputs.pr }}
+        SHA: ${{ inputs.sha }}
+        PKG: ${{ steps.next.outputs.package }}
+        HOST: ${{ steps.next.outputs.host }}
+        STATUS: ${{ steps.next.outputs.status }}
+        REMAINING: ${{ steps.next.outputs.remaining }}
+        STALE: ${{ steps.stale.outputs.stale }}
+        BUILD_OK: ${{ steps.build.outcome }}
+        NEXT_OK: ${{ steps.next.outcome }}
+        QUEUE: ${{ inputs.comment_queue }}
+      shell: bash
+      run: |
+        conclusion=pending
+        if [ "$STALE" = "true" ]; then
+          conclusion=skipped
+        elif [ "$NEXT_OK" != "success" ] && [ "$NEXT_OK" != "skipped" ]; then
+          conclusion=failure
+        elif [ "$STATUS" = "done" ]; then
+          conclusion=done
+        elif [ "$STATUS" = "blocked" ]; then
+          conclusion=failure
+        elif [ "$STATUS" = "next" ]; then
+          if [ "$BUILD_OK" = "success" ]; then
+            conclusion=success
+          elif [ "$BUILD_OK" = "skipped" ]; then
+            conclusion=skipped
+          else
+            conclusion=failure
+          fi
+        fi
+        queue_args=()
+        if [ -n "$QUEUE" ]; then
+          queue_args=(-queue "$QUEUE")
+        fi
+        go run ./cmd/ciqueue comment \
+          -pr "$PR" \
+          -sha "$SHA" \
+          -package "$PKG" \
+          -host "$HOST" \
+          -conclusion "$conclusion" \
+          -run-url "${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID}" \
+          -remaining "${REMAINING:-[]}" \
+          "${queue_args[@]}"
+
+    - name: Decide continue
+      id: decide
+      if: ${{ always() }}
+      env:
+        STALE: ${{ steps.stale.outputs.stale }}
+        STATUS: ${{ steps.next.outputs.status }}
+        BUILD_OK: ${{ steps.build.outcome }}
+        NEXT_OK: ${{ steps.next.outcome }}
+      shell: bash
+      run: |
+        if [ "$STALE" = "true" ] || [ "$STATUS" = "done" ]; then
+          echo "continue=false" >> "$GITHUB_OUTPUT"
+          exit 0
+        fi
+        if [ "$NEXT_OK" != "success" ]; then
+          echo "continue=false" >> "$GITHUB_OUTPUT"
+          echo "ciqueue next failed"
+          exit 1
+        fi
+        if [ "$STATUS" = "blocked" ]; then
+          echo "continue=false" >> "$GITHUB_OUTPUT"
+          echo "queue blocked"
+          exit 1
+        fi
+        if [ "$STATUS" = "next" ] && [ "$BUILD_OK" != "success" ]; then
+          echo "continue=false" >> "$GITHUB_OUTPUT"
+          echo "package build failed"
+          exit 1
+        fi
+        echo "continue=true" >> "$GITHUB_OUTPUT"

@@ -4,8 +4,15 @@ on:
   workflow_call:
     inputs:
       image:
-        required: true
+        description: GHCR image for Linux container slots; empty = bare runner (macOS)
+        required: false
         type: string
+        default: ""
+      runner:
+        description: GitHub-hosted runner label
+        required: false
+        type: string
+        default: ubuntu-latest
       sha:
         required: true
         type: string
@@ -30,6 +37,11 @@ on:
         required: false
         type: string
         default: ""
+      comment_queue:
+        description: sticky-comment id (empty = linux)
+        required: false
+        type: string
+        default: ""
     outputs:
       continue:
         description: whether another slot should run
@@ -37,25 +49,23 @@ on:
 
 jobs:
   slot:
-    runs-on: ubuntu-latest
+    runs-on: ${{ inputs.runner }}
+    # One package build. Native toolchains (ct-tools, rust, osx-cross) can
+    # take hours; GitHub would kill the job at the default 6h workflow cap
+    # anyway, so this matches that for a single slot.
     timeout-minutes: 360
     defaults:
       run:
         shell: bash
     outputs:
-      continue: ${{ steps.decide.outputs.continue }}
-    container:
-      image: ${{ inputs.image }}
-      options: --user 1001:1001
-      credentials:
-        username: ${{ github.actor }}
-        password: ${{ github.token }}
+      continue: ${{ steps.work.outputs.continue }}
+    # fromJSON('null') omits the container so macOS jobs run on the host.
+    container: ${{ inputs.image != '' && fromJSON(format('{{"image":"{0}","options":"--user 1001:1001","credentials":{{"username":"{1}","password":"{2}"}}}}', inputs.image, github.actor, github.token)) || fromJSON('null') }}
     env:
       SIMPLYBS_CACHE_TAG: ${{ inputs.cache_tag }}
       SIMPLYBS_CACHE_REPO: ${{ inputs.cache_repo }}
       GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      HOME: /home/ci
       GOCACHE: /tmp/go-cache
       GOMODCACHE: /tmp/go-modcache
       GOTMPDIR: /tmp/go-tmp
@@ -64,135 +74,21 @@ jobs:
         with:
           ref: ${{ inputs.sha }}
           fetch-depth: 0
-
-      - name: Git safe.directory
-        run: git config --global --add safe.directory "$GITHUB_WORKSPACE"
-
-      - name: Assert non-root
-        run: |
-          uid=$(id -u)
-          echo "uid=$uid user=$(id -un)"
-          if [ "$uid" = 0 ]; then
-            echo "package slots must not run as root (crosstool-NG refuses uid 0)"
-            exit 1
-          fi
-
       - name: Writable Go dirs
         run: mkdir -p "$GOCACHE" "$GOMODCACHE" "$GOTMPDIR"
-
-      - name: Abort if SHA is no longer HEAD
-        id: stale
-        if: inputs.pr != ''
-        env:
-          PR: ${{ inputs.pr }}
-          SHA: ${{ inputs.sha }}
-        run: |
-          head=$(gh api "repos/${GITHUB_REPOSITORY}/pulls/${PR}" --jq .head.sha)
-          if [ "$head" != "$SHA" ]; then
-            echo "stale=true" >> "$GITHUB_OUTPUT"
-            echo "PR head is $head, this slot is $SHA — skipping"
-          else
-            echo "stale=false" >> "$GITHUB_OUTPUT"
-          fi
-
-      - name: Fetch diff base
-        if: steps.stale.outputs.stale != 'true'
-        env:
-          BASE: ${{ inputs.base }}
-        run: git fetch origin "$BASE" --depth=50 || git fetch origin "$BASE" || true
-
-      - name: Next package
-        id: next
-        if: steps.stale.outputs.stale != 'true'
-        env:
-          BASE: ${{ inputs.base }}
-          SHA: ${{ inputs.sha }}
-          HOSTS: ${{ inputs.hosts }}
-          EXTRA: ${{ inputs.extra_package }}
-        run: |
-          extra=()
-          if [ -n "$EXTRA" ]; then
-            extra=(-package "$EXTRA")
-          fi
-          set -o pipefail
-          go run ./cmd/ciqueue next -base "$BASE" -sha "$SHA" -hosts "$HOSTS" "${extra[@]}" | tee /tmp/ciqueue.json
-
-      - name: Build package
-        id: build
-        if: steps.stale.outputs.stale != 'true' && steps.next.outputs.status == 'next'
-        env:
-          PKG: ${{ steps.next.outputs.package }}
-          HOST: ${{ steps.next.outputs.host }}
-        run: |
-          export NUM_CORES="$(nproc)"
-          go run . -host "$HOST" -package "$PKG" -build
-
-      - name: Update PR comment
-        if: always() && inputs.pr != '' && steps.stale.outputs.stale != 'true'
-        env:
-          PR: ${{ inputs.pr }}
-          SHA: ${{ inputs.sha }}
-          PKG: ${{ steps.next.outputs.package }}
-          HOST: ${{ steps.next.outputs.host }}
-          STATUS: ${{ steps.next.outputs.status }}
-          REMAINING: ${{ steps.next.outputs.remaining }}
-          STALE: ${{ steps.stale.outputs.stale }}
-          BUILD_OK: ${{ steps.build.outcome }}
-          NEXT_OK: ${{ steps.next.outcome }}
-        run: |
-          conclusion=pending
-          if [ "$STALE" = "true" ]; then
-            conclusion=skipped
-          elif [ "$NEXT_OK" != "success" ] && [ "$NEXT_OK" != "skipped" ]; then
-            conclusion=failure
-          elif [ "$STATUS" = "done" ]; then
-            conclusion=done
-          elif [ "$STATUS" = "blocked" ]; then
-            conclusion=failure
-          elif [ "$STATUS" = "next" ]; then
-            if [ "$BUILD_OK" = "success" ]; then
-              conclusion=success
-            elif [ "$BUILD_OK" = "skipped" ]; then
-              conclusion=skipped
-            else
-              conclusion=failure
-            fi
-          fi
-          go run ./cmd/ciqueue comment \
-            -pr "$PR" \
-            -sha "$SHA" \
-            -package "$PKG" \
-            -host "$HOST" \
-            -conclusion "$conclusion" \
-            -run-url "${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID}" \
-            -remaining "${REMAINING:-[]}"
-
-      - name: Decide continue
-        id: decide
-        if: always()
-        env:
-          STALE: ${{ steps.stale.outputs.stale }}
-          STATUS: ${{ steps.next.outputs.status }}
-          BUILD_OK: ${{ steps.build.outcome }}
-          NEXT_OK: ${{ steps.next.outcome }}
-        run: |
-          if [ "$STALE" = "true" ] || [ "$STATUS" = "done" ]; then
-            echo "continue=false" >> "$GITHUB_OUTPUT"
-            exit 0
-          fi
-          if [ "$NEXT_OK" != "success" ]; then
-            echo "continue=false" >> "$GITHUB_OUTPUT"
-            echo "ciqueue next failed"
-            exit 1
-          fi
-          if [ "$STATUS" = "blocked" ]; then
-            echo "continue=false" >> "$GITHUB_OUTPUT"
-            echo "queue blocked"
-            exit 1
-          fi
-          if [ "$STATUS" = "next" ] && [ "$BUILD_OK" != "success" ]; then
-            echo "continue=false" >> "$GITHUB_OUTPUT"
-            echo "package build failed"
-            exit 1
-          fi
-          echo "continue=true" >> "$GITHUB_OUTPUT"
+      - name: Container HOME
+        if: ${{ inputs.image != '' }}
+        run: echo "HOME=/home/ci" >> "$GITHUB_ENV"
+      - uses: actions/setup-go@v5
+        if: ${{ inputs.image == '' }}
+        with:
+          go-version-file: go.mod
+      - uses: ./.github/actions/package-slot
+        id: work
+        with:
+          sha: ${{ inputs.sha }}
+          base: ${{ inputs.base }}
+          pr: ${{ inputs.pr }}
+          hosts: ${{ inputs.hosts }}
+          extra_package: ${{ inputs.extra_package }}
+          comment_queue: ${{ inputs.comment_queue }}

@@ -1,4 +1,4 @@
-name: packages
+name: packages-macos
 
 on:
   pull_request:
@@ -23,27 +23,23 @@ on:
         required: false
         type: string
 
-# Linux package queue. macOS runs in parallel via packages-macos.yml
-# (separate runner and cache tag). Three batches of 24 slots (72 packages
-# per run) so a zlib-tree cold fill fits without failing the finish job on
-# the old 24-slot cap.
-# Release cache tag is CI-only (v0-sbs-ci-linux-amd64). Do not use the
-# human/cloud-agent tag (v0-sbs-ubuntu-linux-amd64); CI reuses its own
-# Release across runs after the first cold fill.
+# macOS package queue, parallel with .github/workflows/packages.yml (linux).
+# Three batches of 24 slots (72 packages per run) so a zlib-tree cold fill
+# fits without failing the finish job on the old 24-slot cap.
+# Release cache tag is CI-only (v0-sbs-ci-darwin-arm64). Do not use the
+# human/cloud-agent tag (v0-sbs-ubuntu-linux-amd64).
 permissions:
   contents: write
-  packages: write
   pull-requests: write
   issues: write
   statuses: write
   actions: read
 
 jobs:
-  image:
+  meta:
     runs-on: ubuntu-latest
-    timeout-minutes: 30
+    timeout-minutes: 10
     outputs:
-      image: ${{ steps.out.outputs.image }}
       sha: ${{ steps.meta.outputs.sha }}
       base: ${{ steps.meta.outputs.base }}
       pr: ${{ steps.meta.outputs.pr }}
@@ -83,40 +79,8 @@ jobs:
           echo "base=$base" >> "$GITHUB_OUTPUT"
           echo "pr=$pr" >> "$GITHUB_OUTPUT"
           echo "extra_package=$extra" >> "$GITHUB_OUTPUT"
-          echo "cache_tag=v0-sbs-ci-linux-amd64" >> "$GITHUB_OUTPUT"
-          echo "Resolved sha=$sha base=$base pr=$pr extra=$extra cache_tag=v0-sbs-ci-linux-amd64"
-
-      - uses: actions/checkout@v4
-        with:
-          ref: ${{ steps.meta.outputs.sha }}
-
-      - name: Image name
-        id: img
-        run: echo "name=ghcr.io/$(echo '${{ github.repository }}' | tr '[:upper:]' '[:lower:]')/ci" >> "$GITHUB_OUTPUT"
-
-      - uses: docker/setup-buildx-action@v3
-
-      - uses: docker/login-action@v3
-        with:
-          registry: ghcr.io
-          username: ${{ github.actor }}
-          password: ${{ secrets.GITHUB_TOKEN }}
-
-      - uses: docker/build-push-action@v6
-        id: push
-        with:
-          context: ./ci
-          file: ./ci/Dockerfile
-          push: true
-          provenance: false
-          sbom: false
-          tags: ${{ steps.img.outputs.name }}:${{ steps.meta.outputs.sha }}
-          cache-from: type=registry,ref=${{ steps.img.outputs.name }}:buildcache
-          cache-to: type=registry,ref=${{ steps.img.outputs.name }}:buildcache,mode=max
-
-      - name: Output image
-        id: out
-        run: echo "image=${{ steps.img.outputs.name }}:${{ steps.meta.outputs.sha }}" >> "$GITHUB_OUTPUT"
+          echo "cache_tag=v0-sbs-ci-darwin-arm64" >> "$GITHUB_OUTPUT"
+          echo "Resolved sha=$sha base=$base pr=$pr extra=$extra cache_tag=v0-sbs-ci-darwin-arm64"
 
       - name: Mark commit pending
         env:
@@ -125,70 +89,73 @@ jobs:
         run: |
           gh api "repos/${GITHUB_REPOSITORY}/statuses/${SHA}" \
             -f state=pending \
-            -f context=simplybs-packages \
-            -f description="package queue running" \
+            -f context=simplybs-packages-macos \
+            -f description="macos package queue running" \
             -f target_url="${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID}"
 
   batch1:
-    needs: [image]
+    needs: [meta]
     uses: ./.github/workflows/package-batch.yml
     secrets: inherit
     with:
-      image: ${{ needs.image.outputs.image }}
-      sha: ${{ needs.image.outputs.sha }}
-      base: ${{ needs.image.outputs.base }}
-      pr: ${{ needs.image.outputs.pr }}
-      cache_tag: ${{ needs.image.outputs.cache_tag }}
+      runner: macos-latest
+      sha: ${{ needs.meta.outputs.sha }}
+      base: ${{ needs.meta.outputs.base }}
+      pr: ${{ needs.meta.outputs.pr }}
+      cache_tag: ${{ needs.meta.outputs.cache_tag }}
       cache_repo: ${{ github.repository }}
-      hosts: x86_64-linux-gnu,aarch64-linux-android
-      extra_package: ${{ needs.image.outputs.extra_package }}
+      hosts: aarch64-apple-darwin
+      extra_package: ${{ needs.meta.outputs.extra_package }}
+      comment_queue: macos
   batch2:
-    needs: [image, batch1]
+    needs: [meta, batch1]
     if: needs.batch1.outputs.continue == 'true'
     uses: ./.github/workflows/package-batch.yml
     secrets: inherit
     with:
-      image: ${{ needs.image.outputs.image }}
-      sha: ${{ needs.image.outputs.sha }}
-      base: ${{ needs.image.outputs.base }}
-      pr: ${{ needs.image.outputs.pr }}
-      cache_tag: ${{ needs.image.outputs.cache_tag }}
+      runner: macos-latest
+      sha: ${{ needs.meta.outputs.sha }}
+      base: ${{ needs.meta.outputs.base }}
+      pr: ${{ needs.meta.outputs.pr }}
+      cache_tag: ${{ needs.meta.outputs.cache_tag }}
       cache_repo: ${{ github.repository }}
-      hosts: x86_64-linux-gnu,aarch64-linux-android
-      extra_package: ${{ needs.image.outputs.extra_package }}
+      hosts: aarch64-apple-darwin
+      extra_package: ${{ needs.meta.outputs.extra_package }}
+      comment_queue: macos
   batch3:
-    needs: [image, batch2]
+    needs: [meta, batch2]
     if: needs.batch2.outputs.continue == 'true'
     uses: ./.github/workflows/package-batch.yml
     secrets: inherit
     with:
-      image: ${{ needs.image.outputs.image }}
-      sha: ${{ needs.image.outputs.sha }}
-      base: ${{ needs.image.outputs.base }}
-      pr: ${{ needs.image.outputs.pr }}
-      cache_tag: ${{ needs.image.outputs.cache_tag }}
+      runner: macos-latest
+      sha: ${{ needs.meta.outputs.sha }}
+      base: ${{ needs.meta.outputs.base }}
+      pr: ${{ needs.meta.outputs.pr }}
+      cache_tag: ${{ needs.meta.outputs.cache_tag }}
       cache_repo: ${{ github.repository }}
-      hosts: x86_64-linux-gnu,aarch64-linux-android
-      extra_package: ${{ needs.image.outputs.extra_package }}
+      hosts: aarch64-apple-darwin
+      extra_package: ${{ needs.meta.outputs.extra_package }}
+      comment_queue: macos
   finish:
     if: always()
-    needs: [image, batch1, batch2, batch3]
+    needs: [meta, batch1, batch2, batch3]
     runs-on: ubuntu-latest
     steps:
       - name: Set commit status
         env:
-          SHA: ${{ needs.image.outputs.sha }}
+          SHA: ${{ needs.meta.outputs.sha }}
           C1: ${{ needs.batch1.outputs.continue }}
           C2: ${{ needs.batch2.outputs.continue }}
           C3: ${{ needs.batch3.outputs.continue }}
           R1: ${{ needs.batch1.result }}
           R2: ${{ needs.batch2.result }}
           R3: ${{ needs.batch3.result }}
-          IMG: ${{ needs.image.result }}
+          META: ${{ needs.meta.result }}
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           failed=0
-          if [ "$IMG" = "failure" ]; then failed=1; fi
+          if [ "$META" = "failure" ]; then failed=1; fi
           for r in "$R1" "$R2" "$R3"; do
             if [ "$r" = "failure" ]; then failed=1; fi
           done
@@ -199,20 +166,19 @@ jobs:
           url="${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
           if [ "$failed" = 1 ]; then
             state=failure
-            desc="package queue failed"
+            desc="macos package queue failed"
           elif [ "$last" = "true" ]; then
             state=failure
-            desc="package queue hit slot cap; re-run workflow"
+            desc="macos package queue hit slot cap; re-run workflow"
           else
             state=success
-            desc="package queue complete"
+            desc="macos package queue complete"
           fi
           gh api "repos/${{ github.repository }}/statuses/${SHA}" \
             -f state="$state" \
-            -f context=simplybs-packages \
+            -f context=simplybs-packages-macos \
             -f description="$desc" \
             -f target_url="$url"
           if [ "$state" != "success" ]; then
             exit 1
           fi
-

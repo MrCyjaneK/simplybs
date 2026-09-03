@@ -36,7 +36,7 @@ func main() {
 func usage() {
 	fmt.Fprintf(os.Stderr, `usage:
   ciqueue next    [-base SHA] [-sha SHA] [-hosts list] [-changed-files PATH] [-package name]
-  ciqueue comment [-pr N] [-sha SHA] [-package name] [-host triplet] [-conclusion text] [-run-url URL] [-remaining JSON]
+  ciqueue comment [-pr N] [-sha SHA] [-package name] [-host triplet] [-conclusion text] [-run-url URL] [-remaining JSON] [-queue id]
 `)
 }
 
@@ -128,6 +128,7 @@ func cmdComment(args []string) error {
 	runURL := fs.String("run-url", "", "Actions run URL")
 	jobURL := fs.String("job-url", "", "optional job URL")
 	remaining := fs.String("remaining", "", "JSON array of remaining items")
+	queue := fs.String("queue", "", "sticky-comment id (empty = linux)")
 	repo := fs.String("repo", os.Getenv("GITHUB_REPOSITORY"), "owner/repo")
 	if err := fs.Parse(args); err != nil {
 		return err
@@ -147,7 +148,8 @@ func cmdComment(args []string) error {
 		}
 	}
 
-	st, err := loadCommentState(*repo, *pr)
+	marker := stateMarker(*queue)
+	st, err := loadCommentState(*repo, *pr, marker)
 	if err != nil {
 		return err
 	}
@@ -167,8 +169,8 @@ func cmdComment(args []string) error {
 		})
 	}
 	st.Remaining = rem
-	body := renderComment(st)
-	return upsertComment(*repo, *pr, body)
+	body := renderComment(st, *queue)
+	return upsertComment(*repo, *pr, body, marker)
 }
 
 func splitCSV(s string) []string {

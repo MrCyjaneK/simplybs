@@ -3,6 +3,7 @@ package main
 import (
 	"os"
 	"path/filepath"
+	"strings"
 	"testing"
 
 	"github.com/mrcyjanek/simplybs/host"
@@ -141,6 +142,23 @@ func TestNextQueueZlibSecondHostAfterFirstCached(t *testing.T) {
 	}
 }
 
+func TestNextQueueZlibDarwinHost(t *testing.T) {
+	chdirRepoRoot(t)
+	res, err := nextQueue(queueOpts{
+		changedFiles: []string{"packages/zlib.json"},
+		hosts:        []string{"aarch64-apple-darwin"},
+		cached: func(p *pack.Package, h *host.Host) (bool, error) {
+			return p.Package != "zlib", nil
+		},
+	})
+	if err != nil {
+		t.Fatal(err)
+	}
+	if res.Status != "next" || res.Package != "zlib" || res.Host != "aarch64-apple-darwin" {
+		t.Fatalf("got %+v", res)
+	}
+}
+
 func TestRenderCommentContainsMarker(t *testing.T) {
 	body := renderComment(CommentState{
 		SHA: "abc",
@@ -151,8 +169,8 @@ func TestRenderCommentContainsMarker(t *testing.T) {
 			RunURL:     "https://example.test/run/1",
 		}},
 		Remaining: []Item{{Package: "curl", Host: "x86_64-linux-gnu"}},
-	})
-	st, ok := parseState(body)
+	}, "")
+	st, ok := parseState(body, commentMarker)
 	if !ok {
 		t.Fatalf("parse failed:\n%s", body)
 	}
@@ -161,5 +179,28 @@ func TestRenderCommentContainsMarker(t *testing.T) {
 	}
 	if len(st.Remaining) != 1 || st.Remaining[0].Package != "curl" {
 		t.Fatalf("remaining %+v", st.Remaining)
+	}
+}
+
+func TestRenderCommentQueueMarkersDoNotCollide(t *testing.T) {
+	linux := renderComment(CommentState{SHA: "abc"}, "")
+	macos := renderComment(CommentState{SHA: "abc"}, "macos")
+	if !strings.Contains(linux, commentMarker) {
+		t.Fatalf("linux comment missing default marker:\n%s", linux)
+	}
+	if !strings.Contains(macos, stateMarker("macos")) {
+		t.Fatalf("macos comment missing marker:\n%s", macos)
+	}
+	if !strings.Contains(macos, "## simplybs package queue (macos)") {
+		t.Fatalf("macos title missing:\n%s", macos)
+	}
+	if _, ok := parseState(macos, stateMarker("macos")); !ok {
+		t.Fatalf("macos parser missed macos comment:\n%s", macos)
+	}
+	if _, ok := parseState(linux, stateMarker("macos")); ok {
+		t.Fatal("macos parser matched linux comment")
+	}
+	if _, ok := parseState(macos, commentMarker); ok {
+		t.Fatal("linux parser matched macos comment")
 	}
 }

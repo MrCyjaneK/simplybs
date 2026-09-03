@@ -12,6 +12,14 @@ import (
 
 const commentMarker = "<!-- simplybs-ci-state"
 
+func stateMarker(queue string) string {
+	q := strings.TrimSpace(queue)
+	if q == "" || q == "linux" {
+		return commentMarker
+	}
+	return "<!-- simplybs-ci-" + q + "-state"
+}
+
 // CommentState is stored inside the sticky PR comment.
 type CommentState struct {
 	SHA       string       `json:"sha"`
@@ -28,9 +36,15 @@ type CommentRun struct {
 	JobURL     string `json:"job_url,omitempty"`
 }
 
-func renderComment(st CommentState) string {
+func renderComment(st CommentState, queue string) string {
 	var b strings.Builder
-	b.WriteString("## simplybs package queue\n\n")
+	title := "## simplybs package queue"
+	q := strings.TrimSpace(queue)
+	if q != "" && q != "linux" {
+		title = "## simplybs package queue (" + q + ")"
+	}
+	b.WriteString(title)
+	b.WriteString("\n\n")
 	if st.SHA != "" {
 		fmt.Fprintf(&b, "SHA `%s`\n\n", st.SHA)
 	}
@@ -70,14 +84,14 @@ func renderComment(st CommentState) string {
 	}
 	raw, _ := json.Marshal(st)
 	b.WriteString("\n")
-	b.WriteString(commentMarker)
+	b.WriteString(stateMarker(queue))
 	b.WriteByte('\n')
 	b.Write(raw)
 	b.WriteString("\n-->\n")
 	return b.String()
 }
 
-func loadCommentState(repo string, pr int) (CommentState, error) {
+func loadCommentState(repo string, pr int, marker string) (CommentState, error) {
 	cmd := ghAPI("repos/" + repo + "/issues/" + strconv.Itoa(pr) + "/comments?per_page=100")
 	out, err := cmd.Output()
 	if err != nil {
@@ -91,19 +105,22 @@ func loadCommentState(repo string, pr int) (CommentState, error) {
 		return CommentState{}, err
 	}
 	for _, c := range comments {
-		if st, ok := parseState(c.Body); ok {
+		if st, ok := parseState(c.Body, marker); ok {
 			return st, nil
 		}
 	}
 	return CommentState{}, nil
 }
 
-func parseState(body string) (CommentState, bool) {
-	i := strings.Index(body, commentMarker)
+func parseState(body, marker string) (CommentState, bool) {
+	if marker == "" {
+		marker = commentMarker
+	}
+	i := strings.Index(body, marker)
 	if i < 0 {
 		return CommentState{}, false
 	}
-	rest := body[i+len(commentMarker):]
+	rest := body[i+len(marker):]
 	rest = strings.TrimSpace(rest)
 	end := strings.Index(rest, "-->")
 	if end < 0 {
@@ -117,7 +134,7 @@ func parseState(body string) (CommentState, bool) {
 	return st, true
 }
 
-func upsertComment(repo string, pr int, body string) error {
+func upsertComment(repo string, pr int, body, marker string) error {
 	cmd := ghAPI("repos/" + repo + "/issues/" + strconv.Itoa(pr) + "/comments?per_page=100")
 	out, err := cmd.Output()
 	if err != nil {
@@ -132,7 +149,7 @@ func upsertComment(repo string, pr int, body string) error {
 	}
 	var existing int64
 	for _, c := range comments {
-		if strings.Contains(c.Body, commentMarker) {
+		if strings.Contains(c.Body, marker) {
 			existing = c.ID
 			break
 		}
