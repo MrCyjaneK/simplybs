@@ -1,0 +1,31 @@
+--- a/migcom.tproj/parser.y
++++ b/migcom.tproj/parser.y
+@@ -168,7 +168,7 @@
+ extern int yylex(void);
+ 
+ /* forward declaration */
+-void yyerror(char *s);
++void yyerror(const char *s);
+ 
+ %}
+ 
+@@ -770,7 +770,7 @@
+ %%
+ 
+ void
+-yyerror(char *s)
++yyerror(const char *s)
+ {
+   error(s);
+ }
+--- a/migcom.tproj/lexxer.l
++++ b/migcom.tproj/lexxer.l
+@@ -121,7 +121,7 @@
+ int lineno = 0;			/* Replaces lex yylineno */
+ 
+ static void doSharp(char *); /* process body of # directives */
+-extern void yyerror(char *);
++extern void yyerror(const char *);
+ %}
+ 
+ %Start	Normal String FileName QString SkipToEOL

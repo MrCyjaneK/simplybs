@@ -1,0 +1,42 @@
+{
+    "package": "native/mig",
+    "version": "138",
+    "type": "native",
+    "download": [
+        {
+            "kind": "git",
+            "sha256": "f337e600741638896fb6056ce87c6479f74b89a3",
+            "url": "https://github.com/markmentovai/bootstrap_cmds.git"
+        }
+    ],
+    "dependencies": [
+        "*:*:native/_/_",
+        "*:*:native/autoconf",
+        "*:*:native/automake",
+        "*:*:native/bash",
+        "*:*:native/bison",
+        "*:*:native/coreutils",
+        "*:*:native/flex",
+        "*:*:native/m4",
+        "*:*:native/make",
+        "*:*:native/patch",
+        "*:*:native/perl"
+    ],
+    "export-env": [
+        "*:*:MIGCOM=$NATIVEPREFIX/bin/migcom"
+    ],
+    "build": {
+        "env": [
+            "*:*:YACC=bison -y",
+            "*:*:LEX=flex"
+        ],
+        "steps": [
+            "*:*:patch -p1 < $PATCH_DIR/native/mig/bison-yyerror-const.patch",
+            "*:*:mkdir -p autotools",
+            "*:*:autoreconf -f -i",
+            "*:*:bash ./configure --prefix=$NATIVEPREFIX",
+            "*:*:make -j$NUM_CORES",
+            "*:*:make DESTDIR=$STAGING_DIR install"
+        ]
+    }
+}

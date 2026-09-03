@@ -59,82 +59,37 @@ if [ "$os" = Darwin ] && [ -z "${SDK_PATH:-}" ]; then
 fi
 if [ "$os" = Darwin ]; then
 	if [ -z "${SDK_PATH:-}" ]; then
-		echo "jdk: hermetic MacOSX SDK not found under $NATIVEPREFIX/SDK or $NATIVEPREFIX/_/SDK (need native/_ / osx-cross)" >&2
+		echo "jdk: hermetic MacOSX SDK not found under $NATIVEPREFIX/SDK or $NATIVEPREFIX/_/SDK" >&2
 		exit 1
 	fi
-	# cctools-port does not ship mig. OpenJDK still requires mig, dsymutil,
-	# xattr, and SetFile. Copy those binaries from Xcode/CLT by absolute
-	# path into $tools so PATH stays hermetic (no /usr/bin).
-	dev=""
-	if [ -x /usr/bin/xcode-select ]; then
-		dev=$(/usr/bin/xcode-select -p 2>/dev/null || true)
-	fi
-	stage_tool() {
-		name=$1
-		shift
-		if [ -x "$tools/$name" ]; then
-			return 0
-		fi
-		local src
-		for src in "$@"; do
-			if [ -n "$src" ] && [ -x "$src" ]; then
-				cp -p "$src" "$tools/$name"
-				chmod +x "$tools/$name"
-				echo "jdk: staged $name <- $src"
-				return 0
-			fi
-		done
-		return 1
-	}
-	stage_tool migcom \
-		"$NATIVEPREFIX/libexec/migcom" \
-		"$NATIVEPREFIX/bin/migcom" \
-		"${dev:+$dev/usr/libexec/migcom}" \
-		"${dev:+$dev/Toolchains/XcodeDefault.xctoolchain/usr/libexec/migcom}" \
-		/Library/Developer/CommandLineTools/usr/libexec/migcom \
-		/usr/libexec/migcom || true
-	cp "$PATCH_DIR/jdk/mig" "$tools/mig"
-	chmod +x "$tools/mig"
+	# OpenJDK requires mig (Mach Interface Generator). native/mig builds it.
 	if [ -x "$NATIVEPREFIX/_/bin/llvm-dsymutil" ]; then
 		ln -sf "$NATIVEPREFIX/_/bin/llvm-dsymutil" "$tools/dsymutil"
 	elif [ -x "$NATIVEPREFIX/_/bin/llvm-dsymutil-21" ]; then
 		ln -sf "$NATIVEPREFIX/_/bin/llvm-dsymutil-21" "$tools/dsymutil"
 	elif [ -x "$NATIVEPREFIX/_/bin/dsymutil" ]; then
 		ln -sf "$NATIVEPREFIX/_/bin/dsymutil" "$tools/dsymutil"
-	else
-		stage_tool dsymutil \
-			"${dev:+$dev/Toolchains/XcodeDefault.xctoolchain/usr/bin/dsymutil}" \
-			"${dev:+$dev/usr/bin/dsymutil}" \
-			/Library/Developer/CommandLineTools/usr/bin/dsymutil \
-			/usr/bin/dsymutil || true
 	fi
-	stage_tool xattr \
-		"${dev:+$dev/usr/bin/xattr}" \
-		/usr/bin/xattr || {
+	if [ ! -x "$tools/xattr" ]; then
 		printf '%s\n' '#!/bin/sh' 'exit 0' >"$tools/xattr"
 		chmod +x "$tools/xattr"
-		echo "jdk: staged no-op xattr"
-	}
-	stage_tool SetFile \
-		"${dev:+$dev/usr/bin/SetFile}" \
-		/usr/bin/SetFile || {
+	fi
+	if [ ! -x "$tools/SetFile" ]; then
 		printf '%s\n' '#!/bin/sh' 'exit 0' >"$tools/SetFile"
 		chmod +x "$tools/SetFile"
-		echo "jdk: staged no-op SetFile"
-	}
+	fi
 	export SDK_PATH
 	export SDKROOT=$SDK_PATH
-	export MIGCOM=$tools/migcom
 	export MIGCC="${MIGCC:-$(command -v clang || true)}"
-	if [ ! -x "$tools/migcom" ]; then
-		echo "jdk: hermetic migcom not staged (need Xcode/CLT libexec/migcom); PATH=$PATH" >&2
+	if ! command -v mig >/dev/null 2>&1; then
+		echo "jdk: mig not on PATH (need native/mig); PATH=$PATH" >&2
 		exit 1
 	fi
-	if ! command -v mig >/dev/null 2>&1 || ! command -v dsymutil >/dev/null 2>&1; then
-		echo "jdk: Darwin tools missing after staging; mig=$(command -v mig || true) dsymutil=$(command -v dsymutil || true) PATH=$PATH" >&2
+	if ! command -v dsymutil >/dev/null 2>&1; then
+		echo "jdk: dsymutil not on PATH; PATH=$PATH" >&2
 		exit 1
 	fi
-	echo "jdk: Darwin SDK_PATH=$SDK_PATH mig=$(command -v mig) migcom=$MIGCOM dsymutil=$(command -v dsymutil)"
+	echo "jdk: Darwin SDK_PATH=$SDK_PATH mig=$(command -v mig) dsymutil=$(command -v dsymutil)"
 fi
 
 config=(

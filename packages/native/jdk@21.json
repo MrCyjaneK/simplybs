@@ -11,7 +11,7 @@
     ],
     "dependencies": [
         "*:*:native/_/_",
-        "darwin_*:*:native/_",
+        "darwin_*:*:native/mig",
         "*:*:native/7zip",
         "*:*:native/autoconf",
         "*:*:native/m4",
