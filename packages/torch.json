@@ -5,7 +5,7 @@
     "download": [
         {
             "kind": "git",
-            "sha256": "3a40aeb71885044b78f1b4438c10497dd5df3bae",
+            "sha256": "0bc783fabcb2890463c01278c3779c9fde6a6180",
             "url": "https://github.com/MrCyjaneK/torch.git"
         }
     ],
@@ -26,7 +26,9 @@
         "env": [
             "*:*:config_opts=-DCMAKE_TOOLCHAIN_FILE=$CMAKE_TOOLCHAIN_FILE",
             "*:*:config_opts=$config_opts -DTOR_BUILD_DIR=$PREFIX",
-            "*:*:config_opts=$config_opts -DCMAKE_INSTALL_PREFIX=$PREFIX"
+            "*:*:config_opts=$config_opts -DCMAKE_INSTALL_PREFIX=$PREFIX",
+            "*:*-android*:config_opts=$config_opts -DCMAKE_SHARED_LINKER_FLAGS=-static-libstdc++",
+            "*:*-android*:LDFLAGS=$LDFLAGS -static-libstdc++"
         ],
         "steps": [
             "*:*:mkdir build",
