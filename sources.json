@@ -20,7 +20,8 @@
             "refs": [
                 "106dcfa18c1a9539cb97337e57954ff89685840e",
                 "e170cdcfebd45f6d098e3d811e2b1e1d120df184",
-                "e41649c9a34f39f1d543e064fd2b97de26d3e097"
+                "e41649c9a34f39f1d543e064fd2b97de26d3e097",
+                "78923280eed3eff6a77910bba59ecc1fa2244e02"
             ]
         },
         "https://android.googlesource.com/platform/bionic": {
@@ -975,7 +976,8 @@
         },
         "https://github.com/MrCyjaneK/torch.git": {
             "refs": [
-                "b7a785a538a31ab0cf5baf62d936e3e41182e0b7"
+                "b7a785a538a31ab0cf5baf62d936e3e41182e0b7",
+                "3a40aeb71885044b78f1b4438c10497dd5df3bae"
             ]
         },
         "https://github.com/SELinuxProject/selinux": {
