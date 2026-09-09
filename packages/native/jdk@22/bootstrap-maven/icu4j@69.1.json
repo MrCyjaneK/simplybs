@@ -1,0 +1,41 @@
+{
+    "package": "native/jdk@22/bootstrap-maven/icu4j@69.1",
+    "version": "69.1",
+    "type": "native",
+    "download": [
+        {
+            "kind": "tar.gz",
+            "sha256": "62011fc15b9ae46b32543db7396d6cd932b55b87c72207cddf1a7b56d4937668",
+            "url": "https://github.com/unicode-org/icu/releases/download/release-69-1/icu4j-69_1.tgz"
+        },
+        {
+            "kind": "blob",
+            "path": "./icu4j-69.1.pom",
+            "sha256": "f0450f5cb0f9ebd5f5ad8f39f4dcb728af881af017d31fe0f274b9a31fd8ab9f",
+            "url": "https://repo1.maven.org/maven2/com/ibm/icu/icu4j/69.1/icu4j-69.1.pom"
+        }
+    ],
+    "dependencies": [
+        "*:*:native/bash",
+        "*:*:native/coreutils",
+        "*:*:native/findutils",
+        "*:*:native/jdk@22"
+    ],
+    "build": {
+        "env": [
+            "*:*:WORKDIR=work/icu4j@69.1"
+        ],
+        "steps": [
+            "*:*:mkdir -p $WORKDIR/classes",
+            "*:*:find main/classes/core/src main/classes/collate/src main/classes/translit/src main/classes/currdata/src main/classes/langdata/src main/classes/regiondata/src -name '*.java' >$WORKDIR/sources",
+            "*:*:$JAVA_HOME/bin/javac --release 8 -encoding UTF-8 -d $WORKDIR/classes @$WORKDIR/sources",
+            "*:*:find main/classes/core/src -type f ! -name '*.java' ! -name '*.html' | while IFS= read -r f; do rel=${f#main/classes/core/src/}; mkdir -p $WORKDIR/classes/$(dirname $rel); cp $f $WORKDIR/classes/$rel; done",
+            "*:*:ICU_ROOT=$PWD && cd $WORKDIR/classes && $JAVA_HOME/bin/jar xf $ICU_ROOT/main/shared/data/icudata.jar",
+            "*:*:ICU_ROOT=$PWD && cd $WORKDIR/classes && $JAVA_HOME/bin/jar xf $ICU_ROOT/main/shared/data/icutzdata.jar",
+            "*:*:$JAVA_HOME/bin/jar cf $WORKDIR/icu4j-69.1.jar -C $WORKDIR/classes .",
+            "*:*:mkdir -p $STAGING_DIR$NATIVEPREFIX/share/maven/repository/com/ibm/icu/icu4j/69.1",
+            "*:*:cp $WORKDIR/icu4j-69.1.jar $STAGING_DIR$NATIVEPREFIX/share/maven/repository/com/ibm/icu/icu4j/69.1/icu4j-69.1.jar",
+            "*:*:cp icu4j-69.1.pom $STAGING_DIR$NATIVEPREFIX/share/maven/repository/com/ibm/icu/icu4j/69.1/icu4j-69.1.pom"
+        ]
+    }
+}

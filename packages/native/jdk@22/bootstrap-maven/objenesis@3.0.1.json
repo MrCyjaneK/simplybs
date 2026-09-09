@@ -1,0 +1,33 @@
+{
+    "package": "native/jdk@22/bootstrap-maven/objenesis@3.0.1",
+    "version": "3.0.1",
+    "type": "native",
+    "download": [
+        {
+            "kind": "git",
+            "sha256": "e2da695362c07e873d57a609ee87fd9cbce55865",
+            "url": "https://github.com/easymock/objenesis.git"
+        }
+    ],
+    "dependencies": [
+        "*:*:native/bash",
+        "*:*:native/coreutils",
+        "*:*:native/findutils",
+        "*:*:native/jdk@22",
+        "*:*:native/jdk@22/bootstrap-maven/pom/objenesis-parent@3.0.1"
+    ],
+    "build": {
+        "env": [
+            "*:*:WORKDIR=work/objenesis@3.0.1"
+        ],
+        "steps": [
+            "*:*:mkdir -p $WORKDIR",
+            "*:*:find main/src/main/java -name '*.java' >$WORKDIR/sources",
+            "*:*:$JAVA_HOME/bin/javac -XDignore.symbol.file -d $WORKDIR/classes @$WORKDIR/sources",
+            "*:*:$JAVA_HOME/bin/jar cf $WORKDIR/objenesis-3.0.1.jar -C $WORKDIR/classes .",
+            "*:*:mkdir -p $STAGING_DIR$NATIVEPREFIX/share/maven/repository/org/objenesis/objenesis/3.0.1",
+            "*:*:cp $WORKDIR/objenesis-3.0.1.jar $STAGING_DIR$NATIVEPREFIX/share/maven/repository/org/objenesis/objenesis/3.0.1/objenesis-3.0.1.jar",
+            "*:*:cp main/pom.xml $STAGING_DIR$NATIVEPREFIX/share/maven/repository/org/objenesis/objenesis/3.0.1/objenesis-3.0.1.pom"
+        ]
+    }
+}

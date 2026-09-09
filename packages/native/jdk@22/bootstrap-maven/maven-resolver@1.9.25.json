@@ -1,0 +1,38 @@
+{
+    "package": "native/jdk@22/bootstrap-maven/maven-resolver@1.9.25",
+    "version": "1.9.25",
+    "type": "native",
+    "download": [
+        {
+            "kind": "git",
+            "sha256": "e8891ef9e302d1a55f08a311d711bf2d087470ba",
+            "url": "https://github.com/apache/maven-resolver.git"
+        }
+    ],
+    "dependencies": [
+        "*:*:native/bash",
+        "*:*:native/coreutils",
+        "*:*:native/findutils",
+        "*:*:native/jdk@22",
+        "*:*:native/jdk@22/bootstrap-maven/pom/maven-parent@45"
+    ],
+    "build": {
+        "env": [
+            "*:*:WORKDIR=build/maven-resolver@1.9.25"
+        ],
+        "steps": [
+            "*:*:mkdir -p $WORKDIR/api $WORKDIR/util $STAGING_DIR$NATIVEPREFIX/share/maven/repository/org/apache/maven/resolver/maven-resolver/1.9.25 $STAGING_DIR$NATIVEPREFIX/share/maven/repository/org/apache/maven/resolver/maven-resolver-api/1.9.25 $STAGING_DIR$NATIVEPREFIX/share/maven/repository/org/apache/maven/resolver/maven-resolver-util/1.9.25",
+            "*:*:cp pom.xml $STAGING_DIR$NATIVEPREFIX/share/maven/repository/org/apache/maven/resolver/maven-resolver/1.9.25/maven-resolver-1.9.25.pom",
+            "*:*:find maven-resolver-api/src/main/java -name '*.java' ! -name 'module-info.java' >$WORKDIR/api.sources",
+            "*:*:$JAVA_HOME/bin/javac --release 8 -d $WORKDIR/api @$WORKDIR/api.sources",
+            "*:*:$JAVA_HOME/bin/jar cf $WORKDIR/maven-resolver-api-1.9.25.jar -C $WORKDIR/api .",
+            "*:*:cp $WORKDIR/maven-resolver-api-1.9.25.jar $STAGING_DIR$NATIVEPREFIX/share/maven/repository/org/apache/maven/resolver/maven-resolver-api/1.9.25/maven-resolver-api-1.9.25.jar",
+            "*:*:cp maven-resolver-api/pom.xml $STAGING_DIR$NATIVEPREFIX/share/maven/repository/org/apache/maven/resolver/maven-resolver-api/1.9.25/maven-resolver-api-1.9.25.pom",
+            "*:*:find maven-resolver-util/src/main/java -name '*.java' ! -name 'module-info.java' >$WORKDIR/util.sources",
+            "*:*:$JAVA_HOME/bin/javac --release 8 -cp $WORKDIR/maven-resolver-api-1.9.25.jar -d $WORKDIR/util @$WORKDIR/util.sources",
+            "*:*:$JAVA_HOME/bin/jar cf $WORKDIR/maven-resolver-util-1.9.25.jar -C $WORKDIR/util .",
+            "*:*:cp $WORKDIR/maven-resolver-util-1.9.25.jar $STAGING_DIR$NATIVEPREFIX/share/maven/repository/org/apache/maven/resolver/maven-resolver-util/1.9.25/maven-resolver-util-1.9.25.jar",
+            "*:*:cp maven-resolver-util/pom.xml $STAGING_DIR$NATIVEPREFIX/share/maven/repository/org/apache/maven/resolver/maven-resolver-util/1.9.25/maven-resolver-util-1.9.25.pom"
+        ]
+    }
+}

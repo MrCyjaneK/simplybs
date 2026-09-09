@@ -1,0 +1,38 @@
+{
+    "package": "native/jdk@22/bootstrap-maven/plexus-java@1.5.2",
+    "version": "1.5.2",
+    "type": "native",
+    "download": [
+        {
+            "kind": "git",
+            "sha256": "0cbde2aa41466fd464022a4057da10ab8d031b38",
+            "url": "https://github.com/codehaus-plexus/plexus-languages.git"
+        }
+    ],
+    "dependencies": [
+        "*:*:native/bash",
+        "*:*:native/coreutils",
+        "*:*:native/findutils",
+        "*:*:native/jdk@22",
+        "*:*:native/jdk@22/bootstrap-maven/org.eclipse.sisu.inject@1.0.0",
+        "*:*:native/jdk@22/bootstrap-maven/pom/plexus-languages@1.5.2",
+        "*:*:native/jdk@22/bootstrap-maven/asm@9.9.1",
+        "*:*:native/jdk@22/bootstrap-maven/qdox@2.2.0",
+        "*:*:native/jdk@22/bootstrap-maven/javax.inject@1"
+    ],
+    "build": {
+        "env": [
+            "*:*:WORKDIR=work/plexus-java@1.5.2",
+            "*:*:REPO=$NATIVEPREFIX/share/maven/repository"
+        ],
+        "steps": [
+            "*:*:mkdir -p $WORKDIR",
+            "*:*:find plexus-java/src/main/java -name '*.java' >$WORKDIR/sources",
+            "*:*:$JAVA_HOME/bin/javac -cp $REPO/org/ow2/asm/asm/9.9.1/asm-9.9.1.jar:$REPO/com/thoughtworks/qdox/qdox/2.2.0/qdox-2.2.0.jar:$REPO/javax/inject/javax.inject/1/javax.inject-1.jar -processorpath $REPO/org/eclipse/sisu/org.eclipse.sisu.inject/1.0.0/org.eclipse.sisu.inject-1.0.0.jar:$REPO/javax/inject/javax.inject/1/javax.inject-1.jar -processor org.eclipse.sisu.space.SisuIndexAPT6 -d $WORKDIR/classes @$WORKDIR/sources",
+            "*:*:$JAVA_HOME/bin/jar cf $WORKDIR/plexus-java-1.5.2.jar -C $WORKDIR/classes .",
+            "*:*:mkdir -p $STAGING_DIR$NATIVEPREFIX/share/maven/repository/org/codehaus/plexus/plexus-java/1.5.2",
+            "*:*:cp $WORKDIR/plexus-java-1.5.2.jar $STAGING_DIR$NATIVEPREFIX/share/maven/repository/org/codehaus/plexus/plexus-java/1.5.2/plexus-java-1.5.2.jar",
+            "*:*:cp plexus-java/pom.xml $STAGING_DIR$NATIVEPREFIX/share/maven/repository/org/codehaus/plexus/plexus-java/1.5.2/plexus-java-1.5.2.pom"
+        ]
+    }
+}

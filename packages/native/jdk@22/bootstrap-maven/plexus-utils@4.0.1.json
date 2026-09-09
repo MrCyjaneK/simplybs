@@ -1,0 +1,35 @@
+{
+    "package": "native/jdk@22/bootstrap-maven/plexus-utils@4.0.1",
+    "version": "4.0.1",
+    "type": "native",
+    "download": [
+        {
+            "kind": "git",
+            "sha256": "31ef81812095709ebbfa0e4b707e1c3ad00a51e5",
+            "url": "https://github.com/codehaus-plexus/plexus-utils.git"
+        }
+    ],
+    "dependencies": [
+        "*:*:native/bash",
+        "*:*:native/coreutils",
+        "*:*:native/findutils",
+        "*:*:native/jdk@22",
+        "*:*:native/jdk@22/bootstrap-maven/pom/plexus@17",
+        "*:*:native/jdk@22/bootstrap-maven/plexus-xml@3.0.1"
+    ],
+    "build": {
+        "env": [
+            "*:*:WORKDIR=work/plexus-utils@4.0.1",
+            "*:*:PLEXUS_XML=$NATIVEPREFIX/share/maven/repository/org/codehaus/plexus/plexus-xml/3.0.1/plexus-xml-3.0.1.jar"
+        ],
+        "steps": [
+            "*:*:mkdir -p $WORKDIR",
+            "*:*:find src/main/java -name '*.java' >$WORKDIR/sources",
+            "*:*:$JAVA_HOME/bin/javac -cp $PLEXUS_XML -d $WORKDIR/classes @$WORKDIR/sources",
+            "*:*:$JAVA_HOME/bin/jar cf $WORKDIR/plexus-utils-4.0.1.jar -C $WORKDIR/classes .",
+            "*:*:mkdir -p $STAGING_DIR$NATIVEPREFIX/share/maven/repository/org/codehaus/plexus/plexus-utils/4.0.1",
+            "*:*:cp $WORKDIR/plexus-utils-4.0.1.jar $STAGING_DIR$NATIVEPREFIX/share/maven/repository/org/codehaus/plexus/plexus-utils/4.0.1/plexus-utils-4.0.1.jar",
+            "*:*:cp pom.xml $STAGING_DIR$NATIVEPREFIX/share/maven/repository/org/codehaus/plexus/plexus-utils/4.0.1/plexus-utils-4.0.1.pom"
+        ]
+    }
+}

@@ -1,0 +1,22 @@
+{
+    "package": "native/jdk@22/bootstrap-maven/pom/maven-parent@43",
+    "version": "43",
+    "type": "native",
+    "download": [
+        {
+            "kind": "blob",
+            "path": "./maven-parent-43.pom",
+            "sha256": "468a1262e9aaa5febf9d604e2836267f815351f2b4520f28fb17f53c71e33554",
+            "url": "https://repo1.maven.org/maven2/org/apache/maven/maven-parent/43/maven-parent-43.pom"
+        }
+    ],
+    "dependencies": [
+        "*:*:native/coreutils"
+    ],
+    "build": {
+        "steps": [
+            "*:*:mkdir -p $STAGING_DIR$NATIVEPREFIX/share/maven/repository/org/apache/maven/maven-parent/43",
+            "*:*:cp maven-parent-43.pom $STAGING_DIR$NATIVEPREFIX/share/maven/repository/org/apache/maven/maven-parent/43/maven-parent-43.pom"
+        ]
+    }
+}

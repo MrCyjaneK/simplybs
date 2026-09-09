@@ -1,0 +1,74 @@
+{
+    "package": "native/jdk@22/bootstrap-maven/maven-plugin-tools-generators@3.15.2",
+    "version": "3.15.2",
+    "type": "native",
+    "download": [
+        {
+            "kind": "git",
+            "sha256": "f7ed01b82c390ff629cecdb3cda88ec9346cc92a",
+            "url": "https://github.com/apache/maven-plugin-tools.git"
+        }
+    ],
+    "dependencies": [
+        "*:*:native/bash",
+        "*:*:native/coreutils",
+        "*:*:native/findutils",
+        "*:*:native/jdk@22",
+        "*:*:native/maven@3.9-bin",
+        "*:*:native/jdk@22/bootstrap-maven/maven-plugin-tools-api@3.15.2",
+        "*:*:native/jdk@22/bootstrap-maven/maven-plugin-tools-annotations@3.15.2",
+        "*:*:native/jdk@22/bootstrap-maven/maven-plugin-annotations@3.15.2",
+        "*:*:native/jdk@22/bootstrap-maven/javax.inject@1",
+        "*:*:native/jdk@22/bootstrap-maven/slf4j-api@1.7.36",
+        "*:*:native/jdk@22/bootstrap-maven/slf4j-nop@1.7.36",
+        "*:*:native/jdk@22/bootstrap-maven/asm@9.9.1",
+        "*:*:native/jdk@22/bootstrap-maven/asm-tree@9.9.1",
+        "*:*:native/jdk@22/bootstrap-maven/asm-util@9.9.1",
+        "*:*:native/jdk@22/bootstrap-maven/jsoup@1.22.1",
+        "*:*:native/jdk@22/bootstrap-maven/qdox@2.2.0",
+        "*:*:native/jdk@22/bootstrap-maven/plexus-java@1.5.2",
+        "*:*:native/jdk@22/bootstrap-maven/plexus-archiver@4.10.4",
+        "*:*:native/jdk@22/bootstrap-maven/plexus-io@3.6.0",
+        "*:*:native/jdk@22/bootstrap-maven/plexus-classworlds@2.6.0"
+    ],
+    "export-env": [
+        "*:*:PLUGINXML_JAR=$NATIVEPREFIX/share/maven/repository/org/apache/maven/plugin-tools/maven-plugin-tools-generators/3.15.2/maven-plugin-tools-generators-3.15.2.jar"
+    ],
+    "build": {
+        "env": [
+            "*:*:WORKDIR=work/maven-plugin-tools-generators@3.15.2",
+            "*:*:REPO=$NATIVEPREFIX/share/maven/repository",
+            "*:*:BOOT_LIB=$NATIVEPREFIX/maven-3.9-bootstrap/lib"
+        ],
+        "steps": [
+            "*:*:mkdir -p $WORKDIR/tidy/org/w3c/tidy $WORKDIR/genclasses",
+            "*:*:printf '%s\\n' 'package org.w3c.tidy;' 'import java.io.InputStream;' 'import java.io.OutputStream;' 'public class Tidy {' '    public void setDocType(String s) {}' '    public void setXHTML(boolean b) {}' '    public void setXmlOut(boolean b) {}' '    public void setInputEncoding(String s) {}' '    public void setOutputEncoding(String s) {}' '    public void setMakeClean(boolean b) {}' '    public void setNumEntities(boolean b) {}' '    public void setQuoteNbsp(boolean b) {}' '    public void setQuiet(boolean b) {}' '    public void setShowWarnings(boolean b) {}' '    public void parse(InputStream in, OutputStream out) {}' '}' > $WORKDIR/tidy/org/w3c/tidy/Tidy.java",
+            "*:*:$JAVA_HOME/bin/javac --release 8 -d $WORKDIR/tidy $WORKDIR/tidy/org/w3c/tidy/Tidy.java",
+            "*:*:cp $PATCH_DIR/maven/GeneratePluginXml.java maven-plugin-tools-generators/src/main/java/org/apache/maven/tools/plugin/generator/GeneratePluginXml.java",
+            "*:*:find maven-plugin-tools-generators/src/main/java -name '*.java' ! -name 'PluginHelpGenerator.java' >$WORKDIR/sources",
+            "*:*:printf '%s\\n' 'package org.apache.maven.tools.plugin.generator;' 'import org.apache.maven.project.MavenProject;' 'class PluginHelpGenerator {' '    static String getPluginHelpPath(MavenProject p) { return p.getGroupId() + \"/\" + p.getArtifactId() + \"/plugin-help.xml\"; }' '}' > maven-plugin-tools-generators/src/main/java/org/apache/maven/tools/plugin/generator/PluginHelpGenerator.java",
+            "*:*:echo maven-plugin-tools-generators/src/main/java/org/apache/maven/tools/plugin/generator/PluginHelpGenerator.java >> $WORKDIR/sources",
+            "*:*:$JAVA_HOME/bin/javac --release 8 -cp $(printf '%s:' $BOOT_LIB/*.jar)$WORKDIR/tidy:$REPO/org/apache/maven/plugin-tools/maven-plugin-tools-api/3.15.2/maven-plugin-tools-api-3.15.2.jar:$REPO/org/apache/maven/plugin-tools/maven-plugin-tools-annotations/3.15.2/maven-plugin-tools-annotations-3.15.2.jar:$REPO/org/apache/maven/plugin-tools/maven-plugin-annotations/3.15.2/maven-plugin-annotations-3.15.2.jar:$REPO/javax/inject/javax.inject/1/javax.inject-1.jar:$REPO/org/slf4j/slf4j-api/1.7.36/slf4j-api-1.7.36.jar:$REPO/org/ow2/asm/asm/9.9.1/asm-9.9.1.jar:$REPO/org/jsoup/jsoup/1.22.1/jsoup-1.22.1.jar:$REPO/org/codehaus/plexus/plexus-java/1.5.2/plexus-java-1.5.2.jar -d $WORKDIR/genclasses @$WORKDIR/sources",
+            "*:*:mkdir -p $WORKDIR/uber",
+            "*:*:cd $WORKDIR/uber && $JAVA_HOME/bin/jar xf $REPO/org/apache/maven/plugin-tools/maven-plugin-tools-api/3.15.2/maven-plugin-tools-api-3.15.2.jar",
+            "*:*:cd $WORKDIR/uber && $JAVA_HOME/bin/jar xf $REPO/org/apache/maven/plugin-tools/maven-plugin-tools-annotations/3.15.2/maven-plugin-tools-annotations-3.15.2.jar",
+            "*:*:cd $WORKDIR/uber && $JAVA_HOME/bin/jar xf $REPO/org/apache/maven/plugin-tools/maven-plugin-annotations/3.15.2/maven-plugin-annotations-3.15.2.jar",
+            "*:*:cd $WORKDIR/uber && $JAVA_HOME/bin/jar xf $REPO/org/ow2/asm/asm/9.9.1/asm-9.9.1.jar",
+            "*:*:cd $WORKDIR/uber && $JAVA_HOME/bin/jar xf $REPO/org/ow2/asm/asm-tree/9.9.1/asm-tree-9.9.1.jar",
+            "*:*:cd $WORKDIR/uber && $JAVA_HOME/bin/jar xf $REPO/org/ow2/asm/asm-util/9.9.1/asm-util-9.9.1.jar",
+            "*:*:cd $WORKDIR/uber && $JAVA_HOME/bin/jar xf $REPO/org/jsoup/jsoup/1.22.1/jsoup-1.22.1.jar",
+            "*:*:cd $WORKDIR/uber && $JAVA_HOME/bin/jar xf $REPO/com/thoughtworks/qdox/qdox/2.2.0/qdox-2.2.0.jar",
+            "*:*:cd $WORKDIR/uber && $JAVA_HOME/bin/jar xf $REPO/org/codehaus/plexus/plexus-java/1.5.2/plexus-java-1.5.2.jar",
+            "*:*:cd $WORKDIR/uber && $JAVA_HOME/bin/jar xf $REPO/org/codehaus/plexus/plexus-archiver/4.10.4/plexus-archiver-4.10.4.jar",
+            "*:*:cd $WORKDIR/uber && $JAVA_HOME/bin/jar xf $REPO/org/codehaus/plexus/plexus-io/3.6.0/plexus-io-3.6.0.jar",
+            "*:*:cd $WORKDIR/uber && $JAVA_HOME/bin/jar xf $REPO/org/codehaus/plexus/plexus-classworlds/2.6.0/plexus-classworlds-2.6.0.jar",
+            "*:*:cd $WORKDIR/uber && $JAVA_HOME/bin/jar xf $REPO/javax/inject/javax.inject/1/javax.inject-1.jar",
+            "*:*:cd $WORKDIR/uber && $JAVA_HOME/bin/jar xf $REPO/org/slf4j/slf4j-nop/1.7.36/slf4j-nop-1.7.36.jar",
+            "*:*:cp -R $WORKDIR/genclasses/. $WORKDIR/uber/",
+            "*:*:$JAVA_HOME/bin/jar cf $WORKDIR/maven-plugin-tools-generators-3.15.2.jar -C $WORKDIR/uber .",
+            "*:*:mkdir -p $STAGING_DIR$NATIVEPREFIX/share/maven/repository/org/apache/maven/plugin-tools/maven-plugin-tools-generators/3.15.2",
+            "*:*:cp $WORKDIR/maven-plugin-tools-generators-3.15.2.jar $STAGING_DIR$NATIVEPREFIX/share/maven/repository/org/apache/maven/plugin-tools/maven-plugin-tools-generators/3.15.2/maven-plugin-tools-generators-3.15.2.jar",
+            "*:*:cp maven-plugin-tools-generators/pom.xml $STAGING_DIR$NATIVEPREFIX/share/maven/repository/org/apache/maven/plugin-tools/maven-plugin-tools-generators/3.15.2/maven-plugin-tools-generators-3.15.2.pom"
+        ]
+    }
+}

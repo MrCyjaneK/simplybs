@@ -1,0 +1,45 @@
+{
+    "package": "native/jdk@22/bootstrap-maven/buildnumber-maven-plugin@3.3.0",
+    "version": "3.3.0",
+    "type": "native",
+    "download": [
+        {
+            "kind": "git",
+            "sha256": "d943f30d0c703c9398efe83b6fd5a4b71dc5bcb6",
+            "url": "https://github.com/mojohaus/buildnumber-maven-plugin.git"
+        }
+    ],
+    "dependencies": [
+        "*:*:native/bash",
+        "*:*:native/coreutils",
+        "*:*:native/findutils",
+        "*:*:native/jdk@22",
+        "*:*:native/maven@3.9-bin",
+        "*:*:native/jdk@22/bootstrap-maven/pom/mojo-parent@95",
+        "*:*:native/jdk@22/bootstrap-maven/maven-plugin-annotations@3.15.2",
+        "*:*:native/jdk@22/bootstrap-maven/maven-plugin-tools-generators@3.15.2",
+        "*:*:native/jdk@22/bootstrap-maven/maven-scm@2.2.1",
+        "*:*:native/jdk@22/bootstrap-maven/plexus-utils@4.0.2",
+        "*:*:native/jdk@22/bootstrap-maven/plexus-sec-dispatcher@1.4",
+        "*:*:native/jdk@22/bootstrap-maven/gson@2.13.2",
+        "*:*:native/jdk@22/bootstrap-maven/commons-lang@2.4"
+    ],
+    "build": {
+        "env": [
+            "*:*:WORKDIR=work/buildnumber-maven-plugin@3.3.0",
+            "*:*:REPO=$NATIVEPREFIX/share/maven/repository",
+            "*:*:BOOT_LIB=$NATIVEPREFIX/maven-3.9-bootstrap/lib"
+        ],
+        "steps": [
+            "*:*:mkdir -p $WORKDIR/classes/META-INF/maven $WORKDIR/classes/META-INF/plexus",
+            "*:*:find src/main/java -name '*.java' >$WORKDIR/sources",
+            "*:*:$JAVA_HOME/bin/javac --release 8 -cp $(printf '%s:' $BOOT_LIB/*.jar)$REPO/org/apache/maven/plugin-tools/maven-plugin-annotations/3.15.2/maven-plugin-annotations-3.15.2.jar:$REPO/org/apache/maven/scm/maven-scm-api/2.2.1/maven-scm-api-2.2.1.jar:$REPO/org/apache/maven/scm/maven-scm-manager-plexus/2.2.1/maven-scm-manager-plexus-2.2.1.jar:$REPO/org/apache/maven/scm/maven-scm-provider-gitexe/2.2.1/maven-scm-provider-gitexe-2.2.1.jar:$REPO/org/apache/maven/scm/maven-scm-provider-git-commons/2.2.1/maven-scm-provider-git-commons-2.2.1.jar:$REPO/org/apache/maven/scm/maven-scm-provider-hg/2.2.1/maven-scm-provider-hg-2.2.1.jar:$REPO/org/codehaus/plexus/plexus-utils/4.0.2/plexus-utils-4.0.2.jar:$REPO/org/sonatype/plexus/plexus-sec-dispatcher/1.4/plexus-sec-dispatcher-1.4.jar:$REPO/com/google/code/gson/gson/2.13.2/gson-2.13.2.jar:$REPO/commons-lang/commons-lang/2.4/commons-lang-2.4.jar -d $WORKDIR/classes @$WORKDIR/sources",
+            "*:*:$JAVA_HOME/bin/java -cp $PLUGINXML_JAR:$(printf '%s:' $BOOT_LIB/*.jar) org.apache.maven.tools.plugin.generator.GeneratePluginXml org.codehaus.mojo buildnumber-maven-plugin 3.3.0 buildnumber $WORKDIR/classes $WORKDIR/classes/META-INF/maven $(printf '%s:' $BOOT_LIB/*.jar)$REPO/org/apache/maven/plugin-tools/maven-plugin-annotations/3.15.2/maven-plugin-annotations-3.15.2.jar:$REPO/org/apache/maven/scm/maven-scm-api/2.2.1/maven-scm-api-2.2.1.jar:$REPO/org/apache/maven/scm/maven-scm-manager-plexus/2.2.1/maven-scm-manager-plexus-2.2.1.jar:$REPO/org/apache/maven/scm/maven-scm-provider-gitexe/2.2.1/maven-scm-provider-gitexe-2.2.1.jar:$REPO/org/apache/maven/scm/maven-scm-provider-git-commons/2.2.1/maven-scm-provider-git-commons-2.2.1.jar:$REPO/org/apache/maven/scm/maven-scm-provider-hg/2.2.1/maven-scm-provider-hg-2.2.1.jar:$REPO/org/codehaus/plexus/plexus-utils/4.0.2/plexus-utils-4.0.2.jar:$REPO/org/sonatype/plexus/plexus-sec-dispatcher/1.4/plexus-sec-dispatcher-1.4.jar:$REPO/com/google/code/gson/gson/2.13.2/gson-2.13.2.jar:$REPO/commons-lang/commons-lang/2.4/commons-lang-2.4.jar",
+            "*:*:cp src/main/resources/META-INF/plexus/components.xml $WORKDIR/classes/META-INF/plexus/components.xml",
+            "*:*:$JAVA_HOME/bin/jar cf $WORKDIR/buildnumber-maven-plugin-3.3.0.jar -C $WORKDIR/classes .",
+            "*:*:mkdir -p $STAGING_DIR$NATIVEPREFIX/share/maven/repository/org/codehaus/mojo/buildnumber-maven-plugin/3.3.0",
+            "*:*:cp $WORKDIR/buildnumber-maven-plugin-3.3.0.jar $STAGING_DIR$NATIVEPREFIX/share/maven/repository/org/codehaus/mojo/buildnumber-maven-plugin/3.3.0/buildnumber-maven-plugin-3.3.0.jar",
+            "*:*:cp pom.xml $STAGING_DIR$NATIVEPREFIX/share/maven/repository/org/codehaus/mojo/buildnumber-maven-plugin/3.3.0/buildnumber-maven-plugin-3.3.0.pom"
+        ]
+    }
+}

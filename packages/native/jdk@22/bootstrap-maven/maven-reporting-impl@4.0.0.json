@@ -1,0 +1,54 @@
+{
+    "package": "native/jdk@22/bootstrap-maven/maven-reporting-impl@4.0.0",
+    "version": "4.0.0",
+    "type": "native",
+    "download": [
+        {
+            "kind": "git",
+            "sha256": "c0d27267bea59eaac967660ce22e3b61dbdd06ad",
+            "url": "https://github.com/apache/maven-reporting-impl.git"
+        },
+        {
+            "kind": "blob",
+            "path": "./maven-reporting-impl-4.0.0.pom",
+            "sha256": "e049cf5b77d09c24e83db9fd8f5019bdf86dc37a3357f5634c56fb157ecda248",
+            "url": "https://repo1.maven.org/maven2/org/apache/maven/reporting/maven-reporting-impl/4.0.0/maven-reporting-impl-4.0.0.pom"
+        }
+    ],
+    "dependencies": [
+        "*:*:native/bash",
+        "*:*:native/coreutils",
+        "*:*:native/findutils",
+        "*:*:native/jdk@22",
+        "*:*:native/maven@3.9-bin",
+        "*:*:native/jdk@22/bootstrap-maven/pom/maven-shared-components@43",
+        "*:*:native/jdk@22/bootstrap-maven/maven-reporting-api@4.0.0",
+        "*:*:native/jdk@22/bootstrap-maven/maven-shared-utils@3.4.2",
+        "*:*:native/jdk@22/bootstrap-maven/doxia-sink-api@2.0.0",
+        "*:*:native/jdk@22/bootstrap-maven/doxia-site-model@2.0.0",
+        "*:*:native/jdk@22/bootstrap-maven/doxia-core@2.0.0",
+        "*:*:native/jdk@22/bootstrap-maven/doxia-integration-tools@2.0.0",
+        "*:*:native/jdk@22/bootstrap-maven/doxia-site-renderer@2.0.0",
+        "*:*:native/jdk@22/bootstrap-maven/doxia-module-xhtml5@2.0.0",
+        "*:*:native/jdk@22/bootstrap-maven/plexus-utils@4.0.2",
+        "*:*:native/jdk@22/bootstrap-maven/maven-archiver@3.6.2",
+        "*:*:native/jdk@22/bootstrap-maven/maven-resolver@1.9.23",
+        "*:*:native/jdk@22/bootstrap-maven/maven-plugin-annotations@3.15.2"
+    ],
+    "build": {
+        "env": [
+            "*:*:WORKDIR=build/maven-reporting-impl@4.0.0",
+            "*:*:REPO=$NATIVEPREFIX/share/maven/repository",
+            "*:*:BOOT_LIB=$NATIVEPREFIX/maven-3.9-bootstrap/lib"
+        ],
+        "steps": [
+            "*:*:mkdir -p $WORKDIR",
+            "*:*:find src/main/java -name '*.java' >$WORKDIR/sources",
+            "*:*:$JAVA_HOME/bin/javac -cp $(printf '%s:' $BOOT_LIB/*.jar)$REPO/org/apache/maven/reporting/maven-reporting-api/4.0.0/maven-reporting-api-4.0.0.jar:$REPO/org/apache/maven/shared/maven-shared-utils/3.4.2/maven-shared-utils-3.4.2.jar:$REPO/org/apache/maven/doxia/doxia-sink-api/2.0.0/doxia-sink-api-2.0.0.jar:$REPO/org/apache/maven/doxia/doxia-site-model/2.0.0/doxia-site-model-2.0.0.jar:$REPO/org/apache/maven/doxia/doxia-core/2.0.0/doxia-core-2.0.0.jar:$REPO/org/apache/maven/doxia/doxia-integration-tools/2.0.0/doxia-integration-tools-2.0.0.jar:$REPO/org/apache/maven/doxia/doxia-site-renderer/2.0.0/doxia-site-renderer-2.0.0.jar:$REPO/org/apache/maven/doxia/doxia-module-xhtml5/2.0.0/doxia-module-xhtml5-2.0.0.jar:$REPO/org/codehaus/plexus/plexus-utils/4.0.2/plexus-utils-4.0.2.jar:$REPO/org/apache/maven/maven-archiver/3.6.2/maven-archiver-3.6.2.jar:$REPO/org/apache/maven/resolver/maven-resolver-api/1.9.23/maven-resolver-api-1.9.23.jar:$REPO/org/apache/maven/plugin-tools/maven-plugin-annotations/3.15.2/maven-plugin-annotations-3.15.2.jar -d $WORKDIR/classes @$WORKDIR/sources",
+            "*:*:$JAVA_HOME/bin/jar cf $WORKDIR/maven-reporting-impl-4.0.0.jar -C $WORKDIR/classes .",
+            "*:*:mkdir -p $STAGING_DIR$NATIVEPREFIX/share/maven/repository/org/apache/maven/reporting/maven-reporting-impl/4.0.0",
+            "*:*:cp $WORKDIR/maven-reporting-impl-4.0.0.jar $STAGING_DIR$NATIVEPREFIX/share/maven/repository/org/apache/maven/reporting/maven-reporting-impl/4.0.0/maven-reporting-impl-4.0.0.jar",
+            "*:*:cp maven-reporting-impl-4.0.0.pom $STAGING_DIR$NATIVEPREFIX/share/maven/repository/org/apache/maven/reporting/maven-reporting-impl/4.0.0/maven-reporting-impl-4.0.0.pom"
+        ]
+    }
+}

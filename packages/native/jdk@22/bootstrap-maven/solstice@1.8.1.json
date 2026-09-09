@@ -1,0 +1,48 @@
+{
+    "package": "native/jdk@22/bootstrap-maven/solstice@1.8.1",
+    "version": "1.8.1",
+    "type": "native",
+    "download": [
+        {
+            "kind": "git",
+            "sha256": "fc409fd5517a32ffe6dd54827322c470d9320224",
+            "url": "https://github.com/equodev/equo-ide.git"
+        },
+        {
+            "kind": "blob",
+            "path": "./solstice-1.8.1.pom",
+            "sha256": "6ab4a8ecae2abbd36b919d0b9b9fb24c177148f13e5364c97a0c6ee11a3fc426",
+            "url": "https://repo1.maven.org/maven2/dev/equo/ide/solstice/1.8.1/solstice-1.8.1.pom"
+        }
+    ],
+    "dependencies": [
+        "*:*:native/bash",
+        "*:*:native/coreutils",
+        "*:*:native/findutils",
+        "*:*:native/jdk@22",
+        "*:*:native/jdk@22/bootstrap-maven/slf4j-api@1.7.36",
+        "*:*:native/jdk@22/bootstrap-maven/durian-swt.os@4.3.0",
+        "*:*:native/jdk@22/bootstrap-maven/org.eclipse.osgi@3.24.100",
+        "*:*:native/jdk@22/bootstrap-maven/xz@1.9",
+        "*:*:native/jdk@22/bootstrap-maven/jsr305@3.0.2",
+        "*:*:native/jdk@22/bootstrap-maven/okhttp@4.12.0",
+        "*:*:native/jdk@22/bootstrap-maven/okio@1.17.2",
+        "*:*:native/sed"
+    ],
+    "build": {
+        "env": [
+            "*:*:WORKDIR=build/solstice@1.8.1",
+            "*:*:REPO=$NATIVEPREFIX/share/maven/repository"
+        ],
+        "steps": [
+            "*:*:mkdir -p $WORKDIR",
+            "*:*:find solstice/src/main/java/dev/equo/solstice/p2 solstice/src/main/java/dev/equo/solstice/NestedJars.java solstice/src/main/java/dev/equo/solstice/Unchecked.java solstice/src/main/java/dev/equo/solstice/SignedJars.java solstice/src/main/java/dev/equo/solstice/SolsticeManifest.java solstice/src/main/java/dev/equo/solstice/Unimplemented.java solstice/src/main/java/dev/equo/solstice/Capability.java solstice/src/main/java/dev/equo/solstice/SerializableMisc.java -name '*.java' >$WORKDIR/sources",
+            "*:*:find solstice/src/main/java/dev/equo/solstice/p2 solstice/src/main/java/dev/equo/solstice -maxdepth 1 -name '*.java' -exec sed -i -e '/import org.jetbrains.annotations/d' -e 's/@NotNull //g' -e 's/@Nullable//g' {} +",
+            "*:*:$JAVA_HOME/bin/javac -cp $REPO/org/slf4j/slf4j-api/1.7.36/slf4j-api-1.7.36.jar:$REPO/com/diffplug/durian/durian-swt.os/4.3.0/durian-swt.os-4.3.0.jar:$REPO/org/eclipse/platform/org.eclipse.osgi/3.24.100/org.eclipse.osgi-3.24.100.jar:$REPO/org/tukaani/xz/1.9/xz-1.9.jar:$REPO/com/google/code/findbugs/jsr305/3.0.2/jsr305-3.0.2.jar:$REPO/com/squareup/okhttp3/okhttp/4.12.0/okhttp-4.12.0.jar:$REPO/com/squareup/okio/okio/1.17.2/okio-1.17.2.jar -d $WORKDIR/classes @$WORKDIR/sources",
+            "*:*:$JAVA_HOME/bin/jar cf $WORKDIR/solstice-1.8.1.jar -C $WORKDIR/classes .",
+            "*:*:mkdir -p $STAGING_DIR$NATIVEPREFIX/share/maven/repository/dev/equo/ide/solstice/1.8.1",
+            "*:*:cp $WORKDIR/solstice-1.8.1.jar $STAGING_DIR$NATIVEPREFIX/share/maven/repository/dev/equo/ide/solstice/1.8.1/solstice-1.8.1.jar",
+            "*:*:cp solstice-1.8.1.pom $STAGING_DIR$NATIVEPREFIX/share/maven/repository/dev/equo/ide/solstice/1.8.1/solstice-1.8.1.pom"
+        ]
+    }
+}

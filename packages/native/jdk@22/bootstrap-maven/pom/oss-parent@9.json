@@ -1,0 +1,22 @@
+{
+    "package": "native/jdk@22/bootstrap-maven/pom/oss-parent@9",
+    "version": "9",
+    "type": "native",
+    "download": [
+        {
+            "kind": "blob",
+            "path": "./oss-parent-9.pom",
+            "sha256": "fb40265f982548212ff82e362e59732b2187ec6f0d80182885c14ef1f982827a",
+            "url": "https://repo1.maven.org/maven2/org/sonatype/oss/oss-parent/9/oss-parent-9.pom"
+        }
+    ],
+    "dependencies": [
+        "*:*:native/coreutils"
+    ],
+    "build": {
+        "steps": [
+            "*:*:mkdir -p $STAGING_DIR$NATIVEPREFIX/share/maven/repository/org/sonatype/oss/oss-parent/9",
+            "*:*:cp oss-parent-9.pom $STAGING_DIR$NATIVEPREFIX/share/maven/repository/org/sonatype/oss/oss-parent/9/oss-parent-9.pom"
+        ]
+    }
+}

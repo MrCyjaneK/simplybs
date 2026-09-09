@@ -1,0 +1,22 @@
+{
+    "package": "native/jdk@22/bootstrap-maven/pom/antlr4-master@4.9.3",
+    "version": "4.9.3",
+    "type": "native",
+    "download": [
+        {
+            "kind": "blob",
+            "path": "./antlr4-master-4.9.3.pom",
+            "sha256": "565cc054d3badf50ca0a0717dae311268a2d6709fdddc90ac4a43c62d01935b9",
+            "url": "https://repo1.maven.org/maven2/org/antlr/antlr4-master/4.9.3/antlr4-master-4.9.3.pom"
+        }
+    ],
+    "dependencies": [
+        "*:*:native/coreutils"
+    ],
+    "build": {
+        "steps": [
+            "*:*:mkdir -p $STAGING_DIR$NATIVEPREFIX/share/maven/repository/org/antlr/antlr4-master/4.9.3",
+            "*:*:cp antlr4-master-4.9.3.pom $STAGING_DIR$NATIVEPREFIX/share/maven/repository/org/antlr/antlr4-master/4.9.3/antlr4-master-4.9.3.pom"
+        ]
+    }
+}

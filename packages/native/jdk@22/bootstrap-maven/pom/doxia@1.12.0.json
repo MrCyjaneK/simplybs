@@ -1,0 +1,22 @@
+{
+    "package": "native/jdk@22/bootstrap-maven/pom/doxia@1.12.0",
+    "version": "1.12.0",
+    "type": "native",
+    "download": [
+        {
+            "kind": "blob",
+            "path": "./doxia-1.12.0.pom",
+            "sha256": "2d02a0bd64f331b767cee7455b3193c6fb82110143a119858abc968798a5fc29",
+            "url": "https://repo1.maven.org/maven2/org/apache/maven/doxia/doxia/1.12.0/doxia-1.12.0.pom"
+        }
+    ],
+    "dependencies": [
+        "*:*:native/coreutils"
+    ],
+    "build": {
+        "steps": [
+            "*:*:mkdir -p $STAGING_DIR$NATIVEPREFIX/share/maven/repository/org/apache/maven/doxia/doxia/1.12.0",
+            "*:*:cp doxia-1.12.0.pom $STAGING_DIR$NATIVEPREFIX/share/maven/repository/org/apache/maven/doxia/doxia/1.12.0/doxia-1.12.0.pom"
+        ]
+    }
+}

@@ -1,0 +1,56 @@
+{
+    "package": "native/jdk@22/bootstrap-maven/org.eclipse.sisu.plexus@1.0.0",
+    "version": "1.0.0",
+    "type": "native",
+    "download": [
+        {
+            "kind": "git",
+            "sha256": "4e6a00efdf39bcc37362197d96582cd9a9c41a7d",
+            "url": "https://github.com/eclipse-sisu/sisu-project.git"
+        }
+    ],
+    "dependencies": [
+        "*:*:native/bash",
+        "*:*:native/coreutils",
+        "*:*:native/findutils",
+        "*:*:native/sed",
+        "*:*:native/jdk@22",
+        "*:*:native/maven@3.9-bin",
+        "*:*:native/jdk@22/bootstrap-maven/org.eclipse.sisu.inject@1.0.0",
+        "*:*:native/jdk@22/bootstrap-maven/guice@4.0",
+        "*:*:native/jdk@22/bootstrap-maven/javax.inject@1",
+        "*:*:native/jdk@22/bootstrap-maven/slf4j-api@1.7.36",
+        "*:*:native/jdk@22/bootstrap-maven/slf4j-nop@1.7.36",
+        "*:*:native/jdk@22/bootstrap-maven/plexus-component-annotations@2.2.0",
+        "*:*:native/jdk@22/bootstrap-maven/plexus-classworlds@2.11.0",
+        "*:*:native/jdk@22/bootstrap-maven/plexus-utils@3.6.0",
+        "*:*:native/jdk@22/bootstrap-maven/plexus-build-api@1.2.0",
+        "*:*:native/jdk@22/bootstrap-maven/maven-common-artifact-filters@3.4.0",
+        "*:*:native/jdk@22/bootstrap-maven/maven-plugin-annotations@3.15.2",
+        "*:*:native/jdk@22/bootstrap-maven/maven-plugin-tools-generators@3.15.2"
+    ],
+    "build": {
+        "env": [
+            "*:*:WORKDIR=work/org.eclipse.sisu.plexus@1.0.0",
+            "*:*:REPO=$NATIVEPREFIX/share/maven/repository",
+            "*:*:BOOT_LIB=$NATIVEPREFIX/maven-3.9-bootstrap/lib"
+        ],
+        "steps": [
+            "*:*:mkdir -p $WORKDIR",
+            "*:*:find org.eclipse.sisu.plexus/src/main/java -name '*.java' ! -name 'PlexusBundlePlan.java' ! -name 'PlexusTestCase.java' >$WORKDIR/plexus.sources",
+            "*:*:$JAVA_HOME/bin/javac --release 8 -cp $REPO/org/eclipse/sisu/org.eclipse.sisu.inject/1.0.0/org.eclipse.sisu.inject-1.0.0.jar:$REPO/com/google/inject/guice/4.0/guice-4.0.jar:$REPO/javax/inject/javax.inject/1/javax.inject-1.jar:$REPO/org/slf4j/slf4j-api/1.7.36/slf4j-api-1.7.36.jar:$REPO/org/codehaus/plexus/plexus-component-annotations/2.2.0/plexus-component-annotations-2.2.0.jar:$REPO/org/codehaus/plexus/plexus-classworlds/2.11.0/plexus-classworlds-2.11.0.jar:$REPO/org/codehaus/plexus/plexus-utils/3.6.0/plexus-utils-3.6.0.jar -d $WORKDIR/plexus @$WORKDIR/plexus.sources",
+            "*:*:$JAVA_HOME/bin/jar cf $WORKDIR/org.eclipse.sisu.plexus-1.0.0.jar -C $WORKDIR/plexus .",
+            "*:*:mkdir -p $STAGING_DIR$NATIVEPREFIX/share/maven/repository/org/eclipse/sisu/org.eclipse.sisu.plexus/1.0.0",
+            "*:*:cp $WORKDIR/org.eclipse.sisu.plexus-1.0.0.jar $STAGING_DIR$NATIVEPREFIX/share/maven/repository/org/eclipse/sisu/org.eclipse.sisu.plexus/1.0.0/org.eclipse.sisu.plexus-1.0.0.jar",
+            "*:*:cp org.eclipse.sisu.plexus/pom.xml $STAGING_DIR$NATIVEPREFIX/share/maven/repository/org/eclipse/sisu/org.eclipse.sisu.plexus/1.0.0/org.eclipse.sisu.plexus-1.0.0.pom",
+            "*:*:mkdir -p $WORKDIR/pluginxml/META-INF/maven",
+            "*:*:find org.eclipse.sisu.mojos/src/main/java -name '*.java' >$WORKDIR/plugin.sources",
+            "*:*:$JAVA_HOME/bin/javac --release 8 -cp $(printf '%s:' $BOOT_LIB/*.jar)$REPO/org/eclipse/sisu/org.eclipse.sisu.inject/1.0.0/org.eclipse.sisu.inject-1.0.0.jar:$REPO/org/slf4j/slf4j-api/1.7.36/slf4j-api-1.7.36.jar:$REPO/org/slf4j/slf4j-nop/1.7.36/slf4j-nop-1.7.36.jar:$REPO/org/apache/maven/plugin-tools/maven-plugin-annotations/3.15.2/maven-plugin-annotations-3.15.2.jar:$REPO/org/apache/maven/shared/maven-common-artifact-filters/3.4.0/maven-common-artifact-filters-3.4.0.jar:$REPO/org/codehaus/plexus/plexus-utils/3.6.0/plexus-utils-3.6.0.jar:$REPO/org/codehaus/plexus/plexus-build-api/1.2.0/plexus-build-api-1.2.0.jar -d $WORKDIR/plugin @$WORKDIR/plugin.sources",
+            "*:*:$JAVA_HOME/bin/java -cp $PLUGINXML_JAR:$(printf '%s:' $BOOT_LIB/*.jar) org.apache.maven.tools.plugin.generator.GeneratePluginXml org.eclipse.sisu sisu-maven-plugin 1.0.0 sisu $WORKDIR/plugin $WORKDIR/pluginxml/META-INF/maven $(printf '%s:' $BOOT_LIB/*.jar)$REPO/org/eclipse/sisu/org.eclipse.sisu.inject/1.0.0/org.eclipse.sisu.inject-1.0.0.jar:$REPO/org/slf4j/slf4j-api/1.7.36/slf4j-api-1.7.36.jar:$REPO/org/slf4j/slf4j-nop/1.7.36/slf4j-nop-1.7.36.jar:$REPO/org/apache/maven/plugin-tools/maven-plugin-annotations/3.15.2/maven-plugin-annotations-3.15.2.jar:$REPO/org/apache/maven/shared/maven-common-artifact-filters/3.4.0/maven-common-artifact-filters-3.4.0.jar:$REPO/org/codehaus/plexus/plexus-utils/3.6.0/plexus-utils-3.6.0.jar:$REPO/org/codehaus/plexus/plexus-build-api/1.2.0/plexus-build-api-1.2.0.jar",
+            "*:*:$JAVA_HOME/bin/jar cf $WORKDIR/sisu-maven-plugin-1.0.0.jar -C $WORKDIR/plugin . -C $WORKDIR/pluginxml .",
+            "*:*:mkdir -p $STAGING_DIR$NATIVEPREFIX/share/maven/repository/org/eclipse/sisu/sisu-maven-plugin/1.0.0",
+            "*:*:cp $WORKDIR/sisu-maven-plugin-1.0.0.jar $STAGING_DIR$NATIVEPREFIX/share/maven/repository/org/eclipse/sisu/sisu-maven-plugin/1.0.0/sisu-maven-plugin-1.0.0.jar",
+            "*:*:cp org.eclipse.sisu.mojos/pom.xml $STAGING_DIR$NATIVEPREFIX/share/maven/repository/org/eclipse/sisu/sisu-maven-plugin/1.0.0/sisu-maven-plugin-1.0.0.pom"
+        ]
+    }
+}

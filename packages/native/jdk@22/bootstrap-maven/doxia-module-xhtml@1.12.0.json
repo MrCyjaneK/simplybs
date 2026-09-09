@@ -1,0 +1,39 @@
+{
+    "package": "native/jdk@22/bootstrap-maven/doxia-module-xhtml@1.12.0",
+    "version": "1.12.0",
+    "type": "native",
+    "download": [
+        {
+            "kind": "git",
+            "sha256": "281dc2c380cc14ba758d693c5b463186c53c2fb5",
+            "url": "https://github.com/apache/maven-doxia.git"
+        }
+    ],
+    "dependencies": [
+        "*:*:native/bash",
+        "*:*:native/coreutils",
+        "*:*:native/findutils",
+        "*:*:native/jdk@22",
+        "*:*:native/jdk@22/bootstrap-maven/pom/doxia-modules@1.12.0",
+        "*:*:native/jdk@22/bootstrap-maven/doxia-core@1.12.0",
+        "*:*:native/jdk@22/bootstrap-maven/doxia-sink-api@1.12.0",
+        "*:*:native/jdk@22/bootstrap-maven/doxia-logging-api@1.12.0",
+        "*:*:native/jdk@22/bootstrap-maven/plexus-utils@3.5.1",
+        "*:*:native/jdk@22/bootstrap-maven/plexus-component-annotations@2.1.0"
+    ],
+    "build": {
+        "env": [
+            "*:*:WORKDIR=build/doxia-module-xhtml@1.12.0",
+            "*:*:REPO=$NATIVEPREFIX/share/maven/repository"
+        ],
+        "steps": [
+            "*:*:mkdir -p $WORKDIR",
+            "*:*:find doxia-modules/doxia-module-xhtml/src/main/java -name '*.java' >$WORKDIR/sources",
+            "*:*:$JAVA_HOME/bin/javac -cp $REPO/org/apache/maven/doxia/doxia-sink-api/1.12.0/doxia-sink-api-1.12.0.jar:$REPO/org/apache/maven/doxia/doxia-core/1.12.0/doxia-core-1.12.0.jar:$REPO/org/apache/maven/doxia/doxia-logging-api/1.12.0/doxia-logging-api-1.12.0.jar:$REPO/org/codehaus/plexus/plexus-utils/3.5.1/plexus-utils-3.5.1.jar:$REPO/org/codehaus/plexus/plexus-component-annotations/2.1.0/plexus-component-annotations-2.1.0.jar -d $WORKDIR/classes @$WORKDIR/sources",
+            "*:*:$JAVA_HOME/bin/jar cf $WORKDIR/doxia-module-xhtml-1.12.0.jar -C $WORKDIR/classes .",
+            "*:*:mkdir -p $STAGING_DIR$NATIVEPREFIX/share/maven/repository/org/apache/maven/doxia/doxia-module-xhtml/1.12.0",
+            "*:*:cp $WORKDIR/doxia-module-xhtml-1.12.0.jar $STAGING_DIR$NATIVEPREFIX/share/maven/repository/org/apache/maven/doxia/doxia-module-xhtml/1.12.0/doxia-module-xhtml-1.12.0.jar",
+            "*:*:cp doxia-modules/doxia-module-xhtml/pom.xml $STAGING_DIR$NATIVEPREFIX/share/maven/repository/org/apache/maven/doxia/doxia-module-xhtml/1.12.0/doxia-module-xhtml-1.12.0.pom"
+        ]
+    }
+}

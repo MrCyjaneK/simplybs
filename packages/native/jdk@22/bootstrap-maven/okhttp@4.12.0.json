@@ -1,0 +1,47 @@
+{
+    "package": "native/jdk@22/bootstrap-maven/okhttp@4.12.0",
+    "version": "4.12.0",
+    "type": "native",
+    "download": [
+        {
+            "kind": "git",
+            "sha256": "ad97bd3df34376eec85aa187dc8f45cfde8a2c01",
+            "url": "https://github.com/square/okhttp.git"
+        },
+        {
+            "kind": "blob",
+            "path": "./okhttp-4.12.0.pom",
+            "sha256": "7c737040a9419522e7c50cc027416a70fe7c7629e52b219935ade6b4119c7d38",
+            "url": "https://repo1.maven.org/maven2/com/squareup/okhttp3/okhttp/4.12.0/okhttp-4.12.0.pom"
+        }
+    ],
+    "dependencies": [
+        "*:*:native/bash",
+        "*:*:native/coreutils",
+        "*:*:native/findutils",
+        "*:*:native/jdk@22",
+        "*:*:native/jdk@22/bootstrap-maven/okio@1.17.2",
+        "*:*:native/jdk@22/bootstrap-maven/jsr305@3.0.2",
+        "*:*:native/jdk@22/bootstrap-maven/animal-sniffer-annotations@1.20"
+    ],
+    "build": {
+        "env": [
+            "*:*:WORKDIR=build/okhttp@4.12.0",
+            "*:*:REPO=$NATIVEPREFIX/share/maven/repository"
+        ],
+        "steps": [
+            "*:*:mkdir -p $WORKDIR/classes $WORKDIR/gen/okhttp3/internal $WORKDIR/srcstub/okhttp3/internal/platform",
+            "*:*:printf '%s\\n' 'package okhttp3.internal; public final class Version { public static String userAgent() { return \"okhttp/4.12.0\"; } private Version() {} }' >$WORKDIR/gen/okhttp3/internal/Version.java",
+            "*:*:printf '%s\\n' 'package okhttp3.internal.platform; class AndroidPlatform { static Platform buildIfSupported() { return null; } }' >$WORKDIR/srcstub/okhttp3/internal/platform/AndroidPlatform.java",
+            "*:*:printf '%s\\n' 'package okhttp3.internal.platform; class Android10Platform { static Platform buildIfSupported() { return null; } }' >$WORKDIR/srcstub/okhttp3/internal/platform/Android10Platform.java",
+            "*:*:printf '%s\\n' 'package okhttp3.internal.platform; class ConscryptPlatform { static Platform buildIfSupported() { return null; } }' >$WORKDIR/srcstub/okhttp3/internal/platform/ConscryptPlatform.java",
+            "*:*:find okhttp/src/main/java -name '*.java' ! -name 'Android*.java' ! -name 'ConscryptPlatform.java' >$WORKDIR/sources",
+            "*:*:find $WORKDIR/gen $WORKDIR/srcstub -name '*.java' >>$WORKDIR/sources",
+            "*:*:$JAVA_HOME/bin/javac -cp $REPO/com/squareup/okio/okio/1.17.2/okio-1.17.2.jar:$REPO/com/google/code/findbugs/jsr305/3.0.2/jsr305-3.0.2.jar:$REPO/org/codehaus/mojo/animal-sniffer-annotations/1.20/animal-sniffer-annotations-1.20.jar -d $WORKDIR/classes @$WORKDIR/sources",
+            "*:*:$JAVA_HOME/bin/jar cf $WORKDIR/okhttp-4.12.0.jar -C $WORKDIR/classes .",
+            "*:*:mkdir -p $STAGING_DIR$NATIVEPREFIX/share/maven/repository/com/squareup/okhttp3/okhttp/4.12.0",
+            "*:*:cp $WORKDIR/okhttp-4.12.0.jar $STAGING_DIR$NATIVEPREFIX/share/maven/repository/com/squareup/okhttp3/okhttp/4.12.0/okhttp-4.12.0.jar",
+            "*:*:cp okhttp-4.12.0.pom $STAGING_DIR$NATIVEPREFIX/share/maven/repository/com/squareup/okhttp3/okhttp/4.12.0/okhttp-4.12.0.pom"
+        ]
+    }
+}

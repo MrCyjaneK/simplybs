@@ -1,0 +1,22 @@
+{
+    "package": "native/jdk@22/bootstrap-maven/pom/maven-plugins@47",
+    "version": "47",
+    "type": "native",
+    "download": [
+        {
+            "kind": "blob",
+            "path": "./maven-plugins-47.pom",
+            "sha256": "58ddbb8e429cb5e9054c2f5f7b7cdfeb7adbcdfda21d92b67f67fa2b94edf982",
+            "url": "https://repo1.maven.org/maven2/org/apache/maven/plugins/maven-plugins/47/maven-plugins-47.pom"
+        }
+    ],
+    "dependencies": [
+        "*:*:native/coreutils"
+    ],
+    "build": {
+        "steps": [
+            "*:*:mkdir -p $STAGING_DIR$NATIVEPREFIX/share/maven/repository/org/apache/maven/plugins/maven-plugins/47",
+            "*:*:cp maven-plugins-47.pom $STAGING_DIR$NATIVEPREFIX/share/maven/repository/org/apache/maven/plugins/maven-plugins/47/maven-plugins-47.pom"
+        ]
+    }
+}

@@ -1,0 +1,40 @@
+{
+    "package": "native/jdk@22/bootstrap-maven/slf4j-api@2.0.17",
+    "version": "2.0.17",
+    "type": "native",
+    "download": [
+        {
+            "kind": "git",
+            "sha256": "c233ea1932228a7fc580823289f896e97ba8a74d",
+            "url": "https://github.com/qos-ch/slf4j.git"
+        },
+        {
+            "kind": "blob",
+            "path": "./slf4j-api-2.0.17.pom",
+            "sha256": "150c40287f7cecdc21b9380caac98e928c4f33c023db6b348df1c5ac977026bf",
+            "url": "https://repo1.maven.org/maven2/org/slf4j/slf4j-api/2.0.17/slf4j-api-2.0.17.pom"
+        }
+    ],
+    "dependencies": [
+        "*:*:native/bash",
+        "*:*:native/coreutils",
+        "*:*:native/findutils",
+        "*:*:native/jdk@22",
+        "*:*:native/jdk@22/bootstrap-maven/pom/slf4j-parent@2.0.17"
+    ],
+    "build": {
+        "env": [
+            "*:*:WORKDIR=build/slf4j-api@2.0.17"
+        ],
+        "steps": [
+            "*:*:mkdir -p $WORKDIR",
+            "*:*:find slf4j-api/src/main/java -name '*.java' ! -name 'module-info.java' >$WORKDIR/sources",
+            "*:*:$JAVA_HOME/bin/javac -d $WORKDIR/classes @$WORKDIR/sources",
+            "*:*:rm -rf $WORKDIR/classes/org/slf4j/impl",
+            "*:*:$JAVA_HOME/bin/jar cf $WORKDIR/slf4j-api-2.0.17.jar -C $WORKDIR/classes .",
+            "*:*:mkdir -p $STAGING_DIR$NATIVEPREFIX/share/maven/repository/org/slf4j/slf4j-api/2.0.17",
+            "*:*:cp $WORKDIR/slf4j-api-2.0.17.jar $STAGING_DIR$NATIVEPREFIX/share/maven/repository/org/slf4j/slf4j-api/2.0.17/slf4j-api-2.0.17.jar",
+            "*:*:cp slf4j-api-2.0.17.pom $STAGING_DIR$NATIVEPREFIX/share/maven/repository/org/slf4j/slf4j-api/2.0.17/slf4j-api-2.0.17.pom"
+        ]
+    }
+}

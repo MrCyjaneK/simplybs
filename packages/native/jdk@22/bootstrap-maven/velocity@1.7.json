@@ -1,0 +1,39 @@
+{
+    "package": "native/jdk@22/bootstrap-maven/velocity@1.7",
+    "version": "1.7",
+    "type": "native",
+    "download": [
+        {
+            "kind": "git",
+            "sha256": "e0383483e1b0ab37874e09f31e71bf01143f8238",
+            "url": "https://github.com/apache/velocity-engine.git"
+        }
+    ],
+    "dependencies": [
+        "*:*:native/bash",
+        "*:*:native/coreutils",
+        "*:*:native/findutils",
+        "*:*:native/jdk@22",
+        "*:*:native/jdk@22/bootstrap-maven/pom/apache@4",
+        "*:*:native/jdk@22/bootstrap-maven/commons-collections@3.2.2",
+        "*:*:native/jdk@22/bootstrap-maven/commons-lang@2.4",
+        "*:*:native/jdk@22/bootstrap-maven/oro@2.0.8"
+    ],
+    "build": {
+        "env": [
+            "*:*:WORKDIR=work/velocity@1.7",
+            "*:*:REPO=$NATIVEPREFIX/share/maven/repository"
+        ],
+        "steps": [
+            "*:*:mkdir -p $WORKDIR",
+            "*:*:find src/java -name '*.java' ! -path '*/anakia/*' ! -path '*/texen/*' ! -path '*/servlet/*' ! -path '*/convert/*' ! -name 'Anakia*' ! -name 'VelocityServlet.java' ! -name 'Log4JLogChute.java' ! -name 'AvalonLogChute.java' ! -name 'ServletLogChute.java' ! -name 'CommonsLogLogChute.java' ! -name 'SimpleLog4JLogSystem.java' ! -name 'Log4JLogSystem.java' ! -name 'AvalonLogSystem.java' ! -name 'VelocityFormatter.java' >$WORKDIR/sources",
+            "*:*:$JAVA_HOME/bin/javac --release 8 -cp $REPO/commons-collections/commons-collections/3.2.2/commons-collections-3.2.2.jar:$REPO/commons-lang/commons-lang/2.4/commons-lang-2.4.jar:$REPO/oro/oro/2.0.8/oro-2.0.8.jar -d $WORKDIR/classes @$WORKDIR/sources",
+            "*:*:mkdir -p $WORKDIR/classes/org/apache/velocity/runtime/defaults",
+            "*:*:cp src/java/org/apache/velocity/runtime/defaults/*.properties $WORKDIR/classes/org/apache/velocity/runtime/defaults/",
+            "*:*:$JAVA_HOME/bin/jar cf $WORKDIR/velocity-1.7.jar -C $WORKDIR/classes .",
+            "*:*:mkdir -p $STAGING_DIR$NATIVEPREFIX/share/maven/repository/org/apache/velocity/velocity/1.7",
+            "*:*:cp $WORKDIR/velocity-1.7.jar $STAGING_DIR$NATIVEPREFIX/share/maven/repository/org/apache/velocity/velocity/1.7/velocity-1.7.jar",
+            "*:*:cp pom.xml $STAGING_DIR$NATIVEPREFIX/share/maven/repository/org/apache/velocity/velocity/1.7/velocity-1.7.pom"
+        ]
+    }
+}

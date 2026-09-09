@@ -1,0 +1,67 @@
+{
+    "package": "native/jdk@22/bootstrap-maven/durian-core@1.2.0",
+    "version": "1.2.0",
+    "type": "native",
+    "download": [
+        {
+            "kind": "git",
+            "sha256": "0eb48436f140cc1797b28328551a13ffeb6c3f39",
+            "url": "https://github.com/diffplug/durian.git"
+        },
+        {
+            "kind": "blob",
+            "path": "./durian-core-1.2.0.pom",
+            "sha256": "870320e90755371b01796fe81ba525fd1dee8b70346f554551eedd4289f0b662",
+            "url": "https://repo1.maven.org/maven2/com/diffplug/durian/durian-core/1.2.0/durian-core-1.2.0.pom"
+        },
+        {
+            "kind": "blob",
+            "path": "./durian-io-1.2.0.pom",
+            "sha256": "350919424324e2750a3ddc2fa1bce6a90ac8ce2925698a60a9b4d1d6e4922ffe",
+            "url": "https://repo1.maven.org/maven2/com/diffplug/durian/durian-io/1.2.0/durian-io-1.2.0.pom"
+        },
+        {
+            "kind": "blob",
+            "path": "./durian-collect-1.2.0.pom",
+            "sha256": "8bb762086a0a4fd2a6473bbf905c744763afa1d59a5630f73bb04b7872c09ff3",
+            "url": "https://repo1.maven.org/maven2/com/diffplug/durian/durian-collect/1.2.0/durian-collect-1.2.0.pom"
+        }
+    ],
+    "dependencies": [
+        "*:*:native/bash",
+        "*:*:native/coreutils",
+        "*:*:native/findutils",
+        "*:*:native/jdk@22",
+        "*:*:native/jdk@22/bootstrap-maven/animal-sniffer-annotations@1.20",
+        "*:*:native/jdk@22/bootstrap-maven/j2objc-annotations@1.3",
+        "*:*:native/jdk@22/bootstrap-maven/jsr305@3.0.2",
+        "*:*:native/jdk@22/bootstrap-maven/annotations@3.0.0"
+    ],
+    "build": {
+        "env": [
+            "*:*:WORKDIR=build/durian-core@1.2.0",
+            "*:*:REPO=$NATIVEPREFIX/share/maven/repository"
+        ],
+        "steps": [
+            "*:*:mkdir -p $WORKDIR",
+            "*:*:find core/sources -name '*.java' >$WORKDIR/core.sources",
+            "*:*:$JAVA_HOME/bin/javac --add-exports jdk.unsupported/sun.misc=ALL-UNNAMED -cp $REPO/org/codehaus/mojo/animal-sniffer-annotations/1.20/animal-sniffer-annotations-1.20.jar:$REPO/com/google/j2objc/j2objc-annotations/1.3/j2objc-annotations-1.3.jar:$REPO/com/google/code/findbugs/jsr305/3.0.2/jsr305-3.0.2.jar:$REPO/com/google/code/findbugs/annotations/3.0.0/annotations-3.0.0.jar -d $WORKDIR/core @$WORKDIR/core.sources",
+            "*:*:$JAVA_HOME/bin/jar cf $WORKDIR/durian-core-1.2.0.jar -C $WORKDIR/core .",
+            "*:*:mkdir -p $STAGING_DIR$NATIVEPREFIX/share/maven/repository/com/diffplug/durian/durian-core/1.2.0",
+            "*:*:cp $WORKDIR/durian-core-1.2.0.jar $STAGING_DIR$NATIVEPREFIX/share/maven/repository/com/diffplug/durian/durian-core/1.2.0/durian-core-1.2.0.jar",
+            "*:*:cp durian-core-1.2.0.pom $STAGING_DIR$NATIVEPREFIX/share/maven/repository/com/diffplug/durian/durian-core/1.2.0/durian-core-1.2.0.pom",
+            "*:*:find collect/sources -name '*.java' >$WORKDIR/collect.sources",
+            "*:*:$JAVA_HOME/bin/javac --release 8 -cp $WORKDIR/durian-core-1.2.0.jar:$REPO/org/codehaus/mojo/animal-sniffer-annotations/1.20/animal-sniffer-annotations-1.20.jar:$REPO/com/google/j2objc/j2objc-annotations/1.3/j2objc-annotations-1.3.jar:$REPO/com/google/code/findbugs/jsr305/3.0.2/jsr305-3.0.2.jar:$REPO/com/google/code/findbugs/annotations/3.0.0/annotations-3.0.0.jar -d $WORKDIR/collect @$WORKDIR/collect.sources",
+            "*:*:$JAVA_HOME/bin/jar cf $WORKDIR/durian-collect-1.2.0.jar -C $WORKDIR/collect .",
+            "*:*:mkdir -p $STAGING_DIR$NATIVEPREFIX/share/maven/repository/com/diffplug/durian/durian-collect/1.2.0",
+            "*:*:cp $WORKDIR/durian-collect-1.2.0.jar $STAGING_DIR$NATIVEPREFIX/share/maven/repository/com/diffplug/durian/durian-collect/1.2.0/durian-collect-1.2.0.jar",
+            "*:*:cp durian-collect-1.2.0.pom $STAGING_DIR$NATIVEPREFIX/share/maven/repository/com/diffplug/durian/durian-collect/1.2.0/durian-collect-1.2.0.pom",
+            "*:*:find io/sources -name '*.java' >$WORKDIR/io.sources",
+            "*:*:$JAVA_HOME/bin/javac --release 8 -cp $WORKDIR/durian-core-1.2.0.jar:$WORKDIR/durian-collect-1.2.0.jar:$REPO/org/codehaus/mojo/animal-sniffer-annotations/1.20/animal-sniffer-annotations-1.20.jar:$REPO/com/google/j2objc/j2objc-annotations/1.3/j2objc-annotations-1.3.jar:$REPO/com/google/code/findbugs/jsr305/3.0.2/jsr305-3.0.2.jar:$REPO/com/google/code/findbugs/annotations/3.0.0/annotations-3.0.0.jar -d $WORKDIR/io @$WORKDIR/io.sources",
+            "*:*:$JAVA_HOME/bin/jar cf $WORKDIR/durian-io-1.2.0.jar -C $WORKDIR/io .",
+            "*:*:mkdir -p $STAGING_DIR$NATIVEPREFIX/share/maven/repository/com/diffplug/durian/durian-io/1.2.0",
+            "*:*:cp $WORKDIR/durian-io-1.2.0.jar $STAGING_DIR$NATIVEPREFIX/share/maven/repository/com/diffplug/durian/durian-io/1.2.0/durian-io-1.2.0.jar",
+            "*:*:cp durian-io-1.2.0.pom $STAGING_DIR$NATIVEPREFIX/share/maven/repository/com/diffplug/durian/durian-io/1.2.0/durian-io-1.2.0.pom"
+        ]
+    }
+}

@@ -1,0 +1,38 @@
+{
+    "package": "native/jdk@22/bootstrap-maven/lz4-java@1.4.1",
+    "version": "1.4.1",
+    "type": "native",
+    "download": [
+        {
+            "kind": "git",
+            "sha256": "02e53cb470bed939b69ddcc8dfe291d5e6428e38",
+            "url": "https://github.com/lz4/lz4-java.git"
+        },
+        {
+            "kind": "blob",
+            "path": "./lz4-java-1.4.1.pom",
+            "sha256": "562836344a32d056e6aaddf498b49112141fa408f4090ef56c80673fee59814b",
+            "url": "https://repo1.maven.org/maven2/org/lz4/lz4-java/1.4.1/lz4-java-1.4.1.pom"
+        }
+    ],
+    "dependencies": [
+        "*:*:native/bash",
+        "*:*:native/coreutils",
+        "*:*:native/findutils",
+        "*:*:native/jdk@22"
+    ],
+    "build": {
+        "env": [
+            "*:*:WORKDIR=work/lz4-java@1.4.1"
+        ],
+        "steps": [
+            "*:*:mkdir -p $WORKDIR",
+            "*:*:find src/java -name '*.java' >$WORKDIR/sources",
+            "*:*:$JAVA_HOME/bin/javac --release 8 -d $WORKDIR/classes @$WORKDIR/sources",
+            "*:*:$JAVA_HOME/bin/jar cf $WORKDIR/lz4-java-1.4.1.jar -C $WORKDIR/classes .",
+            "*:*:mkdir -p $STAGING_DIR$NATIVEPREFIX/share/maven/repository/org/lz4/lz4-java/1.4.1",
+            "*:*:cp $WORKDIR/lz4-java-1.4.1.jar $STAGING_DIR$NATIVEPREFIX/share/maven/repository/org/lz4/lz4-java/1.4.1/lz4-java-1.4.1.jar",
+            "*:*:cp lz4-java-1.4.1.pom $STAGING_DIR$NATIVEPREFIX/share/maven/repository/org/lz4/lz4-java/1.4.1/lz4-java-1.4.1.pom"
+        ]
+    }
+}

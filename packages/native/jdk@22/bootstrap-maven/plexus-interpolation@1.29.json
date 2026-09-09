@@ -1,0 +1,32 @@
+{
+    "package": "native/jdk@22/bootstrap-maven/plexus-interpolation@1.29",
+    "version": "1.29",
+    "type": "native",
+    "download": [
+        {
+            "kind": "git",
+            "sha256": "08bde474a835fe95795d3099c11c1b9de2d80779",
+            "url": "https://github.com/codehaus-plexus/plexus-interpolation.git"
+        }
+    ],
+    "dependencies": [
+        "*:*:native/bash",
+        "*:*:native/coreutils",
+        "*:*:native/findutils",
+        "*:*:native/jdk@22"
+    ],
+    "build": {
+        "env": [
+            "*:*:WORKDIR=build/plexus-interpolation@1.29"
+        ],
+        "steps": [
+            "*:*:mkdir -p $WORKDIR",
+            "*:*:find src/main/java -name '*.java' >$WORKDIR/sources",
+            "*:*:$JAVA_HOME/bin/javac -d $WORKDIR/classes @$WORKDIR/sources",
+            "*:*:$JAVA_HOME/bin/jar cf $WORKDIR/plexus-interpolation-1.29.jar -C $WORKDIR/classes .",
+            "*:*:mkdir -p $STAGING_DIR$NATIVEPREFIX/share/maven/repository/org/codehaus/plexus/plexus-interpolation/1.29",
+            "*:*:cp $WORKDIR/plexus-interpolation-1.29.jar $STAGING_DIR$NATIVEPREFIX/share/maven/repository/org/codehaus/plexus/plexus-interpolation/1.29/plexus-interpolation-1.29.jar",
+            "*:*:cp pom.xml $STAGING_DIR$NATIVEPREFIX/share/maven/repository/org/codehaus/plexus/plexus-interpolation/1.29/plexus-interpolation-1.29.pom"
+        ]
+    }
+}

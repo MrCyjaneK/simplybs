@@ -1,0 +1,33 @@
+{
+    "package": "native/jdk@22/bootstrap-maven/javadoc-parser@0.3.1",
+    "version": "0.3.1",
+    "type": "native",
+    "download": [
+        {
+            "kind": "git",
+            "sha256": "c75a9d04ef4f3d922de50849c3eefe24e0deaa5e",
+            "url": "https://github.com/chhorz/javadoc-parser.git"
+        }
+    ],
+    "dependencies": [
+        "*:*:native/bash",
+        "*:*:native/coreutils",
+        "*:*:native/findutils",
+        "*:*:native/jdk@22",
+        "*:*:native/jdk@22/bootstrap-maven/pom/javadoc-parser-parent@0.3.1"
+    ],
+    "build": {
+        "env": [
+            "*:*:WORKDIR=build/javadoc-parser@0.3.1"
+        ],
+        "steps": [
+            "*:*:mkdir -p $WORKDIR",
+            "*:*:find javadoc-parser/src/main/java -name '*.java' ! -name 'module-info.java' >$WORKDIR/sources",
+            "*:*:$JAVA_HOME/bin/javac --release 8 -d $WORKDIR/classes @$WORKDIR/sources",
+            "*:*:$JAVA_HOME/bin/jar cf $WORKDIR/javadoc-parser-0.3.1.jar -C $WORKDIR/classes .",
+            "*:*:mkdir -p $STAGING_DIR$NATIVEPREFIX/share/maven/repository/com/github/chhorz/javadoc-parser/0.3.1",
+            "*:*:cp $WORKDIR/javadoc-parser-0.3.1.jar $STAGING_DIR$NATIVEPREFIX/share/maven/repository/com/github/chhorz/javadoc-parser/0.3.1/javadoc-parser-0.3.1.jar",
+            "*:*:cp javadoc-parser/pom.xml $STAGING_DIR$NATIVEPREFIX/share/maven/repository/com/github/chhorz/javadoc-parser/0.3.1/javadoc-parser-0.3.1.pom"
+        ]
+    }
+}

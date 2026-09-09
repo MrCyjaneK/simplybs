@@ -1,0 +1,43 @@
+{
+    "package": "native/jdk@22/bootstrap-maven/maven-archiver@3.6.3",
+    "version": "3.6.3",
+    "type": "native",
+    "download": [
+        {
+            "kind": "git",
+            "sha256": "3d895e888861c3762143c3a34610c092cabbac27",
+            "url": "https://github.com/apache/maven-archiver.git"
+        },
+        {
+            "kind": "blob",
+            "path": "./maven-archiver-3.6.3.pom",
+            "sha256": "bc130259c5e1087a270ea8cf3f8182fecc90bf93113a2074d640a1a67f102ec4",
+            "url": "https://repo1.maven.org/maven2/org/apache/maven/maven-archiver/3.6.3/maven-archiver-3.6.3.pom"
+        }
+    ],
+    "dependencies": [
+        "*:*:native/bash",
+        "*:*:native/coreutils",
+        "*:*:native/findutils",
+        "*:*:native/jdk@22",
+        "*:*:native/maven@3.9-bin",
+        "*:*:native/jdk@22/bootstrap-maven/plexus-interpolation@1.27",
+        "*:*:native/jdk@22/bootstrap-maven/plexus-archiver@4.10.0"
+    ],
+    "build": {
+        "env": [
+            "*:*:WORKDIR=build/maven-archiver@3.6.3",
+            "*:*:REPO=$NATIVEPREFIX/share/maven/repository",
+            "*:*:BOOT_LIB=$NATIVEPREFIX/maven-3.9-bootstrap/lib"
+        ],
+        "steps": [
+            "*:*:mkdir -p $WORKDIR",
+            "*:*:find src/main/java -name '*.java' >$WORKDIR/sources",
+            "*:*:$JAVA_HOME/bin/javac -cp $(printf '%s:' $BOOT_LIB/*.jar)$REPO/org/codehaus/plexus/plexus-interpolation/1.27/plexus-interpolation-1.27.jar:$REPO/org/codehaus/plexus/plexus-archiver/4.10.0/plexus-archiver-4.10.0.jar -d $WORKDIR/classes @$WORKDIR/sources",
+            "*:*:$JAVA_HOME/bin/jar cf $WORKDIR/maven-archiver-3.6.3.jar -C $WORKDIR/classes .",
+            "*:*:mkdir -p $STAGING_DIR$NATIVEPREFIX/share/maven/repository/org/apache/maven/maven-archiver/3.6.3",
+            "*:*:cp $WORKDIR/maven-archiver-3.6.3.jar $STAGING_DIR$NATIVEPREFIX/share/maven/repository/org/apache/maven/maven-archiver/3.6.3/maven-archiver-3.6.3.jar",
+            "*:*:cp maven-archiver-3.6.3.pom $STAGING_DIR$NATIVEPREFIX/share/maven/repository/org/apache/maven/maven-archiver/3.6.3/maven-archiver-3.6.3.pom"
+        ]
+    }
+}

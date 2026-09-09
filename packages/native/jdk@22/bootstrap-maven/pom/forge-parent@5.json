@@ -1,0 +1,22 @@
+{
+    "package": "native/jdk@22/bootstrap-maven/pom/forge-parent@5",
+    "version": "5",
+    "type": "native",
+    "download": [
+        {
+            "kind": "blob",
+            "path": "./forge-parent-5.pom",
+            "sha256": "e56188aa8ce51278006aa90bc7e0f304a81e2f1219f462e7d21f262535cd2795",
+            "url": "https://repo1.maven.org/maven2/org/sonatype/forge/forge-parent/5/forge-parent-5.pom"
+        }
+    ],
+    "dependencies": [
+        "*:*:native/coreutils"
+    ],
+    "build": {
+        "steps": [
+            "*:*:mkdir -p $STAGING_DIR$NATIVEPREFIX/share/maven/repository/org/sonatype/forge/forge-parent/5",
+            "*:*:cp forge-parent-5.pom $STAGING_DIR$NATIVEPREFIX/share/maven/repository/org/sonatype/forge/forge-parent/5/forge-parent-5.pom"
+        ]
+    }
+}

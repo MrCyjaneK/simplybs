@@ -1,0 +1,56 @@
+{
+    "package": "native/jdk@22/bootstrap-maven/kotlin-stdlib@1.9.10",
+    "version": "1.9.10",
+    "type": "native",
+    "download": [
+        {
+            "kind": "blob",
+            "path": "./kotlin-stdlib-1.9.10.pom",
+            "sha256": "7e29fbf73fdf71e0679d3dee7e680fd573464fa01644a4f58ab819d2c088d3d2",
+            "url": "https://repo1.maven.org/maven2/org/jetbrains/kotlin/kotlin-stdlib/1.9.10/kotlin-stdlib-1.9.10.pom"
+        },
+        {
+            "kind": "blob",
+            "path": "./kotlin-stdlib-common-1.9.10.pom",
+            "sha256": "7d4b70547910676b3bdfc8925a88f3b6bfb24582c9784542805544ceef490a92",
+            "url": "https://repo1.maven.org/maven2/org/jetbrains/kotlin/kotlin-stdlib-common/1.9.10/kotlin-stdlib-common-1.9.10.pom"
+        },
+        {
+            "kind": "blob",
+            "path": "./kotlin-stdlib-jdk7-1.9.10.pom",
+            "sha256": "c7fa67c7961320b89d85a3ca59a2e18c2c65850845595dcae4b46af6945edcd5",
+            "url": "https://repo1.maven.org/maven2/org/jetbrains/kotlin/kotlin-stdlib-jdk7/1.9.10/kotlin-stdlib-jdk7-1.9.10.pom"
+        },
+        {
+            "kind": "blob",
+            "path": "./kotlin-stdlib-jdk8-1.9.10.pom",
+            "sha256": "5f4b94dd3065a7764c37fa15de2ad6d81f40d59f8cb33f17d181c6384fb7a72e",
+            "url": "https://repo1.maven.org/maven2/org/jetbrains/kotlin/kotlin-stdlib-jdk8/1.9.10/kotlin-stdlib-jdk8-1.9.10.pom"
+        }
+    ],
+    "dependencies": [
+        "*:*:native/bash",
+        "*:*:native/coreutils",
+        "*:*:native/kotlin@1.9.10",
+        "*:*:native/jdk@22/bootstrap-maven/annotations@13.0"
+    ],
+    "build": {
+        "env": [
+            "*:*:KOTLIN_HOME=$NATIVEPREFIX/kotlin-1.9.10"
+        ],
+        "steps": [
+            "*:*:mkdir -p $STAGING_DIR$NATIVEPREFIX/share/maven/repository/org/jetbrains/kotlin/kotlin-stdlib/1.9.10",
+            "*:*:cp $KOTLIN_HOME/lib/kotlin-stdlib.jar $STAGING_DIR$NATIVEPREFIX/share/maven/repository/org/jetbrains/kotlin/kotlin-stdlib/1.9.10/kotlin-stdlib-1.9.10.jar",
+            "*:*:cp kotlin-stdlib-1.9.10.pom $STAGING_DIR$NATIVEPREFIX/share/maven/repository/org/jetbrains/kotlin/kotlin-stdlib/1.9.10/kotlin-stdlib-1.9.10.pom",
+            "*:*:mkdir -p $STAGING_DIR$NATIVEPREFIX/share/maven/repository/org/jetbrains/kotlin/kotlin-stdlib-common/1.9.10",
+            "*:*:if [ -f $KOTLIN_HOME/lib/kotlin-stdlib-common.jar ]; then cp $KOTLIN_HOME/lib/kotlin-stdlib-common.jar $STAGING_DIR$NATIVEPREFIX/share/maven/repository/org/jetbrains/kotlin/kotlin-stdlib-common/1.9.10/kotlin-stdlib-common-1.9.10.jar; else cp $KOTLIN_HOME/lib/kotlin-stdlib.jar $STAGING_DIR$NATIVEPREFIX/share/maven/repository/org/jetbrains/kotlin/kotlin-stdlib-common/1.9.10/kotlin-stdlib-common-1.9.10.jar; fi",
+            "*:*:cp kotlin-stdlib-common-1.9.10.pom $STAGING_DIR$NATIVEPREFIX/share/maven/repository/org/jetbrains/kotlin/kotlin-stdlib-common/1.9.10/kotlin-stdlib-common-1.9.10.pom",
+            "*:*:mkdir -p $STAGING_DIR$NATIVEPREFIX/share/maven/repository/org/jetbrains/kotlin/kotlin-stdlib-jdk7/1.9.10",
+            "*:*:cp $KOTLIN_HOME/lib/kotlin-stdlib-jdk7.jar $STAGING_DIR$NATIVEPREFIX/share/maven/repository/org/jetbrains/kotlin/kotlin-stdlib-jdk7/1.9.10/kotlin-stdlib-jdk7-1.9.10.jar",
+            "*:*:cp kotlin-stdlib-jdk7-1.9.10.pom $STAGING_DIR$NATIVEPREFIX/share/maven/repository/org/jetbrains/kotlin/kotlin-stdlib-jdk7/1.9.10/kotlin-stdlib-jdk7-1.9.10.pom",
+            "*:*:mkdir -p $STAGING_DIR$NATIVEPREFIX/share/maven/repository/org/jetbrains/kotlin/kotlin-stdlib-jdk8/1.9.10",
+            "*:*:cp $KOTLIN_HOME/lib/kotlin-stdlib-jdk8.jar $STAGING_DIR$NATIVEPREFIX/share/maven/repository/org/jetbrains/kotlin/kotlin-stdlib-jdk8/1.9.10/kotlin-stdlib-jdk8-1.9.10.jar",
+            "*:*:cp kotlin-stdlib-jdk8-1.9.10.pom $STAGING_DIR$NATIVEPREFIX/share/maven/repository/org/jetbrains/kotlin/kotlin-stdlib-jdk8/1.9.10/kotlin-stdlib-jdk8-1.9.10.pom"
+        ]
+    }
+}

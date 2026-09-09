@@ -1,0 +1,32 @@
+{
+    "package": "native/jdk@22/bootstrap-maven/commons-lang3@3.17.0",
+    "version": "3.17.0",
+    "type": "native",
+    "download": [
+        {
+            "kind": "git",
+            "sha256": "29ccc7665f3bc5d84155a3092ab2209a053324e6",
+            "url": "https://github.com/apache/commons-lang.git"
+        }
+    ],
+    "dependencies": [
+        "*:*:native/bash",
+        "*:*:native/coreutils",
+        "*:*:native/findutils",
+        "*:*:native/jdk@22"
+    ],
+    "build": {
+        "env": [
+            "*:*:WORKDIR=build/commons-lang3@3.17.0"
+        ],
+        "steps": [
+            "*:*:mkdir -p $WORKDIR",
+            "*:*:find src/main/java -name '*.java' ! -name 'module-info.java' >$WORKDIR/sources",
+            "*:*:$JAVA_HOME/bin/javac -d $WORKDIR/classes @$WORKDIR/sources",
+            "*:*:$JAVA_HOME/bin/jar cf $WORKDIR/commons-lang3-3.17.0.jar -C $WORKDIR/classes .",
+            "*:*:mkdir -p $STAGING_DIR$NATIVEPREFIX/share/maven/repository/org/apache/commons/commons-lang3/3.17.0",
+            "*:*:cp $WORKDIR/commons-lang3-3.17.0.jar $STAGING_DIR$NATIVEPREFIX/share/maven/repository/org/apache/commons/commons-lang3/3.17.0/commons-lang3-3.17.0.jar",
+            "*:*:cp pom.xml $STAGING_DIR$NATIVEPREFIX/share/maven/repository/org/apache/commons/commons-lang3/3.17.0/commons-lang3-3.17.0.pom"
+        ]
+    }
+}

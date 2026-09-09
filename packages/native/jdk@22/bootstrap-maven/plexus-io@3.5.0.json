@@ -1,0 +1,38 @@
+{
+    "package": "native/jdk@22/bootstrap-maven/plexus-io@3.5.0",
+    "version": "3.5.0",
+    "type": "native",
+    "download": [
+        {
+            "kind": "git",
+            "sha256": "2c508039d2bb933112388d9d4c6cd0cd6b204155",
+            "url": "https://github.com/codehaus-plexus/plexus-io.git"
+        }
+    ],
+    "dependencies": [
+        "*:*:native/bash",
+        "*:*:native/coreutils",
+        "*:*:native/findutils",
+        "*:*:native/jdk@22",
+        "*:*:native/jdk@22/bootstrap-maven/javax.inject@1",
+        "*:*:native/jdk@22/bootstrap-maven/jsr305@3.0.2",
+        "*:*:native/jdk@22/bootstrap-maven/commons-io@2.16.1",
+        "*:*:native/jdk@22/bootstrap-maven/plexus-utils@4.0.2",
+        "*:*:native/jdk@22/bootstrap-maven/pom/plexus@18"
+    ],
+    "build": {
+        "env": [
+            "*:*:WORKDIR=build/plexus-io@3.5.0",
+            "*:*:REPO=$NATIVEPREFIX/share/maven/repository"
+        ],
+        "steps": [
+            "*:*:mkdir -p $WORKDIR",
+            "*:*:find src/main/java -name '*.java' >$WORKDIR/sources",
+            "*:*:$JAVA_HOME/bin/javac -cp $REPO/javax/inject/javax.inject/1/javax.inject-1.jar:$REPO/com/google/code/findbugs/jsr305/3.0.2/jsr305-3.0.2.jar:$REPO/commons-io/commons-io/2.16.1/commons-io-2.16.1.jar:$REPO/org/codehaus/plexus/plexus-utils/4.0.2/plexus-utils-4.0.2.jar -d $WORKDIR/classes @$WORKDIR/sources",
+            "*:*:$JAVA_HOME/bin/jar cf $WORKDIR/plexus-io-3.5.0.jar -C $WORKDIR/classes .",
+            "*:*:mkdir -p $STAGING_DIR$NATIVEPREFIX/share/maven/repository/org/codehaus/plexus/plexus-io/3.5.0",
+            "*:*:cp $WORKDIR/plexus-io-3.5.0.jar $STAGING_DIR$NATIVEPREFIX/share/maven/repository/org/codehaus/plexus/plexus-io/3.5.0/plexus-io-3.5.0.jar",
+            "*:*:cp pom.xml $STAGING_DIR$NATIVEPREFIX/share/maven/repository/org/codehaus/plexus/plexus-io/3.5.0/plexus-io-3.5.0.pom"
+        ]
+    }
+}

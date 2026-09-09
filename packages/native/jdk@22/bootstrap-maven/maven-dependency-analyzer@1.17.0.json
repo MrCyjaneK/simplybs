@@ -1,0 +1,39 @@
+{
+    "package": "native/jdk@22/bootstrap-maven/maven-dependency-analyzer@1.17.0",
+    "version": "1.17.0",
+    "type": "native",
+    "download": [
+        {
+            "kind": "git",
+            "sha256": "26aa306141ecfd5ed3f982054d430aa65135b5ee",
+            "url": "https://github.com/apache/maven-dependency-analyzer.git"
+        }
+    ],
+    "dependencies": [
+        "*:*:native/bash",
+        "*:*:native/coreutils",
+        "*:*:native/findutils",
+        "*:*:native/jdk@22",
+        "*:*:native/jdk@22/bootstrap-maven/org.eclipse.sisu.inject@1.0.0",
+        "*:*:native/maven@3.9-bin",
+        "*:*:native/jdk@22/bootstrap-maven/pom/maven-shared-components@47",
+        "*:*:native/jdk@22/bootstrap-maven/asm@9.9.1",
+        "*:*:native/jdk@22/bootstrap-maven/javax.inject@1"
+    ],
+    "build": {
+        "env": [
+            "*:*:WORKDIR=build/maven-dependency-analyzer@1.17.0",
+            "*:*:REPO=$NATIVEPREFIX/share/maven/repository",
+            "*:*:BOOT_LIB=$NATIVEPREFIX/maven-3.9-bootstrap/lib"
+        ],
+        "steps": [
+            "*:*:mkdir -p $WORKDIR",
+            "*:*:find src/main/java -name '*.java' >$WORKDIR/sources",
+            "*:*:$JAVA_HOME/bin/javac -cp $(printf '%s:' $BOOT_LIB/*.jar)$REPO/org/ow2/asm/asm/9.9.1/asm-9.9.1.jar:$REPO/javax/inject/javax.inject/1/javax.inject-1.jar -processorpath $REPO/org/eclipse/sisu/org.eclipse.sisu.inject/1.0.0/org.eclipse.sisu.inject-1.0.0.jar:$REPO/javax/inject/javax.inject/1/javax.inject-1.jar -processor org.eclipse.sisu.space.SisuIndexAPT6 -d $WORKDIR/classes @$WORKDIR/sources",
+            "*:*:$JAVA_HOME/bin/jar cf $WORKDIR/maven-dependency-analyzer-1.17.0.jar -C $WORKDIR/classes .",
+            "*:*:mkdir -p $STAGING_DIR$NATIVEPREFIX/share/maven/repository/org/apache/maven/shared/maven-dependency-analyzer/1.17.0",
+            "*:*:cp $WORKDIR/maven-dependency-analyzer-1.17.0.jar $STAGING_DIR$NATIVEPREFIX/share/maven/repository/org/apache/maven/shared/maven-dependency-analyzer/1.17.0/maven-dependency-analyzer-1.17.0.jar",
+            "*:*:cp pom.xml $STAGING_DIR$NATIVEPREFIX/share/maven/repository/org/apache/maven/shared/maven-dependency-analyzer/1.17.0/maven-dependency-analyzer-1.17.0.pom"
+        ]
+    }
+}

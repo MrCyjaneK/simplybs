@@ -1,0 +1,22 @@
+{
+    "package": "native/jdk@22/bootstrap-maven/pom/apache@19",
+    "version": "19",
+    "type": "native",
+    "download": [
+        {
+            "kind": "blob",
+            "path": "./apache-19.pom",
+            "sha256": "91f7a33096ea69bac2cbaf6d01feb934cac002c48d8c8cfa9c240b40f1ec21df",
+            "url": "https://repo1.maven.org/maven2/org/apache/apache/19/apache-19.pom"
+        }
+    ],
+    "dependencies": [
+        "*:*:native/coreutils"
+    ],
+    "build": {
+        "steps": [
+            "*:*:mkdir -p $STAGING_DIR$NATIVEPREFIX/share/maven/repository/org/apache/apache/19",
+            "*:*:cp apache-19.pom $STAGING_DIR$NATIVEPREFIX/share/maven/repository/org/apache/apache/19/apache-19.pom"
+        ]
+    }
+}

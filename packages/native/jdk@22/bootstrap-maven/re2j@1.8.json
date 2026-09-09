@@ -1,0 +1,38 @@
+{
+    "package": "native/jdk@22/bootstrap-maven/re2j@1.8",
+    "version": "1.8",
+    "type": "native",
+    "download": [
+        {
+            "kind": "git",
+            "sha256": "57278921a609461c14d9cdb057d7aa9511c8f7ac",
+            "url": "https://github.com/google/re2j.git"
+        },
+        {
+            "kind": "blob",
+            "path": "./re2j-1.8.pom",
+            "sha256": "df62699335cd46fc465f4c03b8c581d3d507792212d27b65adb923b4c27de4e7",
+            "url": "https://repo1.maven.org/maven2/com/google/re2j/re2j/1.8/re2j-1.8.pom"
+        }
+    ],
+    "dependencies": [
+        "*:*:native/bash",
+        "*:*:native/coreutils",
+        "*:*:native/findutils",
+        "*:*:native/jdk@22"
+    ],
+    "build": {
+        "env": [
+            "*:*:WORKDIR=build/re2j@1.8"
+        ],
+        "steps": [
+            "*:*:mkdir -p $WORKDIR",
+            "*:*:find java -name '*.java' ! -path '*/super/*' >$WORKDIR/sources",
+            "*:*:$JAVA_HOME/bin/javac --release 8 -d $WORKDIR/classes @$WORKDIR/sources",
+            "*:*:$JAVA_HOME/bin/jar cf $WORKDIR/re2j-1.8.jar -C $WORKDIR/classes .",
+            "*:*:mkdir -p $STAGING_DIR$NATIVEPREFIX/share/maven/repository/com/google/re2j/re2j/1.8",
+            "*:*:cp $WORKDIR/re2j-1.8.jar $STAGING_DIR$NATIVEPREFIX/share/maven/repository/com/google/re2j/re2j/1.8/re2j-1.8.jar",
+            "*:*:cp re2j-1.8.pom $STAGING_DIR$NATIVEPREFIX/share/maven/repository/com/google/re2j/re2j/1.8/re2j-1.8.pom"
+        ]
+    }
+}

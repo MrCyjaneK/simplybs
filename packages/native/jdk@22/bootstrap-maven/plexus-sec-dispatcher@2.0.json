@@ -1,0 +1,46 @@
+{
+    "package": "native/jdk@22/bootstrap-maven/plexus-sec-dispatcher@2.0",
+    "version": "2.0",
+    "type": "native",
+    "download": [
+        {
+            "kind": "git",
+            "sha256": "0bab9aa096c411973ce3d48771a8fe735cafd917",
+            "url": "https://github.com/codehaus-plexus/plexus-sec-dispatcher.git"
+        }
+    ],
+    "dependencies": [
+        "*:*:native/bash",
+        "*:*:native/coreutils",
+        "*:*:native/findutils",
+        "*:*:native/jdk@22",
+        "*:*:native/jdk@22/bootstrap-maven/org.eclipse.sisu.inject@1.0.0",
+        "*:*:native/jdk@22/bootstrap-maven/pom/plexus@8",
+        "*:*:native/jdk@22/bootstrap-maven/javax.inject@1",
+        "*:*:native/jdk@22/bootstrap-maven/slf4j-api@1.7.36",
+        "*:*:native/jdk@22/bootstrap-maven/plexus-utils@3.6.1",
+        "*:*:native/jdk@22/bootstrap-maven/plexus-utils@4.0.2",
+        "*:*:native/jdk@22/bootstrap-maven/plexus-xml@3.0.1",
+        "*:*:native/jdk@22/bootstrap-maven/plexus-build-api@1.2.0",
+        "*:*:native/jdk@22/bootstrap-maven/modello@2.6.0",
+        "*:*:native/jdk@22/bootstrap-maven/plexus-cipher@2.0"
+    ],
+    "build": {
+        "env": [
+            "*:*:WORKDIR=work/plexus-sec-dispatcher@2.0",
+            "*:*:REPO=$NATIVEPREFIX/share/maven/repository",
+            "*:*:MODELLO_CP=$NATIVEPREFIX/share/maven/repository/javax/inject/javax.inject/1/javax.inject-1.jar:$NATIVEPREFIX/share/maven/repository/org/slf4j/slf4j-api/1.7.36/slf4j-api-1.7.36.jar:$NATIVEPREFIX/share/maven/repository/org/codehaus/plexus/plexus-utils/4.0.2/plexus-utils-4.0.2.jar:$NATIVEPREFIX/share/maven/repository/org/codehaus/plexus/plexus-xml/3.0.1/plexus-xml-3.0.1.jar:$NATIVEPREFIX/share/maven/repository/org/codehaus/plexus/plexus-build-api/1.2.0/plexus-build-api-1.2.0.jar:$NATIVEPREFIX/share/maven/repository/org/codehaus/modello/modello-core/2.6.0/modello-core-2.6.0.jar:$NATIVEPREFIX/share/maven/repository/org/codehaus/modello/modello-plugin-java/2.6.0/modello-plugin-java-2.6.0.jar:$NATIVEPREFIX/share/maven/repository/org/codehaus/modello/modello-plugin-xml/2.6.0/modello-plugin-xml-2.6.0.jar:$NATIVEPREFIX/share/maven/repository/org/codehaus/modello/modello-plugin-xpp3/2.6.0/modello-plugin-xpp3-2.6.0.jar"
+        ],
+        "steps": [
+            "*:*:mkdir -p $WORKDIR/generated",
+            "*:*:$JAVA_HOME/bin/javac -cp $MODELLO_CP -d $WORKDIR $PATCH_DIR/maven/RunModello.java",
+            "*:*:$JAVA_HOME/bin/java -cp $WORKDIR:$MODELLO_CP RunModello src/main/mdo/settings-security.mdo 1.0.0 $WORKDIR/generated java xpp3-reader xpp3-writer",
+            "*:*:find src/main/java $WORKDIR/generated -name '*.java' >$WORKDIR/sources",
+            "*:*:$JAVA_HOME/bin/javac --release 8 -cp $REPO/javax/inject/javax.inject/1/javax.inject-1.jar:$REPO/org/codehaus/plexus/plexus-utils/3.6.1/plexus-utils-3.6.1.jar:$REPO/org/codehaus/plexus/plexus-xml/3.0.1/plexus-xml-3.0.1.jar:$REPO/org/codehaus/plexus/plexus-cipher/2.0/plexus-cipher-2.0.jar -processorpath $REPO/org/eclipse/sisu/org.eclipse.sisu.inject/1.0.0/org.eclipse.sisu.inject-1.0.0.jar:$REPO/javax/inject/javax.inject/1/javax.inject-1.jar -processor org.eclipse.sisu.space.SisuIndexAPT6 -d $WORKDIR/classes @$WORKDIR/sources",
+            "*:*:$JAVA_HOME/bin/jar cf $WORKDIR/plexus-sec-dispatcher-2.0.jar -C $WORKDIR/classes .",
+            "*:*:mkdir -p $STAGING_DIR$NATIVEPREFIX/share/maven/repository/org/codehaus/plexus/plexus-sec-dispatcher/2.0",
+            "*:*:cp $WORKDIR/plexus-sec-dispatcher-2.0.jar $STAGING_DIR$NATIVEPREFIX/share/maven/repository/org/codehaus/plexus/plexus-sec-dispatcher/2.0/plexus-sec-dispatcher-2.0.jar",
+            "*:*:cp pom.xml $STAGING_DIR$NATIVEPREFIX/share/maven/repository/org/codehaus/plexus/plexus-sec-dispatcher/2.0/plexus-sec-dispatcher-2.0.pom"
+        ]
+    }
+}

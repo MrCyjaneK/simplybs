@@ -1,0 +1,38 @@
+{
+    "package": "native/jdk@22/bootstrap-maven/hamcrest@3.0",
+    "version": "3.0",
+    "type": "native",
+    "download": [
+        {
+            "kind": "git",
+            "sha256": "68984b85e869df6a888fffcad87e4b676a8fc0ac",
+            "url": "https://github.com/hamcrest/JavaHamcrest.git"
+        },
+        {
+            "kind": "blob",
+            "path": "./hamcrest-3.0.pom",
+            "sha256": "4a04a68133bf32461f47b8a53c8ee9df4ce2f49a0dad9794bce8717bee5bac31",
+            "url": "https://repo1.maven.org/maven2/org/hamcrest/hamcrest/3.0/hamcrest-3.0.pom"
+        }
+    ],
+    "dependencies": [
+        "*:*:native/bash",
+        "*:*:native/coreutils",
+        "*:*:native/findutils",
+        "*:*:native/jdk@22"
+    ],
+    "build": {
+        "env": [
+            "*:*:WORKDIR=work/hamcrest@3.0"
+        ],
+        "steps": [
+            "*:*:mkdir -p $WORKDIR",
+            "*:*:find hamcrest/src/main/java -name '*.java' >$WORKDIR/sources",
+            "*:*:$JAVA_HOME/bin/javac --release 8 -d $WORKDIR/classes @$WORKDIR/sources",
+            "*:*:$JAVA_HOME/bin/jar cf $WORKDIR/hamcrest-3.0.jar -C $WORKDIR/classes .",
+            "*:*:mkdir -p $STAGING_DIR$NATIVEPREFIX/share/maven/repository/org/hamcrest/hamcrest/3.0",
+            "*:*:cp $WORKDIR/hamcrest-3.0.jar $STAGING_DIR$NATIVEPREFIX/share/maven/repository/org/hamcrest/hamcrest/3.0/hamcrest-3.0.jar",
+            "*:*:cp hamcrest-3.0.pom $STAGING_DIR$NATIVEPREFIX/share/maven/repository/org/hamcrest/hamcrest/3.0/hamcrest-3.0.pom"
+        ]
+    }
+}

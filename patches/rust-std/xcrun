@@ -1,10 +1,18 @@
 #!/usr/bin/env bash
 # Hermetic xcrun. Reports SDK_PATH and resolves --find via PATH.
+# Stubs Apple's proprietary metal/metallib tools (empty -o outputs) so OpenJDK
+# builds without Xcode's Metal toolchain; Java2D falls back to OpenGL at runtime.
 # Never exec host /usr/bin/xcrun unless simplybs staged xcrun.real.
+set -euo pipefail
+
 show_sdk=0
 find_tool=""
+toolchain_tool=""
+output_file=""
+want_version=0
 i=0
 args=("$@")
+
 while [ $i -lt ${#args[@]} ]; do
 	a=${args[$i]}
 	case "$a" in
@@ -12,8 +20,7 @@ while [ $i -lt ${#args[@]} ]; do
 		show_sdk=1
 		;;
 	--version)
-		echo "xcrun version 72."
-		exit 0
+		want_version=1
 		;;
 	--find | -f)
 		i=$((i + 1))
@@ -21,6 +28,13 @@ while [ $i -lt ${#args[@]} ]; do
 		;;
 	--sdk | -sdk)
 		i=$((i + 1))
+		;;
+	-o)
+		i=$((i + 1))
+		output_file=${args[$i]:-}
+		;;
+	metal | metallib)
+		toolchain_tool=$a
 		;;
 	esac
 	i=$((i + 1))
@@ -39,6 +53,10 @@ if [ -n "$find_tool" ]; then
 	case "$find_tool" in
 	cc) find_tool=clang ;;
 	c++) find_tool=clang++ ;;
+	metal | metallib)
+		echo "$0"
+		exit 0
+		;;
 	esac
 	if p=$(command -v "$find_tool" 2>/dev/null); then
 		echo "$p"
@@ -46,6 +64,25 @@ if [ -n "$find_tool" ]; then
 	fi
 	echo "xcrun: cannot find '$find_tool' in PATH" >&2
 	exit 1
+fi
+
+if [ -n "$toolchain_tool" ]; then
+	if [ "$want_version" -eq 1 ]; then
+		echo "$toolchain_tool version 32023.850 (simplybs stub)"
+		exit 0
+	fi
+	if [ -n "$output_file" ]; then
+		mkdir -p "$(dirname "$output_file")"
+		: >"$output_file"
+		exit 0
+	fi
+	echo "xcrun: $toolchain_tool requires -o <output>" >&2
+	exit 1
+fi
+
+if [ "$want_version" -eq 1 ]; then
+	echo "xcrun version 72."
+	exit 0
 fi
 
 if [ -x "${NATIVEPREFIX:-}/bin/xcrun.real" ]; then

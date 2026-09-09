@@ -1,0 +1,36 @@
+{
+    "package": "native/jdk@22/bootstrap-maven/commons-beanutils@1.9.4",
+    "version": "1.9.4",
+    "type": "native",
+    "download": [
+        {
+            "kind": "git",
+            "sha256": "32ceb2c92512d44f97638805e2f3fd9d70dfcfc6",
+            "url": "https://github.com/apache/commons-beanutils.git"
+        }
+    ],
+    "dependencies": [
+        "*:*:native/bash",
+        "*:*:native/coreutils",
+        "*:*:native/findutils",
+        "*:*:native/jdk@22",
+        "*:*:native/jdk@22/bootstrap-maven/pom/commons-parent@47",
+        "*:*:native/jdk@22/bootstrap-maven/commons-logging@1.2",
+        "*:*:native/jdk@22/bootstrap-maven/commons-collections@3.2.2"
+    ],
+    "build": {
+        "env": [
+            "*:*:WORKDIR=build/commons-beanutils@1.9.4",
+            "*:*:REPO=$NATIVEPREFIX/share/maven/repository"
+        ],
+        "steps": [
+            "*:*:mkdir -p $WORKDIR",
+            "*:*:find src/main/java -name '*.java' ! -name 'module-info.java' >$WORKDIR/sources",
+            "*:*:$JAVA_HOME/bin/javac -cp $REPO/commons-logging/commons-logging/1.2/commons-logging-1.2.jar:$REPO/commons-collections/commons-collections/3.2.2/commons-collections-3.2.2.jar -d $WORKDIR/classes @$WORKDIR/sources",
+            "*:*:$JAVA_HOME/bin/jar cf $WORKDIR/commons-beanutils-1.9.4.jar -C $WORKDIR/classes .",
+            "*:*:mkdir -p $STAGING_DIR$NATIVEPREFIX/share/maven/repository/commons-beanutils/commons-beanutils/1.9.4",
+            "*:*:cp $WORKDIR/commons-beanutils-1.9.4.jar $STAGING_DIR$NATIVEPREFIX/share/maven/repository/commons-beanutils/commons-beanutils/1.9.4/commons-beanutils-1.9.4.jar",
+            "*:*:cp pom.xml $STAGING_DIR$NATIVEPREFIX/share/maven/repository/commons-beanutils/commons-beanutils/1.9.4/commons-beanutils-1.9.4.pom"
+        ]
+    }
+}

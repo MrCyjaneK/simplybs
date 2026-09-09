@@ -1,0 +1,22 @@
+{
+    "package": "native/jdk@22/bootstrap-maven/pom/apache@35",
+    "version": "35",
+    "type": "native",
+    "download": [
+        {
+            "kind": "blob",
+            "path": "./apache-35.pom",
+            "sha256": "ea297dcd114136e8b8e8b630230d52a76c2fc69f6c5db25d672b1857000728b8",
+            "url": "https://repo1.maven.org/maven2/org/apache/apache/35/apache-35.pom"
+        }
+    ],
+    "dependencies": [
+        "*:*:native/coreutils"
+    ],
+    "build": {
+        "steps": [
+            "*:*:mkdir -p $STAGING_DIR$NATIVEPREFIX/share/maven/repository/org/apache/apache/35",
+            "*:*:cp apache-35.pom $STAGING_DIR$NATIVEPREFIX/share/maven/repository/org/apache/apache/35/apache-35.pom"
+        ]
+    }
+}

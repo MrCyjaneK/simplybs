@@ -1,0 +1,22 @@
+{
+    "package": "native/jdk@22/bootstrap-maven/pom/google@5",
+    "version": "5",
+    "type": "native",
+    "download": [
+        {
+            "kind": "blob",
+            "path": "./google-5.pom",
+            "sha256": "e09d345e73ca3fbca7f3e05f30deb74e9d39dd6b79a93fee8c511f23417b6828",
+            "url": "https://repo1.maven.org/maven2/com/google/google/5/google-5.pom"
+        }
+    ],
+    "dependencies": [
+        "*:*:native/coreutils"
+    ],
+    "build": {
+        "steps": [
+            "*:*:mkdir -p $STAGING_DIR$NATIVEPREFIX/share/maven/repository/com/google/google/5",
+            "*:*:cp google-5.pom $STAGING_DIR$NATIVEPREFIX/share/maven/repository/com/google/google/5/google-5.pom"
+        ]
+    }
+}

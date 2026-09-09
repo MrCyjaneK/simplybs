@@ -1,0 +1,36 @@
+{
+    "package": "native/jdk@22/bootstrap-maven/jansi@2.4.3",
+    "version": "2.4.3",
+    "type": "native",
+    "download": [
+        {
+            "kind": "git",
+            "sha256": "917013297d08ed2abcf616e6787b49bec3489b48",
+            "url": "https://github.com/fusesource/jansi.git"
+        }
+    ],
+    "dependencies": [
+        "*:*:native/bash",
+        "*:*:native/coreutils",
+        "*:*:native/findutils",
+        "*:*:native/jdk@22",
+        "*:*:native/jdk@22/bootstrap-maven/pom/fusesource-pom@1.12"
+    ],
+    "build": {
+        "env": [
+            "*:*:WORKDIR=work/jansi@2.4.3"
+        ],
+        "steps": [
+            "*:*:mkdir -p $WORKDIR/classes",
+            "*:*:find src/main/java -name '*.java' ! -name 'module-info.java' >$WORKDIR/sources",
+            "*:*:$JAVA_HOME/bin/javac --release 8 -d $WORKDIR/classes @$WORKDIR/sources",
+            "*:*:if [ -d src/main/resources ]; then cp -R src/main/resources/. $WORKDIR/classes/; fi",
+            "*:*:mkdir -p $WORKDIR/classes/org/fusesource/jansi",
+            "*:*:printf '%s\\n' 'version=2.4.3' > $WORKDIR/classes/org/fusesource/jansi/jansi.properties",
+            "*:*:$JAVA_HOME/bin/jar cf $WORKDIR/jansi-2.4.3.jar -C $WORKDIR/classes .",
+            "*:*:mkdir -p $STAGING_DIR$NATIVEPREFIX/share/maven/repository/org/fusesource/jansi/jansi/2.4.3",
+            "*:*:cp $WORKDIR/jansi-2.4.3.jar $STAGING_DIR$NATIVEPREFIX/share/maven/repository/org/fusesource/jansi/jansi/2.4.3/jansi-2.4.3.jar",
+            "*:*:cp pom.xml $STAGING_DIR$NATIVEPREFIX/share/maven/repository/org/fusesource/jansi/jansi/2.4.3/jansi-2.4.3.pom"
+        ]
+    }
+}

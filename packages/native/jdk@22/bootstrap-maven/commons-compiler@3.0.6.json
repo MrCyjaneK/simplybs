@@ -1,0 +1,33 @@
+{
+    "package": "native/jdk@22/bootstrap-maven/commons-compiler@3.0.6",
+    "version": "3.0.6",
+    "type": "native",
+    "download": [
+        {
+            "kind": "git",
+            "sha256": "9c1d4a8586fa8b2c3c55ddd6c3f0dc2da589a247",
+            "url": "https://github.com/janino-compiler/janino.git"
+        }
+    ],
+    "dependencies": [
+        "*:*:native/bash",
+        "*:*:native/coreutils",
+        "*:*:native/findutils",
+        "*:*:native/jdk@22",
+        "*:*:native/jdk@22/bootstrap-maven/pom/janino-parent@3.0.6"
+    ],
+    "build": {
+        "env": [
+            "*:*:WORKDIR=work/commons-compiler@3.0.6"
+        ],
+        "steps": [
+            "*:*:mkdir -p $WORKDIR/classes",
+            "*:*:find commons-compiler/src/main/java -name '*.java' >$WORKDIR/sources",
+            "*:*:$JAVA_HOME/bin/javac --release 8 -d $WORKDIR/classes @$WORKDIR/sources",
+            "*:*:$JAVA_HOME/bin/jar cf $WORKDIR/commons-compiler-3.0.6.jar -C $WORKDIR/classes .",
+            "*:*:mkdir -p $STAGING_DIR$NATIVEPREFIX/share/maven/repository/org/codehaus/janino/commons-compiler/3.0.6",
+            "*:*:cp $WORKDIR/commons-compiler-3.0.6.jar $STAGING_DIR$NATIVEPREFIX/share/maven/repository/org/codehaus/janino/commons-compiler/3.0.6/commons-compiler-3.0.6.jar",
+            "*:*:cp commons-compiler/pom.xml $STAGING_DIR$NATIVEPREFIX/share/maven/repository/org/codehaus/janino/commons-compiler/3.0.6/commons-compiler-3.0.6.pom"
+        ]
+    }
+}

@@ -1,0 +1,22 @@
+{
+    "package": "native/jdk@22/bootstrap-maven/pom/ow2@1.5.1",
+    "version": "1.5.1",
+    "type": "native",
+    "download": [
+        {
+            "kind": "blob",
+            "path": "./ow2-1.5.1.pom",
+            "sha256": "321ddbb7ee6fe4f53dea6b4cd6db74154d6bfa42391c1f763b361b9f485acf05",
+            "url": "https://repo1.maven.org/maven2/org/ow2/ow2/1.5.1/ow2-1.5.1.pom"
+        }
+    ],
+    "dependencies": [
+        "*:*:native/coreutils"
+    ],
+    "build": {
+        "steps": [
+            "*:*:mkdir -p $STAGING_DIR$NATIVEPREFIX/share/maven/repository/org/ow2/ow2/1.5.1",
+            "*:*:cp ow2-1.5.1.pom $STAGING_DIR$NATIVEPREFIX/share/maven/repository/org/ow2/ow2/1.5.1/ow2-1.5.1.pom"
+        ]
+    }
+}

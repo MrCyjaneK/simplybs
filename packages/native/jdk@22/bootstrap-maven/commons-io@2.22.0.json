@@ -1,0 +1,33 @@
+{
+    "package": "native/jdk@22/bootstrap-maven/commons-io@2.22.0",
+    "version": "2.22.0",
+    "type": "native",
+    "download": [
+        {
+            "kind": "git",
+            "sha256": "c14acc16f73e44a75b2062b17aacb26c4feda746",
+            "url": "https://github.com/apache/commons-io.git"
+        }
+    ],
+    "dependencies": [
+        "*:*:native/bash",
+        "*:*:native/coreutils",
+        "*:*:native/findutils",
+        "*:*:native/jdk@22",
+        "*:*:native/jdk@22/bootstrap-maven/pom/commons-parent@98"
+    ],
+    "build": {
+        "env": [
+            "*:*:WORKDIR=work/commons-io@2.22.0"
+        ],
+        "steps": [
+            "*:*:mkdir -p $WORKDIR",
+            "*:*:find src/main/java -name '*.java' ! -name 'module-info.java' >$WORKDIR/sources",
+            "*:*:$JAVA_HOME/bin/javac --release 8 -d $WORKDIR/classes @$WORKDIR/sources",
+            "*:*:$JAVA_HOME/bin/jar cf $WORKDIR/commons-io-2.22.0.jar -C $WORKDIR/classes .",
+            "*:*:mkdir -p $STAGING_DIR$NATIVEPREFIX/share/maven/repository/commons-io/commons-io/2.22.0",
+            "*:*:cp $WORKDIR/commons-io-2.22.0.jar $STAGING_DIR$NATIVEPREFIX/share/maven/repository/commons-io/commons-io/2.22.0/commons-io-2.22.0.jar",
+            "*:*:cp pom.xml $STAGING_DIR$NATIVEPREFIX/share/maven/repository/commons-io/commons-io/2.22.0/commons-io-2.22.0.pom"
+        ]
+    }
+}

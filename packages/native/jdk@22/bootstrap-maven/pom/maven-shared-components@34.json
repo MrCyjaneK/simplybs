@@ -1,0 +1,22 @@
+{
+    "package": "native/jdk@22/bootstrap-maven/pom/maven-shared-components@34",
+    "version": "34",
+    "type": "native",
+    "download": [
+        {
+            "kind": "blob",
+            "path": "./maven-shared-components-34.pom",
+            "sha256": "64d0edb5f21cfff600b1c3ab7d45f9754cd18ba5fbf83b3d1bb7c4849437d8e3",
+            "url": "https://repo1.maven.org/maven2/org/apache/maven/shared/maven-shared-components/34/maven-shared-components-34.pom"
+        }
+    ],
+    "dependencies": [
+        "*:*:native/coreutils"
+    ],
+    "build": {
+        "steps": [
+            "*:*:mkdir -p $STAGING_DIR$NATIVEPREFIX/share/maven/repository/org/apache/maven/shared/maven-shared-components/34",
+            "*:*:cp maven-shared-components-34.pom $STAGING_DIR$NATIVEPREFIX/share/maven/repository/org/apache/maven/shared/maven-shared-components/34/maven-shared-components-34.pom"
+        ]
+    }
+}

@@ -1,0 +1,48 @@
+{
+    "package": "native/jdk@22/bootstrap-maven/doxia-module-apt@2.0.0",
+    "version": "2.0.0",
+    "type": "native",
+    "download": [
+        {
+            "kind": "git",
+            "sha256": "9d04eaf9f327205929024b558ada4ce61f74c3c5",
+            "url": "https://github.com/apache/maven-doxia.git"
+        },
+        {
+            "kind": "blob",
+            "path": "./doxia-module-apt-2.0.0.pom",
+            "sha256": "15d5d2bcd6fe003c4d181f1b9e88b3e09611e85385246105fc5977301f2c7e96",
+            "url": "https://repo1.maven.org/maven2/org/apache/maven/doxia/doxia-module-apt/2.0.0/doxia-module-apt-2.0.0.pom"
+        }
+    ],
+    "dependencies": [
+        "*:*:native/bash",
+        "*:*:native/coreutils",
+        "*:*:native/findutils",
+        "*:*:native/jdk@22",
+        "*:*:native/jdk@22/bootstrap-maven/pom/doxia-modules@2.0.0",
+        "*:*:native/jdk@22/bootstrap-maven/doxia-core@2.0.0",
+        "*:*:native/jdk@22/bootstrap-maven/doxia-sink-api@2.0.0",
+        "*:*:native/jdk@22/bootstrap-maven/slf4j-api@1.7.36",
+        "*:*:native/jdk@22/bootstrap-maven/javax.inject@1",
+        "*:*:native/jdk@22/bootstrap-maven/commons-io@2.16.1",
+        "*:*:native/jdk@22/bootstrap-maven/commons-lang3@3.17.0",
+        "*:*:native/jdk@22/bootstrap-maven/plexus-xml@3.0.1",
+        "*:*:native/jdk@22/bootstrap-maven/plexus-utils@4.0.2"
+    ],
+    "build": {
+        "env": [
+            "*:*:WORKDIR=build/doxia-module-apt@2.0.0",
+            "*:*:REPO=$NATIVEPREFIX/share/maven/repository"
+        ],
+        "steps": [
+            "*:*:mkdir -p $WORKDIR",
+            "*:*:find doxia-modules/doxia-module-apt/src/main/java -name '*.java' >$WORKDIR/sources",
+            "*:*:$JAVA_HOME/bin/javac -cp $REPO/org/apache/maven/doxia/doxia-sink-api/2.0.0/doxia-sink-api-2.0.0.jar:$REPO/org/apache/maven/doxia/doxia-core/2.0.0/doxia-core-2.0.0.jar:$REPO/org/slf4j/slf4j-api/1.7.36/slf4j-api-1.7.36.jar:$REPO/javax/inject/javax.inject/1/javax.inject-1.jar:$REPO/commons-io/commons-io/2.16.1/commons-io-2.16.1.jar:$REPO/org/apache/commons/commons-lang3/3.17.0/commons-lang3-3.17.0.jar:$REPO/org/codehaus/plexus/plexus-xml/3.0.1/plexus-xml-3.0.1.jar:$REPO/org/codehaus/plexus/plexus-utils/4.0.2/plexus-utils-4.0.2.jar -d $WORKDIR/classes @$WORKDIR/sources",
+            "*:*:$JAVA_HOME/bin/jar cf $WORKDIR/doxia-module-apt-2.0.0.jar -C $WORKDIR/classes .",
+            "*:*:mkdir -p $STAGING_DIR$NATIVEPREFIX/share/maven/repository/org/apache/maven/doxia/doxia-module-apt/2.0.0",
+            "*:*:cp $WORKDIR/doxia-module-apt-2.0.0.jar $STAGING_DIR$NATIVEPREFIX/share/maven/repository/org/apache/maven/doxia/doxia-module-apt/2.0.0/doxia-module-apt-2.0.0.jar",
+            "*:*:cp doxia-module-apt-2.0.0.pom $STAGING_DIR$NATIVEPREFIX/share/maven/repository/org/apache/maven/doxia/doxia-module-apt/2.0.0/doxia-module-apt-2.0.0.pom"
+        ]
+    }
+}

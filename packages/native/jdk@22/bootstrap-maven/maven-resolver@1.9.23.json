@@ -1,0 +1,41 @@
+{
+    "package": "native/jdk@22/bootstrap-maven/maven-resolver@1.9.23",
+    "version": "1.9.23",
+    "type": "native",
+    "download": [
+        {
+            "kind": "git",
+            "sha256": "8535d09660cb68eb55d8e75228d5d35eaae00c88",
+            "url": "https://github.com/apache/maven-resolver.git"
+        }
+    ],
+    "dependencies": [
+        "*:*:native/bash",
+        "*:*:native/coreutils",
+        "*:*:native/findutils",
+        "*:*:native/jdk@22",
+        "*:*:native/jdk@22/bootstrap-maven/pom/maven-parent@44"
+    ],
+    "build": {
+        "env": [
+            "*:*:WORKDIR=build/maven-resolver@1.9.23"
+        ],
+        "steps": [
+            "*:*:mkdir -p $WORKDIR",
+            "*:*:mkdir -p $STAGING_DIR$NATIVEPREFIX/share/maven/repository/org/apache/maven/resolver/maven-resolver/1.9.23",
+            "*:*:cp pom.xml $STAGING_DIR$NATIVEPREFIX/share/maven/repository/org/apache/maven/resolver/maven-resolver/1.9.23/maven-resolver-1.9.23.pom",
+            "*:*:find maven-resolver-api/src/main/java -name '*.java' ! -name 'module-info.java' >$WORKDIR/api.sources",
+            "*:*:$JAVA_HOME/bin/javac -d $WORKDIR/api @$WORKDIR/api.sources",
+            "*:*:$JAVA_HOME/bin/jar cf $WORKDIR/maven-resolver-api-1.9.23.jar -C $WORKDIR/api .",
+            "*:*:mkdir -p $STAGING_DIR$NATIVEPREFIX/share/maven/repository/org/apache/maven/resolver/maven-resolver-api/1.9.23",
+            "*:*:cp $WORKDIR/maven-resolver-api-1.9.23.jar $STAGING_DIR$NATIVEPREFIX/share/maven/repository/org/apache/maven/resolver/maven-resolver-api/1.9.23/maven-resolver-api-1.9.23.jar",
+            "*:*:cp maven-resolver-api/pom.xml $STAGING_DIR$NATIVEPREFIX/share/maven/repository/org/apache/maven/resolver/maven-resolver-api/1.9.23/maven-resolver-api-1.9.23.pom",
+            "*:*:find maven-resolver-util/src/main/java -name '*.java' ! -name 'module-info.java' >$WORKDIR/util.sources",
+            "*:*:$JAVA_HOME/bin/javac -cp $WORKDIR/maven-resolver-api-1.9.23.jar -d $WORKDIR/util @$WORKDIR/util.sources",
+            "*:*:$JAVA_HOME/bin/jar cf $WORKDIR/maven-resolver-util-1.9.23.jar -C $WORKDIR/util .",
+            "*:*:mkdir -p $STAGING_DIR$NATIVEPREFIX/share/maven/repository/org/apache/maven/resolver/maven-resolver-util/1.9.23",
+            "*:*:cp $WORKDIR/maven-resolver-util-1.9.23.jar $STAGING_DIR$NATIVEPREFIX/share/maven/repository/org/apache/maven/resolver/maven-resolver-util/1.9.23/maven-resolver-util-1.9.23.jar",
+            "*:*:cp maven-resolver-util/pom.xml $STAGING_DIR$NATIVEPREFIX/share/maven/repository/org/apache/maven/resolver/maven-resolver-util/1.9.23/maven-resolver-util-1.9.23.pom"
+        ]
+    }
+}

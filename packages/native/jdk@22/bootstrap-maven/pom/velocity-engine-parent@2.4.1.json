@@ -1,0 +1,22 @@
+{
+    "package": "native/jdk@22/bootstrap-maven/pom/velocity-engine-parent@2.4.1",
+    "version": "2.4.1",
+    "type": "native",
+    "download": [
+        {
+            "kind": "blob",
+            "path": "./velocity-engine-parent-2.4.1.pom",
+            "sha256": "8efb661b7e1b44b7a056f23650ab2b43b8fcdb09bbe2ec3d3d02185d5658fd4a",
+            "url": "https://repo1.maven.org/maven2/org/apache/velocity/velocity-engine-parent/2.4.1/velocity-engine-parent-2.4.1.pom"
+        }
+    ],
+    "dependencies": [
+        "*:*:native/coreutils"
+    ],
+    "build": {
+        "steps": [
+            "*:*:mkdir -p $STAGING_DIR$NATIVEPREFIX/share/maven/repository/org/apache/velocity/velocity-engine-parent/2.4.1",
+            "*:*:cp velocity-engine-parent-2.4.1.pom $STAGING_DIR$NATIVEPREFIX/share/maven/repository/org/apache/velocity/velocity-engine-parent/2.4.1/velocity-engine-parent-2.4.1.pom"
+        ]
+    }
+}

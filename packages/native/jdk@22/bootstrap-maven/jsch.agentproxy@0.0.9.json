@@ -1,0 +1,87 @@
+{
+    "package": "native/jdk@22/bootstrap-maven/jsch.agentproxy@0.0.9",
+    "version": "0.0.9",
+    "type": "native",
+    "download": [
+        {
+            "kind": "git",
+            "sha256": "12c3d64fc2b0a4fd37659369edfdee26e48954e2",
+            "url": "https://github.com/ymnk/jsch-agent-proxy.git"
+        },
+        {
+            "kind": "blob",
+            "path": "./jsch.agentproxy-0.0.9.pom",
+            "sha256": "a9aac5a8596492f9004d3e8aea94e331ec8ca4f9e7f6b61ecd383777b8fa62af",
+            "url": "https://repo1.maven.org/maven2/com/jcraft/jsch.agentproxy/0.0.9/jsch.agentproxy-0.0.9.pom"
+        }
+    ],
+    "dependencies": [
+        "*:*:native/bash",
+        "*:*:native/coreutils",
+        "*:*:native/findutils",
+        "*:*:native/jdk@22",
+        "*:*:native/jdk@22/bootstrap-maven/pom/oss-parent@6",
+        "*:*:native/jdk@22/bootstrap-maven/jna@5.6.0",
+        "*:*:native/jdk@22/bootstrap-maven/trilead-ssh2@1.0.0-build217"
+    ],
+    "build": {
+        "env": [
+            "*:*:WORKDIR=work/jsch.agentproxy@0.0.9",
+            "*:*:REPO=$NATIVEPREFIX/share/maven/repository"
+        ],
+        "steps": [
+            "*:*:mkdir -p $WORKDIR",
+            "*:*:mkdir -p $STAGING_DIR$NATIVEPREFIX/share/maven/repository/com/jcraft/jsch.agentproxy/0.0.9",
+            "*:*:cp jsch.agentproxy-0.0.9.pom $STAGING_DIR$NATIVEPREFIX/share/maven/repository/com/jcraft/jsch.agentproxy/0.0.9/jsch.agentproxy-0.0.9.pom",
+            "*:*:mkdir -p $WORKDIR/jsch.agentproxy.core",
+            "*:*:find jsch-agent-proxy-core/src/main/java -name '*.java' >$WORKDIR/jsch.agentproxy.core.sources",
+            "*:*:$JAVA_HOME/bin/javac --release 8 -d $WORKDIR/jsch.agentproxy.core @$WORKDIR/jsch.agentproxy.core.sources",
+            "*:*:$JAVA_HOME/bin/jar cf $WORKDIR/jsch.agentproxy.core-0.0.9.jar -C $WORKDIR/jsch.agentproxy.core .",
+            "*:*:mkdir -p $STAGING_DIR$NATIVEPREFIX/share/maven/repository/com/jcraft/jsch.agentproxy.core/0.0.9",
+            "*:*:cp $WORKDIR/jsch.agentproxy.core-0.0.9.jar $STAGING_DIR$NATIVEPREFIX/share/maven/repository/com/jcraft/jsch.agentproxy.core/0.0.9/jsch.agentproxy.core-0.0.9.jar",
+            "*:*:cp jsch-agent-proxy-core/pom.xml $STAGING_DIR$NATIVEPREFIX/share/maven/repository/com/jcraft/jsch.agentproxy.core/0.0.9/jsch.agentproxy.core-0.0.9.pom",
+            "*:*:mkdir -p $WORKDIR/jsch.agentproxy.usocket-nc",
+            "*:*:find jsch-agent-proxy-usocket-nc/src/main/java -name '*.java' >$WORKDIR/jsch.agentproxy.usocket-nc.sources",
+            "*:*:$JAVA_HOME/bin/javac --release 8 -cp $WORKDIR/jsch.agentproxy.core-0.0.9.jar -d $WORKDIR/jsch.agentproxy.usocket-nc @$WORKDIR/jsch.agentproxy.usocket-nc.sources",
+            "*:*:$JAVA_HOME/bin/jar cf $WORKDIR/jsch.agentproxy.usocket-nc-0.0.9.jar -C $WORKDIR/jsch.agentproxy.usocket-nc .",
+            "*:*:mkdir -p $STAGING_DIR$NATIVEPREFIX/share/maven/repository/com/jcraft/jsch.agentproxy.usocket-nc/0.0.9",
+            "*:*:cp $WORKDIR/jsch.agentproxy.usocket-nc-0.0.9.jar $STAGING_DIR$NATIVEPREFIX/share/maven/repository/com/jcraft/jsch.agentproxy.usocket-nc/0.0.9/jsch.agentproxy.usocket-nc-0.0.9.jar",
+            "*:*:cp jsch-agent-proxy-usocket-nc/pom.xml $STAGING_DIR$NATIVEPREFIX/share/maven/repository/com/jcraft/jsch.agentproxy.usocket-nc/0.0.9/jsch.agentproxy.usocket-nc-0.0.9.pom",
+            "*:*:mkdir -p $WORKDIR/jsch.agentproxy.sshagent",
+            "*:*:find jsch-agent-proxy-sshagent/src/main/java -name '*.java' >$WORKDIR/jsch.agentproxy.sshagent.sources",
+            "*:*:$JAVA_HOME/bin/javac --release 8 -cp $WORKDIR/jsch.agentproxy.core-0.0.9.jar -d $WORKDIR/jsch.agentproxy.sshagent @$WORKDIR/jsch.agentproxy.sshagent.sources",
+            "*:*:$JAVA_HOME/bin/jar cf $WORKDIR/jsch.agentproxy.sshagent-0.0.9.jar -C $WORKDIR/jsch.agentproxy.sshagent .",
+            "*:*:mkdir -p $STAGING_DIR$NATIVEPREFIX/share/maven/repository/com/jcraft/jsch.agentproxy.sshagent/0.0.9",
+            "*:*:cp $WORKDIR/jsch.agentproxy.sshagent-0.0.9.jar $STAGING_DIR$NATIVEPREFIX/share/maven/repository/com/jcraft/jsch.agentproxy.sshagent/0.0.9/jsch.agentproxy.sshagent-0.0.9.jar",
+            "*:*:cp jsch-agent-proxy-sshagent/pom.xml $STAGING_DIR$NATIVEPREFIX/share/maven/repository/com/jcraft/jsch.agentproxy.sshagent/0.0.9/jsch.agentproxy.sshagent-0.0.9.pom",
+            "*:*:mkdir -p $WORKDIR/jsch.agentproxy.usocket-jna",
+            "*:*:find jsch-agent-proxy-usocket-jna/src/main/java -name '*.java' >$WORKDIR/jsch.agentproxy.usocket-jna.sources",
+            "*:*:$JAVA_HOME/bin/javac --release 8 -cp $WORKDIR/jsch.agentproxy.core-0.0.9.jar:$REPO/net/java/dev/jna/jna/5.6.0/jna-5.6.0.jar:$REPO/net/java/dev/jna/jna-platform/5.6.0/jna-platform-5.6.0.jar -d $WORKDIR/jsch.agentproxy.usocket-jna @$WORKDIR/jsch.agentproxy.usocket-jna.sources",
+            "*:*:$JAVA_HOME/bin/jar cf $WORKDIR/jsch.agentproxy.usocket-jna-0.0.9.jar -C $WORKDIR/jsch.agentproxy.usocket-jna .",
+            "*:*:mkdir -p $STAGING_DIR$NATIVEPREFIX/share/maven/repository/com/jcraft/jsch.agentproxy.usocket-jna/0.0.9",
+            "*:*:cp $WORKDIR/jsch.agentproxy.usocket-jna-0.0.9.jar $STAGING_DIR$NATIVEPREFIX/share/maven/repository/com/jcraft/jsch.agentproxy.usocket-jna/0.0.9/jsch.agentproxy.usocket-jna-0.0.9.jar",
+            "*:*:cp jsch-agent-proxy-usocket-jna/pom.xml $STAGING_DIR$NATIVEPREFIX/share/maven/repository/com/jcraft/jsch.agentproxy.usocket-jna/0.0.9/jsch.agentproxy.usocket-jna-0.0.9.pom",
+            "*:*:mkdir -p $WORKDIR/jsch.agentproxy.pageant",
+            "*:*:find jsch-agent-proxy-pageant/src/main/java -name '*.java' >$WORKDIR/jsch.agentproxy.pageant.sources",
+            "*:*:$JAVA_HOME/bin/javac --release 8 -cp $WORKDIR/jsch.agentproxy.core-0.0.9.jar:$REPO/net/java/dev/jna/jna/5.6.0/jna-5.6.0.jar:$REPO/net/java/dev/jna/jna-platform/5.6.0/jna-platform-5.6.0.jar -d $WORKDIR/jsch.agentproxy.pageant @$WORKDIR/jsch.agentproxy.pageant.sources",
+            "*:*:$JAVA_HOME/bin/jar cf $WORKDIR/jsch.agentproxy.pageant-0.0.9.jar -C $WORKDIR/jsch.agentproxy.pageant .",
+            "*:*:mkdir -p $STAGING_DIR$NATIVEPREFIX/share/maven/repository/com/jcraft/jsch.agentproxy.pageant/0.0.9",
+            "*:*:cp $WORKDIR/jsch.agentproxy.pageant-0.0.9.jar $STAGING_DIR$NATIVEPREFIX/share/maven/repository/com/jcraft/jsch.agentproxy.pageant/0.0.9/jsch.agentproxy.pageant-0.0.9.jar",
+            "*:*:cp jsch-agent-proxy-pageant/pom.xml $STAGING_DIR$NATIVEPREFIX/share/maven/repository/com/jcraft/jsch.agentproxy.pageant/0.0.9/jsch.agentproxy.pageant-0.0.9.pom",
+            "*:*:mkdir -p $WORKDIR/jsch.agentproxy.connector-factory",
+            "*:*:find jsch-agent-proxy-connector-factory/src/main/java -name '*.java' >$WORKDIR/jsch.agentproxy.connector-factory.sources",
+            "*:*:$JAVA_HOME/bin/javac --release 8 -cp $WORKDIR/jsch.agentproxy.core-0.0.9.jar:$WORKDIR/jsch.agentproxy.usocket-jna-0.0.9.jar:$WORKDIR/jsch.agentproxy.usocket-nc-0.0.9.jar:$WORKDIR/jsch.agentproxy.sshagent-0.0.9.jar:$WORKDIR/jsch.agentproxy.pageant-0.0.9.jar -d $WORKDIR/jsch.agentproxy.connector-factory @$WORKDIR/jsch.agentproxy.connector-factory.sources",
+            "*:*:$JAVA_HOME/bin/jar cf $WORKDIR/jsch.agentproxy.connector-factory-0.0.9.jar -C $WORKDIR/jsch.agentproxy.connector-factory .",
+            "*:*:mkdir -p $STAGING_DIR$NATIVEPREFIX/share/maven/repository/com/jcraft/jsch.agentproxy.connector-factory/0.0.9",
+            "*:*:cp $WORKDIR/jsch.agentproxy.connector-factory-0.0.9.jar $STAGING_DIR$NATIVEPREFIX/share/maven/repository/com/jcraft/jsch.agentproxy.connector-factory/0.0.9/jsch.agentproxy.connector-factory-0.0.9.jar",
+            "*:*:cp jsch-agent-proxy-connector-factory/pom.xml $STAGING_DIR$NATIVEPREFIX/share/maven/repository/com/jcraft/jsch.agentproxy.connector-factory/0.0.9/jsch.agentproxy.connector-factory-0.0.9.pom",
+            "*:*:mkdir -p $WORKDIR/jsch.agentproxy.svnkit-trilead-ssh2",
+            "*:*:find jsch-agent-proxy-svnkit-trilead-ssh2/src/main/java -name '*.java' >$WORKDIR/jsch.agentproxy.svnkit-trilead-ssh2.sources",
+            "*:*:$JAVA_HOME/bin/javac --release 8 -cp $WORKDIR/jsch.agentproxy.core-0.0.9.jar:$REPO/com/trilead/trilead-ssh2/1.0.0-build217/trilead-ssh2-1.0.0-build217.jar -d $WORKDIR/jsch.agentproxy.svnkit-trilead-ssh2 @$WORKDIR/jsch.agentproxy.svnkit-trilead-ssh2.sources",
+            "*:*:$JAVA_HOME/bin/jar cf $WORKDIR/jsch.agentproxy.svnkit-trilead-ssh2-0.0.9.jar -C $WORKDIR/jsch.agentproxy.svnkit-trilead-ssh2 .",
+            "*:*:mkdir -p $STAGING_DIR$NATIVEPREFIX/share/maven/repository/com/jcraft/jsch.agentproxy.svnkit-trilead-ssh2/0.0.9",
+            "*:*:cp $WORKDIR/jsch.agentproxy.svnkit-trilead-ssh2-0.0.9.jar $STAGING_DIR$NATIVEPREFIX/share/maven/repository/com/jcraft/jsch.agentproxy.svnkit-trilead-ssh2/0.0.9/jsch.agentproxy.svnkit-trilead-ssh2-0.0.9.jar",
+            "*:*:cp jsch-agent-proxy-svnkit-trilead-ssh2/pom.xml $STAGING_DIR$NATIVEPREFIX/share/maven/repository/com/jcraft/jsch.agentproxy.svnkit-trilead-ssh2/0.0.9/jsch.agentproxy.svnkit-trilead-ssh2-0.0.9.pom"
+        ]
+    }
+}

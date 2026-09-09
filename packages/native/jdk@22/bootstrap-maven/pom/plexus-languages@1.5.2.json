@@ -1,0 +1,22 @@
+{
+    "package": "native/jdk@22/bootstrap-maven/pom/plexus-languages@1.5.2",
+    "version": "1.5.2",
+    "type": "native",
+    "download": [
+        {
+            "kind": "blob",
+            "path": "./plexus-languages-1.5.2.pom",
+            "sha256": "9e7d29fc65089d69e75b559efaa5db8117dab3c579d0ef19759776d5643a492b",
+            "url": "https://repo1.maven.org/maven2/org/codehaus/plexus/plexus-languages/1.5.2/plexus-languages-1.5.2.pom"
+        }
+    ],
+    "dependencies": [
+        "*:*:native/coreutils"
+    ],
+    "build": {
+        "steps": [
+            "*:*:mkdir -p $STAGING_DIR$NATIVEPREFIX/share/maven/repository/org/codehaus/plexus/plexus-languages/1.5.2",
+            "*:*:cp plexus-languages-1.5.2.pom $STAGING_DIR$NATIVEPREFIX/share/maven/repository/org/codehaus/plexus/plexus-languages/1.5.2/plexus-languages-1.5.2.pom"
+        ]
+    }
+}

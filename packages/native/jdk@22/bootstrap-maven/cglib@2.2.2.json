@@ -1,0 +1,44 @@
+{
+    "package": "native/jdk@22/bootstrap-maven/cglib@2.2.2",
+    "version": "2.2.2",
+    "type": "native",
+    "download": [
+        {
+            "kind": "tar.gz",
+            "sha256": "982481bcccd567199ef0f4aaaf7f62926c2762d5514fd33ad9520c792c7a8fd2",
+            "url": "http://archive.debian.org/debian/pool/main/c/cglib/cglib_2.2.2+dfsg.orig.tar.gz"
+        },
+        {
+            "kind": "blob",
+            "path": "./cglib-2.2.2.pom",
+            "sha256": "9d6073c9e0d449b23b88f81976e395990878f771849a88a27bff1b2eeddcbad1",
+            "url": "https://repo1.maven.org/maven2/cglib/cglib/2.2.2/cglib-2.2.2.pom"
+        }
+    ],
+    "dependencies": [
+        "*:*:native/bash",
+        "*:*:native/coreutils",
+        "*:*:native/findutils",
+        "*:*:native/jdk@22",
+        "*:*:native/sed",
+        "*:*:native/jdk@22/bootstrap-maven/asm@3.3.1"
+    ],
+    "build": {
+        "env": [
+            "*:*:WORKDIR=build/cglib@2.2.2",
+            "*:*:REPO=$NATIVEPREFIX/share/maven/repository"
+        ],
+        "steps": [
+            "*:*:mkdir -p $WORKDIR",
+            "*:*:sed -i '/import org.objectweb.asm.util.TraceClassVisitor;/d' src/proxy/net/sf/cglib/core/DebuggingClassWriter.java",
+            "*:*:sed -i 's/TraceClassVisitor tcv = new TraceClassVisitor(null, pw);//' src/proxy/net/sf/cglib/core/DebuggingClassWriter.java",
+            "*:*:sed -i 's/cr.accept(tcv, 0);//' src/proxy/net/sf/cglib/core/DebuggingClassWriter.java",
+            "*:*:find src/proxy -name '*.java' ! -path '*/transform/*' >$WORKDIR/sources",
+            "*:*:$JAVA_HOME/bin/javac --release 8 -cp $REPO/asm/asm/3.3.1/asm-3.3.1.jar -d $WORKDIR/classes @$WORKDIR/sources",
+            "*:*:$JAVA_HOME/bin/jar cf $WORKDIR/cglib-2.2.2.jar -C $WORKDIR/classes .",
+            "*:*:mkdir -p $STAGING_DIR$NATIVEPREFIX/share/maven/repository/cglib/cglib/2.2.2",
+            "*:*:cp $WORKDIR/cglib-2.2.2.jar $STAGING_DIR$NATIVEPREFIX/share/maven/repository/cglib/cglib/2.2.2/cglib-2.2.2.jar",
+            "*:*:cp cglib-2.2.2.pom $STAGING_DIR$NATIVEPREFIX/share/maven/repository/cglib/cglib/2.2.2/cglib-2.2.2.pom"
+        ]
+    }
+}

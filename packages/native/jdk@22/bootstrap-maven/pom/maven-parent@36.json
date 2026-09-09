@@ -1,0 +1,22 @@
+{
+    "package": "native/jdk@22/bootstrap-maven/pom/maven-parent@36",
+    "version": "36",
+    "type": "native",
+    "download": [
+        {
+            "kind": "blob",
+            "path": "./maven-parent-36.pom",
+            "sha256": "fcc3ab64c3cc80966d562a9aa604d8c280b3b7092441dd09e5290b081dfbedb5",
+            "url": "https://repo1.maven.org/maven2/org/apache/maven/maven-parent/36/maven-parent-36.pom"
+        }
+    ],
+    "dependencies": [
+        "*:*:native/coreutils"
+    ],
+    "build": {
+        "steps": [
+            "*:*:mkdir -p $STAGING_DIR$NATIVEPREFIX/share/maven/repository/org/apache/maven/maven-parent/36",
+            "*:*:cp maven-parent-36.pom $STAGING_DIR$NATIVEPREFIX/share/maven/repository/org/apache/maven/maven-parent/36/maven-parent-36.pom"
+        ]
+    }
+}

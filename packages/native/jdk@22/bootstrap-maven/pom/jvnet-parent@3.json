@@ -1,0 +1,22 @@
+{
+    "package": "native/jdk@22/bootstrap-maven/pom/jvnet-parent@3",
+    "version": "3",
+    "type": "native",
+    "download": [
+        {
+            "kind": "blob",
+            "path": "./jvnet-parent-3.pom",
+            "sha256": "30f5789efa39ddbf96095aada3fc1260c4561faf2f714686717cb2dc5049475a",
+            "url": "https://repo1.maven.org/maven2/net/java/jvnet-parent/3/jvnet-parent-3.pom"
+        }
+    ],
+    "dependencies": [
+        "*:*:native/coreutils"
+    ],
+    "build": {
+        "steps": [
+            "*:*:mkdir -p $STAGING_DIR$NATIVEPREFIX/share/maven/repository/net/java/jvnet-parent/3",
+            "*:*:cp jvnet-parent-3.pom $STAGING_DIR$NATIVEPREFIX/share/maven/repository/net/java/jvnet-parent/3/jvnet-parent-3.pom"
+        ]
+    }
+}

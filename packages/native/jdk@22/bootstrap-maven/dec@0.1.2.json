@@ -1,0 +1,38 @@
+{
+    "package": "native/jdk@22/bootstrap-maven/dec@0.1.2",
+    "version": "0.1.2",
+    "type": "native",
+    "download": [
+        {
+            "kind": "git",
+            "sha256": "46c1a881b41bb638c76247558aa04b1591af3aa7",
+            "url": "https://github.com/google/brotli.git"
+        },
+        {
+            "kind": "blob",
+            "path": "./dec-0.1.2.pom",
+            "sha256": "1d3db28e001eb9a01732d0c98be062af9af536d942897a0c937984af8b4228c0",
+            "url": "https://repo1.maven.org/maven2/org/brotli/dec/0.1.2/dec-0.1.2.pom"
+        }
+    ],
+    "dependencies": [
+        "*:*:native/bash",
+        "*:*:native/coreutils",
+        "*:*:native/findutils",
+        "*:*:native/jdk@22"
+    ],
+    "build": {
+        "env": [
+            "*:*:WORKDIR=_build/dec@0.1.2"
+        ],
+        "steps": [
+            "*:*:mkdir -p $WORKDIR",
+            "*:*:find java/org/brotli/dec -name '*.java' ! -name '*Test.java' >$WORKDIR/sources",
+            "*:*:$JAVA_HOME/bin/javac -d $WORKDIR/classes @$WORKDIR/sources",
+            "*:*:$JAVA_HOME/bin/jar cf $WORKDIR/dec-0.1.2.jar -C $WORKDIR/classes .",
+            "*:*:mkdir -p $STAGING_DIR$NATIVEPREFIX/share/maven/repository/org/brotli/dec/0.1.2",
+            "*:*:cp $WORKDIR/dec-0.1.2.jar $STAGING_DIR$NATIVEPREFIX/share/maven/repository/org/brotli/dec/0.1.2/dec-0.1.2.jar",
+            "*:*:cp dec-0.1.2.pom $STAGING_DIR$NATIVEPREFIX/share/maven/repository/org/brotli/dec/0.1.2/dec-0.1.2.pom"
+        ]
+    }
+}

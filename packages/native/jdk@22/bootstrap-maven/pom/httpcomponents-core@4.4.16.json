@@ -1,0 +1,22 @@
+{
+    "package": "native/jdk@22/bootstrap-maven/pom/httpcomponents-core@4.4.16",
+    "version": "4.4.16",
+    "type": "native",
+    "download": [
+        {
+            "kind": "blob",
+            "path": "./httpcomponents-core-4.4.16.pom",
+            "sha256": "f2d75a2c2d423ad18539bf21656d56f88a4091944a662fcaf159d5ae283db7f7",
+            "url": "https://repo1.maven.org/maven2/org/apache/httpcomponents/httpcomponents-core/4.4.16/httpcomponents-core-4.4.16.pom"
+        }
+    ],
+    "dependencies": [
+        "*:*:native/coreutils"
+    ],
+    "build": {
+        "steps": [
+            "*:*:mkdir -p $STAGING_DIR$NATIVEPREFIX/share/maven/repository/org/apache/httpcomponents/httpcomponents-core/4.4.16",
+            "*:*:cp httpcomponents-core-4.4.16.pom $STAGING_DIR$NATIVEPREFIX/share/maven/repository/org/apache/httpcomponents/httpcomponents-core/4.4.16/httpcomponents-core-4.4.16.pom"
+        ]
+    }
+}

@@ -1,0 +1,22 @@
+{
+    "package": "native/jdk@22/bootstrap-maven/pom/apache@5",
+    "version": "5",
+    "type": "native",
+    "download": [
+        {
+            "kind": "blob",
+            "path": "./apache-5.pom",
+            "sha256": "1933a6037439b389bda2feaccfc0113880fd8d88f7d240d2052b91108dd5ae89",
+            "url": "https://repo1.maven.org/maven2/org/apache/apache/5/apache-5.pom"
+        }
+    ],
+    "dependencies": [
+        "*:*:native/coreutils"
+    ],
+    "build": {
+        "steps": [
+            "*:*:mkdir -p $STAGING_DIR$NATIVEPREFIX/share/maven/repository/org/apache/apache/5",
+            "*:*:cp apache-5.pom $STAGING_DIR$NATIVEPREFIX/share/maven/repository/org/apache/apache/5/apache-5.pom"
+        ]
+    }
+}

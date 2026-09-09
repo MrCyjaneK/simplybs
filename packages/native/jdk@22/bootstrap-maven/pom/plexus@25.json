@@ -1,0 +1,22 @@
+{
+    "package": "native/jdk@22/bootstrap-maven/pom/plexus@25",
+    "version": "25",
+    "type": "native",
+    "download": [
+        {
+            "kind": "blob",
+            "path": "./plexus-25.pom",
+            "sha256": "faa7947c2020967ad0c92b259ee9fa361d05e90cd036d17c37098bb1edaea3a3",
+            "url": "https://repo1.maven.org/maven2/org/codehaus/plexus/plexus/25/plexus-25.pom"
+        }
+    ],
+    "dependencies": [
+        "*:*:native/coreutils"
+    ],
+    "build": {
+        "steps": [
+            "*:*:mkdir -p $STAGING_DIR$NATIVEPREFIX/share/maven/repository/org/codehaus/plexus/plexus/25",
+            "*:*:cp plexus-25.pom $STAGING_DIR$NATIVEPREFIX/share/maven/repository/org/codehaus/plexus/plexus/25/plexus-25.pom"
+        ]
+    }
+}

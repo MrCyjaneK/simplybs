@@ -1,0 +1,45 @@
+{
+    "package": "native/jdk@22/bootstrap-maven/plexus-sec-dispatcher@1.4",
+    "version": "1.4",
+    "type": "native",
+    "download": [
+        {
+            "kind": "git",
+            "sha256": "7db8f880486e192a1c5ea9544e01e756c3d49d0f",
+            "url": "https://github.com/sonatype/plexus-sec-dispatcher.git"
+        }
+    ],
+    "dependencies": [
+        "*:*:native/bash",
+        "*:*:native/coreutils",
+        "*:*:native/findutils",
+        "*:*:native/jdk@22",
+        "*:*:native/jdk@22/bootstrap-maven/pom/spice-parent@12",
+        "*:*:native/jdk@22/bootstrap-maven/plexus-cipher@1.4",
+        "*:*:native/jdk@22/bootstrap-maven/plexus-utils@4.0.2",
+        "*:*:native/jdk@22/bootstrap-maven/plexus-xml@3.0.1",
+        "*:*:native/jdk@22/bootstrap-maven/plexus-build-api@1.2.0",
+        "*:*:native/jdk@22/bootstrap-maven/modello@2.6.0",
+        "*:*:native/jdk@22/bootstrap-maven/slf4j-api@1.7.36",
+        "*:*:native/jdk@22/bootstrap-maven/javax.inject@1"
+    ],
+    "build": {
+        "env": [
+            "*:*:WORKDIR=work/plexus-sec-dispatcher@1.4",
+            "*:*:REPO=$NATIVEPREFIX/share/maven/repository",
+            "*:*:MODELLO_CP=$NATIVEPREFIX/share/maven/repository/javax/inject/javax.inject/1/javax.inject-1.jar:$NATIVEPREFIX/share/maven/repository/org/slf4j/slf4j-api/1.7.36/slf4j-api-1.7.36.jar:$NATIVEPREFIX/share/maven/repository/org/codehaus/plexus/plexus-utils/4.0.2/plexus-utils-4.0.2.jar:$NATIVEPREFIX/share/maven/repository/org/codehaus/plexus/plexus-xml/3.0.1/plexus-xml-3.0.1.jar:$NATIVEPREFIX/share/maven/repository/org/codehaus/plexus/plexus-build-api/1.2.0/plexus-build-api-1.2.0.jar:$NATIVEPREFIX/share/maven/repository/org/codehaus/modello/modello-core/2.6.0/modello-core-2.6.0.jar:$NATIVEPREFIX/share/maven/repository/org/codehaus/modello/modello-plugin-java/2.6.0/modello-plugin-java-2.6.0.jar:$NATIVEPREFIX/share/maven/repository/org/codehaus/modello/modello-plugin-xml/2.6.0/modello-plugin-xml-2.6.0.jar:$NATIVEPREFIX/share/maven/repository/org/codehaus/modello/modello-plugin-xpp3/2.6.0/modello-plugin-xpp3-2.6.0.jar"
+        ],
+        "steps": [
+            "*:*:mkdir -p $WORKDIR/stub/org/codehaus/plexus/logging $WORKDIR/generated $WORKDIR/classes",
+            "*:*:cp $PATCH_DIR/maven/plexus-sec-dispatcher-1.4-AbstractLogEnabled.java $WORKDIR/stub/org/codehaus/plexus/logging/AbstractLogEnabled.java",
+            "*:*:$JAVA_HOME/bin/javac -cp $MODELLO_CP -d $WORKDIR $PATCH_DIR/maven/RunModello.java",
+            "*:*:$JAVA_HOME/bin/java -cp $WORKDIR:$MODELLO_CP RunModello src/main/mdo/settings-security.mdo 1.0.0 $WORKDIR/generated java xpp3-reader",
+            "*:*:find src/main/java $WORKDIR/generated $WORKDIR/stub -name '*.java' >$WORKDIR/sources",
+            "*:*:$JAVA_HOME/bin/javac --release 8 -cp $REPO/org/sonatype/plexus/plexus-cipher/1.4/plexus-cipher-1.4.jar:$REPO/org/codehaus/plexus/plexus-utils/4.0.2/plexus-utils-4.0.2.jar:$REPO/org/codehaus/plexus/plexus-xml/3.0.1/plexus-xml-3.0.1.jar -d $WORKDIR/classes @$WORKDIR/sources",
+            "*:*:$JAVA_HOME/bin/jar cf $WORKDIR/plexus-sec-dispatcher-1.4.jar -C $WORKDIR/classes .",
+            "*:*:mkdir -p $STAGING_DIR$NATIVEPREFIX/share/maven/repository/org/sonatype/plexus/plexus-sec-dispatcher/1.4",
+            "*:*:cp $WORKDIR/plexus-sec-dispatcher-1.4.jar $STAGING_DIR$NATIVEPREFIX/share/maven/repository/org/sonatype/plexus/plexus-sec-dispatcher/1.4/plexus-sec-dispatcher-1.4.jar",
+            "*:*:cp pom.xml $STAGING_DIR$NATIVEPREFIX/share/maven/repository/org/sonatype/plexus/plexus-sec-dispatcher/1.4/plexus-sec-dispatcher-1.4.pom"
+        ]
+    }
+}

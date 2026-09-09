@@ -1,0 +1,22 @@
+{
+    "package": "native/jdk@22/bootstrap-maven/pom/apache@7",
+    "version": "7",
+    "type": "native",
+    "download": [
+        {
+            "kind": "blob",
+            "path": "./apache-7.pom",
+            "sha256": "1397ce1db433adc9f223dbf07496d133681448751f4ae29e58f68e78fb4b6c25",
+            "url": "https://repo1.maven.org/maven2/org/apache/apache/7/apache-7.pom"
+        }
+    ],
+    "dependencies": [
+        "*:*:native/coreutils"
+    ],
+    "build": {
+        "steps": [
+            "*:*:mkdir -p $STAGING_DIR$NATIVEPREFIX/share/maven/repository/org/apache/apache/7",
+            "*:*:cp apache-7.pom $STAGING_DIR$NATIVEPREFIX/share/maven/repository/org/apache/apache/7/apache-7.pom"
+        ]
+    }
+}

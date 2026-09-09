@@ -1,0 +1,38 @@
+{
+    "package": "native/jdk@22/bootstrap-maven/apiguardian-api@1.1.2",
+    "version": "1.1.2",
+    "type": "native",
+    "download": [
+        {
+            "kind": "git",
+            "sha256": "aa952a1b9d5b4e9cc0af853e2c140c2455b397be",
+            "url": "https://github.com/apiguardian-team/apiguardian.git"
+        },
+        {
+            "kind": "blob",
+            "path": "./apiguardian-api-1.1.2.pom",
+            "sha256": "32355081d109095c3d5d374d5a43b4f4c1b75d549e983ef50723e2772e5302a0",
+            "url": "https://repo1.maven.org/maven2/org/apiguardian/apiguardian-api/1.1.2/apiguardian-api-1.1.2.pom"
+        }
+    ],
+    "dependencies": [
+        "*:*:native/bash",
+        "*:*:native/coreutils",
+        "*:*:native/findutils",
+        "*:*:native/jdk@22"
+    ],
+    "build": {
+        "env": [
+            "*:*:WORKDIR=build/apiguardian-api@1.1.2"
+        ],
+        "steps": [
+            "*:*:mkdir -p $WORKDIR",
+            "*:*:find src/main/java -name '*.java' ! -name 'module-info.java' >$WORKDIR/sources",
+            "*:*:$JAVA_HOME/bin/javac -d $WORKDIR/classes @$WORKDIR/sources",
+            "*:*:$JAVA_HOME/bin/jar cf $WORKDIR/apiguardian-api-1.1.2.jar -C $WORKDIR/classes .",
+            "*:*:mkdir -p $STAGING_DIR$NATIVEPREFIX/share/maven/repository/org/apiguardian/apiguardian-api/1.1.2",
+            "*:*:cp $WORKDIR/apiguardian-api-1.1.2.jar $STAGING_DIR$NATIVEPREFIX/share/maven/repository/org/apiguardian/apiguardian-api/1.1.2/apiguardian-api-1.1.2.jar",
+            "*:*:cp apiguardian-api-1.1.2.pom $STAGING_DIR$NATIVEPREFIX/share/maven/repository/org/apiguardian/apiguardian-api/1.1.2/apiguardian-api-1.1.2.pom"
+        ]
+    }
+}

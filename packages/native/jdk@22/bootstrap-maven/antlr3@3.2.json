@@ -1,0 +1,49 @@
+{
+    "package": "native/jdk@22/bootstrap-maven/antlr3@3.2",
+    "version": "3.2",
+    "type": "native",
+    "download": [
+        {
+            "kind": "tar.gz",
+            "sha256": "fca85b779064a06020bf37865c0c8b16df1ef25f4471392a36466b662ec0588a",
+            "url": "https://deb.debian.org/debian/pool/main/a/antlr3.2/antlr3.2_3.2.orig.tar.gz"
+        },
+        {
+            "kind": "tar.xz",
+            "sha256": "fe7eab16bac9a73c0066b3487ba0e569078f17cae014e37f301a0cecf9c5fb70",
+            "url": "https://deb.debian.org/debian/pool/main/a/antlr3.2/antlr3.2_3.2-16.debian.tar.xz"
+        }
+    ],
+    "dependencies": [
+        "*:*:native/bash",
+        "*:*:native/coreutils",
+        "*:*:native/findutils",
+        "*:*:native/sed",
+        "*:*:native/jdk@22",
+        "*:*:native/jdk@22/bootstrap-maven/antlr2",
+        "*:*:native/jdk@22/bootstrap-maven/stringtemplate3"
+    ],
+    "build": {
+        "env": [
+            "*:*:WORKDIR=build/antlr3.2",
+            "*:*:GENV2=build/antlr3.2/v2"
+        ],
+        "steps": [
+            "*:*:mkdir -p $GENV2 $WORKDIR/classes $STAGING_DIR$NATIVEPREFIX/share/java",
+            "*:*:sed -i 's/delegates.removeAll(direct);/if (direct != null) delegates.removeAll(direct);/' tool/src/main/java/org/antlr/tool/CompositeGrammar.java",
+            "*:*:cp tool/src/main/antlr2/org/antlr/grammar/v2/*.g $GENV2/",
+            "*:*:cd $GENV2 && $JAVA_HOME/bin/java -cp $NATIVEPREFIX/share/java/antlr2.jar antlr.Tool antlr.g",
+            "*:*:cd $GENV2 && $JAVA_HOME/bin/java -cp $NATIVEPREFIX/share/java/antlr2.jar antlr.Tool codegen.g",
+            "*:*:cd $GENV2 && $JAVA_HOME/bin/java -cp $NATIVEPREFIX/share/java/antlr2.jar antlr.Tool antlr.print.g",
+            "*:*:cd $GENV2 && $JAVA_HOME/bin/java -cp $NATIVEPREFIX/share/java/antlr2.jar antlr.Tool assign.types.g",
+            "*:*:cd $GENV2 && $JAVA_HOME/bin/java -cp $NATIVEPREFIX/share/java/antlr2.jar antlr.Tool buildnfa.g",
+            "*:*:cd $GENV2 && $JAVA_HOME/bin/java -cp $NATIVEPREFIX/share/java/antlr2.jar antlr.Tool define.g",
+            "*:*:find tool/src/main/java runtime/Java/src/main/java $GENV2 generated-sources/antlr3 -name '*.java' ! -name 'DOTTreeGenerator.java' >$WORKDIR/sources",
+            "*:*:$JAVA_HOME/bin/javac -encoding ISO-8859-1 --release 8 -cp $NATIVEPREFIX/share/java/antlr2.jar:$NATIVEPREFIX/share/java/stringtemplate3.jar -d $WORKDIR/classes @$WORKDIR/sources",
+            "*:*:cp -R tool/src/main/resources/. $WORKDIR/classes/",
+            "*:*:cd $WORKDIR/classes && $JAVA_HOME/bin/jar xf $NATIVEPREFIX/share/java/antlr2.jar",
+            "*:*:cd $WORKDIR/classes && $JAVA_HOME/bin/jar xf $NATIVEPREFIX/share/java/stringtemplate3.jar",
+            "*:*:$JAVA_HOME/bin/jar cf $STAGING_DIR$NATIVEPREFIX/share/java/antlr3.2.jar -C $WORKDIR/classes ."
+        ]
+    }
+}

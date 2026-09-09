@@ -1,0 +1,41 @@
+{
+    "package": "native/jdk@22/bootstrap-maven/guice@5.1.0",
+    "version": "5.1.0",
+    "type": "native",
+    "download": [
+        {
+            "kind": "git",
+            "sha256": "b0ff10c8ec8911137451623a333d6daa65f73d8a",
+            "url": "https://github.com/google/guice.git"
+        }
+    ],
+    "dependencies": [
+        "*:*:native/bash",
+        "*:*:native/coreutils",
+        "*:*:native/findutils",
+        "*:*:native/jdk@22",
+        "*:*:native/jdk@22/bootstrap-maven/pom/guice-parent@5.1.0",
+        "*:*:native/jdk@22/bootstrap-maven/javax.inject@1",
+        "*:*:native/jdk@22/bootstrap-maven/aopalliance@1.0",
+        "*:*:native/jdk@22/bootstrap-maven/guava@33.6.0-jre",
+        "*:*:native/jdk@22/bootstrap-maven/asm@9.9.1",
+        "*:*:native/jdk@22/bootstrap-maven/jsr305@3.0.2",
+        "*:*:native/jdk@22/bootstrap-maven/error_prone_annotations@2.47.0"
+    ],
+    "build": {
+        "env": [
+            "*:*:WORKDIR=work/guice@5.1.0",
+            "*:*:REPO=$NATIVEPREFIX/share/maven/repository"
+        ],
+        "steps": [
+            "*:*:mkdir -p $WORKDIR",
+            "*:*:find core/src -name '*.java' >$WORKDIR/sources",
+            "*:*:$JAVA_HOME/bin/javac --release 8 -cp $REPO/javax/inject/javax.inject/1/javax.inject-1.jar:$REPO/aopalliance/aopalliance/1.0/aopalliance-1.0.jar:$REPO/com/google/guava/guava/33.6.0-jre/guava-33.6.0-jre.jar:$REPO/org/ow2/asm/asm/9.9.1/asm-9.9.1.jar:$REPO/com/google/code/findbugs/jsr305/3.0.2/jsr305-3.0.2.jar:$REPO/com/google/errorprone/error_prone_annotations/2.47.0/error_prone_annotations-2.47.0.jar -d $WORKDIR/classes @$WORKDIR/sources",
+            "*:*:$JAVA_HOME/bin/jar cf $WORKDIR/guice-5.1.0.jar -C $WORKDIR/classes .",
+            "*:*:mkdir -p $STAGING_DIR$NATIVEPREFIX/share/maven/repository/com/google/inject/guice/5.1.0",
+            "*:*:cp $WORKDIR/guice-5.1.0.jar $STAGING_DIR$NATIVEPREFIX/share/maven/repository/com/google/inject/guice/5.1.0/guice-5.1.0.jar",
+            "*:*:cp core/pom.xml $STAGING_DIR$NATIVEPREFIX/share/maven/repository/com/google/inject/guice/5.1.0/guice-5.1.0.pom",
+            "*:*:cp $STAGING_DIR$NATIVEPREFIX/share/maven/repository/com/google/inject/guice/5.1.0/guice-5.1.0.jar $STAGING_DIR$NATIVEPREFIX/share/maven/repository/com/google/inject/guice/5.1.0/guice-5.1.0-classes.jar"
+        ]
+    }
+}

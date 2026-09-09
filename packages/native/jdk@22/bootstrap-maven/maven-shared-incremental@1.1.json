@@ -1,0 +1,38 @@
+{
+    "package": "native/jdk@22/bootstrap-maven/maven-shared-incremental@1.1",
+    "version": "1.1",
+    "type": "native",
+    "download": [
+        {
+            "kind": "git",
+            "sha256": "a7ae98be73756c0a0b36f357741eb1e39daffd3b",
+            "url": "https://github.com/apache/maven-shared-incremental.git"
+        }
+    ],
+    "dependencies": [
+        "*:*:native/bash",
+        "*:*:native/coreutils",
+        "*:*:native/findutils",
+        "*:*:native/jdk@22",
+        "*:*:native/maven@3.9-bin",
+        "*:*:native/jdk@22/bootstrap-maven/pom/maven-shared-components@19",
+        "*:*:native/jdk@22/bootstrap-maven/maven-shared-utils@3.4.2",
+        "*:*:native/jdk@22/bootstrap-maven/plexus-component-annotations@1.5.5"
+    ],
+    "build": {
+        "env": [
+            "*:*:WORKDIR=build/maven-shared-incremental@1.1",
+            "*:*:REPO=$NATIVEPREFIX/share/maven/repository",
+            "*:*:BOOT_LIB=$NATIVEPREFIX/maven-3.9-bootstrap/lib"
+        ],
+        "steps": [
+            "*:*:mkdir -p $WORKDIR/classes",
+            "*:*:find src/main/java -name '*.java' >$WORKDIR/sources",
+            "*:*:$JAVA_HOME/bin/javac -cp $(printf '%s:' $BOOT_LIB/*.jar)$REPO/org/apache/maven/shared/maven-shared-utils/3.4.2/maven-shared-utils-3.4.2.jar:$REPO/org/codehaus/plexus/plexus-component-annotations/1.5.5/plexus-component-annotations-1.5.5.jar -d $WORKDIR/classes @$WORKDIR/sources",
+            "*:*:$JAVA_HOME/bin/jar cf $WORKDIR/maven-shared-incremental-1.1.jar -C $WORKDIR/classes .",
+            "*:*:mkdir -p $STAGING_DIR$NATIVEPREFIX/share/maven/repository/org/apache/maven/shared/maven-shared-incremental/1.1",
+            "*:*:cp $WORKDIR/maven-shared-incremental-1.1.jar $STAGING_DIR$NATIVEPREFIX/share/maven/repository/org/apache/maven/shared/maven-shared-incremental/1.1/maven-shared-incremental-1.1.jar",
+            "*:*:cp pom.xml $STAGING_DIR$NATIVEPREFIX/share/maven/repository/org/apache/maven/shared/maven-shared-incremental/1.1/maven-shared-incremental-1.1.pom"
+        ]
+    }
+}

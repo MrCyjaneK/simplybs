@@ -1,0 +1,46 @@
+{
+    "package": "native/jdk@22/bootstrap-maven/maven-artifact-transfer@0.13.1",
+    "version": "0.13.1",
+    "type": "native",
+    "download": [
+        {
+            "kind": "git",
+            "sha256": "ee4b1f50504d9538ea447e0d987a44e9e89e8dc1",
+            "url": "https://github.com/apache/maven-artifact-transfer.git"
+        },
+        {
+            "kind": "blob",
+            "path": "./maven-artifact-transfer-0.13.1.pom",
+            "sha256": "e4b15a1e7cfbfe480408cfbaa148d66ea3324bf19e9ac6d6c17053bdb18ac4cd",
+            "url": "https://repo1.maven.org/maven2/org/apache/maven/shared/maven-artifact-transfer/0.13.1/maven-artifact-transfer-0.13.1.pom"
+        }
+    ],
+    "dependencies": [
+        "*:*:native/bash",
+        "*:*:native/coreutils",
+        "*:*:native/findutils",
+        "*:*:native/jdk@22",
+        "*:*:native/maven@3.9-bin",
+        "*:*:native/jdk@22/bootstrap-maven/pom/maven-shared-components@34",
+        "*:*:native/jdk@22/bootstrap-maven/plexus-component-annotations@2.2.0",
+        "*:*:native/jdk@22/bootstrap-maven/maven-common-artifact-filters@3.4.0",
+        "*:*:native/jdk@22/bootstrap-maven/plexus-utils@4.0.2",
+        "*:*:native/jdk@22/bootstrap-maven/slf4j-api@1.7.36"
+    ],
+    "build": {
+        "env": [
+            "*:*:WORKDIR=build/maven-artifact-transfer@0.13.1",
+            "*:*:REPO=$NATIVEPREFIX/share/maven/repository",
+            "*:*:BOOT_LIB=$NATIVEPREFIX/maven-3.9-bootstrap/lib"
+        ],
+        "steps": [
+            "*:*:mkdir -p $WORKDIR/classes",
+            "*:*:find src/main/java -name '*.java' ! -name 'Maven30*.java' ! -name 'Maven31*.java' ! -name 'Maven302*.java' ! -name 'MavenAetherUtils.java' ! -name 'Invoker.java' ! -path '*/internal/Default*.java' >$WORKDIR/sources",
+            "*:*:$JAVA_HOME/bin/javac --release 8 -cp $(printf '%s:' $BOOT_LIB/*.jar)$REPO/org/codehaus/plexus/plexus-component-annotations/2.2.0/plexus-component-annotations-2.2.0.jar:$REPO/org/apache/maven/shared/maven-common-artifact-filters/3.4.0/maven-common-artifact-filters-3.4.0.jar:$REPO/org/codehaus/plexus/plexus-utils/4.0.2/plexus-utils-4.0.2.jar:$REPO/org/slf4j/slf4j-api/1.7.36/slf4j-api-1.7.36.jar -d $WORKDIR/classes @$WORKDIR/sources",
+            "*:*:$JAVA_HOME/bin/jar cf $WORKDIR/maven-artifact-transfer-0.13.1.jar -C $WORKDIR/classes .",
+            "*:*:mkdir -p $STAGING_DIR$NATIVEPREFIX/share/maven/repository/org/apache/maven/shared/maven-artifact-transfer/0.13.1",
+            "*:*:cp $WORKDIR/maven-artifact-transfer-0.13.1.jar $STAGING_DIR$NATIVEPREFIX/share/maven/repository/org/apache/maven/shared/maven-artifact-transfer/0.13.1/maven-artifact-transfer-0.13.1.jar",
+            "*:*:cp maven-artifact-transfer-0.13.1.pom $STAGING_DIR$NATIVEPREFIX/share/maven/repository/org/apache/maven/shared/maven-artifact-transfer/0.13.1/maven-artifact-transfer-0.13.1.pom"
+        ]
+    }
+}

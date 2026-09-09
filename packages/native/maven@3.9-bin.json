@@ -1,0 +1,31 @@
+{
+    "package": "native/maven@3.9-bin",
+    "version": "3.9.16",
+    "type": "native",
+    "download": [
+        {
+            "kind": "blob",
+            "path": "./apache-maven-3.9.16-bin.tar.gz",
+            "sha256": "80ffca22aed9e8b9713a232f3394fd81d7f20322df75efdb2b047dbd3e3a23bb",
+            "url": "https://dlcdn.apache.org/maven/maven-3/3.9.16/binaries/apache-maven-3.9.16-bin.tar.gz"
+        }
+    ],
+    "dependencies": [
+        "*:*:native/_/_",
+        "*:*:native/bash",
+        "*:*:native/coreutils",
+        "*:*:native/gzip",
+        "*:*:native/tar"
+    ],
+    "export-env": [
+        "*:*:BOOT_MVN=$NATIVEPREFIX/maven-3.9-bootstrap/bin/mvn"
+    ],
+    "build": {
+        "env": [],
+        "steps": [
+            "*:*:tar -xzf apache-maven-3.9.16-bin.tar.gz",
+            "*:*:mkdir -p $STAGING_DIR$NATIVEPREFIX/maven-3.9-bootstrap",
+            "*:*:cp -a apache-maven-3.9.16/. $STAGING_DIR$NATIVEPREFIX/maven-3.9-bootstrap/"
+        ]
+    }
+}

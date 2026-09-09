@@ -1,0 +1,32 @@
+{
+    "package": "native/jdk@22/bootstrap-maven/jaxen@1.2.0",
+    "version": "1.2.0",
+    "type": "native",
+    "download": [
+        {
+            "kind": "git",
+            "sha256": "b9fb932ef64f0fe7b05f7ac33b4c5e8de6597b21",
+            "url": "https://github.com/jaxen-xpath/jaxen.git"
+        }
+    ],
+    "dependencies": [
+        "*:*:native/bash",
+        "*:*:native/coreutils",
+        "*:*:native/findutils",
+        "*:*:native/jdk@22"
+    ],
+    "build": {
+        "env": [
+            "*:*:WORKDIR=work/jaxen@1.2.0"
+        ],
+        "steps": [
+            "*:*:mkdir -p $WORKDIR",
+            "*:*:find src/java/main -name '*.java' ! -path '*/dom4j/*' ! -path '*/jdom/*' ! -path '*/xom/*' ! -path '*/exml/*' >$WORKDIR/sources",
+            "*:*:$JAVA_HOME/bin/javac --release 8 -d $WORKDIR/classes @$WORKDIR/sources",
+            "*:*:$JAVA_HOME/bin/jar cf $WORKDIR/jaxen-1.2.0.jar -C $WORKDIR/classes .",
+            "*:*:mkdir -p $STAGING_DIR$NATIVEPREFIX/share/maven/repository/jaxen/jaxen/1.2.0",
+            "*:*:cp $WORKDIR/jaxen-1.2.0.jar $STAGING_DIR$NATIVEPREFIX/share/maven/repository/jaxen/jaxen/1.2.0/jaxen-1.2.0.jar",
+            "*:*:cp pom.xml $STAGING_DIR$NATIVEPREFIX/share/maven/repository/jaxen/jaxen/1.2.0/jaxen-1.2.0.pom"
+        ]
+    }
+}

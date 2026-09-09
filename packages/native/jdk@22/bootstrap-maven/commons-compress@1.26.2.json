@@ -1,0 +1,40 @@
+{
+    "package": "native/jdk@22/bootstrap-maven/commons-compress@1.26.2",
+    "version": "1.26.2",
+    "type": "native",
+    "download": [
+        {
+            "kind": "git",
+            "sha256": "95727006cac0892c654951c4e7f1db142462f22a",
+            "url": "https://github.com/apache/commons-compress.git"
+        }
+    ],
+    "dependencies": [
+        "*:*:native/bash",
+        "*:*:native/coreutils",
+        "*:*:native/findutils",
+        "*:*:native/jdk@22",
+        "*:*:native/jdk@22/asm@9.5",
+        "*:*:native/jdk@22/bootstrap-maven/commons-codec@1.21.0",
+        "*:*:native/jdk@22/bootstrap-maven/commons-io@2.16.1",
+        "*:*:native/jdk@22/bootstrap-maven/commons-lang3@3.17.0",
+        "*:*:native/jdk@22/bootstrap-maven/xz@1.9",
+        "*:*:native/jdk@22/bootstrap-maven/zstd-jni@1.5.6-3",
+        "*:*:native/jdk@22/bootstrap-maven/dec@0.1.2"
+    ],
+    "build": {
+        "env": [
+            "*:*:WORKDIR=build/commons-compress@1.26.2",
+            "*:*:REPO=$NATIVEPREFIX/share/maven/repository"
+        ],
+        "steps": [
+            "*:*:mkdir -p $WORKDIR",
+            "*:*:find src/main/java -name '*.java' ! -name 'module-info.java' >$WORKDIR/sources",
+            "*:*:$JAVA_HOME/bin/javac -encoding ISO-8859-1 -cp $REPO/commons-codec/commons-codec/1.21.0/commons-codec-1.21.0.jar:$REPO/commons-io/commons-io/2.16.1/commons-io-2.16.1.jar:$REPO/org/apache/commons/commons-lang3/3.17.0/commons-lang3-3.17.0.jar:$REPO/org/tukaani/xz/1.9/xz-1.9.jar:$REPO/com/github/luben/zstd-jni/1.5.6-3/zstd-jni-1.5.6-3.jar:$REPO/org/brotli/dec/0.1.2/dec-0.1.2.jar:$NATIVEPREFIX/lib/graalvm/asm-9.5/asm.jar -d $WORKDIR/classes @$WORKDIR/sources",
+            "*:*:$JAVA_HOME/bin/jar cf $WORKDIR/commons-compress-1.26.2.jar -C $WORKDIR/classes .",
+            "*:*:mkdir -p $STAGING_DIR$NATIVEPREFIX/share/maven/repository/org/apache/commons/commons-compress/1.26.2",
+            "*:*:cp $WORKDIR/commons-compress-1.26.2.jar $STAGING_DIR$NATIVEPREFIX/share/maven/repository/org/apache/commons/commons-compress/1.26.2/commons-compress-1.26.2.jar",
+            "*:*:cp pom.xml $STAGING_DIR$NATIVEPREFIX/share/maven/repository/org/apache/commons/commons-compress/1.26.2/commons-compress-1.26.2.pom"
+        ]
+    }
+}

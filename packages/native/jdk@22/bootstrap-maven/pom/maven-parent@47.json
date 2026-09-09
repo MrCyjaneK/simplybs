@@ -1,0 +1,22 @@
+{
+    "package": "native/jdk@22/bootstrap-maven/pom/maven-parent@47",
+    "version": "47",
+    "type": "native",
+    "download": [
+        {
+            "kind": "blob",
+            "path": "./maven-parent-47.pom",
+            "sha256": "82d0112ba1907ff5fd13a2485829c97df66c6a81e075359a561a422f7d1582d3",
+            "url": "https://repo1.maven.org/maven2/org/apache/maven/maven-parent/47/maven-parent-47.pom"
+        }
+    ],
+    "dependencies": [
+        "*:*:native/coreutils"
+    ],
+    "build": {
+        "steps": [
+            "*:*:mkdir -p $STAGING_DIR$NATIVEPREFIX/share/maven/repository/org/apache/maven/maven-parent/47",
+            "*:*:cp maven-parent-47.pom $STAGING_DIR$NATIVEPREFIX/share/maven/repository/org/apache/maven/maven-parent/47/maven-parent-47.pom"
+        ]
+    }
+}

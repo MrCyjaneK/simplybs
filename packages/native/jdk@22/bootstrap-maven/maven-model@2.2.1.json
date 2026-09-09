@@ -1,0 +1,44 @@
+{
+    "package": "native/jdk@22/bootstrap-maven/maven-model@2.2.1",
+    "version": "2.2.1",
+    "type": "native",
+    "download": [
+        {
+            "kind": "git",
+            "sha256": "847203c6346f4b8d5ae27285f11eda8818af283f",
+            "url": "https://github.com/apache/maven.git"
+        }
+    ],
+    "dependencies": [
+        "*:*:native/bash",
+        "*:*:native/coreutils",
+        "*:*:native/findutils",
+        "*:*:native/jdk@22",
+        "*:*:native/jdk@22/bootstrap-maven/pom/maven@2.2.1",
+        "*:*:native/jdk@22/bootstrap-maven/javax.inject@1",
+        "*:*:native/jdk@22/bootstrap-maven/slf4j-api@1.7.36",
+        "*:*:native/jdk@22/bootstrap-maven/plexus-utils@4.0.2",
+        "*:*:native/jdk@22/bootstrap-maven/plexus-xml@3.0.1",
+        "*:*:native/jdk@22/bootstrap-maven/plexus-build-api@1.2.0",
+        "*:*:native/jdk@22/bootstrap-maven/modello@2.6.0",
+        "*:*:native/jdk@22/bootstrap-maven/plexus-utils@3.5.1"
+    ],
+    "build": {
+        "env": [
+            "*:*:WORKDIR=work/maven-model@2.2.1",
+            "*:*:REPO=$NATIVEPREFIX/share/maven/repository",
+            "*:*:MODELLO_CP=$NATIVEPREFIX/share/maven/repository/javax/inject/javax.inject/1/javax.inject-1.jar:$NATIVEPREFIX/share/maven/repository/org/slf4j/slf4j-api/1.7.36/slf4j-api-1.7.36.jar:$NATIVEPREFIX/share/maven/repository/org/codehaus/plexus/plexus-utils/4.0.2/plexus-utils-4.0.2.jar:$NATIVEPREFIX/share/maven/repository/org/codehaus/plexus/plexus-xml/3.0.1/plexus-xml-3.0.1.jar:$NATIVEPREFIX/share/maven/repository/org/codehaus/plexus/plexus-build-api/1.2.0/plexus-build-api-1.2.0.jar:$NATIVEPREFIX/share/maven/repository/org/codehaus/modello/modello-core/2.6.0/modello-core-2.6.0.jar:$NATIVEPREFIX/share/maven/repository/org/codehaus/modello/modello-plugin-java/2.6.0/modello-plugin-java-2.6.0.jar:$NATIVEPREFIX/share/maven/repository/org/codehaus/modello/modello-plugin-xml/2.6.0/modello-plugin-xml-2.6.0.jar:$NATIVEPREFIX/share/maven/repository/org/codehaus/modello/modello-plugin-xpp3/2.6.0/modello-plugin-xpp3-2.6.0.jar"
+        ],
+        "steps": [
+            "*:*:mkdir -p $WORKDIR/generated",
+            "*:*:$JAVA_HOME/bin/javac -cp $MODELLO_CP -d $WORKDIR $PATCH_DIR/maven/RunModello.java",
+            "*:*:$JAVA_HOME/bin/java -cp $WORKDIR:$MODELLO_CP RunModello maven-model/src/main/mdo/maven.mdo 4.0.0 $WORKDIR/generated java xpp3-reader xpp3-writer",
+            "*:*:find $WORKDIR/generated -name '*.java' >$WORKDIR/sources",
+            "*:*:$JAVA_HOME/bin/javac --release 8 -cp $REPO/org/codehaus/plexus/plexus-utils/3.5.1/plexus-utils-3.5.1.jar:$REPO/org/codehaus/plexus/plexus-xml/3.0.1/plexus-xml-3.0.1.jar -d $WORKDIR/classes @$WORKDIR/sources",
+            "*:*:$JAVA_HOME/bin/jar cf $WORKDIR/maven-model-2.2.1.jar -C $WORKDIR/classes .",
+            "*:*:mkdir -p $STAGING_DIR$NATIVEPREFIX/share/maven/repository/org/apache/maven/maven-model/2.2.1",
+            "*:*:cp $WORKDIR/maven-model-2.2.1.jar $STAGING_DIR$NATIVEPREFIX/share/maven/repository/org/apache/maven/maven-model/2.2.1/maven-model-2.2.1.jar",
+            "*:*:cp maven-model/pom.xml $STAGING_DIR$NATIVEPREFIX/share/maven/repository/org/apache/maven/maven-model/2.2.1/maven-model-2.2.1.pom"
+        ]
+    }
+}

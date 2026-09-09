@@ -1,0 +1,22 @@
+{
+    "package": "native/jdk@22/bootstrap-maven/pom/doxia-sitetools@1.11.1",
+    "version": "1.11.1",
+    "type": "native",
+    "download": [
+        {
+            "kind": "blob",
+            "path": "./doxia-sitetools-1.11.1.pom",
+            "sha256": "1ee7c5b411e6c91b70a19683ef96ac6fd273f9323d3f4a396e201949f48aa748",
+            "url": "https://repo1.maven.org/maven2/org/apache/maven/doxia/doxia-sitetools/1.11.1/doxia-sitetools-1.11.1.pom"
+        }
+    ],
+    "dependencies": [
+        "*:*:native/coreutils"
+    ],
+    "build": {
+        "steps": [
+            "*:*:mkdir -p $STAGING_DIR$NATIVEPREFIX/share/maven/repository/org/apache/maven/doxia/doxia-sitetools/1.11.1",
+            "*:*:cp doxia-sitetools-1.11.1.pom $STAGING_DIR$NATIVEPREFIX/share/maven/repository/org/apache/maven/doxia/doxia-sitetools/1.11.1/doxia-sitetools-1.11.1.pom"
+        ]
+    }
+}

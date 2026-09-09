@@ -1,0 +1,22 @@
+{
+    "package": "native/jdk@22/bootstrap-maven/pom/plexus@8",
+    "version": "8",
+    "type": "native",
+    "download": [
+        {
+            "kind": "blob",
+            "path": "./plexus-8.pom",
+            "sha256": "ffa349db04e7abf65885bdc5a2062f4197c0ff9d3f1f4e2aa5720b77233f742c",
+            "url": "https://repo1.maven.org/maven2/org/codehaus/plexus/plexus/8/plexus-8.pom"
+        }
+    ],
+    "dependencies": [
+        "*:*:native/coreutils"
+    ],
+    "build": {
+        "steps": [
+            "*:*:mkdir -p $STAGING_DIR$NATIVEPREFIX/share/maven/repository/org/codehaus/plexus/plexus/8",
+            "*:*:cp plexus-8.pom $STAGING_DIR$NATIVEPREFIX/share/maven/repository/org/codehaus/plexus/plexus/8/plexus-8.pom"
+        ]
+    }
+}

@@ -1,0 +1,63 @@
+{
+    "package": "native/jdk@22/bootstrap-maven/maven-checkstyle-plugin@3.6.0",
+    "version": "3.6.0",
+    "type": "native",
+    "download": [
+        {
+            "kind": "git",
+            "sha256": "dd1abd9ee7cb1046ece3ae013fa6e68a345c7a32",
+            "url": "https://github.com/apache/maven-checkstyle-plugin.git"
+        },
+        {
+            "kind": "blob",
+            "path": "./maven-checkstyle-plugin-3.6.0.pom",
+            "sha256": "cffaa2aca918f96afd7fe2cc99f1715fa66af0a87a8dee459e77dbc79f74a55e",
+            "url": "https://repo1.maven.org/maven2/org/apache/maven/plugins/maven-checkstyle-plugin/3.6.0/maven-checkstyle-plugin-3.6.0.pom"
+        }
+    ],
+    "dependencies": [
+        "*:*:native/bash",
+        "*:*:native/coreutils",
+        "*:*:native/findutils",
+        "*:*:native/jdk@22",
+        "*:*:native/jdk@22/bootstrap-maven/org.eclipse.sisu.inject@1.0.0",
+        "*:*:native/maven@3.9-bin",
+        "*:*:native/jdk@22/bootstrap-maven/pom/maven-plugins@43",
+        "*:*:native/jdk@22/bootstrap-maven/maven-plugin-annotations@3.15.2",
+        "*:*:native/jdk@22/bootstrap-maven/maven-plugin-tools-generators@3.15.2",
+        "*:*:native/jdk@22/bootstrap-maven/javax.inject@1",
+        "*:*:native/jdk@22/bootstrap-maven/slf4j-api@1.7.36",
+        "*:*:native/jdk@22/bootstrap-maven/maven-reporting-api@4.0.0",
+        "*:*:native/jdk@22/bootstrap-maven/maven-reporting-impl@4.0.0",
+        "*:*:native/jdk@22/bootstrap-maven/doxia-sink-api@2.0.0",
+        "*:*:native/jdk@22/bootstrap-maven/doxia-core@2.0.0",
+        "*:*:native/jdk@22/bootstrap-maven/doxia-integration-tools@2.0.0",
+        "*:*:native/jdk@22/bootstrap-maven/plexus-component-annotations@2.2.0",
+        "*:*:native/jdk@22/bootstrap-maven/plexus-resources@1.3.0",
+        "*:*:native/jdk@22/bootstrap-maven/plexus-utils@4.0.2",
+        "*:*:native/jdk@22/bootstrap-maven/plexus-xml@3.0.1",
+        "*:*:native/jdk@22/bootstrap-maven/plexus-i18n@1.0-beta-10",
+        "*:*:native/jdk@22/bootstrap-maven/checkstyle@9.3",
+        "*:*:native/jdk@22/bootstrap-maven/commons-lang3@3.17.0"
+    ],
+    "build": {
+        "env": [
+            "*:*:WORKDIR=build/maven-checkstyle-plugin@3.6.0",
+            "*:*:REPO=$NATIVEPREFIX/share/maven/repository",
+            "*:*:BOOT_LIB=$NATIVEPREFIX/maven-3.9-bootstrap/lib"
+        ],
+        "steps": [
+            "*:*:mkdir -p $WORKDIR",
+            "*:*:find src/main/java -name '*.java' >$WORKDIR/sources",
+            "*:*:$JAVA_HOME/bin/javac -cp $(printf '%s:' $BOOT_LIB/*.jar)$REPO/org/apache/maven/plugin-tools/maven-plugin-annotations/3.15.2/maven-plugin-annotations-3.15.2.jar:$REPO/javax/inject/javax.inject/1/javax.inject-1.jar:$REPO/org/slf4j/slf4j-api/1.7.36/slf4j-api-1.7.36.jar:$REPO/org/apache/maven/reporting/maven-reporting-api/4.0.0/maven-reporting-api-4.0.0.jar:$REPO/org/apache/maven/reporting/maven-reporting-impl/4.0.0/maven-reporting-impl-4.0.0.jar:$REPO/org/apache/maven/doxia/doxia-sink-api/2.0.0/doxia-sink-api-2.0.0.jar:$REPO/org/apache/maven/doxia/doxia-core/2.0.0/doxia-core-2.0.0.jar:$REPO/org/apache/maven/doxia/doxia-integration-tools/2.0.0/doxia-integration-tools-2.0.0.jar:$REPO/org/codehaus/plexus/plexus-component-annotations/2.2.0/plexus-component-annotations-2.2.0.jar:$REPO/org/codehaus/plexus/plexus-resources/1.3.0/plexus-resources-1.3.0.jar:$REPO/org/codehaus/plexus/plexus-utils/4.0.2/plexus-utils-4.0.2.jar:$REPO/org/codehaus/plexus/plexus-xml/3.0.1/plexus-xml-3.0.1.jar:$REPO/org/codehaus/plexus/plexus-i18n/1.0-beta-10/plexus-i18n-1.0-beta-10.jar:$REPO/com/puppycrawl/tools/checkstyle/9.3/checkstyle-9.3.jar:$REPO/org/apache/commons/commons-lang3/3.17.0/commons-lang3-3.17.0.jar -processorpath $REPO/org/eclipse/sisu/org.eclipse.sisu.inject/1.0.0/org.eclipse.sisu.inject-1.0.0.jar:$REPO/javax/inject/javax.inject/1/javax.inject-1.jar -processor org.eclipse.sisu.space.SisuIndexAPT6 -d $WORKDIR/classes @$WORKDIR/sources",
+            "*:*:mkdir -p $WORKDIR/plugin-res/META-INF/maven $WORKDIR/plugin-res/META-INF/plexus",
+            "*:*:$JAVA_HOME/bin/java -cp $PLUGINXML_JAR:$(printf '%s:' $BOOT_LIB/*.jar) org.apache.maven.tools.plugin.generator.GeneratePluginXml org.apache.maven.plugins maven-checkstyle-plugin 3.6.0 checkstyle $WORKDIR/classes $WORKDIR/plugin-res/META-INF/maven $(printf '%s:' $BOOT_LIB/*.jar)$REPO/org/apache/maven/plugin-tools/maven-plugin-annotations/3.15.2/maven-plugin-annotations-3.15.2.jar:$REPO/javax/inject/javax.inject/1/javax.inject-1.jar:$REPO/org/slf4j/slf4j-api/1.7.36/slf4j-api-1.7.36.jar:$REPO/org/apache/maven/reporting/maven-reporting-api/4.0.0/maven-reporting-api-4.0.0.jar:$REPO/org/apache/maven/reporting/maven-reporting-impl/4.0.0/maven-reporting-impl-4.0.0.jar:$REPO/org/apache/maven/doxia/doxia-sink-api/2.0.0/doxia-sink-api-2.0.0.jar:$REPO/org/apache/maven/doxia/doxia-core/2.0.0/doxia-core-2.0.0.jar:$REPO/org/apache/maven/doxia/doxia-integration-tools/2.0.0/doxia-integration-tools-2.0.0.jar:$REPO/org/codehaus/plexus/plexus-component-annotations/2.2.0/plexus-component-annotations-2.2.0.jar:$REPO/org/codehaus/plexus/plexus-resources/1.3.0/plexus-resources-1.3.0.jar:$REPO/org/codehaus/plexus/plexus-utils/4.0.2/plexus-utils-4.0.2.jar:$REPO/org/codehaus/plexus/plexus-xml/3.0.1/plexus-xml-3.0.1.jar:$REPO/org/codehaus/plexus/plexus-i18n/1.0-beta-10/plexus-i18n-1.0-beta-10.jar:$REPO/com/puppycrawl/tools/checkstyle/9.3/checkstyle-9.3.jar:$REPO/org/apache/commons/commons-lang3/3.17.0/commons-lang3-3.17.0.jar",
+            "*:*:printf '%s\\n' '<?xml version=\"1.0\" encoding=\"UTF-8\"?>' '<component-set>' '  <components>' '    <component>' '      <role>org.apache.maven.plugins.checkstyle.exec.CheckstyleExecutor</role>' '      <role-hint>default</role-hint>' '      <implementation>org.apache.maven.plugins.checkstyle.exec.DefaultCheckstyleExecutor</implementation>' '      <instantiation-strategy>per-lookup</instantiation-strategy>' '    </component>' '    <component>' '      <role>org.codehaus.plexus.resource.ResourceManager</role>' '      <role-hint>license</role-hint>' '      <implementation>org.apache.maven.plugins.checkstyle.resource.LicenseResourceManager</implementation>' '      <instantiation-strategy>per-lookup</instantiation-strategy>' '    </component>' '  </components>' '</component-set>' > $WORKDIR/plugin-res/META-INF/plexus/components.xml",
+            "*:*:cp -R src/main/resources/. $WORKDIR/classes/",
+            "*:*:$JAVA_HOME/bin/jar cf $WORKDIR/maven-checkstyle-plugin-3.6.0.jar -C $WORKDIR/classes . -C $WORKDIR/plugin-res .",
+            "*:*:mkdir -p $STAGING_DIR$NATIVEPREFIX/share/maven/repository/org/apache/maven/plugins/maven-checkstyle-plugin/3.6.0",
+            "*:*:cp $WORKDIR/maven-checkstyle-plugin-3.6.0.jar $STAGING_DIR$NATIVEPREFIX/share/maven/repository/org/apache/maven/plugins/maven-checkstyle-plugin/3.6.0/maven-checkstyle-plugin-3.6.0.jar",
+            "*:*:cp maven-checkstyle-plugin-3.6.0.pom $STAGING_DIR$NATIVEPREFIX/share/maven/repository/org/apache/maven/plugins/maven-checkstyle-plugin/3.6.0/maven-checkstyle-plugin-3.6.0.pom"
+        ]
+    }
+}

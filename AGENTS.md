@@ -15,7 +15,7 @@ go run . <flags>
 Common invocations:
 
 ```bash
-go run . -host x86_64-linux-gnu -package zlib -list      # show a package + its dep tree
+go run . -host x86_64-linux-gnu -package zlib -list       # show a package + its dep tree
 go run . -host x86_64-linux-gnu -package zlib -download   # fetch sources (verifies sha256)
 go run . -host x86_64-linux-gnu -package zlib -build      # build a package (+ its deps)
 go run . -world -host <triplet> -build                    # build everything for a host
@@ -24,48 +24,30 @@ go run . -world -host <triplet> -build                    # build everything for
 Supported host triplets are defined in `host/main.go` (e.g. `x86_64-linux-gnu`,
 `aarch64-linux-android`, `x86_64-w64-mingw32`, `aarch64-apple-darwin`).
 
-## rust-std (all platforms)
+## Making changes
 
-`rust-std` builds the Rust standard library (`library/std`, stage 1) for a
-given `-host` triplet. **“All platforms”** means every entry in
-`host.SupportedHosts` — pass them as a comma-separated `-host` list:
+There are many ways to solve problems, here are solutions, ordered by preference
 
-| `-host` (simplybs triplet) | Rust target (`$RUST_TRIPLET`) |
-| --- | --- |
-| `x86_64-linux-gnu` | `x86_64-unknown-linux-gnu` |
-| `aarch64-linux-gnu` | `aarch64-unknown-linux-gnu` |
-| `x86_64-w64-mingw32` | `x86_64-pc-windows-gnu` |
-| `aarch64-apple-darwin` | `aarch64-apple-darwin` |
-| `x86_64-apple-darwin` | `x86_64-apple-darwin` |
-| `aarch64-apple-ios` | `aarch64-apple-ios` |
-| `aarch64-apple-ios-simulator` | `aarch64-apple-ios-sim` |
-| `aarch64-linux-android` | `aarch64-linux-android` |
-| `x86_64-linux-android` | `x86_64-linux-android` |
-| `armv7a-linux-androideabi` | `armv7-linux-androideabi` |
+1. Making a change to the .json file - adding an extra step.
+2. Prefer an extra step over && - && use accepted mainly when you need to cd as each step starts at working dir
+3. Adding existing dependency from the tree
+4. Adding an extra dependnecy (**must be built from source**, unless we are moving a prebuilt dependency to an older version - in which event it is fine to add extra prebuilt)
+5. Setting an ENV value depending on builder / host
+6. Setting a custom command depending on builder / host (preference is on using ENV but it's just a preference)
+7. Using `sed` to make a minimal inline change (replacing a header name, changing path)
+8. Copying some binaries around (if a tool expects something on $PATH feel free to copy it to $NATIVEPREFIX/bin - every build gets a clean tree anyway)
+9. Stubing a functionality (something expects output but can run without it? Why not run echo > output, expects nothing? just point to true)
+10. Patching the code using .patch files
 
-```bash
-go run . -host \
-  aarch64-apple-darwin,x86_64-apple-darwin,aarch64-apple-ios,aarch64-apple-ios-simulator,\
-  x86_64-w64-mingw32,x86_64-linux-gnu,aarch64-linux-gnu,aarch64-linux-android,\
-  x86_64-linux-android,armv7a-linux-androideabi \
-  -package rust-std -build
-```
 
-Each host build is independent (separate artifact under `.buildlib/<goos>_<goarch>/built/`).
-Requires `native/rust` (and the full native toolchain for that target) to already be built.
+Things that are absolute nononononono
 
-## After editing packages — always run lint
+1. Pulling anything from the network in the build steps (no wget, curl, pip install, npm install that can reach the internet)
+2. Pulling prebuilds because it is easier
+3. When in doubt halt and ask human.
 
-Whenever you add or change a package definition (new source, new git ref, bumped
-version, new dependency, etc.), regenerate metadata and validate with:
 
-```bash
-go run . -lint
-```
-
-`-lint` reformats every `packages/**.json`, checks for invalid/cyclic
-dependencies, and regenerates the checked-in `sources.json`. Commit the resulting
-`sources.json` changes together with your package edits.
+After changing sources run `go run . -lint`
 
 To generate git `download` entries from repos you've checked out locally:
 
@@ -96,3 +78,15 @@ what it needs and auto-pushes what it built. It just works. Run the command:
 ```bash
 go run . -host x86_64-linux-gnu -package zlib -build
 ```
+
+## Clean
+
+All builds start and end clean, if you need to inspect directory structure add exit 42 as last step (or other step if you ar einterested at certain point). Errors are not clean
+
+## Logs
+
+Never redirect to tail just to get last lines, always retain full logs to save time. Logs are very long.
+
+## Dependencies
+
+All dependencies are 1 level, no package pulls anything other than what's explicitly specified

@@ -1,0 +1,58 @@
+{
+    "package": "native/jdk@22/bootstrap-maven/apache-rat-plugin@0.16.1",
+    "version": "0.16.1",
+    "type": "native",
+    "download": [
+        {
+            "kind": "git",
+            "sha256": "bc422708ba1569b6acf793703c435c78b16ca60c",
+            "url": "https://github.com/apache/creadur-rat.git"
+        }
+    ],
+    "dependencies": [
+        "*:*:native/bash",
+        "*:*:native/coreutils",
+        "*:*:native/findutils",
+        "*:*:native/jdk@22",
+        "*:*:native/jdk@22/bootstrap-maven/org.eclipse.sisu.inject@1.0.0",
+        "*:*:native/jdk@22/bootstrap-maven/javax.inject@1",
+        "*:*:native/maven@3.9-bin",
+        "*:*:native/jdk@22/bootstrap-maven/pom/apache-rat-project@0.16.1",
+        "*:*:native/jdk@22/bootstrap-maven/apache-rat-core@0.16.1",
+        "*:*:native/jdk@22/bootstrap-maven/maven-plugin-annotations@3.15.2",
+        "*:*:native/jdk@22/bootstrap-maven/maven-plugin-tools-generators@3.15.2",
+        "*:*:native/jdk@22/bootstrap-maven/doxia-core@1.12.0",
+        "*:*:native/jdk@22/bootstrap-maven/doxia-sink-api@1.12.0",
+        "*:*:native/jdk@22/bootstrap-maven/doxia-logging-api@1.12.0",
+        "*:*:native/jdk@22/bootstrap-maven/doxia-module-xhtml@1.12.0",
+        "*:*:native/jdk@22/bootstrap-maven/doxia-module-xhtml5@1.11.1",
+        "*:*:native/jdk@22/bootstrap-maven/doxia-decoration-model@1.11.1",
+        "*:*:native/jdk@22/bootstrap-maven/doxia-integration-tools@1.11.1",
+        "*:*:native/jdk@22/bootstrap-maven/doxia-site-renderer@1.11.1",
+        "*:*:native/jdk@22/bootstrap-maven/maven-reporting-api@3.1.1",
+        "*:*:native/jdk@22/bootstrap-maven/maven-shared-utils@3.4.2",
+        "*:*:native/jdk@22/bootstrap-maven/plexus-utils@3.5.1",
+        "*:*:native/jdk@22/bootstrap-maven/commons-lang3@3.14.0",
+        "*:*:native/jdk@22/bootstrap-maven/commons-io@2.15.1",
+        "*:*:native/jdk@22/bootstrap-maven/gitignore-reader@1.3.1"
+    ],
+    "build": {
+        "env": [
+            "*:*:WORKDIR=work/apache-rat-plugin@0.16.1",
+            "*:*:REPO=$NATIVEPREFIX/share/maven/repository",
+            "*:*:BOOT_LIB=$NATIVEPREFIX/maven-3.9-bootstrap/lib"
+        ],
+        "steps": [
+            "*:*:mkdir -p $WORKDIR",
+            "*:*:find apache-rat-plugin/src/main/java -name '*.java' >$WORKDIR/sources",
+            "*:*:$JAVA_HOME/bin/javac -cp $(printf '%s:' $BOOT_LIB/*.jar)$REPO/org/apache/maven/plugin-tools/maven-plugin-annotations/3.15.2/maven-plugin-annotations-3.15.2.jar:$REPO/org/apache/rat/apache-rat-core/0.16.1/apache-rat-core-0.16.1.jar:$REPO/org/apache/maven/doxia/doxia-core/1.12.0/doxia-core-1.12.0.jar:$REPO/org/apache/maven/doxia/doxia-sink-api/1.12.0/doxia-sink-api-1.12.0.jar:$REPO/org/apache/maven/doxia/doxia-logging-api/1.12.0/doxia-logging-api-1.12.0.jar:$REPO/org/apache/maven/doxia/doxia-module-xhtml/1.12.0/doxia-module-xhtml-1.12.0.jar:$REPO/org/apache/maven/doxia/doxia-module-xhtml5/1.11.1/doxia-module-xhtml5-1.11.1.jar:$REPO/org/apache/maven/doxia/doxia-decoration-model/1.11.1/doxia-decoration-model-1.11.1.jar:$REPO/org/apache/maven/doxia/doxia-integration-tools/1.11.1/doxia-integration-tools-1.11.1.jar:$REPO/org/apache/maven/doxia/doxia-site-renderer/1.11.1/doxia-site-renderer-1.11.1.jar:$REPO/org/apache/maven/reporting/maven-reporting-api/3.1.1/maven-reporting-api-3.1.1.jar:$REPO/org/apache/maven/shared/maven-shared-utils/3.4.2/maven-shared-utils-3.4.2.jar:$REPO/org/codehaus/plexus/plexus-utils/3.5.1/plexus-utils-3.5.1.jar:$REPO/org/apache/commons/commons-lang3/3.14.0/commons-lang3-3.14.0.jar:$REPO/commons-io/commons-io/2.15.1/commons-io-2.15.1.jar:$REPO/nl/basjes/gitignore/gitignore-reader/1.3.1/gitignore-reader-1.3.1.jar -processorpath $REPO/org/eclipse/sisu/org.eclipse.sisu.inject/1.0.0/org.eclipse.sisu.inject-1.0.0.jar:$REPO/javax/inject/javax.inject/1/javax.inject-1.jar -processor org.eclipse.sisu.space.SisuIndexAPT6 -d $WORKDIR/classes @$WORKDIR/sources",
+            "*:*:mkdir -p $WORKDIR/plugin-res/META-INF/maven",
+            "*:*:$JAVA_HOME/bin/java -cp $PLUGINXML_JAR:$(printf '%s:' $BOOT_LIB/*.jar) org.apache.maven.tools.plugin.generator.GeneratePluginXml org.apache.rat apache-rat-plugin 0.16.1 apache-rat $WORKDIR/classes $WORKDIR/plugin-res/META-INF/maven $(printf '%s:' $BOOT_LIB/*.jar)$REPO/org/apache/maven/plugin-tools/maven-plugin-annotations/3.15.2/maven-plugin-annotations-3.15.2.jar:$REPO/org/apache/rat/apache-rat-core/0.16.1/apache-rat-core-0.16.1.jar:$REPO/org/apache/maven/doxia/doxia-core/1.12.0/doxia-core-1.12.0.jar:$REPO/org/apache/maven/doxia/doxia-sink-api/1.12.0/doxia-sink-api-1.12.0.jar:$REPO/org/apache/maven/doxia/doxia-logging-api/1.12.0/doxia-logging-api-1.12.0.jar:$REPO/org/apache/maven/doxia/doxia-module-xhtml/1.12.0/doxia-module-xhtml-1.12.0.jar:$REPO/org/apache/maven/doxia/doxia-module-xhtml5/1.11.1/doxia-module-xhtml5-1.11.1.jar:$REPO/org/apache/maven/doxia/doxia-decoration-model/1.11.1/doxia-decoration-model-1.11.1.jar:$REPO/org/apache/maven/doxia/doxia-integration-tools/1.11.1/doxia-integration-tools-1.11.1.jar:$REPO/org/apache/maven/doxia/doxia-site-renderer/1.11.1/doxia-site-renderer-1.11.1.jar:$REPO/org/apache/maven/reporting/maven-reporting-api/3.1.1/maven-reporting-api-3.1.1.jar:$REPO/org/apache/maven/shared/maven-shared-utils/3.4.2/maven-shared-utils-3.4.2.jar:$REPO/org/codehaus/plexus/plexus-utils/3.5.1/plexus-utils-3.5.1.jar:$REPO/org/apache/commons/commons-lang3/3.14.0/commons-lang3-3.14.0.jar:$REPO/commons-io/commons-io/2.15.1/commons-io-2.15.1.jar:$REPO/nl/basjes/gitignore/gitignore-reader/1.3.1/gitignore-reader-1.3.1.jar",
+            "*:*:cp -R apache-rat-plugin/src/main/resources/. $WORKDIR/classes/",
+            "*:*:$JAVA_HOME/bin/jar cf $WORKDIR/apache-rat-plugin-0.16.1.jar -C $WORKDIR/classes . -C $WORKDIR/plugin-res .",
+            "*:*:mkdir -p $STAGING_DIR$NATIVEPREFIX/share/maven/repository/org/apache/rat/apache-rat-plugin/0.16.1",
+            "*:*:cp $WORKDIR/apache-rat-plugin-0.16.1.jar $STAGING_DIR$NATIVEPREFIX/share/maven/repository/org/apache/rat/apache-rat-plugin/0.16.1/apache-rat-plugin-0.16.1.jar",
+            "*:*:cp apache-rat-plugin/pom.xml $STAGING_DIR$NATIVEPREFIX/share/maven/repository/org/apache/rat/apache-rat-plugin/0.16.1/apache-rat-plugin-0.16.1.pom"
+        ]
+    }
+}

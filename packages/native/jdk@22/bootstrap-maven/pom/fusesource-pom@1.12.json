@@ -1,0 +1,22 @@
+{
+    "package": "native/jdk@22/bootstrap-maven/pom/fusesource-pom@1.12",
+    "version": "1.12",
+    "type": "native",
+    "download": [
+        {
+            "kind": "blob",
+            "path": "./fusesource-pom-1.12.pom",
+            "sha256": "c40d960daadcef7b01c1b1c6657afbac4fffb5e53168f8fcb0b28b84e6fdcca1",
+            "url": "https://repo1.maven.org/maven2/org/fusesource/fusesource-pom/1.12/fusesource-pom-1.12.pom"
+        }
+    ],
+    "dependencies": [
+        "*:*:native/coreutils"
+    ],
+    "build": {
+        "steps": [
+            "*:*:mkdir -p $STAGING_DIR$NATIVEPREFIX/share/maven/repository/org/fusesource/fusesource-pom/1.12",
+            "*:*:cp fusesource-pom-1.12.pom $STAGING_DIR$NATIVEPREFIX/share/maven/repository/org/fusesource/fusesource-pom/1.12/fusesource-pom-1.12.pom"
+        ]
+    }
+}

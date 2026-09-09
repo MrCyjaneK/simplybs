@@ -1,0 +1,27 @@
+{
+    "package": "native/jdk@22/bootstrap-maven/pom/okio@3.6.0",
+    "version": "3.6.0",
+    "type": "native",
+    "download": [
+        {
+            "kind": "blob",
+            "path": "./okio-3.6.0.pom",
+            "sha256": "aeb3b70a24c103ed0c54541f35f5c511d27ce60cae376a596d7d653697f8cc95",
+            "url": "https://repo1.maven.org/maven2/com/squareup/okio/okio/3.6.0/okio-3.6.0.pom"
+        }
+    ],
+    "dependencies": [
+        "*:*:native/coreutils",
+        "*:*:native/jdk@22/bootstrap-maven/okio-jvm@3.6.0"
+    ],
+    "build": {
+        "env": [
+            "*:*:REPO=$NATIVEPREFIX/share/maven/repository"
+        ],
+        "steps": [
+            "*:*:mkdir -p $STAGING_DIR$NATIVEPREFIX/share/maven/repository/com/squareup/okio/okio/3.6.0",
+            "*:*:cp $REPO/com/squareup/okio/okio-jvm/3.6.0/okio-jvm-3.6.0.jar $STAGING_DIR$NATIVEPREFIX/share/maven/repository/com/squareup/okio/okio/3.6.0/okio-3.6.0.jar",
+            "*:*:cp okio-3.6.0.pom $STAGING_DIR$NATIVEPREFIX/share/maven/repository/com/squareup/okio/okio/3.6.0/okio-3.6.0.pom"
+        ]
+    }
+}

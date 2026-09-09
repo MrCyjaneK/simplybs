@@ -1,0 +1,33 @@
+{
+    "package": "native/jdk@22/bootstrap-maven/plexus-component-annotations@2.1.0",
+    "version": "2.1.0",
+    "type": "native",
+    "download": [
+        {
+            "kind": "git",
+            "sha256": "e8053c76674535b6bf7fd8c4b0114629eeb5923d",
+            "url": "https://github.com/codehaus-plexus/plexus-containers.git"
+        }
+    ],
+    "dependencies": [
+        "*:*:native/bash",
+        "*:*:native/coreutils",
+        "*:*:native/findutils",
+        "*:*:native/jdk@22",
+        "*:*:native/jdk@22/bootstrap-maven/pom/plexus-containers@2.1.0"
+    ],
+    "build": {
+        "env": [
+            "*:*:WORKDIR=build/plexus-component-annotations@2.1.0"
+        ],
+        "steps": [
+            "*:*:mkdir -p $WORKDIR",
+            "*:*:find plexus-component-annotations/src/main/java -name '*.java' >$WORKDIR/sources",
+            "*:*:$JAVA_HOME/bin/javac -d $WORKDIR/classes @$WORKDIR/sources",
+            "*:*:$JAVA_HOME/bin/jar cf $WORKDIR/plexus-component-annotations-2.1.0.jar -C $WORKDIR/classes .",
+            "*:*:mkdir -p $STAGING_DIR$NATIVEPREFIX/share/maven/repository/org/codehaus/plexus/plexus-component-annotations/2.1.0",
+            "*:*:cp $WORKDIR/plexus-component-annotations-2.1.0.jar $STAGING_DIR$NATIVEPREFIX/share/maven/repository/org/codehaus/plexus/plexus-component-annotations/2.1.0/plexus-component-annotations-2.1.0.jar",
+            "*:*:cp plexus-component-annotations/pom.xml $STAGING_DIR$NATIVEPREFIX/share/maven/repository/org/codehaus/plexus/plexus-component-annotations/2.1.0/plexus-component-annotations-2.1.0.pom"
+        ]
+    }
+}

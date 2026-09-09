@@ -1,0 +1,38 @@
+{
+    "package": "native/jdk@22/bootstrap-maven/byte-buddy-agent@1.12.19",
+    "version": "1.12.19",
+    "type": "native",
+    "download": [
+        {
+            "kind": "git",
+            "sha256": "c93425a1e92bd246c053968512226ff391c54b5c",
+            "url": "https://github.com/raphw/byte-buddy.git"
+        }
+    ],
+    "dependencies": [
+        "*:*:native/bash",
+        "*:*:native/coreutils",
+        "*:*:native/findutils",
+        "*:*:native/sed",
+        "*:*:native/jdk@22",
+        "*:*:native/jdk@22/bootstrap-maven/pom/byte-buddy-parent@1.12.19",
+        "*:*:native/jdk@22/bootstrap-maven/jsr305@3.0.2",
+        "*:*:native/jdk@22/bootstrap-maven/annotations@3.0.0"
+    ],
+    "build": {
+        "env": [
+            "*:*:WORKDIR=work/byte-buddy-agent@1.12.19",
+            "*:*:REPO=$NATIVEPREFIX/share/maven/repository"
+        ],
+        "steps": [
+            "*:*:mkdir -p $WORKDIR/classes",
+            "*:*:sed -i 's/return new Accessor.Simple.WithDirectAttachment(.*);/return Accessor.Unavailable.INSTANCE;/' byte-buddy-agent/src/main/java/net/bytebuddy/agent/ByteBuddyAgent.java",
+            "*:*:find byte-buddy-agent/src/main/java -name '*.java' ! -name 'VirtualMachine.java' >$WORKDIR/sources",
+            "*:*:$JAVA_HOME/bin/javac -XDignore.symbol.file -cp $REPO/com/google/code/findbugs/annotations/3.0.0/annotations-3.0.0.jar:$REPO/com/google/code/findbugs/jsr305/3.0.2/jsr305-3.0.2.jar -d $WORKDIR/classes @$WORKDIR/sources",
+            "*:*:$JAVA_HOME/bin/jar cf $WORKDIR/byte-buddy-agent-1.12.19.jar -C $WORKDIR/classes .",
+            "*:*:mkdir -p $STAGING_DIR$NATIVEPREFIX/share/maven/repository/net/bytebuddy/byte-buddy-agent/1.12.19",
+            "*:*:cp $WORKDIR/byte-buddy-agent-1.12.19.jar $STAGING_DIR$NATIVEPREFIX/share/maven/repository/net/bytebuddy/byte-buddy-agent/1.12.19/byte-buddy-agent-1.12.19.jar",
+            "*:*:cp byte-buddy-agent/pom.xml $STAGING_DIR$NATIVEPREFIX/share/maven/repository/net/bytebuddy/byte-buddy-agent/1.12.19/byte-buddy-agent-1.12.19.pom"
+        ]
+    }
+}

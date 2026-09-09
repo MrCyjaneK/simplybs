@@ -1,0 +1,39 @@
+{
+    "package": "native/jdk@22/bootstrap-maven/plexus-utils@1.5.8",
+    "version": "1.5.8",
+    "type": "native",
+    "download": [
+        {
+            "kind": "git",
+            "sha256": "38ecf41fe352679ded6ab65e413574a4b19c2966",
+            "url": "https://github.com/codehaus-plexus/plexus-utils.git"
+        },
+        {
+            "kind": "blob",
+            "path": "./plexus-utils-1.5.8.pom",
+            "sha256": "1ff4fb95c218af4a46f71d625212c70f377ccf97ad2e26cb8d4c10709265bf62",
+            "url": "https://repo1.maven.org/maven2/org/codehaus/plexus/plexus-utils/1.5.8/plexus-utils-1.5.8.pom"
+        }
+    ],
+    "dependencies": [
+        "*:*:native/bash",
+        "*:*:native/coreutils",
+        "*:*:native/findutils",
+        "*:*:native/jdk@22",
+        "*:*:native/jdk@22/bootstrap-maven/pom/plexus@2.0.2"
+    ],
+    "build": {
+        "env": [
+            "*:*:WORKDIR=work/plexus-utils@1.5.8"
+        ],
+        "steps": [
+            "*:*:mkdir -p $WORKDIR",
+            "*:*:find src/main/java -name '*.java' ! -name 'module-info.java' ! -path '*/interpolation/*' >$WORKDIR/sources",
+            "*:*:$JAVA_HOME/bin/javac --release 8 -encoding ISO-8859-1 -d $WORKDIR/classes @$WORKDIR/sources",
+            "*:*:$JAVA_HOME/bin/jar cf $WORKDIR/plexus-utils-1.5.8.jar -C $WORKDIR/classes .",
+            "*:*:mkdir -p $STAGING_DIR$NATIVEPREFIX/share/maven/repository/org/codehaus/plexus/plexus-utils/1.5.8",
+            "*:*:cp $WORKDIR/plexus-utils-1.5.8.jar $STAGING_DIR$NATIVEPREFIX/share/maven/repository/org/codehaus/plexus/plexus-utils/1.5.8/plexus-utils-1.5.8.jar",
+            "*:*:cp plexus-utils-1.5.8.pom $STAGING_DIR$NATIVEPREFIX/share/maven/repository/org/codehaus/plexus/plexus-utils/1.5.8/plexus-utils-1.5.8.pom"
+        ]
+    }
+}

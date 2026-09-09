@@ -1,0 +1,38 @@
+{
+    "package": "native/jdk@22/bootstrap-maven/commons-collections@3.2.2",
+    "version": "3.2.2",
+    "type": "native",
+    "download": [
+        {
+            "kind": "git",
+            "sha256": "8e217b44a763565f395268be20e7cff1dedf747b",
+            "url": "https://github.com/apache/commons-collections.git"
+        }
+    ],
+    "dependencies": [
+        "*:*:native/bash",
+        "*:*:native/coreutils",
+        "*:*:native/findutils",
+        "*:*:native/jdk@22",
+        "*:*:native/sed",
+        "*:*:native/jdk@22/bootstrap-maven/pom/commons-parent@39"
+    ],
+    "build": {
+        "env": [
+            "*:*:WORKDIR=build/commons-collections@3.2.2"
+        ],
+        "steps": [
+            "*:*:mkdir -p $WORKDIR",
+            "*:*:sed -i 's/public Object remove(Object key, Object item)/public Object removeMapping(Object key, Object item)/' src/java/org/apache/commons/collections/MultiHashMap.java",
+            "*:*:sed -i 's/public Object remove(Object key, Object item);/public Object removeMapping(Object key, Object item);/' src/java/org/apache/commons/collections/MultiMap.java",
+            "*:*:sed -i 's/public Object remove(Object key1, Object key2)/public Object removeMultiKey(Object key1, Object key2)/' src/java/org/apache/commons/collections/map/MultiKeyMap.java",
+            "*:*:sed -i 's/public Object remove(Object key, Object value)/public Object removeMapping(Object key, Object value)/' src/java/org/apache/commons/collections/map/MultiValueMap.java",
+            "*:*:find src/java -name '*.java' >$WORKDIR/sources",
+            "*:*:$JAVA_HOME/bin/javac --release 8 -d $WORKDIR/classes @$WORKDIR/sources",
+            "*:*:$JAVA_HOME/bin/jar cf $WORKDIR/commons-collections-3.2.2.jar -C $WORKDIR/classes .",
+            "*:*:mkdir -p $STAGING_DIR$NATIVEPREFIX/share/maven/repository/commons-collections/commons-collections/3.2.2",
+            "*:*:cp $WORKDIR/commons-collections-3.2.2.jar $STAGING_DIR$NATIVEPREFIX/share/maven/repository/commons-collections/commons-collections/3.2.2/commons-collections-3.2.2.jar",
+            "*:*:cp pom.xml $STAGING_DIR$NATIVEPREFIX/share/maven/repository/commons-collections/commons-collections/3.2.2/commons-collections-3.2.2.pom"
+        ]
+    }
+}

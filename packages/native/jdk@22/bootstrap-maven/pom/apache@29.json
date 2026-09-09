@@ -1,0 +1,22 @@
+{
+    "package": "native/jdk@22/bootstrap-maven/pom/apache@29",
+    "version": "29",
+    "type": "native",
+    "download": [
+        {
+            "kind": "blob",
+            "path": "./apache-29.pom",
+            "sha256": "3e49037174820bbd0df63420a977255886398954c2a06291fa61f727ac35b377",
+            "url": "https://repo1.maven.org/maven2/org/apache/apache/29/apache-29.pom"
+        }
+    ],
+    "dependencies": [
+        "*:*:native/coreutils"
+    ],
+    "build": {
+        "steps": [
+            "*:*:mkdir -p $STAGING_DIR$NATIVEPREFIX/share/maven/repository/org/apache/apache/29",
+            "*:*:cp apache-29.pom $STAGING_DIR$NATIVEPREFIX/share/maven/repository/org/apache/apache/29/apache-29.pom"
+        ]
+    }
+}

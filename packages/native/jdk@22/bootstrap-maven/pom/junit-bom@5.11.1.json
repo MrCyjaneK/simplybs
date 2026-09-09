@@ -1,0 +1,22 @@
+{
+    "package": "native/jdk@22/bootstrap-maven/pom/junit-bom@5.11.1",
+    "version": "5.11.1",
+    "type": "native",
+    "download": [
+        {
+            "kind": "blob",
+            "path": "./junit-bom-5.11.1.pom",
+            "sha256": "c72124a9c9a79910c1858766b72c350e1a39244cbfb4b076348fbfe078281965",
+            "url": "https://repo1.maven.org/maven2/org/junit/junit-bom/5.11.1/junit-bom-5.11.1.pom"
+        }
+    ],
+    "dependencies": [
+        "*:*:native/coreutils"
+    ],
+    "build": {
+        "steps": [
+            "*:*:mkdir -p $STAGING_DIR$NATIVEPREFIX/share/maven/repository/org/junit/junit-bom/5.11.1",
+            "*:*:cp junit-bom-5.11.1.pom $STAGING_DIR$NATIVEPREFIX/share/maven/repository/org/junit/junit-bom/5.11.1/junit-bom-5.11.1.pom"
+        ]
+    }
+}

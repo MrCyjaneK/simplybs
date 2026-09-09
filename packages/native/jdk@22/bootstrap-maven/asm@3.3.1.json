@@ -1,0 +1,39 @@
+{
+    "package": "native/jdk@22/bootstrap-maven/asm@3.3.1",
+    "version": "3.3.1",
+    "type": "native",
+    "download": [
+        {
+            "kind": "git",
+            "sha256": "d6f33999569493c18f04686facf8e91484db7ee6",
+            "url": "https://gitlab.ow2.org/asm/asm.git"
+        },
+        {
+            "kind": "blob",
+            "path": "./asm-3.3.1.pom",
+            "sha256": "6e9dcc0313935ff11e7bea368811e48066ae3177a72ed69bceb3792096f7c2bb",
+            "url": "https://repo1.maven.org/maven2/asm/asm/3.3.1/asm-3.3.1.pom"
+        }
+    ],
+    "dependencies": [
+        "*:*:native/bash",
+        "*:*:native/coreutils",
+        "*:*:native/findutils",
+        "*:*:native/jdk@22",
+        "*:*:native/jdk@22/bootstrap-maven/pom/asm-parent@3.3.1"
+    ],
+    "build": {
+        "env": [
+            "*:*:WORKDIR=build/asm@3.3.1"
+        ],
+        "steps": [
+            "*:*:mkdir -p $WORKDIR",
+            "*:*:find src/org/objectweb/asm -name '*.java' ! -path '*/tree/*' ! -path '*/util/*' ! -path '*/commons/*' ! -path '*/xml/*' ! -path '*/attrs/*' ! -path '*/optimizer/*' >$WORKDIR/sources",
+            "*:*:$JAVA_HOME/bin/javac --release 8 -d $WORKDIR/classes @$WORKDIR/sources",
+            "*:*:$JAVA_HOME/bin/jar cf $WORKDIR/asm-3.3.1.jar -C $WORKDIR/classes .",
+            "*:*:mkdir -p $STAGING_DIR$NATIVEPREFIX/share/maven/repository/asm/asm/3.3.1",
+            "*:*:cp $WORKDIR/asm-3.3.1.jar $STAGING_DIR$NATIVEPREFIX/share/maven/repository/asm/asm/3.3.1/asm-3.3.1.jar",
+            "*:*:cp asm-3.3.1.pom $STAGING_DIR$NATIVEPREFIX/share/maven/repository/asm/asm/3.3.1/asm-3.3.1.pom"
+        ]
+    }
+}

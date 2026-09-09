@@ -1,0 +1,42 @@
+{
+    "package": "native/jdk@22/bootstrap-maven/commons-beanutils@1.8.3",
+    "version": "1.8.3",
+    "type": "native",
+    "download": [
+        {
+            "kind": "git",
+            "sha256": "bcd28bd06687c9e7441c061572e5474e2151ff14",
+            "url": "https://github.com/apache/commons-beanutils.git"
+        },
+        {
+            "kind": "blob",
+            "path": "./commons-beanutils-1.8.3.pom",
+            "sha256": "552ad56800bc6010f1e6ea8c7638f24c74230e9991a52568df20d5b5aa5c4b20",
+            "url": "https://repo1.maven.org/maven2/commons-beanutils/commons-beanutils/1.8.3/commons-beanutils-1.8.3.pom"
+        }
+    ],
+    "dependencies": [
+        "*:*:native/bash",
+        "*:*:native/coreutils",
+        "*:*:native/findutils",
+        "*:*:native/jdk@22",
+        "*:*:native/jdk@22/bootstrap-maven/pom/commons-parent@14",
+        "*:*:native/jdk@22/bootstrap-maven/commons-logging@1.1.1",
+        "*:*:native/jdk@22/bootstrap-maven/commons-collections@3.2.2"
+    ],
+    "build": {
+        "env": [
+            "*:*:WORKDIR=build/commons-beanutils@1.8.3",
+            "*:*:REPO=$NATIVEPREFIX/share/maven/repository"
+        ],
+        "steps": [
+            "*:*:mkdir -p $WORKDIR",
+            "*:*:find src/main/java -name '*.java' >$WORKDIR/sources",
+            "*:*:$JAVA_HOME/bin/javac --release 8 -cp $REPO/commons-logging/commons-logging/1.1.1/commons-logging-1.1.1.jar:$REPO/commons-collections/commons-collections/3.2.2/commons-collections-3.2.2.jar -d $WORKDIR/classes @$WORKDIR/sources",
+            "*:*:$JAVA_HOME/bin/jar cf $WORKDIR/commons-beanutils-1.8.3.jar -C $WORKDIR/classes .",
+            "*:*:mkdir -p $STAGING_DIR$NATIVEPREFIX/share/maven/repository/commons-beanutils/commons-beanutils/1.8.3",
+            "*:*:cp $WORKDIR/commons-beanutils-1.8.3.jar $STAGING_DIR$NATIVEPREFIX/share/maven/repository/commons-beanutils/commons-beanutils/1.8.3/commons-beanutils-1.8.3.jar",
+            "*:*:cp commons-beanutils-1.8.3.pom $STAGING_DIR$NATIVEPREFIX/share/maven/repository/commons-beanutils/commons-beanutils/1.8.3/commons-beanutils-1.8.3.pom"
+        ]
+    }
+}

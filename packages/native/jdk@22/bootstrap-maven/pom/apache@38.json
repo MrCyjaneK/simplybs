@@ -1,0 +1,22 @@
+{
+    "package": "native/jdk@22/bootstrap-maven/pom/apache@38",
+    "version": "38",
+    "type": "native",
+    "download": [
+        {
+            "kind": "blob",
+            "path": "./apache-38.pom",
+            "sha256": "9b0a5f28ddfb4b7500a37022bee8245efdd044fb9a3d79fb827550923eccc4b5",
+            "url": "https://repo1.maven.org/maven2/org/apache/apache/38/apache-38.pom"
+        }
+    ],
+    "dependencies": [
+        "*:*:native/coreutils"
+    ],
+    "build": {
+        "steps": [
+            "*:*:mkdir -p $STAGING_DIR$NATIVEPREFIX/share/maven/repository/org/apache/apache/38",
+            "*:*:cp apache-38.pom $STAGING_DIR$NATIVEPREFIX/share/maven/repository/org/apache/apache/38/apache-38.pom"
+        ]
+    }
+}

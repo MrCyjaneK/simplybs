@@ -1,0 +1,22 @@
+{
+    "package": "native/jdk@22/bootstrap-maven/pom/oss-parent@6",
+    "version": "6",
+    "type": "native",
+    "download": [
+        {
+            "kind": "blob",
+            "path": "./oss-parent-6.pom",
+            "sha256": "b4306d13e8f5392458a1b30866f1cff161b3d2e6999a88d059eea3932c8a8499",
+            "url": "https://repo1.maven.org/maven2/org/sonatype/oss/oss-parent/6/oss-parent-6.pom"
+        }
+    ],
+    "dependencies": [
+        "*:*:native/coreutils"
+    ],
+    "build": {
+        "steps": [
+            "*:*:mkdir -p $STAGING_DIR$NATIVEPREFIX/share/maven/repository/org/sonatype/oss/oss-parent/6",
+            "*:*:cp oss-parent-6.pom $STAGING_DIR$NATIVEPREFIX/share/maven/repository/org/sonatype/oss/oss-parent/6/oss-parent-6.pom"
+        ]
+    }
+}

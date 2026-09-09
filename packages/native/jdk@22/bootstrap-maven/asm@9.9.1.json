@@ -1,0 +1,39 @@
+{
+    "package": "native/jdk@22/bootstrap-maven/asm@9.9.1",
+    "version": "9.9.1",
+    "type": "native",
+    "download": [
+        {
+            "kind": "git",
+            "sha256": "4e6de6cb3dcddb00a2bbf7bbb9ee40f0c15281c5",
+            "url": "https://gitlab.ow2.org/asm/asm.git"
+        },
+        {
+            "kind": "blob",
+            "path": "./asm-9.9.1.pom",
+            "sha256": "aca68dee9ba2f6cd90ffde728efdc7e3ebfcf59f3f41fbfe248d2d01d5b866af",
+            "url": "https://repo1.maven.org/maven2/org/ow2/asm/asm/9.9.1/asm-9.9.1.pom"
+        }
+    ],
+    "dependencies": [
+        "*:*:native/bash",
+        "*:*:native/coreutils",
+        "*:*:native/findutils",
+        "*:*:native/jdk@22",
+        "*:*:native/jdk@22/bootstrap-maven/pom/ow2@1.5.1"
+    ],
+    "build": {
+        "env": [
+            "*:*:WORKDIR=work/asm@9.9.1"
+        ],
+        "steps": [
+            "*:*:mkdir -p $WORKDIR",
+            "*:*:find asm/src/main/java -name '*.java' >$WORKDIR/sources",
+            "*:*:$JAVA_HOME/bin/javac -d $WORKDIR/classes @$WORKDIR/sources",
+            "*:*:$JAVA_HOME/bin/jar cf $WORKDIR/asm-9.9.1.jar -C $WORKDIR/classes .",
+            "*:*:mkdir -p $STAGING_DIR$NATIVEPREFIX/share/maven/repository/org/ow2/asm/asm/9.9.1",
+            "*:*:cp $WORKDIR/asm-9.9.1.jar $STAGING_DIR$NATIVEPREFIX/share/maven/repository/org/ow2/asm/asm/9.9.1/asm-9.9.1.jar",
+            "*:*:cp asm-9.9.1.pom $STAGING_DIR$NATIVEPREFIX/share/maven/repository/org/ow2/asm/asm/9.9.1/asm-9.9.1.pom"
+        ]
+    }
+}

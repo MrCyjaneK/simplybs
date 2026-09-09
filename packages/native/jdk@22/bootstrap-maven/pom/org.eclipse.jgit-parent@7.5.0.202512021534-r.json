@@ -1,0 +1,22 @@
+{
+    "package": "native/jdk@22/bootstrap-maven/pom/org.eclipse.jgit-parent@7.5.0.202512021534-r",
+    "version": "7.5.0.202512021534-r",
+    "type": "native",
+    "download": [
+        {
+            "kind": "blob",
+            "path": "./org.eclipse.jgit-parent-7.5.0.202512021534-r.pom",
+            "sha256": "7e38806a853691a49db16eac836fe6b626276943b108b67754a3d5c740fbbc0e",
+            "url": "https://repo1.maven.org/maven2/org/eclipse/jgit/org.eclipse.jgit-parent/7.5.0.202512021534-r/org.eclipse.jgit-parent-7.5.0.202512021534-r.pom"
+        }
+    ],
+    "dependencies": [
+        "*:*:native/coreutils"
+    ],
+    "build": {
+        "steps": [
+            "*:*:mkdir -p $STAGING_DIR$NATIVEPREFIX/share/maven/repository/org/eclipse/jgit/org.eclipse.jgit-parent/7.5.0.202512021534-r",
+            "*:*:cp org.eclipse.jgit-parent-7.5.0.202512021534-r.pom $STAGING_DIR$NATIVEPREFIX/share/maven/repository/org/eclipse/jgit/org.eclipse.jgit-parent/7.5.0.202512021534-r/org.eclipse.jgit-parent-7.5.0.202512021534-r.pom"
+        ]
+    }
+}

@@ -1,0 +1,22 @@
+{
+    "package": "native/jdk@22/bootstrap-maven/pom/commons-parent@48",
+    "version": "48",
+    "type": "native",
+    "download": [
+        {
+            "kind": "blob",
+            "path": "./commons-parent-48.pom",
+            "sha256": "1e1f7de9370a7b7901f128f1dacd1422be74e3f47f9558b0f79e04c0637ca0b4",
+            "url": "https://repo1.maven.org/maven2/org/apache/commons/commons-parent/48/commons-parent-48.pom"
+        }
+    ],
+    "dependencies": [
+        "*:*:native/coreutils"
+    ],
+    "build": {
+        "steps": [
+            "*:*:mkdir -p $STAGING_DIR$NATIVEPREFIX/share/maven/repository/org/apache/commons/commons-parent/48",
+            "*:*:cp commons-parent-48.pom $STAGING_DIR$NATIVEPREFIX/share/maven/repository/org/apache/commons/commons-parent/48/commons-parent-48.pom"
+        ]
+    }
+}

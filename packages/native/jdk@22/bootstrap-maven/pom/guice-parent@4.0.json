@@ -1,0 +1,22 @@
+{
+    "package": "native/jdk@22/bootstrap-maven/pom/guice-parent@4.0",
+    "version": "4.0",
+    "type": "native",
+    "download": [
+        {
+            "kind": "blob",
+            "path": "./guice-parent-4.0.pom",
+            "sha256": "f65f11a7f2c06859d00b166f6ec57354c1be92599d6c1525674e5ff64f8feeab",
+            "url": "https://repo1.maven.org/maven2/com/google/inject/guice-parent/4.0/guice-parent-4.0.pom"
+        }
+    ],
+    "dependencies": [
+        "*:*:native/coreutils"
+    ],
+    "build": {
+        "steps": [
+            "*:*:mkdir -p $STAGING_DIR$NATIVEPREFIX/share/maven/repository/com/google/inject/guice-parent/4.0",
+            "*:*:cp guice-parent-4.0.pom $STAGING_DIR$NATIVEPREFIX/share/maven/repository/com/google/inject/guice-parent/4.0/guice-parent-4.0.pom"
+        ]
+    }
+}

@@ -1,0 +1,39 @@
+{
+    "package": "native/jdk@22/bootstrap-maven/plexus-build-api@0.0.7",
+    "version": "0.0.7",
+    "type": "native",
+    "download": [
+        {
+            "kind": "git",
+            "sha256": "883ea674097b2d147b8efd21ed19f3962b14fd2f",
+            "url": "https://github.com/codehaus-plexus/plexus-build-api.git"
+        }
+    ],
+    "dependencies": [
+        "*:*:native/bash",
+        "*:*:native/coreutils",
+        "*:*:native/findutils",
+        "*:*:native/jdk@22",
+        "*:*:native/jdk@22/bootstrap-maven/plexus-utils@4.0.2",
+        "*:*:native/jdk@22/bootstrap-maven/plexus-container-default@2.1.0"
+    ],
+    "build": {
+        "env": [
+            "*:*:WORKDIR=build/plexus-build-api@0.0.7",
+            "*:*:PLEXUS_UTILS=$NATIVEPREFIX/share/maven/repository/org/codehaus/plexus/plexus-utils/4.0.2/plexus-utils-4.0.2.jar",
+            "*:*:PLEXUS_CONTAINER=$NATIVEPREFIX/share/maven/repository/org/codehaus/plexus/plexus-container-default/2.1.0/plexus-container-default-2.1.0.jar"
+        ],
+        "steps": [
+            "*:*:mkdir -p $WORKDIR",
+            "*:*:cp $PATCH_DIR/maven/plexus-build-api-0.0.7-EmptyScanner.java src/main/java/org/sonatype/plexus/build/incremental/EmptyScanner.java",
+            "*:*:find src/main/java -name '*.java' >$WORKDIR/sources",
+            "*:*:$JAVA_HOME/bin/javac -cp $PLEXUS_UTILS:$PLEXUS_CONTAINER -d $WORKDIR/classes @$WORKDIR/sources",
+            "*:*:mkdir -p $WORKDIR/classes/META-INF/plexus",
+            "*:*:printf '%s\\n' '<?xml version=\"1.0\" encoding=\"UTF-8\"?>' '<component-set>' '  <components>' '    <component>' '      <role>org.sonatype.plexus.build.incremental.BuildContext</role>' '      <role-hint>default</role-hint>' '      <implementation>org.sonatype.plexus.build.incremental.DefaultBuildContext</implementation>' '    </component>' '  </components>' '</component-set>' > $WORKDIR/classes/META-INF/plexus/components.xml",
+            "*:*:$JAVA_HOME/bin/jar cf $WORKDIR/plexus-build-api-0.0.7.jar -C $WORKDIR/classes .",
+            "*:*:mkdir -p $STAGING_DIR$NATIVEPREFIX/share/maven/repository/org/sonatype/plexus/plexus-build-api/0.0.7",
+            "*:*:cp $WORKDIR/plexus-build-api-0.0.7.jar $STAGING_DIR$NATIVEPREFIX/share/maven/repository/org/sonatype/plexus/plexus-build-api/0.0.7/plexus-build-api-0.0.7.jar",
+            "*:*:cp pom.xml $STAGING_DIR$NATIVEPREFIX/share/maven/repository/org/sonatype/plexus/plexus-build-api/0.0.7/plexus-build-api-0.0.7.pom"
+        ]
+    }
+}

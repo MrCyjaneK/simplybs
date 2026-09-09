@@ -1,0 +1,34 @@
+{
+    "package": "native/kotlin@1.9.10",
+    "version": "1.9.10",
+    "type": "native",
+    "download": [
+        {
+            "kind": "blob",
+            "path": "./kotlin-compiler-1.9.10.zip",
+            "sha256": "7d74863deecf8e0f28ea54c3735feab003d0eac67e8d3a791254b16889c20342",
+            "url": "https://github.com/JetBrains/kotlin/releases/download/v1.9.10/kotlin-compiler-1.9.10.zip"
+        }
+    ],
+    "dependencies": [
+        "*:*:native/_/_",
+        "*:*:native/7zip",
+        "*:*:native/bash",
+        "*:*:native/coreutils"
+    ],
+    "export-env": [
+        "*:*:KOTLIN_HOME=$NATIVEPREFIX/kotlin-1.9.10",
+        "*:*:KOTLINC=$NATIVEPREFIX/kotlin-1.9.10/bin/kotlinc"
+    ],
+    "build": {
+        "env": [],
+        "steps": [
+            "*:*:mkdir work",
+            "*:*:cd work && 7zz x ../kotlin-compiler-1.9.10.zip",
+            "*:*:mkdir -p $STAGING_DIR$NATIVEPREFIX/kotlin-1.9.10 $STAGING_DIR$NATIVEPREFIX/bin",
+            "*:*:cp -a work/kotlinc/. $STAGING_DIR$NATIVEPREFIX/kotlin-1.9.10/",
+            "*:*:chmod +x $STAGING_DIR$NATIVEPREFIX/kotlin-1.9.10/bin/kotlinc",
+            "*:*:ln -sf ../kotlin-1.9.10/bin/kotlinc $STAGING_DIR$NATIVEPREFIX/bin/kotlinc"
+        ]
+    }
+}

@@ -1,0 +1,22 @@
+{
+    "package": "native/jdk@22/bootstrap-maven/pom/genesis-default-flava@2.0",
+    "version": "2.0",
+    "type": "native",
+    "download": [
+        {
+            "kind": "blob",
+            "path": "./genesis-default-flava-2.0.pom",
+            "sha256": "08e6e146f4e245266dff9dd800b12875dd2367d3f67a34ab660a126c811215f8",
+            "url": "https://repo1.maven.org/maven2/org/apache/geronimo/genesis/genesis-default-flava/2.0/genesis-default-flava-2.0.pom"
+        }
+    ],
+    "dependencies": [
+        "*:*:native/coreutils"
+    ],
+    "build": {
+        "steps": [
+            "*:*:mkdir -p $STAGING_DIR$NATIVEPREFIX/share/maven/repository/org/apache/geronimo/genesis/genesis-default-flava/2.0",
+            "*:*:cp genesis-default-flava-2.0.pom $STAGING_DIR$NATIVEPREFIX/share/maven/repository/org/apache/geronimo/genesis/genesis-default-flava/2.0/genesis-default-flava-2.0.pom"
+        ]
+    }
+}

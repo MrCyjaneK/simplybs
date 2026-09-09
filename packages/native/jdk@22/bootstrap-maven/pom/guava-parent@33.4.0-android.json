@@ -1,0 +1,22 @@
+{
+    "package": "native/jdk@22/bootstrap-maven/pom/guava-parent@33.4.0-android",
+    "version": "33.4.0-android",
+    "type": "native",
+    "download": [
+        {
+            "kind": "blob",
+            "path": "./guava-parent-33.4.0-android.pom",
+            "sha256": "7220ede61026596fbc720ee4b93246fa2d14f328058532b59ef053de397c7d83",
+            "url": "https://repo1.maven.org/maven2/com/google/guava/guava-parent/33.4.0-android/guava-parent-33.4.0-android.pom"
+        }
+    ],
+    "dependencies": [
+        "*:*:native/coreutils"
+    ],
+    "build": {
+        "steps": [
+            "*:*:mkdir -p $STAGING_DIR$NATIVEPREFIX/share/maven/repository/com/google/guava/guava-parent/33.4.0-android",
+            "*:*:cp guava-parent-33.4.0-android.pom $STAGING_DIR$NATIVEPREFIX/share/maven/repository/com/google/guava/guava-parent/33.4.0-android/guava-parent-33.4.0-android.pom"
+        ]
+    }
+}

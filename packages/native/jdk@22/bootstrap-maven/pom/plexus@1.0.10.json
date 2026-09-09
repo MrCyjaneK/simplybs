@@ -1,0 +1,22 @@
+{
+    "package": "native/jdk@22/bootstrap-maven/pom/plexus@1.0.10",
+    "version": "1.0.10",
+    "type": "native",
+    "download": [
+        {
+            "kind": "blob",
+            "path": "./plexus-1.0.10.pom",
+            "sha256": "09b999a969e73525a6cc3ad2868ea744766e1d93b25c6c656d61a5ff9c881da9",
+            "url": "https://repo1.maven.org/maven2/org/codehaus/plexus/plexus/1.0.10/plexus-1.0.10.pom"
+        }
+    ],
+    "dependencies": [
+        "*:*:native/coreutils"
+    ],
+    "build": {
+        "steps": [
+            "*:*:mkdir -p $STAGING_DIR$NATIVEPREFIX/share/maven/repository/org/codehaus/plexus/plexus/1.0.10",
+            "*:*:cp plexus-1.0.10.pom $STAGING_DIR$NATIVEPREFIX/share/maven/repository/org/codehaus/plexus/plexus/1.0.10/plexus-1.0.10.pom"
+        ]
+    }
+}

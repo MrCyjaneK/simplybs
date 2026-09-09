@@ -1,0 +1,22 @@
+{
+    "package": "native/jdk@22/bootstrap-maven/pom/objenesis-parent@3.3",
+    "version": "3.3",
+    "type": "native",
+    "download": [
+        {
+            "kind": "blob",
+            "path": "./objenesis-parent-3.3.pom",
+            "sha256": "305c384aa2f1e1c7fe53a96da41c3ec35243b97d428d24a8f779818cc10be4ff",
+            "url": "https://repo1.maven.org/maven2/org/objenesis/objenesis-parent/3.3/objenesis-parent-3.3.pom"
+        }
+    ],
+    "dependencies": [
+        "*:*:native/coreutils"
+    ],
+    "build": {
+        "steps": [
+            "*:*:mkdir -p $STAGING_DIR$NATIVEPREFIX/share/maven/repository/org/objenesis/objenesis-parent/3.3",
+            "*:*:cp objenesis-parent-3.3.pom $STAGING_DIR$NATIVEPREFIX/share/maven/repository/org/objenesis/objenesis-parent/3.3/objenesis-parent-3.3.pom"
+        ]
+    }
+}

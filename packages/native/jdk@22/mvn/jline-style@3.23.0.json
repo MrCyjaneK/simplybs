@@ -1,0 +1,35 @@
+{
+    "package": "native/jdk@22/mvn/jline-style@3.23.0",
+    "version": "3.23.0",
+    "type": "native",
+    "download": [
+        {
+            "kind": "git",
+            "sha256": "cc57d0bab938742459e414400e4241ef261edcbe",
+            "url": "https://github.com/jline/jline3.git"
+        }
+    ],
+    "dependencies": [
+        "*:*:native/bash",
+        "*:*:native/coreutils",
+        "*:*:native/findutils",
+        "*:*:native/jdk@22",
+        "*:*:native/jdk@22/mvn/jline-native@3.23.0",
+        "*:*:native/jdk@22/mvn/jline-terminal@3.23.0",
+        "*:*:native/jdk@22/mvn/jsr305@3.0.2"
+    ],
+    "build": {
+        "env": [
+            "*:*:WORKDIR=work/jline-style@3.23.0",
+            "*:*:REPO=$NATIVEPREFIX/share/maven/repository"
+        ],
+        "steps": [
+            "*:*:mkdir -p $WORKDIR/classes",
+            "*:*:find style/src/main/java -name '*.java' >$WORKDIR/sources",
+            "*:*:$JAVA_HOME/bin/javac --release 8 -cp $REPO/org/jline/jline-terminal/3.23.0/jline-terminal-3.23.0.jar:$REPO/org/jline/jline-native/3.23.0/jline-native-3.23.0.jar:$REPO/com/google/code/findbugs/jsr305/3.0.2/jsr305-3.0.2.jar -d $WORKDIR/classes @$WORKDIR/sources",
+            "*:*:$JAVA_HOME/bin/jar cf $WORKDIR/jline-style-3.23.0.jar -C $WORKDIR/classes .",
+            "*:*:mkdir -p $STAGING_DIR$NATIVEPREFIX/share/maven/repository/org/jline/jline-style/3.23.0",
+            "*:*:cp $WORKDIR/jline-style-3.23.0.jar $STAGING_DIR$NATIVEPREFIX/share/maven/repository/org/jline/jline-style/3.23.0/jline-style-3.23.0.jar"
+        ]
+    }
+}

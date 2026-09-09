@@ -1,0 +1,27 @@
+{
+    "package": "native/jdk@22/bootstrap-maven/pom/google-collections@1.0",
+    "version": "1.0",
+    "type": "native",
+    "download": [
+        {
+            "kind": "blob",
+            "path": "./google-collections-1.0.pom",
+            "sha256": "893d56afcea1b22f83220fd7e49a6668c5b8901e39bd59dc57b42f55673721ce",
+            "url": "https://repo1.maven.org/maven2/com/google/collections/google-collections/1.0/google-collections-1.0.pom"
+        }
+    ],
+    "dependencies": [
+        "*:*:native/coreutils",
+        "*:*:native/jdk@22/bootstrap-maven/guava@31.0.1-jre"
+    ],
+    "build": {
+        "env": [
+            "*:*:REPO=$NATIVEPREFIX/share/maven/repository"
+        ],
+        "steps": [
+            "*:*:mkdir -p $STAGING_DIR$NATIVEPREFIX/share/maven/repository/com/google/collections/google-collections/1.0",
+            "*:*:cp $REPO/com/google/guava/guava/31.0.1-jre/guava-31.0.1-jre.jar $STAGING_DIR$NATIVEPREFIX/share/maven/repository/com/google/collections/google-collections/1.0/google-collections-1.0.jar",
+            "*:*:cp google-collections-1.0.pom $STAGING_DIR$NATIVEPREFIX/share/maven/repository/com/google/collections/google-collections/1.0/google-collections-1.0.pom"
+        ]
+    }
+}

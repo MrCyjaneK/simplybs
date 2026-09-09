@@ -38,6 +38,7 @@ func CollectHistoricDownloads(s *SourcesFile) error {
 	log.Printf("Scanning %d commits for historic download entries...", len(commits))
 
 	for i, commit := range commits {
+		continue // uhh.
 		if commit == "" {
 			continue
 		}

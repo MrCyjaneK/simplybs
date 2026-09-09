@@ -1,0 +1,38 @@
+{
+    "package": "native/jdk@22/asm@9.5",
+    "version": "9.5",
+    "type": "native",
+    "download": [
+        {
+            "kind": "git",
+            "sha256": "443339a964352dcec4dd3915de8f13188920d3ac",
+            "url": "https://gitlab.ow2.org/asm/asm.git"
+        }
+    ],
+    "dependencies": [
+        "*:*:native/coreutils",
+        "*:*:native/findutils",
+        "*:*:native/jdk@22"
+    ],
+    "build": {
+        "env": [
+            "*:*:DESTDIR=$STAGING_DIR$NATIVEPREFIX/lib/graalvm/asm-9.5",
+            "*:*:WORKDIR=build/asm-9.5"
+        ],
+        "steps": [
+            "*:*:mkdir -p $WORKDIR/asm $WORKDIR/asm-tree $WORKDIR/asm-analysis $WORKDIR/asm-commons $DESTDIR",
+            "*:*:find asm/src/main/java -name '*.java' >$WORKDIR/asm.sources",
+            "*:*:$JAVA_HOME/bin/javac -d $WORKDIR/asm @$WORKDIR/asm.sources",
+            "*:*:$JAVA_HOME/bin/jar cf $DESTDIR/asm.jar -C $WORKDIR/asm .",
+            "*:*:find asm-tree/src/main/java -name '*.java' >$WORKDIR/asm-tree.sources",
+            "*:*:$JAVA_HOME/bin/javac -classpath $DESTDIR/asm.jar -d $WORKDIR/asm-tree @$WORKDIR/asm-tree.sources",
+            "*:*:$JAVA_HOME/bin/jar cf $DESTDIR/asm-tree.jar -C $WORKDIR/asm-tree .",
+            "*:*:find asm-analysis/src/main/java -name '*.java' >$WORKDIR/asm-analysis.sources",
+            "*:*:$JAVA_HOME/bin/javac -classpath $DESTDIR/asm.jar:$DESTDIR/asm-tree.jar -d $WORKDIR/asm-analysis @$WORKDIR/asm-analysis.sources",
+            "*:*:$JAVA_HOME/bin/jar cf $DESTDIR/asm-analysis.jar -C $WORKDIR/asm-analysis .",
+            "*:*:find asm-commons/src/main/java -name '*.java' >$WORKDIR/asm-commons.sources",
+            "*:*:$JAVA_HOME/bin/javac -classpath $DESTDIR/asm.jar:$DESTDIR/asm-tree.jar:$DESTDIR/asm-analysis.jar -d $WORKDIR/asm-commons @$WORKDIR/asm-commons.sources",
+            "*:*:$JAVA_HOME/bin/jar cf $DESTDIR/asm-commons.jar -C $WORKDIR/asm-commons ."
+        ]
+    }
+}

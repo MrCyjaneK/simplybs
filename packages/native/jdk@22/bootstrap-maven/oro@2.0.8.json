@@ -1,0 +1,42 @@
+{
+    "package": "native/jdk@22/bootstrap-maven/oro@2.0.8",
+    "version": "2.0.8",
+    "type": "native",
+    "download": [
+        {
+            "kind": "blob",
+            "path": "./jakarta-oro-2.0.8.tar.gz",
+            "sha256": "4c4f3c7c479994c3ce09f542d4fbdc03eed58a2d7f320d32f2baf238b5b6f566",
+            "url": "https://archive.apache.org/dist/jakarta/oro/source/jakarta-oro-2.0.8.tar.gz"
+        },
+        {
+            "kind": "blob",
+            "path": "./oro-2.0.8.pom",
+            "sha256": "9aa9dfeb2e85e1d5e7932c87140697cecc2b0fadd933d679fd420a2e43831a82",
+            "url": "https://repo1.maven.org/maven2/oro/oro/2.0.8/oro-2.0.8.pom"
+        }
+    ],
+    "dependencies": [
+        "*:*:native/bash",
+        "*:*:native/coreutils",
+        "*:*:native/findutils",
+        "*:*:native/gzip",
+        "*:*:native/tar",
+        "*:*:native/jdk@22"
+    ],
+    "build": {
+        "env": [
+            "*:*:WORKDIR=work/oro@2.0.8"
+        ],
+        "steps": [
+            "*:*:mkdir -p $WORKDIR",
+            "*:*:gzip -dc jakarta-oro-2.0.8.tar.gz | tar xf -",
+            "*:*:find jakarta-oro-2.0.8/src/java/org -name '*.java' >$WORKDIR/sources",
+            "*:*:$JAVA_HOME/bin/javac --release 8 -d $WORKDIR/classes @$WORKDIR/sources",
+            "*:*:$JAVA_HOME/bin/jar cf $WORKDIR/oro-2.0.8.jar -C $WORKDIR/classes .",
+            "*:*:mkdir -p $STAGING_DIR$NATIVEPREFIX/share/maven/repository/oro/oro/2.0.8",
+            "*:*:cp $WORKDIR/oro-2.0.8.jar $STAGING_DIR$NATIVEPREFIX/share/maven/repository/oro/oro/2.0.8/oro-2.0.8.jar",
+            "*:*:cp oro-2.0.8.pom $STAGING_DIR$NATIVEPREFIX/share/maven/repository/oro/oro/2.0.8/oro-2.0.8.pom"
+        ]
+    }
+}

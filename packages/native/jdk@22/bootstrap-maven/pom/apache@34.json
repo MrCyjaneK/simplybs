@@ -1,0 +1,22 @@
+{
+    "package": "native/jdk@22/bootstrap-maven/pom/apache@34",
+    "version": "34",
+    "type": "native",
+    "download": [
+        {
+            "kind": "blob",
+            "path": "./apache-34.pom",
+            "sha256": "3671ae9d4d062ae3bb985731c76088bb2f6f7d7254e2d304ee9f690b97651328",
+            "url": "https://repo1.maven.org/maven2/org/apache/apache/34/apache-34.pom"
+        }
+    ],
+    "dependencies": [
+        "*:*:native/coreutils"
+    ],
+    "build": {
+        "steps": [
+            "*:*:mkdir -p $STAGING_DIR$NATIVEPREFIX/share/maven/repository/org/apache/apache/34",
+            "*:*:cp apache-34.pom $STAGING_DIR$NATIVEPREFIX/share/maven/repository/org/apache/apache/34/apache-34.pom"
+        ]
+    }
+}

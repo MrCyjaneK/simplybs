@@ -1,0 +1,22 @@
+{
+    "package": "native/jdk@22/bootstrap-maven/pom/apache@6",
+    "version": "6",
+    "type": "native",
+    "download": [
+        {
+            "kind": "blob",
+            "path": "./apache-6.pom",
+            "sha256": "12edb5096e13f40c362d0bd40902589fa9586505123fa26799ce50b116fa5bb3",
+            "url": "https://repo1.maven.org/maven2/org/apache/apache/6/apache-6.pom"
+        }
+    ],
+    "dependencies": [
+        "*:*:native/coreutils"
+    ],
+    "build": {
+        "steps": [
+            "*:*:mkdir -p $STAGING_DIR$NATIVEPREFIX/share/maven/repository/org/apache/apache/6",
+            "*:*:cp apache-6.pom $STAGING_DIR$NATIVEPREFIX/share/maven/repository/org/apache/apache/6/apache-6.pom"
+        ]
+    }
+}

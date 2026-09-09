@@ -1,0 +1,22 @@
+{
+    "package": "native/jdk@22/bootstrap-maven/pom/jakarta.xml.bind-api-parent@2.3.3",
+    "version": "2.3.3",
+    "type": "native",
+    "download": [
+        {
+            "kind": "blob",
+            "path": "./jakarta.xml.bind-api-parent-2.3.3.pom",
+            "sha256": "280da531760166d4412368d0dd899ef4aebfd0a7d82bf233502e29856806ada9",
+            "url": "https://repo1.maven.org/maven2/jakarta/xml/bind/jakarta.xml.bind-api-parent/2.3.3/jakarta.xml.bind-api-parent-2.3.3.pom"
+        }
+    ],
+    "dependencies": [
+        "*:*:native/coreutils"
+    ],
+    "build": {
+        "steps": [
+            "*:*:mkdir -p $STAGING_DIR$NATIVEPREFIX/share/maven/repository/jakarta/xml/bind/jakarta.xml.bind-api-parent/2.3.3",
+            "*:*:cp jakarta.xml.bind-api-parent-2.3.3.pom $STAGING_DIR$NATIVEPREFIX/share/maven/repository/jakarta/xml/bind/jakarta.xml.bind-api-parent/2.3.3/jakarta.xml.bind-api-parent-2.3.3.pom"
+        ]
+    }
+}

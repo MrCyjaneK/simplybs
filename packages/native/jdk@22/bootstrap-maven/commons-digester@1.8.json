@@ -1,0 +1,42 @@
+{
+    "package": "native/jdk@22/bootstrap-maven/commons-digester@1.8",
+    "version": "1.8",
+    "type": "native",
+    "download": [
+        {
+            "kind": "git",
+            "sha256": "8ff0834cbed4fb97f9cf1426993b50342983adeb",
+            "url": "https://github.com/apache/commons-digester.git"
+        },
+        {
+            "kind": "blob",
+            "path": "./commons-digester-1.8.pom",
+            "sha256": "c10144f223d7ab697ccea7da0e753b75603ea7fbc4e35570068e6c477068e9b5",
+            "url": "https://repo1.maven.org/maven2/commons-digester/commons-digester/1.8/commons-digester-1.8.pom"
+        }
+    ],
+    "dependencies": [
+        "*:*:native/bash",
+        "*:*:native/coreutils",
+        "*:*:native/findutils",
+        "*:*:native/jdk@22",
+        "*:*:native/jdk@22/bootstrap-maven/commons-beanutils@1.9.4",
+        "*:*:native/jdk@22/bootstrap-maven/commons-logging@1.2",
+        "*:*:native/jdk@22/bootstrap-maven/commons-collections@3.2.2"
+    ],
+    "build": {
+        "env": [
+            "*:*:WORKDIR=work/commons-digester@1.8",
+            "*:*:REPO=$NATIVEPREFIX/share/maven/repository"
+        ],
+        "steps": [
+            "*:*:mkdir -p $WORKDIR",
+            "*:*:find src/java -name '*.java' >$WORKDIR/sources",
+            "*:*:$JAVA_HOME/bin/javac --release 8 -cp $REPO/commons-beanutils/commons-beanutils/1.9.4/commons-beanutils-1.9.4.jar:$REPO/commons-logging/commons-logging/1.2/commons-logging-1.2.jar:$REPO/commons-collections/commons-collections/3.2.2/commons-collections-3.2.2.jar -d $WORKDIR/classes @$WORKDIR/sources",
+            "*:*:$JAVA_HOME/bin/jar cf $WORKDIR/commons-digester-1.8.jar -C $WORKDIR/classes .",
+            "*:*:mkdir -p $STAGING_DIR$NATIVEPREFIX/share/maven/repository/commons-digester/commons-digester/1.8",
+            "*:*:cp $WORKDIR/commons-digester-1.8.jar $STAGING_DIR$NATIVEPREFIX/share/maven/repository/commons-digester/commons-digester/1.8/commons-digester-1.8.jar",
+            "*:*:cp commons-digester-1.8.pom $STAGING_DIR$NATIVEPREFIX/share/maven/repository/commons-digester/commons-digester/1.8/commons-digester-1.8.pom"
+        ]
+    }
+}

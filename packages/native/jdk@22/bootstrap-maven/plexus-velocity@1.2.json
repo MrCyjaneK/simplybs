@@ -1,0 +1,37 @@
+{
+    "package": "native/jdk@22/bootstrap-maven/plexus-velocity@1.2",
+    "version": "1.2",
+    "type": "native",
+    "download": [
+        {
+            "kind": "git",
+            "sha256": "567f0e0f5628d7ec5ba68b06c46f100d31875220",
+            "url": "https://github.com/codehaus-plexus/plexus-velocity.git"
+        }
+    ],
+    "dependencies": [
+        "*:*:native/bash",
+        "*:*:native/coreutils",
+        "*:*:native/findutils",
+        "*:*:native/jdk@22",
+        "*:*:native/jdk@22/bootstrap-maven/pom/plexus-components@4.0",
+        "*:*:native/jdk@22/bootstrap-maven/plexus-container-default@2.1.0",
+        "*:*:native/jdk@22/bootstrap-maven/commons-collections@3.2.2",
+        "*:*:native/jdk@22/bootstrap-maven/velocity@1.7"
+    ],
+    "build": {
+        "env": [
+            "*:*:WORKDIR=work/plexus-velocity@1.2",
+            "*:*:REPO=$NATIVEPREFIX/share/maven/repository"
+        ],
+        "steps": [
+            "*:*:mkdir -p $WORKDIR",
+            "*:*:find src/main/java -name '*.java' >$WORKDIR/sources",
+            "*:*:$JAVA_HOME/bin/javac --release 8 -cp $REPO/org/codehaus/plexus/plexus-container-default/2.1.0/plexus-container-default-2.1.0.jar:$REPO/commons-collections/commons-collections/3.2.2/commons-collections-3.2.2.jar:$REPO/org/apache/velocity/velocity/1.7/velocity-1.7.jar -d $WORKDIR/classes @$WORKDIR/sources",
+            "*:*:$JAVA_HOME/bin/jar cf $WORKDIR/plexus-velocity-1.2.jar -C $WORKDIR/classes .",
+            "*:*:mkdir -p $STAGING_DIR$NATIVEPREFIX/share/maven/repository/org/codehaus/plexus/plexus-velocity/1.2",
+            "*:*:cp $WORKDIR/plexus-velocity-1.2.jar $STAGING_DIR$NATIVEPREFIX/share/maven/repository/org/codehaus/plexus/plexus-velocity/1.2/plexus-velocity-1.2.jar",
+            "*:*:cp pom.xml $STAGING_DIR$NATIVEPREFIX/share/maven/repository/org/codehaus/plexus/plexus-velocity/1.2/plexus-velocity-1.2.pom"
+        ]
+    }
+}

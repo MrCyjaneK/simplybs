@@ -1,0 +1,51 @@
+{
+    "package": "native/jdk@22/bootstrap-maven/doxia-decoration-model@1.11.1",
+    "version": "1.11.1",
+    "type": "native",
+    "download": [
+        {
+            "kind": "git",
+            "sha256": "1f9fcf561c3a4e7ccd39dfd49bb905a296bfac1b",
+            "url": "https://github.com/apache/maven-doxia-sitetools.git"
+        },
+        {
+            "kind": "blob",
+            "path": "./doxia-decoration-model-1.11.1.pom",
+            "sha256": "fd2040e074d6b00c595562c7fc8117f4d378038aa0c5c2bc8fb84c2b8e6246fb",
+            "url": "https://repo1.maven.org/maven2/org/apache/maven/doxia/doxia-decoration-model/1.11.1/doxia-decoration-model-1.11.1.pom"
+        }
+    ],
+    "dependencies": [
+        "*:*:native/bash",
+        "*:*:native/coreutils",
+        "*:*:native/findutils",
+        "*:*:native/jdk@22",
+        "*:*:native/jdk@22/bootstrap-maven/pom/doxia-sitetools@1.11.1",
+        "*:*:native/jdk@22/bootstrap-maven/javax.inject@1",
+        "*:*:native/jdk@22/bootstrap-maven/slf4j-api@1.7.36",
+        "*:*:native/jdk@22/bootstrap-maven/plexus-utils@4.0.2",
+        "*:*:native/jdk@22/bootstrap-maven/plexus-xml@3.0.1",
+        "*:*:native/jdk@22/bootstrap-maven/plexus-build-api@1.2.0",
+        "*:*:native/jdk@22/bootstrap-maven/modello@2.6.0",
+        "*:*:native/jdk@22/bootstrap-maven/plexus-utils@3.5.1",
+        "*:*:native/jdk@22/bootstrap-maven/plexus-component-annotations@2.1.0"
+    ],
+    "build": {
+        "env": [
+            "*:*:WORKDIR=work/doxia-decoration-model@1.11.1",
+            "*:*:REPO=$NATIVEPREFIX/share/maven/repository",
+            "*:*:MODELLO_CP=$NATIVEPREFIX/share/maven/repository/javax/inject/javax.inject/1/javax.inject-1.jar:$NATIVEPREFIX/share/maven/repository/org/slf4j/slf4j-api/1.7.36/slf4j-api-1.7.36.jar:$NATIVEPREFIX/share/maven/repository/org/codehaus/plexus/plexus-utils/4.0.2/plexus-utils-4.0.2.jar:$NATIVEPREFIX/share/maven/repository/org/codehaus/plexus/plexus-xml/3.0.1/plexus-xml-3.0.1.jar:$NATIVEPREFIX/share/maven/repository/org/codehaus/plexus/plexus-build-api/1.2.0/plexus-build-api-1.2.0.jar:$NATIVEPREFIX/share/maven/repository/org/codehaus/modello/modello-core/2.6.0/modello-core-2.6.0.jar:$NATIVEPREFIX/share/maven/repository/org/codehaus/modello/modello-plugin-java/2.6.0/modello-plugin-java-2.6.0.jar:$NATIVEPREFIX/share/maven/repository/org/codehaus/modello/modello-plugin-xml/2.6.0/modello-plugin-xml-2.6.0.jar:$NATIVEPREFIX/share/maven/repository/org/codehaus/modello/modello-plugin-xpp3/2.6.0/modello-plugin-xpp3-2.6.0.jar"
+        ],
+        "steps": [
+            "*:*:mkdir -p $WORKDIR/generated",
+            "*:*:$JAVA_HOME/bin/javac -cp $MODELLO_CP -d $WORKDIR $PATCH_DIR/maven/RunModello.java",
+            "*:*:$JAVA_HOME/bin/java -cp $WORKDIR:$MODELLO_CP RunModello doxia-decoration-model/src/main/mdo/decoration.mdo 1.8.0 $WORKDIR/generated java xpp3-reader xpp3-writer",
+            "*:*:find doxia-decoration-model/src/main/java $WORKDIR/generated -name '*.java' >$WORKDIR/sources",
+            "*:*:$JAVA_HOME/bin/javac -cp $REPO/org/codehaus/plexus/plexus-utils/3.5.1/plexus-utils-3.5.1.jar:$REPO/org/codehaus/plexus/plexus-xml/3.0.1/plexus-xml-3.0.1.jar:$REPO/org/codehaus/plexus/plexus-component-annotations/2.1.0/plexus-component-annotations-2.1.0.jar -d $WORKDIR/classes @$WORKDIR/sources",
+            "*:*:$JAVA_HOME/bin/jar cf $WORKDIR/doxia-decoration-model-1.11.1.jar -C $WORKDIR/classes .",
+            "*:*:mkdir -p $STAGING_DIR$NATIVEPREFIX/share/maven/repository/org/apache/maven/doxia/doxia-decoration-model/1.11.1",
+            "*:*:cp $WORKDIR/doxia-decoration-model-1.11.1.jar $STAGING_DIR$NATIVEPREFIX/share/maven/repository/org/apache/maven/doxia/doxia-decoration-model/1.11.1/doxia-decoration-model-1.11.1.jar",
+            "*:*:cp doxia-decoration-model-1.11.1.pom $STAGING_DIR$NATIVEPREFIX/share/maven/repository/org/apache/maven/doxia/doxia-decoration-model/1.11.1/doxia-decoration-model-1.11.1.pom"
+        ]
+    }
+}

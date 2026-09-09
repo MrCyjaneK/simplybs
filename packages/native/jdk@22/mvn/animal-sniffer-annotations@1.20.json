@@ -1,0 +1,30 @@
+{
+    "package": "native/jdk@22/mvn/animal-sniffer-annotations@1.20",
+    "version": "1.20",
+    "type": "native",
+    "download": [
+        {
+            "kind": "git",
+            "sha256": "a69b280569ff52694cb2cec65b907b85ee41c517",
+            "url": "https://github.com/mojohaus/animal-sniffer.git"
+        }
+    ],
+    "dependencies": [
+        "*:*:native/coreutils",
+        "*:*:native/findutils",
+        "*:*:native/jdk@22"
+    ],
+    "build": {
+        "env": [
+            "*:*:WORKDIR=work/animal-sniffer-annotations@1.20"
+        ],
+        "steps": [
+            "*:*:mkdir -p $WORKDIR/classes",
+            "*:*:find animal-sniffer-annotations/src/main/java -name '*.java' >$WORKDIR/sources",
+            "*:*:$JAVA_HOME/bin/javac --release 8 -d $WORKDIR/classes @$WORKDIR/sources",
+            "*:*:$JAVA_HOME/bin/jar cf $WORKDIR/animal-sniffer-annotations-1.20.jar -C $WORKDIR/classes .",
+            "*:*:mkdir -p $STAGING_DIR$NATIVEPREFIX/share/maven/repository/org/codehaus/mojo/animal-sniffer-annotations/1.20",
+            "*:*:cp $WORKDIR/animal-sniffer-annotations-1.20.jar $STAGING_DIR$NATIVEPREFIX/share/maven/repository/org/codehaus/mojo/animal-sniffer-annotations/1.20/animal-sniffer-annotations-1.20.jar"
+        ]
+    }
+}

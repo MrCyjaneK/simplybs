@@ -1,0 +1,22 @@
+{
+    "package": "native/jdk@22/bootstrap-maven/pom/wagon-providers@3.5.3",
+    "version": "3.5.3",
+    "type": "native",
+    "download": [
+        {
+            "kind": "blob",
+            "path": "./wagon-providers-3.5.3.pom",
+            "sha256": "807c51ffccdef6c01130b74aeed27815ec162bc2686c01e9d29f16efc526a44a",
+            "url": "https://repo1.maven.org/maven2/org/apache/maven/wagon/wagon-providers/3.5.3/wagon-providers-3.5.3.pom"
+        }
+    ],
+    "dependencies": [
+        "*:*:native/coreutils"
+    ],
+    "build": {
+        "steps": [
+            "*:*:mkdir -p $STAGING_DIR$NATIVEPREFIX/share/maven/repository/org/apache/maven/wagon/wagon-providers/3.5.3",
+            "*:*:cp wagon-providers-3.5.3.pom $STAGING_DIR$NATIVEPREFIX/share/maven/repository/org/apache/maven/wagon/wagon-providers/3.5.3/wagon-providers-3.5.3.pom"
+        ]
+    }
+}

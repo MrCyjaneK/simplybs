@@ -1,0 +1,39 @@
+{
+    "package": "native/jdk@22/bootstrap-maven/commons-collections4@4.4",
+    "version": "4.4",
+    "type": "native",
+    "download": [
+        {
+            "kind": "git",
+            "sha256": "cab58b3a8093a2f6b84f12783a3fb358747310f7",
+            "url": "https://github.com/apache/commons-collections.git"
+        },
+        {
+            "kind": "blob",
+            "path": "./commons-collections4-4.4.pom",
+            "sha256": "271bd673839af46e73aff957e2918d4bf96f5ac4f6c6cf4d5be93fd1f1271c4d",
+            "url": "https://repo1.maven.org/maven2/org/apache/commons/commons-collections4/4.4/commons-collections4-4.4.pom"
+        }
+    ],
+    "dependencies": [
+        "*:*:native/bash",
+        "*:*:native/coreutils",
+        "*:*:native/findutils",
+        "*:*:native/jdk@22",
+        "*:*:native/jdk@22/bootstrap-maven/pom/commons-parent@48"
+    ],
+    "build": {
+        "env": [
+            "*:*:WORKDIR=build/commons-collections4@4.4"
+        ],
+        "steps": [
+            "*:*:mkdir -p $WORKDIR",
+            "*:*:find src/main/java -name '*.java' ! -name 'module-info.java' >$WORKDIR/sources",
+            "*:*:$JAVA_HOME/bin/javac --release 8 -d $WORKDIR/classes @$WORKDIR/sources",
+            "*:*:$JAVA_HOME/bin/jar cf $WORKDIR/commons-collections4-4.4.jar -C $WORKDIR/classes .",
+            "*:*:mkdir -p $STAGING_DIR$NATIVEPREFIX/share/maven/repository/org/apache/commons/commons-collections4/4.4",
+            "*:*:cp $WORKDIR/commons-collections4-4.4.jar $STAGING_DIR$NATIVEPREFIX/share/maven/repository/org/apache/commons/commons-collections4/4.4/commons-collections4-4.4.jar",
+            "*:*:cp commons-collections4-4.4.pom $STAGING_DIR$NATIVEPREFIX/share/maven/repository/org/apache/commons/commons-collections4/4.4/commons-collections4-4.4.pom"
+        ]
+    }
+}

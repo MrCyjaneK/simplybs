@@ -1,0 +1,38 @@
+{
+    "package": "native/jdk@22/bootstrap-maven/auto-value-annotations@1.9",
+    "version": "1.9",
+    "type": "native",
+    "download": [
+        {
+            "kind": "git",
+            "sha256": "d26281e822ecd6e616889569e57c9166ecf22184",
+            "url": "https://github.com/google/auto.git"
+        },
+        {
+            "kind": "blob",
+            "path": "./auto-value-annotations-1.9.pom",
+            "sha256": "9220a3dabe75c79334f061b0e40df833448666bac28a8b823bc1e8fd52f8c98a",
+            "url": "https://repo1.maven.org/maven2/com/google/auto/value/auto-value-annotations/1.9/auto-value-annotations-1.9.pom"
+        }
+    ],
+    "dependencies": [
+        "*:*:native/bash",
+        "*:*:native/coreutils",
+        "*:*:native/findutils",
+        "*:*:native/jdk@22"
+    ],
+    "build": {
+        "env": [
+            "*:*:WORKDIR=work/auto-value-annotations@1.9"
+        ],
+        "steps": [
+            "*:*:mkdir -p $WORKDIR",
+            "*:*:find value/src/main/java/com/google/auto/value value/src/main/java/com/google/auto/value/extension/memoized value/src/main/java/com/google/auto/value/extension/serializable value/src/main/java/com/google/auto/value/extension/toprettystring -maxdepth 1 -name '*.java' >$WORKDIR/sources",
+            "*:*:$JAVA_HOME/bin/javac --release 8 -d $WORKDIR/classes @$WORKDIR/sources",
+            "*:*:$JAVA_HOME/bin/jar cf $WORKDIR/auto-value-annotations-1.9.jar -C $WORKDIR/classes .",
+            "*:*:mkdir -p $STAGING_DIR$NATIVEPREFIX/share/maven/repository/com/google/auto/value/auto-value-annotations/1.9",
+            "*:*:cp $WORKDIR/auto-value-annotations-1.9.jar $STAGING_DIR$NATIVEPREFIX/share/maven/repository/com/google/auto/value/auto-value-annotations/1.9/auto-value-annotations-1.9.jar",
+            "*:*:cp auto-value-annotations-1.9.pom $STAGING_DIR$NATIVEPREFIX/share/maven/repository/com/google/auto/value/auto-value-annotations/1.9/auto-value-annotations-1.9.pom"
+        ]
+    }
+}

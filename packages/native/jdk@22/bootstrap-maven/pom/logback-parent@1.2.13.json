@@ -1,0 +1,22 @@
+{
+    "package": "native/jdk@22/bootstrap-maven/pom/logback-parent@1.2.13",
+    "version": "1.2.13",
+    "type": "native",
+    "download": [
+        {
+            "kind": "blob",
+            "path": "./logback-parent-1.2.13.pom",
+            "sha256": "fa08315e836e63f337ad9d252194086aff541cdbd787a8b7903515ac3469364f",
+            "url": "https://repo1.maven.org/maven2/ch/qos/logback/logback-parent/1.2.13/logback-parent-1.2.13.pom"
+        }
+    ],
+    "dependencies": [
+        "*:*:native/coreutils"
+    ],
+    "build": {
+        "steps": [
+            "*:*:mkdir -p $STAGING_DIR$NATIVEPREFIX/share/maven/repository/ch/qos/logback/logback-parent/1.2.13",
+            "*:*:cp logback-parent-1.2.13.pom $STAGING_DIR$NATIVEPREFIX/share/maven/repository/ch/qos/logback/logback-parent/1.2.13/logback-parent-1.2.13.pom"
+        ]
+    }
+}

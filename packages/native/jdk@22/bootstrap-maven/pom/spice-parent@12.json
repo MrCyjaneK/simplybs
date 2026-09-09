@@ -1,0 +1,22 @@
+{
+    "package": "native/jdk@22/bootstrap-maven/pom/spice-parent@12",
+    "version": "12",
+    "type": "native",
+    "download": [
+        {
+            "kind": "blob",
+            "path": "./spice-parent-12.pom",
+            "sha256": "21a19b26dbe5c38ddb5114cf4eadbf5ccb411bc6b128fdd5949b1ccb12f3683e",
+            "url": "https://repo1.maven.org/maven2/org/sonatype/spice/spice-parent/12/spice-parent-12.pom"
+        }
+    ],
+    "dependencies": [
+        "*:*:native/coreutils"
+    ],
+    "build": {
+        "steps": [
+            "*:*:mkdir -p $STAGING_DIR$NATIVEPREFIX/share/maven/repository/org/sonatype/spice/spice-parent/12",
+            "*:*:cp spice-parent-12.pom $STAGING_DIR$NATIVEPREFIX/share/maven/repository/org/sonatype/spice/spice-parent/12/spice-parent-12.pom"
+        ]
+    }
+}

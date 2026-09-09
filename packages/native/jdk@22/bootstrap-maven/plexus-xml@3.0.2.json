@@ -1,0 +1,33 @@
+{
+    "package": "native/jdk@22/bootstrap-maven/plexus-xml@3.0.2",
+    "version": "3.0.2",
+    "type": "native",
+    "download": [
+        {
+            "kind": "git",
+            "sha256": "474a0e3daca9caeb1f8f72ebf33db44f5ffb3c0c",
+            "url": "https://github.com/codehaus-plexus/plexus-xml.git"
+        }
+    ],
+    "dependencies": [
+        "*:*:native/bash",
+        "*:*:native/coreutils",
+        "*:*:native/findutils",
+        "*:*:native/jdk@22",
+        "*:*:native/jdk@22/bootstrap-maven/pom/plexus@20"
+    ],
+    "build": {
+        "env": [
+            "*:*:WORKDIR=build/plexus-xml@3.0.2"
+        ],
+        "steps": [
+            "*:*:mkdir -p $WORKDIR",
+            "*:*:find src/main/java -name '*.java' >$WORKDIR/sources",
+            "*:*:$JAVA_HOME/bin/javac -d $WORKDIR/classes @$WORKDIR/sources",
+            "*:*:$JAVA_HOME/bin/jar cf $WORKDIR/plexus-xml-3.0.2.jar -C $WORKDIR/classes .",
+            "*:*:mkdir -p $STAGING_DIR$NATIVEPREFIX/share/maven/repository/org/codehaus/plexus/plexus-xml/3.0.2",
+            "*:*:cp $WORKDIR/plexus-xml-3.0.2.jar $STAGING_DIR$NATIVEPREFIX/share/maven/repository/org/codehaus/plexus/plexus-xml/3.0.2/plexus-xml-3.0.2.jar",
+            "*:*:cp pom.xml $STAGING_DIR$NATIVEPREFIX/share/maven/repository/org/codehaus/plexus/plexus-xml/3.0.2/plexus-xml-3.0.2.pom"
+        ]
+    }
+}

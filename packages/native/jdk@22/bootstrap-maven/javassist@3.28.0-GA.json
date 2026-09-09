@@ -1,0 +1,33 @@
+{
+    "package": "native/jdk@22/bootstrap-maven/javassist@3.28.0-GA",
+    "version": "3.28.0-GA",
+    "type": "native",
+    "download": [
+        {
+            "kind": "git",
+            "sha256": "3112090a508b8a42c08cd68308d1018596a70b1e",
+            "url": "https://github.com/jboss-javassist/javassist.git"
+        }
+    ],
+    "dependencies": [
+        "*:*:native/bash",
+        "*:*:native/coreutils",
+        "*:*:native/findutils",
+        "*:*:native/jdk@22"
+    ],
+    "build": {
+        "env": [
+            "*:*:WORKDIR=build/javassist@3.28.0-GA"
+        ],
+        "steps": [
+            "*:*:mkdir -p $WORKDIR",
+            "*:*:find src/main/javassist -name '*.java' >$WORKDIR/sources",
+            "*:*:$JAVA_HOME/bin/javac -d $WORKDIR/classes @$WORKDIR/sources",
+            "*:*:cp -R src/main/META-INF $WORKDIR/classes/",
+            "*:*:$JAVA_HOME/bin/jar cf $WORKDIR/javassist-3.28.0-GA.jar -C $WORKDIR/classes .",
+            "*:*:mkdir -p $STAGING_DIR$NATIVEPREFIX/share/maven/repository/org/javassist/javassist/3.28.0-GA",
+            "*:*:cp $WORKDIR/javassist-3.28.0-GA.jar $STAGING_DIR$NATIVEPREFIX/share/maven/repository/org/javassist/javassist/3.28.0-GA/javassist-3.28.0-GA.jar",
+            "*:*:cp pom.xml $STAGING_DIR$NATIVEPREFIX/share/maven/repository/org/javassist/javassist/3.28.0-GA/javassist-3.28.0-GA.pom"
+        ]
+    }
+}

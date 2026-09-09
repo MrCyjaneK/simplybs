@@ -1,0 +1,59 @@
+{
+    "package": "native/jdk@22/bootstrap-maven/doxia-site-renderer@1.11.1",
+    "version": "1.11.1",
+    "type": "native",
+    "download": [
+        {
+            "kind": "git",
+            "sha256": "1f9fcf561c3a4e7ccd39dfd49bb905a296bfac1b",
+            "url": "https://github.com/apache/maven-doxia-sitetools.git"
+        },
+        {
+            "kind": "blob",
+            "path": "./doxia-site-renderer-1.11.1.pom",
+            "sha256": "bd9ac2f023c8fbf7fc2ab00cee25dffbc18249870ce0da2ec46ba6689066184f",
+            "url": "https://repo1.maven.org/maven2/org/apache/maven/doxia/doxia-site-renderer/1.11.1/doxia-site-renderer-1.11.1.pom"
+        }
+    ],
+    "dependencies": [
+        "*:*:native/bash",
+        "*:*:native/coreutils",
+        "*:*:native/findutils",
+        "*:*:native/jdk@22",
+        "*:*:native/maven@3.9-bin",
+        "*:*:native/jdk@22/bootstrap-maven/pom/doxia-sitetools@1.11.1",
+        "*:*:native/jdk@22/bootstrap-maven/doxia-core@1.12.0",
+        "*:*:native/jdk@22/bootstrap-maven/doxia-logging-api@1.12.0",
+        "*:*:native/jdk@22/bootstrap-maven/doxia-sink-api@1.12.0",
+        "*:*:native/jdk@22/bootstrap-maven/doxia-decoration-model@1.11.1",
+        "*:*:native/jdk@22/bootstrap-maven/doxia-skin-model@1.11.1",
+        "*:*:native/jdk@22/bootstrap-maven/doxia-module-xhtml@1.12.0",
+        "*:*:native/jdk@22/bootstrap-maven/doxia-module-xhtml5@1.11.1",
+        "*:*:native/jdk@22/bootstrap-maven/plexus-component-annotations@2.1.0",
+        "*:*:native/jdk@22/bootstrap-maven/plexus-i18n@1.0-beta-10",
+        "*:*:native/jdk@22/bootstrap-maven/plexus-container-default@2.1.0",
+        "*:*:native/jdk@22/bootstrap-maven/plexus-velocity@1.2",
+        "*:*:native/jdk@22/bootstrap-maven/plexus-utils@3.5.1",
+        "*:*:native/jdk@22/bootstrap-maven/velocity@1.7",
+        "*:*:native/jdk@22/bootstrap-maven/velocity-tools@2.0",
+        "*:*:native/jdk@22/bootstrap-maven/commons-collections@3.2.2",
+        "*:*:native/jdk@22/bootstrap-maven/commons-lang3@3.14.0"
+    ],
+    "build": {
+        "env": [
+            "*:*:WORKDIR=work/doxia-site-renderer@1.11.1",
+            "*:*:REPO=$NATIVEPREFIX/share/maven/repository",
+            "*:*:BOOT_LIB=$NATIVEPREFIX/maven-3.9-bootstrap/lib"
+        ],
+        "steps": [
+            "*:*:mkdir -p $WORKDIR",
+            "*:*:find doxia-site-renderer/src/main/java -name '*.java' >$WORKDIR/sources",
+            "*:*:$JAVA_HOME/bin/javac --release 8 -cp $(printf '%s:' $BOOT_LIB/*.jar)$REPO/org/apache/maven/doxia/doxia-core/1.12.0/doxia-core-1.12.0.jar:$REPO/org/apache/maven/doxia/doxia-logging-api/1.12.0/doxia-logging-api-1.12.0.jar:$REPO/org/apache/maven/doxia/doxia-sink-api/1.12.0/doxia-sink-api-1.12.0.jar:$REPO/org/apache/maven/doxia/doxia-decoration-model/1.11.1/doxia-decoration-model-1.11.1.jar:$REPO/org/apache/maven/doxia/doxia-skin-model/1.11.1/doxia-skin-model-1.11.1.jar:$REPO/org/apache/maven/doxia/doxia-module-xhtml/1.12.0/doxia-module-xhtml-1.12.0.jar:$REPO/org/apache/maven/doxia/doxia-module-xhtml5/1.11.1/doxia-module-xhtml5-1.11.1.jar:$REPO/org/codehaus/plexus/plexus-component-annotations/2.1.0/plexus-component-annotations-2.1.0.jar:$REPO/org/codehaus/plexus/plexus-i18n/1.0-beta-10/plexus-i18n-1.0-beta-10.jar:$REPO/org/codehaus/plexus/plexus-container-default/2.1.0/plexus-container-default-2.1.0.jar:$REPO/org/codehaus/plexus/plexus-velocity/1.2/plexus-velocity-1.2.jar:$REPO/org/codehaus/plexus/plexus-utils/3.5.1/plexus-utils-3.5.1.jar:$REPO/org/apache/velocity/velocity/1.7/velocity-1.7.jar:$REPO/org/apache/velocity/velocity-tools/2.0/velocity-tools-2.0.jar:$REPO/commons-collections/commons-collections/3.2.2/commons-collections-3.2.2.jar:$REPO/org/apache/commons/commons-lang3/3.14.0/commons-lang3-3.14.0.jar -d $WORKDIR/classes @$WORKDIR/sources",
+            "*:*:cp -R doxia-site-renderer/src/main/resources/. $WORKDIR/classes/",
+            "*:*:$JAVA_HOME/bin/jar cf $WORKDIR/doxia-site-renderer-1.11.1.jar -C $WORKDIR/classes .",
+            "*:*:mkdir -p $STAGING_DIR$NATIVEPREFIX/share/maven/repository/org/apache/maven/doxia/doxia-site-renderer/1.11.1",
+            "*:*:cp $WORKDIR/doxia-site-renderer-1.11.1.jar $STAGING_DIR$NATIVEPREFIX/share/maven/repository/org/apache/maven/doxia/doxia-site-renderer/1.11.1/doxia-site-renderer-1.11.1.jar",
+            "*:*:cp doxia-site-renderer-1.11.1.pom $STAGING_DIR$NATIVEPREFIX/share/maven/repository/org/apache/maven/doxia/doxia-site-renderer/1.11.1/doxia-site-renderer-1.11.1.pom"
+        ]
+    }
+}

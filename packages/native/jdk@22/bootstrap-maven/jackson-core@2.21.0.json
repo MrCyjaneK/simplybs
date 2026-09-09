@@ -1,0 +1,42 @@
+{
+    "package": "native/jdk@22/bootstrap-maven/jackson-core@2.21.0",
+    "version": "2.21.0",
+    "type": "native",
+    "download": [
+        {
+            "kind": "git",
+            "sha256": "80fb536c26e49505be73eb826c450de4f9dba6d0",
+            "url": "https://github.com/FasterXML/jackson-core.git"
+        },
+        {
+            "kind": "blob",
+            "path": "./jackson-core-2.21.0.pom",
+            "sha256": "a0add9d219816d4da50a03d62ae21222329388822cb8aac8b5ab3d0af16aa7d6",
+            "url": "https://repo1.maven.org/maven2/com/fasterxml/jackson/core/jackson-core/2.21.0/jackson-core-2.21.0.pom"
+        }
+    ],
+    "dependencies": [
+        "*:*:native/bash",
+        "*:*:native/coreutils",
+        "*:*:native/findutils",
+        "*:*:native/jdk@22",
+        "*:*:native/jdk@22/bootstrap-maven/pom/jackson-base@2.21.0",
+        "*:*:native/jdk@22/bootstrap-maven/fastdoubleparser@2.0.1"
+    ],
+    "build": {
+        "env": [
+            "*:*:WORKDIR=build/jackson-core@2.21.0",
+            "*:*:REPO=$NATIVEPREFIX/share/maven/repository"
+        ],
+        "steps": [
+            "*:*:mkdir -p $WORKDIR/gen/com/fasterxml/jackson/core/json",
+            "*:*:printf '%s\\n' 'package com.fasterxml.jackson.core.json;' '' 'import com.fasterxml.jackson.core.Version;' 'import com.fasterxml.jackson.core.Versioned;' 'import com.fasterxml.jackson.core.util.VersionUtil;' '' 'public final class PackageVersion implements Versioned {' '    public final static Version VERSION = VersionUtil.parseVersion(' '        \"2.21.0\", \"com.fasterxml.jackson.core\", \"jackson-core\");' '' '    @Override' '    public Version version() {' '        return VERSION;' '    }' '}' > $WORKDIR/gen/com/fasterxml/jackson/core/json/PackageVersion.java",
+            "*:*:find src/main/java $WORKDIR/gen -name '*.java' ! -name 'module-info.java' ! -name 'PackageVersion.java.in' >$WORKDIR/sources",
+            "*:*:$JAVA_HOME/bin/javac --release 8 -cp $REPO/ch/randelshofer/fastdoubleparser/2.0.1/fastdoubleparser-2.0.1.jar -d $WORKDIR/classes @$WORKDIR/sources",
+            "*:*:$JAVA_HOME/bin/jar cf $WORKDIR/jackson-core-2.21.0.jar -C $WORKDIR/classes .",
+            "*:*:mkdir -p $STAGING_DIR$NATIVEPREFIX/share/maven/repository/com/fasterxml/jackson/core/jackson-core/2.21.0",
+            "*:*:cp $WORKDIR/jackson-core-2.21.0.jar $STAGING_DIR$NATIVEPREFIX/share/maven/repository/com/fasterxml/jackson/core/jackson-core/2.21.0/jackson-core-2.21.0.jar",
+            "*:*:cp jackson-core-2.21.0.pom $STAGING_DIR$NATIVEPREFIX/share/maven/repository/com/fasterxml/jackson/core/jackson-core/2.21.0/jackson-core-2.21.0.pom"
+        ]
+    }
+}

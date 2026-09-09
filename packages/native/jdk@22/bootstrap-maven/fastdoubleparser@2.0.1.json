@@ -1,0 +1,40 @@
+{
+    "package": "native/jdk@22/bootstrap-maven/fastdoubleparser@2.0.1",
+    "version": "2.0.1",
+    "type": "native",
+    "download": [
+        {
+            "kind": "git",
+            "sha256": "2e1235766719b2db4f24c5c28920012850333833",
+            "url": "https://github.com/wrandelshofer/FastDoubleParser.git"
+        },
+        {
+            "kind": "blob",
+            "path": "./fastdoubleparser-2.0.1.pom",
+            "sha256": "922b2ea73b7aa0368f1346e6b791bc8c901c42d0c90fb1d4efefcd3d532e6df8",
+            "url": "https://repo1.maven.org/maven2/ch/randelshofer/fastdoubleparser/2.0.1/fastdoubleparser-2.0.1.pom"
+        }
+    ],
+    "dependencies": [
+        "*:*:native/bash",
+        "*:*:native/coreutils",
+        "*:*:native/findutils",
+        "*:*:native/jdk@22"
+    ],
+    "build": {
+        "env": [
+            "*:*:WORKDIR=build/fastdoubleparser@2.0.1"
+        ],
+        "steps": [
+            "*:*:mkdir -p $WORKDIR/src $WORKDIR/classes",
+            "*:*:cp -R fastdoubleparser-dev/src/main/java/. $WORKDIR/src",
+            "*:*:cp -R fastdoubleparser-java8/src/main/java/. $WORKDIR/src",
+            "*:*:find $WORKDIR/src -name '*.java' ! -name 'module-info.java' >$WORKDIR/sources",
+            "*:*:$JAVA_HOME/bin/javac --add-modules jdk.incubator.vector -d $WORKDIR/classes @$WORKDIR/sources",
+            "*:*:$JAVA_HOME/bin/jar cf $WORKDIR/fastdoubleparser-2.0.1.jar -C $WORKDIR/classes .",
+            "*:*:mkdir -p $STAGING_DIR$NATIVEPREFIX/share/maven/repository/ch/randelshofer/fastdoubleparser/2.0.1",
+            "*:*:cp $WORKDIR/fastdoubleparser-2.0.1.jar $STAGING_DIR$NATIVEPREFIX/share/maven/repository/ch/randelshofer/fastdoubleparser/2.0.1/fastdoubleparser-2.0.1.jar",
+            "*:*:cp fastdoubleparser-2.0.1.pom $STAGING_DIR$NATIVEPREFIX/share/maven/repository/ch/randelshofer/fastdoubleparser/2.0.1/fastdoubleparser-2.0.1.pom"
+        ]
+    }
+}

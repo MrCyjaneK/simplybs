@@ -1,0 +1,40 @@
+{
+    "package": "native/jdk@22/bootstrap-maven/jdom2@2.0.6.1",
+    "version": "2.0.6.1",
+    "type": "native",
+    "download": [
+        {
+            "kind": "git",
+            "sha256": "c6065f684bdff5cebf5f23b2859c5e4c89fd89db",
+            "url": "https://github.com/hunterhacker/jdom.git"
+        },
+        {
+            "kind": "blob",
+            "path": "./jdom2-2.0.6.1.pom",
+            "sha256": "55795e1018b8ae647b937967cf810a99b08582c2374e7873c128734c8c914bf3",
+            "url": "https://repo1.maven.org/maven2/org/jdom/jdom2/2.0.6.1/jdom2-2.0.6.1.pom"
+        }
+    ],
+    "dependencies": [
+        "*:*:native/bash",
+        "*:*:native/coreutils",
+        "*:*:native/findutils",
+        "*:*:native/sed",
+        "*:*:native/jdk@22"
+    ],
+    "build": {
+        "env": [
+            "*:*:WORKDIR=work/jdom2@2.0.6.1"
+        ],
+        "steps": [
+            "*:*:mkdir -p $WORKDIR",
+            "*:*:sed -i '/import org.jdom2.xpath.XPathFactory;/d' core/src/java/org/jdom2/JDOMConstants.java",
+            "*:*:find core/src/java -name '*.java' ! -path '*/xpath/*' >$WORKDIR/sources",
+            "*:*:$JAVA_HOME/bin/javac --release 8 -d $WORKDIR/classes @$WORKDIR/sources",
+            "*:*:$JAVA_HOME/bin/jar cf $WORKDIR/jdom2-2.0.6.1.jar -C $WORKDIR/classes .",
+            "*:*:mkdir -p $STAGING_DIR$NATIVEPREFIX/share/maven/repository/org/jdom/jdom2/2.0.6.1",
+            "*:*:cp $WORKDIR/jdom2-2.0.6.1.jar $STAGING_DIR$NATIVEPREFIX/share/maven/repository/org/jdom/jdom2/2.0.6.1/jdom2-2.0.6.1.jar",
+            "*:*:cp jdom2-2.0.6.1.pom $STAGING_DIR$NATIVEPREFIX/share/maven/repository/org/jdom/jdom2/2.0.6.1/jdom2-2.0.6.1.pom"
+        ]
+    }
+}

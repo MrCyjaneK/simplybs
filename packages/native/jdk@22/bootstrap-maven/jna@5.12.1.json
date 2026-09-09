@@ -1,0 +1,50 @@
+{
+    "package": "native/jdk@22/bootstrap-maven/jna@5.12.1",
+    "version": "5.12.1",
+    "type": "native",
+    "download": [
+        {
+            "kind": "git",
+            "sha256": "3705b849892aa3c37e5608e640eff19047811a5c",
+            "url": "https://github.com/java-native-access/jna.git"
+        },
+        {
+            "kind": "blob",
+            "path": "./jna-5.12.1.pom",
+            "sha256": "65ff25849bad859554b50317792f5689adb4529ae4031e9a5246319cb2b85356",
+            "url": "https://repo1.maven.org/maven2/net/java/dev/jna/jna/5.12.1/jna-5.12.1.pom"
+        },
+        {
+            "kind": "blob",
+            "path": "./jna-platform-5.12.1.pom",
+            "sha256": "c279ffa3b5168e2203087231c638919a7cec7458006b1cda66959747860fb457",
+            "url": "https://repo1.maven.org/maven2/net/java/dev/jna/jna-platform/5.12.1/jna-platform-5.12.1.pom"
+        }
+    ],
+    "dependencies": [
+        "*:*:native/bash",
+        "*:*:native/coreutils",
+        "*:*:native/findutils",
+        "*:*:native/jdk@22"
+    ],
+    "build": {
+        "env": [
+            "*:*:WORKDIR=work/jna@5.12.1"
+        ],
+        "steps": [
+            "*:*:mkdir -p $WORKDIR",
+            "*:*:find src -name '*.java' ! -name 'module-info.java' >$WORKDIR/sources",
+            "*:*:$JAVA_HOME/bin/javac --release 8 -d $WORKDIR/classes @$WORKDIR/sources",
+            "*:*:$JAVA_HOME/bin/jar cf $WORKDIR/jna-5.12.1.jar -C $WORKDIR/classes .",
+            "*:*:mkdir -p $STAGING_DIR$NATIVEPREFIX/share/maven/repository/net/java/dev/jna/jna/5.12.1",
+            "*:*:cp $WORKDIR/jna-5.12.1.jar $STAGING_DIR$NATIVEPREFIX/share/maven/repository/net/java/dev/jna/jna/5.12.1/jna-5.12.1.jar",
+            "*:*:cp jna-5.12.1.pom $STAGING_DIR$NATIVEPREFIX/share/maven/repository/net/java/dev/jna/jna/5.12.1/jna-5.12.1.pom",
+            "*:*:find contrib/platform/src -name '*.java' ! -name 'module-info.java' >$WORKDIR/platform.sources",
+            "*:*:$JAVA_HOME/bin/javac --release 8 -cp $WORKDIR/jna-5.12.1.jar -d $WORKDIR/platform @$WORKDIR/platform.sources",
+            "*:*:$JAVA_HOME/bin/jar cf $WORKDIR/jna-platform-5.12.1.jar -C $WORKDIR/platform .",
+            "*:*:mkdir -p $STAGING_DIR$NATIVEPREFIX/share/maven/repository/net/java/dev/jna/jna-platform/5.12.1",
+            "*:*:cp $WORKDIR/jna-platform-5.12.1.jar $STAGING_DIR$NATIVEPREFIX/share/maven/repository/net/java/dev/jna/jna-platform/5.12.1/jna-platform-5.12.1.jar",
+            "*:*:cp jna-platform-5.12.1.pom $STAGING_DIR$NATIVEPREFIX/share/maven/repository/net/java/dev/jna/jna-platform/5.12.1/jna-platform-5.12.1.pom"
+        ]
+    }
+}

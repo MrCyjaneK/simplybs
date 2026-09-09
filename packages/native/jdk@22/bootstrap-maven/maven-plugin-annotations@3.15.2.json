@@ -1,0 +1,32 @@
+{
+    "package": "native/jdk@22/bootstrap-maven/maven-plugin-annotations@3.15.2",
+    "version": "3.15.2",
+    "type": "native",
+    "download": [
+        {
+            "kind": "git",
+            "sha256": "f7ed01b82c390ff629cecdb3cda88ec9346cc92a",
+            "url": "https://github.com/apache/maven-plugin-tools.git"
+        }
+    ],
+    "dependencies": [
+        "*:*:native/bash",
+        "*:*:native/coreutils",
+        "*:*:native/findutils",
+        "*:*:native/jdk@22"
+    ],
+    "build": {
+        "env": [
+            "*:*:WORKDIR=build/maven-plugin-annotations@3.15.2"
+        ],
+        "steps": [
+            "*:*:mkdir -p $WORKDIR",
+            "*:*:find maven-plugin-annotations/src/main/java -name '*.java' >$WORKDIR/sources",
+            "*:*:$JAVA_HOME/bin/javac -d $WORKDIR/classes @$WORKDIR/sources",
+            "*:*:$JAVA_HOME/bin/jar cf $WORKDIR/maven-plugin-annotations-3.15.2.jar -C $WORKDIR/classes .",
+            "*:*:mkdir -p $STAGING_DIR$NATIVEPREFIX/share/maven/repository/org/apache/maven/plugin-tools/maven-plugin-annotations/3.15.2",
+            "*:*:cp $WORKDIR/maven-plugin-annotations-3.15.2.jar $STAGING_DIR$NATIVEPREFIX/share/maven/repository/org/apache/maven/plugin-tools/maven-plugin-annotations/3.15.2/maven-plugin-annotations-3.15.2.jar",
+            "*:*:cp maven-plugin-annotations/pom.xml $STAGING_DIR$NATIVEPREFIX/share/maven/repository/org/apache/maven/plugin-tools/maven-plugin-annotations/3.15.2/maven-plugin-annotations-3.15.2.pom"
+        ]
+    }
+}

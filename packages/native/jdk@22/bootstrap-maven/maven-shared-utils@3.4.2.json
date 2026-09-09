@@ -1,0 +1,39 @@
+{
+    "package": "native/jdk@22/bootstrap-maven/maven-shared-utils@3.4.2",
+    "version": "3.4.2",
+    "type": "native",
+    "download": [
+        {
+            "kind": "git",
+            "sha256": "2dc9eb5ea2b4ed2573bd96282a16e0340083c87a",
+            "url": "https://github.com/apache/maven-shared-utils.git"
+        }
+    ],
+    "dependencies": [
+        "*:*:native/bash",
+        "*:*:native/coreutils",
+        "*:*:native/findutils",
+        "*:*:native/jdk@22",
+        "*:*:native/maven@3.9-bin",
+        "*:*:native/jdk@22/bootstrap-maven/pom/maven-shared-components@39",
+        "*:*:native/jdk@22/bootstrap-maven/slf4j-api@1.7.36",
+        "*:*:native/jdk@22/bootstrap-maven/commons-io@2.11.0",
+        "*:*:native/jdk@22/bootstrap-maven/jsr305@3.0.2"
+    ],
+    "build": {
+        "env": [
+            "*:*:WORKDIR=build/maven-shared-utils@3.4.2",
+            "*:*:REPO=$NATIVEPREFIX/share/maven/repository",
+            "*:*:BOOT_LIB=$NATIVEPREFIX/maven-3.9-bootstrap/lib"
+        ],
+        "steps": [
+            "*:*:mkdir -p $WORKDIR",
+            "*:*:find src/main/java -name '*.java' ! -name 'module-info.java' >$WORKDIR/sources",
+            "*:*:$JAVA_HOME/bin/javac -cp $(printf '%s:' $BOOT_LIB/*.jar)$REPO/org/slf4j/slf4j-api/1.7.36/slf4j-api-1.7.36.jar:$REPO/commons-io/commons-io/2.11.0/commons-io-2.11.0.jar:$REPO/com/google/code/findbugs/jsr305/3.0.2/jsr305-3.0.2.jar -d $WORKDIR/classes @$WORKDIR/sources",
+            "*:*:$JAVA_HOME/bin/jar cf $WORKDIR/maven-shared-utils-3.4.2.jar -C $WORKDIR/classes .",
+            "*:*:mkdir -p $STAGING_DIR$NATIVEPREFIX/share/maven/repository/org/apache/maven/shared/maven-shared-utils/3.4.2",
+            "*:*:cp $WORKDIR/maven-shared-utils-3.4.2.jar $STAGING_DIR$NATIVEPREFIX/share/maven/repository/org/apache/maven/shared/maven-shared-utils/3.4.2/maven-shared-utils-3.4.2.jar",
+            "*:*:cp pom.xml $STAGING_DIR$NATIVEPREFIX/share/maven/repository/org/apache/maven/shared/maven-shared-utils/3.4.2/maven-shared-utils-3.4.2.pom"
+        ]
+    }
+}

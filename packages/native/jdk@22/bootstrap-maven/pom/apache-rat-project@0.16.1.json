@@ -1,0 +1,22 @@
+{
+    "package": "native/jdk@22/bootstrap-maven/pom/apache-rat-project@0.16.1",
+    "version": "0.16.1",
+    "type": "native",
+    "download": [
+        {
+            "kind": "blob",
+            "path": "./apache-rat-project-0.16.1.pom",
+            "sha256": "eb211cec7b87631acdaf8a5be3dfd94103ca66a912c226e92832ab748e5a37f0",
+            "url": "https://repo1.maven.org/maven2/org/apache/rat/apache-rat-project/0.16.1/apache-rat-project-0.16.1.pom"
+        }
+    ],
+    "dependencies": [
+        "*:*:native/coreutils"
+    ],
+    "build": {
+        "steps": [
+            "*:*:mkdir -p $STAGING_DIR$NATIVEPREFIX/share/maven/repository/org/apache/rat/apache-rat-project/0.16.1",
+            "*:*:cp apache-rat-project-0.16.1.pom $STAGING_DIR$NATIVEPREFIX/share/maven/repository/org/apache/rat/apache-rat-project/0.16.1/apache-rat-project-0.16.1.pom"
+        ]
+    }
+}

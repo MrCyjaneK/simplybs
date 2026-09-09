@@ -1,0 +1,44 @@
+{
+    "package": "native/jdk@22/bootstrap-maven/byte-buddy@1.10.14",
+    "version": "1.10.14",
+    "type": "native",
+    "download": [
+        {
+            "kind": "git",
+            "sha256": "f370677086dbf9d090ef7a4d10331879112a28c7",
+            "url": "https://github.com/raphw/byte-buddy.git"
+        },
+        {
+            "kind": "blob",
+            "path": "./byte-buddy-1.10.14.pom",
+            "sha256": "3b39ca3d5ebb9ab757f9d42dcd6b677c88b4828edca7f6079f11bbf2ef3cee58",
+            "url": "https://repo1.maven.org/maven2/net/bytebuddy/byte-buddy/1.10.14/byte-buddy-1.10.14.pom"
+        }
+    ],
+    "dependencies": [
+        "*:*:native/bash",
+        "*:*:native/coreutils",
+        "*:*:native/findutils",
+        "*:*:native/jdk@22",
+        "*:*:native/jdk@22/bootstrap-maven/pom/byte-buddy-parent@1.10.14",
+        "*:*:native/jdk@22/bootstrap-maven/asm@9.9.1",
+        "*:*:native/jdk@22/bootstrap-maven/asm-tree@9.9.1",
+        "*:*:native/jdk@22/bootstrap-maven/asm-commons@9.9.1",
+        "*:*:native/jdk@22/bootstrap-maven/annotations@3.0.0"
+    ],
+    "build": {
+        "env": [
+            "*:*:WORKDIR=work/byte-buddy@1.10.14",
+            "*:*:REPO=$NATIVEPREFIX/share/maven/repository"
+        ],
+        "steps": [
+            "*:*:mkdir -p $WORKDIR/classes",
+            "*:*:find byte-buddy-dep/src/main/java byte-buddy-dep/src/precompiled/java/net/bytebuddy/build -name '*.java' >$WORKDIR/sources",
+            "*:*:$JAVA_HOME/bin/javac -XDignore.symbol.file -cp $REPO/com/google/code/findbugs/annotations/3.0.0/annotations-3.0.0.jar:$REPO/org/ow2/asm/asm/9.9.1/asm-9.9.1.jar:$REPO/org/ow2/asm/asm-tree/9.9.1/asm-tree-9.9.1.jar:$REPO/org/ow2/asm/asm-commons/9.9.1/asm-commons-9.9.1.jar -d $WORKDIR/classes @$WORKDIR/sources",
+            "*:*:$JAVA_HOME/bin/jar cf $WORKDIR/byte-buddy-1.10.14.jar -C $WORKDIR/classes .",
+            "*:*:mkdir -p $STAGING_DIR$NATIVEPREFIX/share/maven/repository/net/bytebuddy/byte-buddy/1.10.14",
+            "*:*:cp $WORKDIR/byte-buddy-1.10.14.jar $STAGING_DIR$NATIVEPREFIX/share/maven/repository/net/bytebuddy/byte-buddy/1.10.14/byte-buddy-1.10.14.jar",
+            "*:*:cp byte-buddy-1.10.14.pom $STAGING_DIR$NATIVEPREFIX/share/maven/repository/net/bytebuddy/byte-buddy/1.10.14/byte-buddy-1.10.14.pom"
+        ]
+    }
+}

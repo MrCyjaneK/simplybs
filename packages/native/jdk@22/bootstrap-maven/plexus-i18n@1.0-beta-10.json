@@ -1,0 +1,38 @@
+{
+    "package": "native/jdk@22/bootstrap-maven/plexus-i18n@1.0-beta-10",
+    "version": "1.0-beta-10",
+    "type": "native",
+    "download": [
+        {
+            "kind": "git",
+            "sha256": "d5aaf49970fc3e95408f4f9cd1b856fa72be130f",
+            "url": "https://github.com/codehaus-plexus/plexus-i18n.git"
+        }
+    ],
+    "dependencies": [
+        "*:*:native/bash",
+        "*:*:native/coreutils",
+        "*:*:native/findutils",
+        "*:*:native/jdk@22",
+        "*:*:native/maven@3.9-bin",
+        "*:*:native/jdk@22/bootstrap-maven/pom/plexus-components@1.1.12",
+        "*:*:native/jdk@22/bootstrap-maven/plexus-utils@4.0.2"
+    ],
+    "build": {
+        "env": [
+            "*:*:WORKDIR=build/plexus-i18n@1.0-beta-10",
+            "*:*:REPO=$NATIVEPREFIX/share/maven/repository",
+            "*:*:BOOT_LIB=$NATIVEPREFIX/maven-3.9-bootstrap/lib",
+            "*:*:REPO=$NATIVEPREFIX/share/maven/repository"
+        ],
+        "steps": [
+            "*:*:mkdir -p $WORKDIR",
+            "*:*:find src/main/java -name '*.java' ! -name 'module-info.java' >$WORKDIR/sources",
+            "*:*:$JAVA_HOME/bin/javac -cp $(printf '%s:' $BOOT_LIB/*.jar)$REPO/org/codehaus/plexus/plexus-utils/4.0.2/plexus-utils-4.0.2.jar -d $WORKDIR/classes @$WORKDIR/sources",
+            "*:*:$JAVA_HOME/bin/jar cf $WORKDIR/plexus-i18n-1.0-beta-10.jar -C $WORKDIR/classes .",
+            "*:*:mkdir -p $STAGING_DIR$NATIVEPREFIX/share/maven/repository/org/codehaus/plexus/plexus-i18n/1.0-beta-10",
+            "*:*:cp $WORKDIR/plexus-i18n-1.0-beta-10.jar $STAGING_DIR$NATIVEPREFIX/share/maven/repository/org/codehaus/plexus/plexus-i18n/1.0-beta-10/plexus-i18n-1.0-beta-10.jar",
+            "*:*:cp pom.xml $STAGING_DIR$NATIVEPREFIX/share/maven/repository/org/codehaus/plexus/plexus-i18n/1.0-beta-10/plexus-i18n-1.0-beta-10.pom"
+        ]
+    }
+}

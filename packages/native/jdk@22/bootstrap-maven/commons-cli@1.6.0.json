@@ -1,0 +1,33 @@
+{
+    "package": "native/jdk@22/bootstrap-maven/commons-cli@1.6.0",
+    "version": "1.6.0",
+    "type": "native",
+    "download": [
+        {
+            "kind": "git",
+            "sha256": "0d29a55998aa52be8832497527e266630f97c371",
+            "url": "https://github.com/apache/commons-cli.git"
+        }
+    ],
+    "dependencies": [
+        "*:*:native/bash",
+        "*:*:native/coreutils",
+        "*:*:native/findutils",
+        "*:*:native/jdk@22",
+        "*:*:native/jdk@22/bootstrap-maven/pom/commons-parent@64"
+    ],
+    "build": {
+        "env": [
+            "*:*:WORKDIR=build/commons-cli@1.6.0"
+        ],
+        "steps": [
+            "*:*:mkdir -p $WORKDIR",
+            "*:*:find src/main/java -name '*.java' ! -name 'module-info.java' >$WORKDIR/sources",
+            "*:*:$JAVA_HOME/bin/javac -d $WORKDIR/classes @$WORKDIR/sources",
+            "*:*:$JAVA_HOME/bin/jar cf $WORKDIR/commons-cli-1.6.0.jar -C $WORKDIR/classes .",
+            "*:*:mkdir -p $STAGING_DIR$NATIVEPREFIX/share/maven/repository/commons-cli/commons-cli/1.6.0",
+            "*:*:cp $WORKDIR/commons-cli-1.6.0.jar $STAGING_DIR$NATIVEPREFIX/share/maven/repository/commons-cli/commons-cli/1.6.0/commons-cli-1.6.0.jar",
+            "*:*:cp pom.xml $STAGING_DIR$NATIVEPREFIX/share/maven/repository/commons-cli/commons-cli/1.6.0/commons-cli-1.6.0.pom"
+        ]
+    }
+}

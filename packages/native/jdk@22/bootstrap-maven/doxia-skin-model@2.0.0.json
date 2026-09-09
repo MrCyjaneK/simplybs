@@ -1,0 +1,49 @@
+{
+    "package": "native/jdk@22/bootstrap-maven/doxia-skin-model@2.0.0",
+    "version": "2.0.0",
+    "type": "native",
+    "download": [
+        {
+            "kind": "git",
+            "sha256": "0f79ba1c1dad16d1b001a09fdc7eafd1049792d5",
+            "url": "https://github.com/apache/maven-doxia-sitetools.git"
+        },
+        {
+            "kind": "blob",
+            "path": "./doxia-skin-model-2.0.0.pom",
+            "sha256": "10bbc5674fab0fa2bbcf8f7696796d3e1b92ab31525330921fbdb8da74fe1472",
+            "url": "https://repo1.maven.org/maven2/org/apache/maven/doxia/doxia-skin-model/2.0.0/doxia-skin-model-2.0.0.pom"
+        }
+    ],
+    "dependencies": [
+        "*:*:native/bash",
+        "*:*:native/coreutils",
+        "*:*:native/findutils",
+        "*:*:native/jdk@22",
+        "*:*:native/jdk@22/bootstrap-maven/pom/doxia-sitetools@2.0.0",
+        "*:*:native/jdk@22/bootstrap-maven/javax.inject@1",
+        "*:*:native/jdk@22/bootstrap-maven/slf4j-api@1.7.36",
+        "*:*:native/jdk@22/bootstrap-maven/plexus-utils@4.0.2",
+        "*:*:native/jdk@22/bootstrap-maven/plexus-xml@3.0.1",
+        "*:*:native/jdk@22/bootstrap-maven/plexus-build-api@1.2.0",
+        "*:*:native/jdk@22/bootstrap-maven/modello@2.6.0"
+    ],
+    "build": {
+        "env": [
+            "*:*:WORKDIR=build/doxia-skin-model@2.0.0",
+            "*:*:REPO=$NATIVEPREFIX/share/maven/repository",
+            "*:*:MODELLO_CP=$NATIVEPREFIX/share/maven/repository/javax/inject/javax.inject/1/javax.inject-1.jar:$NATIVEPREFIX/share/maven/repository/org/slf4j/slf4j-api/1.7.36/slf4j-api-1.7.36.jar:$NATIVEPREFIX/share/maven/repository/org/codehaus/plexus/plexus-utils/4.0.2/plexus-utils-4.0.2.jar:$NATIVEPREFIX/share/maven/repository/org/codehaus/plexus/plexus-xml/3.0.1/plexus-xml-3.0.1.jar:$NATIVEPREFIX/share/maven/repository/org/codehaus/plexus/plexus-build-api/1.2.0/plexus-build-api-1.2.0.jar:$NATIVEPREFIX/share/maven/repository/org/codehaus/modello/modello-core/2.6.0/modello-core-2.6.0.jar:$NATIVEPREFIX/share/maven/repository/org/codehaus/modello/modello-plugin-java/2.6.0/modello-plugin-java-2.6.0.jar:$NATIVEPREFIX/share/maven/repository/org/codehaus/modello/modello-plugin-xml/2.6.0/modello-plugin-xml-2.6.0.jar:$NATIVEPREFIX/share/maven/repository/org/codehaus/modello/modello-plugin-xpp3/2.6.0/modello-plugin-xpp3-2.6.0.jar"
+        ],
+        "steps": [
+            "*:*:mkdir -p $WORKDIR/generated",
+            "*:*:$JAVA_HOME/bin/javac -cp $MODELLO_CP -d $WORKDIR $PATCH_DIR/maven/RunModello.java",
+            "*:*:$JAVA_HOME/bin/java -cp $WORKDIR:$MODELLO_CP RunModello doxia-skin-model/src/main/mdo/skin.mdo 2.0.0 $WORKDIR/generated java xpp3-reader",
+            "*:*:find $WORKDIR/generated -name '*.java' >$WORKDIR/sources",
+            "*:*:$JAVA_HOME/bin/javac -cp $REPO/org/codehaus/plexus/plexus-xml/3.0.1/plexus-xml-3.0.1.jar:$REPO/org/codehaus/plexus/plexus-utils/4.0.2/plexus-utils-4.0.2.jar -d $WORKDIR/classes @$WORKDIR/sources",
+            "*:*:$JAVA_HOME/bin/jar cf $WORKDIR/doxia-skin-model-2.0.0.jar -C $WORKDIR/classes .",
+            "*:*:mkdir -p $STAGING_DIR$NATIVEPREFIX/share/maven/repository/org/apache/maven/doxia/doxia-skin-model/2.0.0",
+            "*:*:cp $WORKDIR/doxia-skin-model-2.0.0.jar $STAGING_DIR$NATIVEPREFIX/share/maven/repository/org/apache/maven/doxia/doxia-skin-model/2.0.0/doxia-skin-model-2.0.0.jar",
+            "*:*:cp doxia-skin-model-2.0.0.pom $STAGING_DIR$NATIVEPREFIX/share/maven/repository/org/apache/maven/doxia/doxia-skin-model/2.0.0/doxia-skin-model-2.0.0.pom"
+        ]
+    }
+}

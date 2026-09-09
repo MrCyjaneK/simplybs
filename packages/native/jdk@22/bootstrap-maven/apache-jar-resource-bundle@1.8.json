@@ -1,0 +1,31 @@
+{
+    "package": "native/jdk@22/bootstrap-maven/apache-jar-resource-bundle@1.8",
+    "version": "1.8",
+    "type": "native",
+    "download": [
+        {
+            "kind": "git",
+            "sha256": "de8120d4d4bc8bfde35e37353bffa52df2d39f55",
+            "url": "https://github.com/apache/maven-apache-resources.git"
+        }
+    ],
+    "dependencies": [
+        "*:*:native/bash",
+        "*:*:native/coreutils",
+        "*:*:native/findutils",
+        "*:*:native/jdk@22"
+    ],
+    "build": {
+        "env": [
+            "*:*:WORKDIR=build/apache-jar-resource-bundle@1.8"
+        ],
+        "steps": [
+            "*:*:mkdir -p $WORKDIR/classes",
+            "*:*:cp -R jar/src/main/resources/. $WORKDIR/classes/",
+            "*:*:$JAVA_HOME/bin/jar cf $WORKDIR/apache-jar-resource-bundle-1.8.jar -C $WORKDIR/classes .",
+            "*:*:mkdir -p $STAGING_DIR$NATIVEPREFIX/share/maven/repository/org/apache/apache/resources/apache-jar-resource-bundle/1.8",
+            "*:*:cp $WORKDIR/apache-jar-resource-bundle-1.8.jar $STAGING_DIR$NATIVEPREFIX/share/maven/repository/org/apache/apache/resources/apache-jar-resource-bundle/1.8/apache-jar-resource-bundle-1.8.jar",
+            "*:*:cp jar/pom.xml $STAGING_DIR$NATIVEPREFIX/share/maven/repository/org/apache/apache/resources/apache-jar-resource-bundle/1.8/apache-jar-resource-bundle-1.8.pom"
+        ]
+    }
+}

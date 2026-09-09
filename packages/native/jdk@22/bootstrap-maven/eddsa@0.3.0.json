@@ -1,0 +1,32 @@
+{
+    "package": "native/jdk@22/bootstrap-maven/eddsa@0.3.0",
+    "version": "0.3.0",
+    "type": "native",
+    "download": [
+        {
+            "kind": "git",
+            "sha256": "7c26a6312c2d2e887210930698706103e0f2da7d",
+            "url": "https://github.com/str4d/ed25519-java.git"
+        }
+    ],
+    "dependencies": [
+        "*:*:native/bash",
+        "*:*:native/coreutils",
+        "*:*:native/findutils",
+        "*:*:native/jdk@22"
+    ],
+    "build": {
+        "env": [
+            "*:*:WORKDIR=work/eddsa@0.3.0"
+        ],
+        "steps": [
+            "*:*:mkdir -p $WORKDIR",
+            "*:*:find src -name '*.java' >$WORKDIR/sources",
+            "*:*:$JAVA_HOME/bin/javac --add-exports java.base/sun.security.x509=ALL-UNNAMED -d $WORKDIR/classes @$WORKDIR/sources",
+            "*:*:$JAVA_HOME/bin/jar cf $WORKDIR/eddsa-0.3.0.jar -C $WORKDIR/classes .",
+            "*:*:mkdir -p $STAGING_DIR$NATIVEPREFIX/share/maven/repository/net/i2p/crypto/eddsa/0.3.0",
+            "*:*:cp $WORKDIR/eddsa-0.3.0.jar $STAGING_DIR$NATIVEPREFIX/share/maven/repository/net/i2p/crypto/eddsa/0.3.0/eddsa-0.3.0.jar",
+            "*:*:cp pom.xml $STAGING_DIR$NATIVEPREFIX/share/maven/repository/net/i2p/crypto/eddsa/0.3.0/eddsa-0.3.0.pom"
+        ]
+    }
+}

@@ -1,0 +1,22 @@
+{
+    "package": "native/jdk@22/bootstrap-maven/pom/maven-plugins@44",
+    "version": "44",
+    "type": "native",
+    "download": [
+        {
+            "kind": "blob",
+            "path": "./maven-plugins-44.pom",
+            "sha256": "d7801d725de2abb706efb931e22eac5df4d0c7fc8c9ea9a4d9986782407aaff7",
+            "url": "https://repo1.maven.org/maven2/org/apache/maven/plugins/maven-plugins/44/maven-plugins-44.pom"
+        }
+    ],
+    "dependencies": [
+        "*:*:native/coreutils"
+    ],
+    "build": {
+        "steps": [
+            "*:*:mkdir -p $STAGING_DIR$NATIVEPREFIX/share/maven/repository/org/apache/maven/plugins/maven-plugins/44",
+            "*:*:cp maven-plugins-44.pom $STAGING_DIR$NATIVEPREFIX/share/maven/repository/org/apache/maven/plugins/maven-plugins/44/maven-plugins-44.pom"
+        ]
+    }
+}

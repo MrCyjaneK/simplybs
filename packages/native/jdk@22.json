@@ -51,12 +51,14 @@
         "linux_*:*:native/fontconfig",
         "linux_*:*:native/alsa"
     ],
+    "export-env": [
+        "*:*:JAVA_HOME=$NATIVEPREFIX/jdk-22"
+    ],
     "build": {
         "env": [
             "*:*:JDK_VERSION=22",
             "*:*:BOOT_JDK=$NATIVEPREFIX/jdk-21",
             "*:*:AUTOCONF=$NATIVEPREFIX/bin/autoconf",
-            "*:*:PATH=./.jdk-tools:$NATIVEPREFIX/bin:$NATIVEPREFIX/_/bin",
             "darwin_arm64:*:SDK_PATH=$NATIVEPREFIX/_/SDK/MacOSX26.1.sdk",
             "darwin_arm64:*:SDKROOT=$NATIVEPREFIX/_/SDK/MacOSX26.1.sdk",
             "darwin_arm64:*:MIGCC=$NATIVEPREFIX/_/bin/clang",
@@ -65,18 +67,21 @@
             "darwin_arm64:*:LDFLAGS=$LDFLAGS -mmacosx-version-min=$OSX_MIN_VERSION"
         ],
         "steps": [
-            "*:*:mkdir -p .jdk-tools $STAGING_DIR$NATIVEPREFIX/jdk-$JDK_VERSION $STAGING_DIR$NATIVEPREFIX/bin",
-            "*:*:cp $PATCH_DIR/jdk/which .jdk-tools/which",
-            "*:*:chmod +x .jdk-tools/which",
-            "*:*:test -x $NATIVEPREFIX/_/bin/llvm-cxxfilt && ln -sf $NATIVEPREFIX/_/bin/llvm-cxxfilt .jdk-tools/c++filt || true",
-            "*:*:test -x $NATIVEPREFIX/_/bin/llvm-objdump && ln -sf $NATIVEPREFIX/_/bin/llvm-objdump .jdk-tools/objdump || true",
-            "darwin_arm64:*:cp $PATCH_DIR/rust-std/xcrun .jdk-tools/xcrun",
-            "darwin_arm64:*:cp $PATCH_DIR/jdk/true.sh .jdk-tools/xattr",
-            "darwin_arm64:*:cp $PATCH_DIR/jdk/true.sh .jdk-tools/SetFile",
-            "darwin_arm64:*:ln -sf $NATIVEPREFIX/_/bin/llvm-dsymutil .jdk-tools/dsymutil || ln -sf $NATIVEPREFIX/_/bin/llvm-dsymutil-21 .jdk-tools/dsymutil",
-            "darwin_arm64:*:chmod +x .jdk-tools/xcrun .jdk-tools/xattr .jdk-tools/SetFile",
+            "*:*:mkdir -p $STAGING_DIR$NATIVEPREFIX/jdk-$JDK_VERSION $STAGING_DIR$NATIVEPREFIX/bin",
+            "*:*:cp -f $PATCH_DIR/jdk/which $NATIVEPREFIX/bin/which",
+            "*:*:chmod +x $NATIVEPREFIX/bin/which",
+            "*:*:test -x $NATIVEPREFIX/_/bin/llvm-cxxfilt && ln -sf $NATIVEPREFIX/_/bin/llvm-cxxfilt $NATIVEPREFIX/bin/c++filt || true",
+            "*:*:test -x $NATIVEPREFIX/_/bin/llvm-objdump && ln -sf $NATIVEPREFIX/_/bin/llvm-objdump $NATIVEPREFIX/bin/objdump || true",
+            "darwin_arm64:*:test -L $NATIVEPREFIX/bin/xcrun && mv $NATIVEPREFIX/bin/xcrun $NATIVEPREFIX/bin/xcrun.real || true",
+            "darwin_arm64:*:cp -f $PATCH_DIR/rust-std/xcrun $NATIVEPREFIX/bin/xcrun",
+            "darwin_arm64:*:chmod +x $NATIVEPREFIX/bin/xcrun",
+            "darwin_arm64:*:cp -f $PATCH_DIR/jdk/true.sh $NATIVEPREFIX/bin/xattr",
+            "darwin_arm64:*:cp -f $PATCH_DIR/jdk/true.sh $NATIVEPREFIX/bin/SetFile",
+            "darwin_arm64:*:chmod +x $NATIVEPREFIX/bin/xattr $NATIVEPREFIX/bin/SetFile",
+            "darwin_arm64:*:ln -sf $NATIVEPREFIX/_/bin/llvm-dsymutil $NATIVEPREFIX/bin/dsymutil || ln -sf $NATIVEPREFIX/_/bin/llvm-dsymutil-21 $NATIVEPREFIX/bin/dsymutil",
+            "darwin_arm64:*:sed -i.bak 's/#      include <fp.h>/#      include <math.h>/' src/java.desktop/share/native/libsplashscreen/libpng/pngpriv.h",
             "linux_*:*:bash configure --with-boot-jdk=$BOOT_JDK --with-toolchain-type=clang --disable-warnings-as-errors --enable-headless-only --with-native-debug-symbols=none --with-jvm-variants=server --with-debug-level=release --with-num-cores=$NUM_CORES --with-jobs=$NUM_CORES --with-zlib=system --with-extra-cflags=\"$CFLAGS\" --with-extra-cxxflags=\"$CXXFLAGS\" --with-extra-ldflags=\"$LDFLAGS -Wl,--undefined-version\" --with-alsa=$NATIVEPREFIX --with-cups=$NATIVEPREFIX --with-fontconfig=$NATIVEPREFIX --with-fontconfig-include=$NATIVEPREFIX/include --with-x=$NATIVEPREFIX --x-includes=$NATIVEPREFIX/include --x-libraries=$NATIVEPREFIX/lib",
-            "darwin_arm64:*:bash configure --with-boot-jdk=$BOOT_JDK --with-toolchain-type=clang --disable-warnings-as-errors --enable-headless-only --with-native-debug-symbols=none --with-jvm-variants=server --with-debug-level=release --with-num-cores=$NUM_CORES --with-jobs=$NUM_CORES --with-zlib=system --with-extra-cflags=\"$CFLAGS\" --with-extra-cxxflags=\"$CXXFLAGS\" --with-extra-ldflags=\"$LDFLAGS\" --with-sysroot=$SDK_PATH",
+            "darwin_arm64:*:bash configure --with-boot-jdk=$BOOT_JDK --with-toolchain-type=clang --disable-warnings-as-errors --with-native-debug-symbols=none --with-jvm-variants=server --with-debug-level=release --with-num-cores=$NUM_CORES --with-jobs=$NUM_CORES --with-zlib=system --with-extra-cflags=\"$CFLAGS\" --with-extra-cxxflags=\"$CXXFLAGS\" --with-extra-ldflags=\"$LDFLAGS\" --with-sysroot=$SDK_PATH",
             "*:*:make JOBS=$NUM_CORES images",
             "linux_*:*:cp -a build/*/images/jdk/. $STAGING_DIR$NATIVEPREFIX/jdk-$JDK_VERSION/",
             "darwin_arm64:*:cp -a build/*/images/jdk/. $STAGING_DIR$NATIVEPREFIX/jdk-$JDK_VERSION/",

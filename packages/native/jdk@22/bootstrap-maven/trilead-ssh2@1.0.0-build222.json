@@ -1,0 +1,38 @@
+{
+    "package": "native/jdk@22/bootstrap-maven/trilead-ssh2@1.0.0-build222",
+    "version": "1.0.0-build222",
+    "type": "native",
+    "download": [
+        {
+            "kind": "git",
+            "sha256": "13eac3bb4951516c7629233ad79c5479cb50f6fa",
+            "url": "https://github.com/MrCyjaneK/trilead-ssh2-mirror.git"
+        },
+        {
+            "kind": "blob",
+            "path": "./trilead-ssh2-1.0.0-build222.pom",
+            "sha256": "ef91b2f5719c9b26c23aa545c218eb8b0b9aaf8d75fd24043665506fb9b419c9",
+            "url": "https://repo1.maven.org/maven2/com/trilead/trilead-ssh2/1.0.0-build222/trilead-ssh2-1.0.0-build222.pom"
+        }
+    ],
+    "dependencies": [
+        "*:*:native/bash",
+        "*:*:native/coreutils",
+        "*:*:native/findutils",
+        "*:*:native/jdk@22"
+    ],
+    "build": {
+        "env": [
+            "*:*:WORKDIR=work/trilead-ssh2@1.0.0-build222"
+        ],
+        "steps": [
+            "*:*:mkdir -p $WORKDIR/classes",
+            "*:*:find trilead-ssh2/src/main/java -name '*.java' >$WORKDIR/sources",
+            "*:*:$JAVA_HOME/bin/javac --release 8 -d $WORKDIR/classes @$WORKDIR/sources",
+            "*:*:$JAVA_HOME/bin/jar cf $WORKDIR/trilead-ssh2-1.0.0-build222.jar -C $WORKDIR/classes .",
+            "*:*:mkdir -p $STAGING_DIR$NATIVEPREFIX/share/maven/repository/com/trilead/trilead-ssh2/1.0.0-build222",
+            "*:*:cp $WORKDIR/trilead-ssh2-1.0.0-build222.jar $STAGING_DIR$NATIVEPREFIX/share/maven/repository/com/trilead/trilead-ssh2/1.0.0-build222/trilead-ssh2-1.0.0-build222.jar",
+            "*:*:cp trilead-ssh2-1.0.0-build222.pom $STAGING_DIR$NATIVEPREFIX/share/maven/repository/com/trilead/trilead-ssh2/1.0.0-build222/trilead-ssh2-1.0.0-build222.pom"
+        ]
+    }
+}

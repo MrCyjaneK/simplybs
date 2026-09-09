@@ -1,0 +1,43 @@
+{
+    "package": "native/jdk@22/bootstrap-maven/Saxon-HE@10.6",
+    "version": "10.6",
+    "type": "native",
+    "download": [
+        {
+            "kind": "blob",
+            "path": "./saxon10-6source.zip",
+            "sha256": "f4108b4608e1ccd23034cee47910c27944939604c566b3c85e75da03cd8f5639",
+            "url": "https://github.com/Saxonica/Saxon-HE/raw/main/10/source/saxon10-6source.zip"
+        },
+        {
+            "kind": "blob",
+            "path": "./Saxon-HE-10.6.pom",
+            "sha256": "a2d6dda438e864ab935f31b43b53052c4e8711a9505642719190513e76f41248",
+            "url": "https://repo1.maven.org/maven2/net/sf/saxon/Saxon-HE/10.6/Saxon-HE-10.6.pom"
+        }
+    ],
+    "dependencies": [
+        "*:*:native/bash",
+        "*:*:native/coreutils",
+        "*:*:native/findutils",
+        "*:*:native/jdk@22",
+        "*:*:native/sed"
+    ],
+    "build": {
+        "env": [
+            "*:*:WORKDIR=build/Saxon-HE@10.6"
+        ],
+        "steps": [
+            "*:*:mkdir -p $WORKDIR/src $WORKDIR/classes",
+            "*:*:cd $WORKDIR/src && $JAVA_HOME/bin/jar xf $OLDPWD/saxon10-6source.zip",
+            "*:*:sed -i 's/XmlCatalogResolver.setCatalog(value, config, getOptionValue(\"t\") != null);/throw new XPathException(\"Apache catalog resolver not available\");/' $WORKDIR/src/net/sf/saxon/trans/CommandLineOptions.java",
+            "*:*:find $WORKDIR/src/net $WORKDIR/src/api -name '*.java' ! -path '*/option/axiom/*' ! -path '*/option/dom4j/*' ! -path '*/option/jdom2/*' ! -path '*/option/xom/*' ! -path '*/gizmo/*' ! -name 'Gizmo.java' ! -name 'XmlCatalogResolver.java' >$WORKDIR/sources",
+            "*:*:$JAVA_HOME/bin/javac -encoding UTF-8 -d $WORKDIR/classes @$WORKDIR/sources",
+            "*:*:cd $WORKDIR/src && find net api -type f ! -name '*.java' | while read f; do mkdir -p $WORKDIR/classes/$(dirname $f) && cp $f $WORKDIR/classes/$f; done",
+            "*:*:$JAVA_HOME/bin/jar cf $WORKDIR/Saxon-HE-10.6.jar -C $WORKDIR/classes .",
+            "*:*:mkdir -p $STAGING_DIR$NATIVEPREFIX/share/maven/repository/net/sf/saxon/Saxon-HE/10.6",
+            "*:*:cp $WORKDIR/Saxon-HE-10.6.jar $STAGING_DIR$NATIVEPREFIX/share/maven/repository/net/sf/saxon/Saxon-HE/10.6/Saxon-HE-10.6.jar",
+            "*:*:cp Saxon-HE-10.6.pom $STAGING_DIR$NATIVEPREFIX/share/maven/repository/net/sf/saxon/Saxon-HE/10.6/Saxon-HE-10.6.pom"
+        ]
+    }
+}

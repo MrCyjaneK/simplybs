@@ -1,0 +1,39 @@
+{
+    "package": "native/jdk@22/bootstrap-maven/antlr-runtime@3.4",
+    "version": "3.4",
+    "type": "native",
+    "download": [
+        {
+            "kind": "git",
+            "sha256": "fb4eb0e43212f4a7e841f4117b88c4b674b87698",
+            "url": "https://github.com/antlr/antlr3.git"
+        },
+        {
+            "kind": "blob",
+            "path": "./antlr-runtime-3.4.pom",
+            "sha256": "95e403c15c7ca0caa9ed2f84c756c9b01293ee89db702cd8985a8a38e11ffefa",
+            "url": "https://repo1.maven.org/maven2/org/antlr/antlr-runtime/3.4/antlr-runtime-3.4.pom"
+        }
+    ],
+    "dependencies": [
+        "*:*:native/bash",
+        "*:*:native/coreutils",
+        "*:*:native/findutils",
+        "*:*:native/jdk@22",
+        "*:*:native/jdk@22/bootstrap-maven/pom/antlr-master@3.4"
+    ],
+    "build": {
+        "env": [
+            "*:*:WORKDIR=work/antlr-runtime@3.4"
+        ],
+        "steps": [
+            "*:*:mkdir -p $WORKDIR/classes",
+            "*:*:find runtime/Java/src/main/java -name '*.java' ! -name 'DOTTreeGenerator.java' >$WORKDIR/sources",
+            "*:*:$JAVA_HOME/bin/javac -d $WORKDIR/classes @$WORKDIR/sources",
+            "*:*:$JAVA_HOME/bin/jar cf $WORKDIR/antlr-runtime-3.4.jar -C $WORKDIR/classes .",
+            "*:*:mkdir -p $STAGING_DIR$NATIVEPREFIX/share/maven/repository/org/antlr/antlr-runtime/3.4",
+            "*:*:cp $WORKDIR/antlr-runtime-3.4.jar $STAGING_DIR$NATIVEPREFIX/share/maven/repository/org/antlr/antlr-runtime/3.4/antlr-runtime-3.4.jar",
+            "*:*:cp antlr-runtime-3.4.pom $STAGING_DIR$NATIVEPREFIX/share/maven/repository/org/antlr/antlr-runtime/3.4/antlr-runtime-3.4.pom"
+        ]
+    }
+}

@@ -1,0 +1,22 @@
+{
+    "package": "native/jdk@22/bootstrap-maven/pom/xmlunit-parent@2.11.0",
+    "version": "2.11.0",
+    "type": "native",
+    "download": [
+        {
+            "kind": "blob",
+            "path": "./xmlunit-parent-2.11.0.pom",
+            "sha256": "2effb33e41b5b0899bf4b7c8889ae20810f80c8aebee1844935758842527a4c2",
+            "url": "https://repo1.maven.org/maven2/org/xmlunit/xmlunit-parent/2.11.0/xmlunit-parent-2.11.0.pom"
+        }
+    ],
+    "dependencies": [
+        "*:*:native/coreutils"
+    ],
+    "build": {
+        "steps": [
+            "*:*:mkdir -p $STAGING_DIR$NATIVEPREFIX/share/maven/repository/org/xmlunit/xmlunit-parent/2.11.0",
+            "*:*:cp xmlunit-parent-2.11.0.pom $STAGING_DIR$NATIVEPREFIX/share/maven/repository/org/xmlunit/xmlunit-parent/2.11.0/xmlunit-parent-2.11.0.pom"
+        ]
+    }
+}

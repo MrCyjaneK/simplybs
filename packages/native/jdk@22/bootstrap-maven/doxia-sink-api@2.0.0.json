@@ -1,0 +1,39 @@
+{
+    "package": "native/jdk@22/bootstrap-maven/doxia-sink-api@2.0.0",
+    "version": "2.0.0",
+    "type": "native",
+    "download": [
+        {
+            "kind": "git",
+            "sha256": "9d04eaf9f327205929024b558ada4ce61f74c3c5",
+            "url": "https://github.com/apache/maven-doxia.git"
+        },
+        {
+            "kind": "blob",
+            "path": "./doxia-sink-api-2.0.0.pom",
+            "sha256": "4b05895d1cd65013d4b8e7eeb09cde6b567b4c31729fe5c77c0f0898b5e04b88",
+            "url": "https://repo1.maven.org/maven2/org/apache/maven/doxia/doxia-sink-api/2.0.0/doxia-sink-api-2.0.0.pom"
+        }
+    ],
+    "dependencies": [
+        "*:*:native/bash",
+        "*:*:native/coreutils",
+        "*:*:native/findutils",
+        "*:*:native/jdk@22",
+        "*:*:native/jdk@22/bootstrap-maven/pom/doxia@2.0.0"
+    ],
+    "build": {
+        "env": [
+            "*:*:WORKDIR=build/doxia-sink-api@2.0.0"
+        ],
+        "steps": [
+            "*:*:mkdir -p $WORKDIR",
+            "*:*:find doxia-sink-api/src/main/java -name '*.java' >$WORKDIR/sources",
+            "*:*:$JAVA_HOME/bin/javac -d $WORKDIR/classes @$WORKDIR/sources",
+            "*:*:$JAVA_HOME/bin/jar cf $WORKDIR/doxia-sink-api-2.0.0.jar -C $WORKDIR/classes .",
+            "*:*:mkdir -p $STAGING_DIR$NATIVEPREFIX/share/maven/repository/org/apache/maven/doxia/doxia-sink-api/2.0.0",
+            "*:*:cp $WORKDIR/doxia-sink-api-2.0.0.jar $STAGING_DIR$NATIVEPREFIX/share/maven/repository/org/apache/maven/doxia/doxia-sink-api/2.0.0/doxia-sink-api-2.0.0.jar",
+            "*:*:cp doxia-sink-api-2.0.0.pom $STAGING_DIR$NATIVEPREFIX/share/maven/repository/org/apache/maven/doxia/doxia-sink-api/2.0.0/doxia-sink-api-2.0.0.pom"
+        ]
+    }
+}

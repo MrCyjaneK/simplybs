@@ -1,0 +1,39 @@
+{
+    "package": "native/jdk@22/bootstrap-maven/zstd-jni@1.5.5-11",
+    "version": "1.5.5-11",
+    "type": "native",
+    "download": [
+        {
+            "kind": "git",
+            "sha256": "a3c3d7df5067d2760f6639981d277ffcbfbee5f7",
+            "url": "https://github.com/luben/zstd-jni.git"
+        },
+        {
+            "kind": "blob",
+            "path": "./zstd-jni-1.5.5-11.pom",
+            "sha256": "a0152b1897c4a6e7dd36e5f686f0e631c3839b5db208b38daa11a4f6dc9b25ff",
+            "url": "https://repo1.maven.org/maven2/com/github/luben/zstd-jni/1.5.5-11/zstd-jni-1.5.5-11.pom"
+        }
+    ],
+    "dependencies": [
+        "*:*:native/bash",
+        "*:*:native/coreutils",
+        "*:*:native/findutils",
+        "*:*:native/jdk@22"
+    ],
+    "build": {
+        "env": [
+            "*:*:WORKDIR=work/zstd-jni@1.5.5-11"
+        ],
+        "steps": [
+            "*:*:mkdir -p $WORKDIR/gen/com/github/luben/zstd/util",
+            "*:*:echo 'package com.github.luben.zstd.util; public class ZstdVersion { public static final String VERSION = \"1.5.5-11\"; }' >$WORKDIR/gen/com/github/luben/zstd/util/ZstdVersion.java",
+            "*:*:find src/main/java $WORKDIR/gen -name '*.java' >$WORKDIR/sources",
+            "*:*:$JAVA_HOME/bin/javac -d $WORKDIR/classes @$WORKDIR/sources",
+            "*:*:$JAVA_HOME/bin/jar cf $WORKDIR/zstd-jni-1.5.5-11.jar -C $WORKDIR/classes .",
+            "*:*:mkdir -p $STAGING_DIR$NATIVEPREFIX/share/maven/repository/com/github/luben/zstd-jni/1.5.5-11",
+            "*:*:cp $WORKDIR/zstd-jni-1.5.5-11.jar $STAGING_DIR$NATIVEPREFIX/share/maven/repository/com/github/luben/zstd-jni/1.5.5-11/zstd-jni-1.5.5-11.jar",
+            "*:*:cp zstd-jni-1.5.5-11.pom $STAGING_DIR$NATIVEPREFIX/share/maven/repository/com/github/luben/zstd-jni/1.5.5-11/zstd-jni-1.5.5-11.pom"
+        ]
+    }
+}

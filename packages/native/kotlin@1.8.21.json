@@ -1,0 +1,29 @@
+{
+    "package": "native/kotlin@1.8.21",
+    "version": "1.8.21",
+    "type": "native",
+    "download": [
+        {
+            "kind": "blob",
+            "path": "./kotlin-compiler-1.8.21.zip",
+            "sha256": "6e43c5569ad067492d04d92c28cdf8095673699d81ce460bd7270443297e8fd7",
+            "url": "https://github.com/JetBrains/kotlin/releases/download/v1.8.21/kotlin-compiler-1.8.21.zip"
+        }
+    ],
+    "dependencies": [
+        "*:*:native/_/_",
+        "*:*:native/7zip",
+        "*:*:native/bash",
+        "*:*:native/coreutils"
+    ],
+    "build": {
+        "env": [],
+        "steps": [
+            "*:*:mkdir work",
+            "*:*:cd work && 7zz x ../kotlin-compiler-1.8.21.zip",
+            "*:*:mkdir -p $STAGING_DIR$NATIVEPREFIX/kotlin-1.8.21",
+            "*:*:cp -a work/kotlinc/. $STAGING_DIR$NATIVEPREFIX/kotlin-1.8.21/",
+            "*:*:chmod +x $STAGING_DIR$NATIVEPREFIX/kotlin-1.8.21/bin/kotlinc"
+        ]
+    }
+}

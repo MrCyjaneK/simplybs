@@ -1,0 +1,37 @@
+{
+    "package": "native/jdk@22/bootstrap-maven/gson@2.13.2",
+    "version": "2.13.2",
+    "type": "native",
+    "download": [
+        {
+            "kind": "git",
+            "sha256": "686fad782d969d8f15c7581a5435a208b810caa7",
+            "url": "https://github.com/google/gson.git"
+        }
+    ],
+    "dependencies": [
+        "*:*:native/bash",
+        "*:*:native/coreutils",
+        "*:*:native/findutils",
+        "*:*:native/jdk@22",
+        "*:*:native/sed",
+        "*:*:native/jdk@22/bootstrap-maven/pom/gson-parent@2.13.2",
+        "*:*:native/jdk@22/bootstrap-maven/error_prone_annotations@2.41.0"
+    ],
+    "build": {
+        "env": [
+            "*:*:WORKDIR=work/gson@2.13.2",
+            "*:*:REPO=$NATIVEPREFIX/share/maven/repository"
+        ],
+        "steps": [
+            "*:*:mkdir -p $WORKDIR",
+            "*:*:sed -i 's/${project.version}/2.13.2/' gson/src/main/java-templates/com/google/gson/internal/GsonBuildConfig.java",
+            "*:*:find gson/src/main/java gson/src/main/java-templates -name '*.java' ! -name 'module-info.java' >$WORKDIR/sources",
+            "*:*:$JAVA_HOME/bin/javac --release 8 -cp $REPO/com/google/errorprone/error_prone_annotations/2.41.0/error_prone_annotations-2.41.0.jar -d $WORKDIR/classes @$WORKDIR/sources",
+            "*:*:$JAVA_HOME/bin/jar cf $WORKDIR/gson-2.13.2.jar -C $WORKDIR/classes .",
+            "*:*:mkdir -p $STAGING_DIR$NATIVEPREFIX/share/maven/repository/com/google/code/gson/gson/2.13.2",
+            "*:*:cp $WORKDIR/gson-2.13.2.jar $STAGING_DIR$NATIVEPREFIX/share/maven/repository/com/google/code/gson/gson/2.13.2/gson-2.13.2.jar",
+            "*:*:cp gson/pom.xml $STAGING_DIR$NATIVEPREFIX/share/maven/repository/com/google/code/gson/gson/2.13.2/gson-2.13.2.pom"
+        ]
+    }
+}

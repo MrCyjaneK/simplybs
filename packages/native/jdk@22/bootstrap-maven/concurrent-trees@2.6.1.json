@@ -1,0 +1,33 @@
+{
+    "package": "native/jdk@22/bootstrap-maven/concurrent-trees@2.6.1",
+    "version": "2.6.1",
+    "type": "native",
+    "download": [
+        {
+            "kind": "git",
+            "sha256": "a0c776706eec90e425960a056b20f260bca238b2",
+            "url": "https://github.com/npgall/concurrent-trees.git"
+        }
+    ],
+    "dependencies": [
+        "*:*:native/bash",
+        "*:*:native/coreutils",
+        "*:*:native/findutils",
+        "*:*:native/jdk@22",
+        "*:*:native/jdk@22/bootstrap-maven/pom/oss-parent@7"
+    ],
+    "build": {
+        "env": [
+            "*:*:WORKDIR=build/concurrent-trees@2.6.1"
+        ],
+        "steps": [
+            "*:*:mkdir -p $WORKDIR",
+            "*:*:find code/src/main/java -name '*.java' >$WORKDIR/sources",
+            "*:*:$JAVA_HOME/bin/javac -d $WORKDIR/classes @$WORKDIR/sources",
+            "*:*:$JAVA_HOME/bin/jar cf $WORKDIR/concurrent-trees-2.6.1.jar -C $WORKDIR/classes .",
+            "*:*:mkdir -p $STAGING_DIR$NATIVEPREFIX/share/maven/repository/com/googlecode/concurrent-trees/concurrent-trees/2.6.1",
+            "*:*:cp $WORKDIR/concurrent-trees-2.6.1.jar $STAGING_DIR$NATIVEPREFIX/share/maven/repository/com/googlecode/concurrent-trees/concurrent-trees/2.6.1/concurrent-trees-2.6.1.jar",
+            "*:*:cp code/pom.xml $STAGING_DIR$NATIVEPREFIX/share/maven/repository/com/googlecode/concurrent-trees/concurrent-trees/2.6.1/concurrent-trees-2.6.1.pom"
+        ]
+    }
+}

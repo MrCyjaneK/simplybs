@@ -1,0 +1,44 @@
+{
+    "package": "native/jdk@22/mvn/hamcrest-core@1.3",
+    "version": "1.3",
+    "type": "native",
+    "download": [
+        {
+            "kind": "git",
+            "sha256": "36d525e1e425006939a77aec5183aecd7c775b05",
+            "url": "https://github.com/hamcrest/JavaHamcrest.git"
+        }
+    ],
+    "dependencies": [
+        "*:*:native/bash",
+        "*:*:native/coreutils",
+        "*:*:native/findutils",
+        "*:*:native/sed",
+        "*:*:native/jdk@22"
+    ],
+    "build": {
+        "env": [
+            "*:*:WORKDIR=work/hamcrest-core@1.3"
+        ],
+        "steps": [
+            "*:*:mkdir -p $WORKDIR/classes $WORKDIR/gen $WORKDIR/generator",
+            "*:*:sed -i 's/return allOf(Arrays.asList(matchers));/return allOf((Iterable) Arrays.asList(matchers));/' hamcrest-core/src/main/java/org/hamcrest/core/AllOf.java",
+            "*:*:sed -i 's/return anyOf(Arrays.asList(matchers));/return anyOf((Iterable) Arrays.asList(matchers));/' hamcrest-core/src/main/java/org/hamcrest/core/AnyOf.java",
+            "*:*:find hamcrest-core/src/main/java -name '*.java' >$WORKDIR/core.sources",
+            "*:*:$JAVA_HOME/bin/javac --release 8 -d $WORKDIR/classes @$WORKDIR/core.sources",
+            "*:*:find hamcrest-generator/src/main/java -name '*.java' ! -name 'QDox.java' ! -name 'QDoxFactoryReader.java' >$WORKDIR/generator.sources",
+            "*:*:sed -i 's/new QDoxFactoryReader(new ReflectiveFactoryReader(cls), qdox, className)/new ReflectiveFactoryReader(cls)/' hamcrest-generator/src/main/java/org/hamcrest/generator/config/XmlConfigurator.java",
+            "*:*:sed -i 's/qdox.addSourceTree(sourceDir);//' hamcrest-generator/src/main/java/org/hamcrest/generator/config/XmlConfigurator.java",
+            "*:*:sed -i '/qdox = new QDox();/d' hamcrest-generator/src/main/java/org/hamcrest/generator/config/XmlConfigurator.java",
+            "*:*:sed -i '/private final QDox qdox;/d' hamcrest-generator/src/main/java/org/hamcrest/generator/config/XmlConfigurator.java",
+            "*:*:sed -i '/import org.hamcrest.generator.QDoxFactoryReader;/d' hamcrest-generator/src/main/java/org/hamcrest/generator/config/XmlConfigurator.java",
+            "*:*:sed -i '/import org.hamcrest.generator.QDox;/d' hamcrest-generator/src/main/java/org/hamcrest/generator/config/XmlConfigurator.java",
+            "*:*:$JAVA_HOME/bin/javac --release 8 -d $WORKDIR/generator @$WORKDIR/generator.sources",
+            "*:*:$JAVA_HOME/bin/java -cp $WORKDIR/generator:$WORKDIR/classes org.hamcrest.generator.config.XmlConfigurator core-matchers.xml hamcrest-core/src/main/java org.hamcrest.CoreMatchers $WORKDIR/gen",
+            "*:*:$JAVA_HOME/bin/javac --release 8 -cp $WORKDIR/classes -d $WORKDIR/classes $WORKDIR/gen/org/hamcrest/CoreMatchers.java",
+            "*:*:$JAVA_HOME/bin/jar cf $WORKDIR/hamcrest-core-1.3.jar -C $WORKDIR/classes .",
+            "*:*:mkdir -p $STAGING_DIR$NATIVEPREFIX/share/maven/repository/org/hamcrest/hamcrest-core/1.3",
+            "*:*:cp $WORKDIR/hamcrest-core-1.3.jar $STAGING_DIR$NATIVEPREFIX/share/maven/repository/org/hamcrest/hamcrest-core/1.3/hamcrest-core-1.3.jar"
+        ]
+    }
+}

@@ -1,0 +1,38 @@
+{
+    "package": "native/jdk@22/bootstrap-maven/plexus-container-default@2.1.0",
+    "version": "2.1.0",
+    "type": "native",
+    "download": [
+        {
+            "kind": "git",
+            "sha256": "e8053c76674535b6bf7fd8c4b0114629eeb5923d",
+            "url": "https://github.com/codehaus-plexus/plexus-containers.git"
+        }
+    ],
+    "dependencies": [
+        "*:*:native/bash",
+        "*:*:native/coreutils",
+        "*:*:native/findutils",
+        "*:*:native/jdk@22",
+        "*:*:native/jdk@22/bootstrap-maven/pom/plexus-containers@2.1.0",
+        "*:*:native/jdk@22/bootstrap-maven/plexus-utils@3.5.1",
+        "*:*:native/jdk@22/bootstrap-maven/plexus-classworlds@2.6.0",
+        "*:*:native/jdk@22/bootstrap-maven/xbean-reflect@3.7",
+        "*:*:native/jdk@22/bootstrap-maven/pom/google-collections@1.0"
+    ],
+    "build": {
+        "env": [
+            "*:*:WORKDIR=build/plexus-container-default@2.1.0",
+            "*:*:REPO=$NATIVEPREFIX/share/maven/repository"
+        ],
+        "steps": [
+            "*:*:mkdir -p $WORKDIR",
+            "*:*:find plexus-container-default/src/main/java -name '*.java' ! -name 'PlexusTestCase.java' ! -name 'PlexusJUnit4TestCase.java' >$WORKDIR/sources",
+            "*:*:$JAVA_HOME/bin/javac --release 8 -cp $REPO/org/codehaus/plexus/plexus-utils/3.5.1/plexus-utils-3.5.1.jar:$REPO/org/codehaus/plexus/plexus-classworlds/2.6.0/plexus-classworlds-2.6.0.jar:$REPO/org/apache/xbean/xbean-reflect/3.7/xbean-reflect-3.7.jar:$REPO/com/google/collections/google-collections/1.0/google-collections-1.0.jar -d $WORKDIR/classes @$WORKDIR/sources",
+            "*:*:$JAVA_HOME/bin/jar cf $WORKDIR/plexus-container-default-2.1.0.jar -C $WORKDIR/classes .",
+            "*:*:mkdir -p $STAGING_DIR$NATIVEPREFIX/share/maven/repository/org/codehaus/plexus/plexus-container-default/2.1.0",
+            "*:*:cp $WORKDIR/plexus-container-default-2.1.0.jar $STAGING_DIR$NATIVEPREFIX/share/maven/repository/org/codehaus/plexus/plexus-container-default/2.1.0/plexus-container-default-2.1.0.jar",
+            "*:*:cp plexus-container-default/pom.xml $STAGING_DIR$NATIVEPREFIX/share/maven/repository/org/codehaus/plexus/plexus-container-default/2.1.0/plexus-container-default-2.1.0.pom"
+        ]
+    }
+}

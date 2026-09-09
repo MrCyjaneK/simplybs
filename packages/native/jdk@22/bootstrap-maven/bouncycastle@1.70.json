@@ -1,0 +1,82 @@
+{
+    "package": "native/jdk@22/bootstrap-maven/bouncycastle@1.70",
+    "version": "1.70",
+    "type": "native",
+    "download": [
+        {
+            "kind": "git",
+            "sha256": "1ef1da015e116c1c2d09719674dfdd437971077f",
+            "url": "https://github.com/bcgit/bc-java.git"
+        },
+        {
+            "kind": "blob",
+            "path": "./bcprov-jdk15on-1.70.pom",
+            "sha256": "6df4b5b76d9062017664ad0ca285e57154ae803607cb89c970b39cc0e016abb0",
+            "url": "https://repo1.maven.org/maven2/org/bouncycastle/bcprov-jdk15on/1.70/bcprov-jdk15on-1.70.pom"
+        },
+        {
+            "kind": "blob",
+            "path": "./bcutil-jdk15on-1.70.pom",
+            "sha256": "9ebae71c25e0c9f2cd756003c01f1ad0fc398ca06fbcda0d175e71cac5840aad",
+            "url": "https://repo1.maven.org/maven2/org/bouncycastle/bcutil-jdk15on/1.70/bcutil-jdk15on-1.70.pom"
+        },
+        {
+            "kind": "blob",
+            "path": "./bcpkix-jdk15on-1.70.pom",
+            "sha256": "6ea5502b7eebec7018271bb8a82cb819bf4c1f2b6543549c5cfd84d6a13996bf",
+            "url": "https://repo1.maven.org/maven2/org/bouncycastle/bcpkix-jdk15on/1.70/bcpkix-jdk15on-1.70.pom"
+        },
+        {
+            "kind": "blob",
+            "path": "./bcpg-jdk15on-1.70.pom",
+            "sha256": "df398b389bc419564df63c5ae2cf4b5ae653d96e5fbb253bbc94d1b06733cdf5",
+            "url": "https://repo1.maven.org/maven2/org/bouncycastle/bcpg-jdk15on/1.70/bcpg-jdk15on-1.70.pom"
+        }
+    ],
+    "dependencies": [
+        "*:*:native/bash",
+        "*:*:native/coreutils",
+        "*:*:native/findutils",
+        "*:*:native/jdk@22"
+    ],
+    "build": {
+        "env": [
+            "*:*:WORKDIR=work/bouncycastle@1.70",
+            "*:*:BC_COMPILE=2",
+            "*:*:REPO=$NATIVEPREFIX/share/maven/repository"
+        ],
+        "steps": [
+            "*:*:mkdir -p $WORKDIR/bcprov $WORKDIR/bcutil $WORKDIR/bcpkix $WORKDIR/bcpg",
+            "*:*:find core/src/main/java prov/src/main/java -name '*.java' ! -name '*Tests.java' ! -name 'AllTests.java' ! -name 'LMSVectorUtils.java' ! -path '*/org/bouncycastle/asn1/bsi/*' ! -path '*/org/bouncycastle/asn1/cmc/*' ! -path '*/org/bouncycastle/asn1/cmp/*' ! -path '*/org/bouncycastle/asn1/cms/*' ! -path '*/org/bouncycastle/asn1/crmf/*' ! -path '*/org/bouncycastle/asn1/dvcs/*' ! -path '*/org/bouncycastle/asn1/eac/*' ! -path '*/org/bouncycastle/asn1/esf/*' ! -path '*/org/bouncycastle/asn1/ess/*' ! -path '*/org/bouncycastle/asn1/est/*' ! -path '*/org/bouncycastle/asn1/icao/*' ! -path '*/org/bouncycastle/asn1/isismtt/*' ! -path '*/org/bouncycastle/asn1/its/*' ! -path '*/org/bouncycastle/asn1/smime/*' ! -path '*/org/bouncycastle/asn1/tsp/*' >$WORKDIR/bcprov.sources",
+            "*:*:$JAVA_HOME/bin/javac --release 8 -encoding UTF-8 -d $WORKDIR/bcprov @$WORKDIR/bcprov.sources",
+            "*:*:if [ -d core/src/main/java ]; then find core/src/main/java \\( -name '*.properties' -o -name mailcap \\) | while IFS= read -r f; do rel=${f#core/src/main/java/}; mkdir -p $WORKDIR/bcprov/$(dirname $rel); cp $f $WORKDIR/bcprov/$rel; done; fi",
+            "*:*:if [ -d prov/src/main/java ]; then find prov/src/main/java \\( -name '*.properties' -o -name mailcap \\) | while IFS= read -r f; do rel=${f#prov/src/main/java/}; mkdir -p $WORKDIR/bcprov/$(dirname $rel); cp $f $WORKDIR/bcprov/$rel; done; fi",
+            "*:*:if [ -d prov/src/main/resources ]; then find prov/src/main/resources \\( -name '*.properties' -o -name mailcap \\) | while IFS= read -r f; do rel=${f#prov/src/main/resources/}; mkdir -p $WORKDIR/bcprov/$(dirname $rel); cp $f $WORKDIR/bcprov/$rel; done; fi",
+            "*:*:$JAVA_HOME/bin/jar cf $WORKDIR/bcprov-jdk15on-1.70.jar -C $WORKDIR/bcprov .",
+            "*:*:mkdir -p $STAGING_DIR$NATIVEPREFIX/share/maven/repository/org/bouncycastle/bcprov-jdk15on/1.70",
+            "*:*:cp $WORKDIR/bcprov-jdk15on-1.70.jar $STAGING_DIR$NATIVEPREFIX/share/maven/repository/org/bouncycastle/bcprov-jdk15on/1.70/bcprov-jdk15on-1.70.jar",
+            "*:*:cp bcprov-jdk15on-1.70.pom $STAGING_DIR$NATIVEPREFIX/share/maven/repository/org/bouncycastle/bcprov-jdk15on/1.70/bcprov-jdk15on-1.70.pom",
+            "*:*:find util/src/main/java -name '*.java' ! -name '*Test.java' ! -name '*Tests.java' >$WORKDIR/bcutil.sources",
+            "*:*:$JAVA_HOME/bin/javac --release 8 -encoding UTF-8 -cp $WORKDIR/bcprov-jdk15on-1.70.jar -d $WORKDIR/bcutil @$WORKDIR/bcutil.sources",
+            "*:*:if [ -d util/src/main/java ]; then find util/src/main/java \\( -name '*.properties' -o -name mailcap \\) | while IFS= read -r f; do rel=${f#util/src/main/java/}; mkdir -p $WORKDIR/bcutil/$(dirname $rel); cp $f $WORKDIR/bcutil/$rel; done; fi",
+            "*:*:$JAVA_HOME/bin/jar cf $WORKDIR/bcutil-jdk15on-1.70.jar -C $WORKDIR/bcutil .",
+            "*:*:mkdir -p $STAGING_DIR$NATIVEPREFIX/share/maven/repository/org/bouncycastle/bcutil-jdk15on/1.70",
+            "*:*:cp $WORKDIR/bcutil-jdk15on-1.70.jar $STAGING_DIR$NATIVEPREFIX/share/maven/repository/org/bouncycastle/bcutil-jdk15on/1.70/bcutil-jdk15on-1.70.jar",
+            "*:*:cp bcutil-jdk15on-1.70.pom $STAGING_DIR$NATIVEPREFIX/share/maven/repository/org/bouncycastle/bcutil-jdk15on/1.70/bcutil-jdk15on-1.70.pom",
+            "*:*:find pkix/src/main/java -name '*.java' ! -name '*Test.java' ! -name '*Tests.java' ! -path '*/test/*' >$WORKDIR/bcpkix.sources",
+            "*:*:$JAVA_HOME/bin/javac --release 8 -encoding UTF-8 -cp $WORKDIR/bcprov-jdk15on-1.70.jar:$WORKDIR/bcutil-jdk15on-1.70.jar -d $WORKDIR/bcpkix @$WORKDIR/bcpkix.sources",
+            "*:*:if [ -d pkix/src/main/java ]; then find pkix/src/main/java \\( -name '*.properties' -o -name mailcap \\) | while IFS= read -r f; do rel=${f#pkix/src/main/java/}; mkdir -p $WORKDIR/bcpkix/$(dirname $rel); cp $f $WORKDIR/bcpkix/$rel; done; fi",
+            "*:*:$JAVA_HOME/bin/jar cf $WORKDIR/bcpkix-jdk15on-1.70.jar -C $WORKDIR/bcpkix .",
+            "*:*:mkdir -p $STAGING_DIR$NATIVEPREFIX/share/maven/repository/org/bouncycastle/bcpkix-jdk15on/1.70",
+            "*:*:cp $WORKDIR/bcpkix-jdk15on-1.70.jar $STAGING_DIR$NATIVEPREFIX/share/maven/repository/org/bouncycastle/bcpkix-jdk15on/1.70/bcpkix-jdk15on-1.70.jar",
+            "*:*:cp bcpkix-jdk15on-1.70.pom $STAGING_DIR$NATIVEPREFIX/share/maven/repository/org/bouncycastle/bcpkix-jdk15on/1.70/bcpkix-jdk15on-1.70.pom",
+            "*:*:find pg/src/main/java -name '*.java' ! -name '*Test.java' ! -name '*Tests.java' ! -path '*/test/*' >$WORKDIR/bcpg.sources",
+            "*:*:$JAVA_HOME/bin/javac --release 8 -encoding UTF-8 -cp $WORKDIR/bcprov-jdk15on-1.70.jar -d $WORKDIR/bcpg @$WORKDIR/bcpg.sources",
+            "*:*:if [ -d pg/src/main/java ]; then find pg/src/main/java \\( -name '*.properties' -o -name mailcap \\) | while IFS= read -r f; do rel=${f#pg/src/main/java/}; mkdir -p $WORKDIR/bcpg/$(dirname $rel); cp $f $WORKDIR/bcpg/$rel; done; fi",
+            "*:*:$JAVA_HOME/bin/jar cf $WORKDIR/bcpg-jdk15on-1.70.jar -C $WORKDIR/bcpg .",
+            "*:*:mkdir -p $STAGING_DIR$NATIVEPREFIX/share/maven/repository/org/bouncycastle/bcpg-jdk15on/1.70",
+            "*:*:cp $WORKDIR/bcpg-jdk15on-1.70.jar $STAGING_DIR$NATIVEPREFIX/share/maven/repository/org/bouncycastle/bcpg-jdk15on/1.70/bcpg-jdk15on-1.70.jar",
+            "*:*:cp bcpg-jdk15on-1.70.pom $STAGING_DIR$NATIVEPREFIX/share/maven/repository/org/bouncycastle/bcpg-jdk15on/1.70/bcpg-jdk15on-1.70.pom"
+        ]
+    }
+}

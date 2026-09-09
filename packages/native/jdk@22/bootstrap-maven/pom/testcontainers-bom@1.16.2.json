@@ -1,0 +1,22 @@
+{
+    "package": "native/jdk@22/bootstrap-maven/pom/testcontainers-bom@1.16.2",
+    "version": "1.16.2",
+    "type": "native",
+    "download": [
+        {
+            "kind": "blob",
+            "path": "./testcontainers-bom-1.16.2.pom",
+            "sha256": "4cdc10db524d5c7efdc7dac9fbfac58befb3741b9a765d99289f28843fb1c56e",
+            "url": "https://repo1.maven.org/maven2/org/testcontainers/testcontainers-bom/1.16.2/testcontainers-bom-1.16.2.pom"
+        }
+    ],
+    "dependencies": [
+        "*:*:native/coreutils"
+    ],
+    "build": {
+        "steps": [
+            "*:*:mkdir -p $STAGING_DIR$NATIVEPREFIX/share/maven/repository/org/testcontainers/testcontainers-bom/1.16.2",
+            "*:*:cp testcontainers-bom-1.16.2.pom $STAGING_DIR$NATIVEPREFIX/share/maven/repository/org/testcontainers/testcontainers-bom/1.16.2/testcontainers-bom-1.16.2.pom"
+        ]
+    }
+}

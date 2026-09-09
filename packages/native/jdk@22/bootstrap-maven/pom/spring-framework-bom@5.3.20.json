@@ -1,0 +1,22 @@
+{
+    "package": "native/jdk@22/bootstrap-maven/pom/spring-framework-bom@5.3.20",
+    "version": "5.3.20",
+    "type": "native",
+    "download": [
+        {
+            "kind": "blob",
+            "path": "./spring-framework-bom-5.3.20.pom",
+            "sha256": "787a85cff3f3f93d72f84f5b1fb71e6270e14b7b3d1ed20f79bc2d4fe44829ec",
+            "url": "https://repo1.maven.org/maven2/org/springframework/spring-framework-bom/5.3.20/spring-framework-bom-5.3.20.pom"
+        }
+    ],
+    "dependencies": [
+        "*:*:native/coreutils"
+    ],
+    "build": {
+        "steps": [
+            "*:*:mkdir -p $STAGING_DIR$NATIVEPREFIX/share/maven/repository/org/springframework/spring-framework-bom/5.3.20",
+            "*:*:cp spring-framework-bom-5.3.20.pom $STAGING_DIR$NATIVEPREFIX/share/maven/repository/org/springframework/spring-framework-bom/5.3.20/spring-framework-bom-5.3.20.pom"
+        ]
+    }
+}

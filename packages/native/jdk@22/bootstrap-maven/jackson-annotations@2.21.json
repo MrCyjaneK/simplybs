@@ -1,0 +1,33 @@
+{
+    "package": "native/jdk@22/bootstrap-maven/jackson-annotations@2.21",
+    "version": "2.21",
+    "type": "native",
+    "download": [
+        {
+            "kind": "git",
+            "sha256": "e71e0bd0deddf35d2c310463acd258dca1d536d1",
+            "url": "https://github.com/FasterXML/jackson-annotations.git"
+        }
+    ],
+    "dependencies": [
+        "*:*:native/bash",
+        "*:*:native/coreutils",
+        "*:*:native/findutils",
+        "*:*:native/jdk@22",
+        "*:*:native/jdk@22/bootstrap-maven/pom/jackson-parent@2.21"
+    ],
+    "build": {
+        "env": [
+            "*:*:WORKDIR=build/jackson-annotations@2.21"
+        ],
+        "steps": [
+            "*:*:mkdir -p $WORKDIR",
+            "*:*:find src/main/java -name '*.java' ! -name 'module-info.java' >$WORKDIR/sources",
+            "*:*:$JAVA_HOME/bin/javac --release 8 -d $WORKDIR/classes @$WORKDIR/sources",
+            "*:*:$JAVA_HOME/bin/jar cf $WORKDIR/jackson-annotations-2.21.jar -C $WORKDIR/classes .",
+            "*:*:mkdir -p $STAGING_DIR$NATIVEPREFIX/share/maven/repository/com/fasterxml/jackson/core/jackson-annotations/2.21",
+            "*:*:cp $WORKDIR/jackson-annotations-2.21.jar $STAGING_DIR$NATIVEPREFIX/share/maven/repository/com/fasterxml/jackson/core/jackson-annotations/2.21/jackson-annotations-2.21.jar",
+            "*:*:cp pom.xml $STAGING_DIR$NATIVEPREFIX/share/maven/repository/com/fasterxml/jackson/core/jackson-annotations/2.21/jackson-annotations-2.21.pom"
+        ]
+    }
+}

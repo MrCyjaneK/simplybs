@@ -11,3 +11,5 @@ logs
 # Local Windows Cygwin+clang seed (keep README only)
 patches/native/_/windows_amd64_cygwin_clang/**
 !patches/native/_/windows_amd64_cygwin_clang/README.md
+
+*.pyc

@@ -1,0 +1,61 @@
+{
+    "package": "native/jdk@22/bootstrap-maven/maven-dependency-plugin@3.10.0",
+    "version": "3.10.0",
+    "type": "native",
+    "download": [
+        {
+            "kind": "git",
+            "sha256": "4127c336cc2420d0f19e7927371f979841df6e7b",
+            "url": "https://github.com/apache/maven-dependency-plugin.git"
+        }
+    ],
+    "dependencies": [
+        "*:*:native/bash",
+        "*:*:native/coreutils",
+        "*:*:native/findutils",
+        "*:*:native/jdk@22",
+        "*:*:native/jdk@22/bootstrap-maven/org.eclipse.sisu.inject@1.0.0",
+        "*:*:native/maven@3.9-bin",
+        "*:*:native/jdk@22/bootstrap-maven/pom/maven-plugins@47",
+        "*:*:native/jdk@22/bootstrap-maven/javax.inject@1",
+        "*:*:native/jdk@22/bootstrap-maven/slf4j-api@1.7.36",
+        "*:*:native/jdk@22/bootstrap-maven/maven-plugin-annotations@3.15.2",
+        "*:*:native/jdk@22/bootstrap-maven/maven-plugin-tools-generators@3.15.2",
+        "*:*:native/jdk@22/bootstrap-maven/doxia-sink-api@2.0.0",
+        "*:*:native/jdk@22/bootstrap-maven/maven-reporting-api@4.0.0",
+        "*:*:native/jdk@22/bootstrap-maven/maven-reporting-impl@4.0.0",
+        "*:*:native/jdk@22/bootstrap-maven/plexus-archiver@4.11.0",
+        "*:*:native/jdk@22/bootstrap-maven/commons-lang3@3.20.0",
+        "*:*:native/jdk@22/bootstrap-maven/plexus-utils@4.0.2",
+        "*:*:native/jdk@22/bootstrap-maven/plexus-xml@3.0.1",
+        "*:*:native/jdk@22/bootstrap-maven/plexus-io@3.6.0",
+        "*:*:native/jdk@22/bootstrap-maven/plexus-i18n@1.1.0",
+        "*:*:native/jdk@22/bootstrap-maven/maven-dependency-analyzer@1.17.0",
+        "*:*:native/jdk@22/bootstrap-maven/maven-dependency-tree@3.3.0",
+        "*:*:native/jdk@22/bootstrap-maven/maven-common-artifact-filters@3.4.0",
+        "*:*:native/jdk@22/bootstrap-maven/maven-artifact-transfer@0.13.1",
+        "*:*:native/jdk@22/bootstrap-maven/maven-shared-utils@3.4.2",
+        "*:*:native/jdk@22/bootstrap-maven/maven-resolver@1.9.25",
+        "*:*:native/jdk@22/bootstrap-maven/plexus-build-api@0.0.7",
+        "*:*:native/jdk@22/bootstrap-maven/velocity-engine-core@2.4.1",
+        "*:*:native/jdk@22/bootstrap-maven/velocity-tools-generic@3.1"
+    ],
+    "build": {
+        "env": [
+            "*:*:WORKDIR=build/maven-dependency-plugin@3.10.0",
+            "*:*:REPO=$NATIVEPREFIX/share/maven/repository",
+            "*:*:BOOT_LIB=$NATIVEPREFIX/maven-3.9-bootstrap/lib"
+        ],
+        "steps": [
+            "*:*:mkdir -p $WORKDIR/classes $WORKDIR/pluginxml/META-INF/maven",
+            "*:*:find src/main/java -name '*.java' >$WORKDIR/sources",
+            "*:*:$JAVA_HOME/bin/javac --release 8 -cp $(printf '%s:' $BOOT_LIB/*.jar)$REPO/org/apache/maven/plugin-tools/maven-plugin-annotations/3.15.2/maven-plugin-annotations-3.15.2.jar:$REPO/javax/inject/javax.inject/1/javax.inject-1.jar:$REPO/org/apache/maven/doxia/doxia-sink-api/2.0.0/doxia-sink-api-2.0.0.jar:$REPO/org/apache/maven/reporting/maven-reporting-api/4.0.0/maven-reporting-api-4.0.0.jar:$REPO/org/apache/maven/reporting/maven-reporting-impl/4.0.0/maven-reporting-impl-4.0.0.jar:$REPO/org/codehaus/plexus/plexus-archiver/4.11.0/plexus-archiver-4.11.0.jar:$REPO/org/apache/commons/commons-lang3/3.20.0/commons-lang3-3.20.0.jar:$REPO/org/codehaus/plexus/plexus-utils/4.0.2/plexus-utils-4.0.2.jar:$REPO/org/codehaus/plexus/plexus-xml/3.0.1/plexus-xml-3.0.1.jar:$REPO/org/codehaus/plexus/plexus-io/3.6.0/plexus-io-3.6.0.jar:$REPO/org/codehaus/plexus/plexus-i18n/1.1.0/plexus-i18n-1.1.0.jar:$REPO/org/apache/maven/shared/maven-dependency-analyzer/1.17.0/maven-dependency-analyzer-1.17.0.jar:$REPO/org/apache/maven/shared/maven-dependency-tree/3.3.0/maven-dependency-tree-3.3.0.jar:$REPO/org/apache/maven/shared/maven-common-artifact-filters/3.4.0/maven-common-artifact-filters-3.4.0.jar:$REPO/org/apache/maven/shared/maven-artifact-transfer/0.13.1/maven-artifact-transfer-0.13.1.jar:$REPO/org/apache/maven/shared/maven-shared-utils/3.4.2/maven-shared-utils-3.4.2.jar:$REPO/org/apache/maven/resolver/maven-resolver-api/1.9.25/maven-resolver-api-1.9.25.jar:$REPO/org/apache/maven/resolver/maven-resolver-util/1.9.25/maven-resolver-util-1.9.25.jar:$REPO/org/sonatype/plexus/plexus-build-api/0.0.7/plexus-build-api-0.0.7.jar:$REPO/org/slf4j/slf4j-api/1.7.36/slf4j-api-1.7.36.jar:$REPO/org/apache/velocity/velocity-engine-core/2.4.1/velocity-engine-core-2.4.1.jar:$REPO/org/apache/velocity/tools/velocity-tools-generic/3.1/velocity-tools-generic-3.1.jar -processorpath $REPO/org/eclipse/sisu/org.eclipse.sisu.inject/1.0.0/org.eclipse.sisu.inject-1.0.0.jar:$REPO/javax/inject/javax.inject/1/javax.inject-1.jar -processor org.eclipse.sisu.space.SisuIndexAPT6 -d $WORKDIR/classes @$WORKDIR/sources",
+            "*:*:cp -R src/main/resources/. $WORKDIR/classes/",
+            "*:*:$JAVA_HOME/bin/java -cp $PLUGINXML_JAR:$(printf '%s:' $BOOT_LIB/*.jar) org.apache.maven.tools.plugin.generator.GeneratePluginXml org.apache.maven.plugins maven-dependency-plugin 3.10.0 dependency $WORKDIR/classes $WORKDIR/pluginxml/META-INF/maven $(printf '%s:' $BOOT_LIB/*.jar)$REPO/org/apache/maven/plugin-tools/maven-plugin-annotations/3.15.2/maven-plugin-annotations-3.15.2.jar:$REPO/javax/inject/javax.inject/1/javax.inject-1.jar:$REPO/org/apache/maven/doxia/doxia-sink-api/2.0.0/doxia-sink-api-2.0.0.jar:$REPO/org/apache/maven/reporting/maven-reporting-api/4.0.0/maven-reporting-api-4.0.0.jar:$REPO/org/apache/maven/reporting/maven-reporting-impl/4.0.0/maven-reporting-impl-4.0.0.jar:$REPO/org/codehaus/plexus/plexus-archiver/4.11.0/plexus-archiver-4.11.0.jar:$REPO/org/apache/commons/commons-lang3/3.20.0/commons-lang3-3.20.0.jar:$REPO/org/codehaus/plexus/plexus-utils/4.0.2/plexus-utils-4.0.2.jar:$REPO/org/codehaus/plexus/plexus-xml/3.0.1/plexus-xml-3.0.1.jar:$REPO/org/codehaus/plexus/plexus-io/3.6.0/plexus-io-3.6.0.jar:$REPO/org/codehaus/plexus/plexus-i18n/1.1.0/plexus-i18n-1.1.0.jar:$REPO/org/apache/maven/shared/maven-dependency-analyzer/1.17.0/maven-dependency-analyzer-1.17.0.jar:$REPO/org/apache/maven/shared/maven-dependency-tree/3.3.0/maven-dependency-tree-3.3.0.jar:$REPO/org/apache/maven/shared/maven-common-artifact-filters/3.4.0/maven-common-artifact-filters-3.4.0.jar:$REPO/org/apache/maven/shared/maven-artifact-transfer/0.13.1/maven-artifact-transfer-0.13.1.jar:$REPO/org/apache/maven/shared/maven-shared-utils/3.4.2/maven-shared-utils-3.4.2.jar:$REPO/org/apache/maven/resolver/maven-resolver-api/1.9.25/maven-resolver-api-1.9.25.jar:$REPO/org/apache/maven/resolver/maven-resolver-util/1.9.25/maven-resolver-util-1.9.25.jar:$REPO/org/sonatype/plexus/plexus-build-api/0.0.7/plexus-build-api-0.0.7.jar:$REPO/org/slf4j/slf4j-api/1.7.36/slf4j-api-1.7.36.jar:$REPO/org/apache/velocity/velocity-engine-core/2.4.1/velocity-engine-core-2.4.1.jar:$REPO/org/apache/velocity/tools/velocity-tools-generic/3.1/velocity-tools-generic-3.1.jar",
+            "*:*:$JAVA_HOME/bin/jar cf $WORKDIR/maven-dependency-plugin-3.10.0.jar -C $WORKDIR/classes . -C $WORKDIR/pluginxml .",
+            "*:*:mkdir -p $STAGING_DIR$NATIVEPREFIX/share/maven/repository/org/apache/maven/plugins/maven-dependency-plugin/3.10.0",
+            "*:*:cp $WORKDIR/maven-dependency-plugin-3.10.0.jar $STAGING_DIR$NATIVEPREFIX/share/maven/repository/org/apache/maven/plugins/maven-dependency-plugin/3.10.0/maven-dependency-plugin-3.10.0.jar",
+            "*:*:cp pom.xml $STAGING_DIR$NATIVEPREFIX/share/maven/repository/org/apache/maven/plugins/maven-dependency-plugin/3.10.0/maven-dependency-plugin-3.10.0.pom"
+        ]
+    }
+}

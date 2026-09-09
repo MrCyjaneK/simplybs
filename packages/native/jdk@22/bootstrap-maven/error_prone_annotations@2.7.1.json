@@ -1,0 +1,33 @@
+{
+    "package": "native/jdk@22/bootstrap-maven/error_prone_annotations@2.7.1",
+    "version": "2.7.1",
+    "type": "native",
+    "download": [
+        {
+            "kind": "git",
+            "sha256": "09262b80cbc736ab7e27635de5be811a39371ff3",
+            "url": "https://github.com/google/error-prone.git"
+        }
+    ],
+    "dependencies": [
+        "*:*:native/bash",
+        "*:*:native/coreutils",
+        "*:*:native/findutils",
+        "*:*:native/jdk@22",
+        "*:*:native/jdk@22/bootstrap-maven/pom/error_prone_parent@2.7.1"
+    ],
+    "build": {
+        "env": [
+            "*:*:WORKDIR=build/error_prone_annotations@2.7.1"
+        ],
+        "steps": [
+            "*:*:mkdir -p $WORKDIR",
+            "*:*:find annotations/src/main/java -name '*.java' >$WORKDIR/sources",
+            "*:*:$JAVA_HOME/bin/javac -d $WORKDIR/classes @$WORKDIR/sources",
+            "*:*:$JAVA_HOME/bin/jar cf $WORKDIR/error_prone_annotations-2.7.1.jar -C $WORKDIR/classes .",
+            "*:*:mkdir -p $STAGING_DIR$NATIVEPREFIX/share/maven/repository/com/google/errorprone/error_prone_annotations/2.7.1",
+            "*:*:cp $WORKDIR/error_prone_annotations-2.7.1.jar $STAGING_DIR$NATIVEPREFIX/share/maven/repository/com/google/errorprone/error_prone_annotations/2.7.1/error_prone_annotations-2.7.1.jar",
+            "*:*:cp annotations/pom.xml $STAGING_DIR$NATIVEPREFIX/share/maven/repository/com/google/errorprone/error_prone_annotations/2.7.1/error_prone_annotations-2.7.1.pom"
+        ]
+    }
+}

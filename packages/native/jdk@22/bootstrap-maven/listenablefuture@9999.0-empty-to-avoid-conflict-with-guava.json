@@ -1,0 +1,31 @@
+{
+    "package": "native/jdk@22/bootstrap-maven/listenablefuture@9999.0-empty-to-avoid-conflict-with-guava",
+    "version": "9999.0-empty-to-avoid-conflict-with-guava",
+    "type": "native",
+    "download": [
+        {
+            "kind": "blob",
+            "path": "./listenablefuture-9999.0-empty-to-avoid-conflict-with-guava.pom",
+            "sha256": "18d4b1db26153d4e55079ce1f76bb1fe05cdb862ef9954a88cbcc4ff38b8679b",
+            "url": "https://repo1.maven.org/maven2/com/google/guava/listenablefuture/9999.0-empty-to-avoid-conflict-with-guava/listenablefuture-9999.0-empty-to-avoid-conflict-with-guava.pom"
+        }
+    ],
+    "dependencies": [
+        "*:*:native/bash",
+        "*:*:native/coreutils",
+        "*:*:native/jdk@22",
+        "*:*:native/jdk@22/bootstrap-maven/pom/guava-parent@26.0-android"
+    ],
+    "build": {
+        "env": [
+            "*:*:WORKDIR=build/listenablefuture@9999.0-empty-to-avoid-conflict-with-guava"
+        ],
+        "steps": [
+            "*:*:mkdir -p $WORKDIR/empty",
+            "*:*:$JAVA_HOME/bin/jar cf $WORKDIR/listenablefuture-9999.0-empty-to-avoid-conflict-with-guava.jar -C $WORKDIR/empty .",
+            "*:*:mkdir -p $STAGING_DIR$NATIVEPREFIX/share/maven/repository/com/google/guava/listenablefuture/9999.0-empty-to-avoid-conflict-with-guava",
+            "*:*:cp $WORKDIR/listenablefuture-9999.0-empty-to-avoid-conflict-with-guava.jar $STAGING_DIR$NATIVEPREFIX/share/maven/repository/com/google/guava/listenablefuture/9999.0-empty-to-avoid-conflict-with-guava/listenablefuture-9999.0-empty-to-avoid-conflict-with-guava.jar",
+            "*:*:cp listenablefuture-9999.0-empty-to-avoid-conflict-with-guava.pom $STAGING_DIR$NATIVEPREFIX/share/maven/repository/com/google/guava/listenablefuture/9999.0-empty-to-avoid-conflict-with-guava/listenablefuture-9999.0-empty-to-avoid-conflict-with-guava.pom"
+        ]
+    }
+}

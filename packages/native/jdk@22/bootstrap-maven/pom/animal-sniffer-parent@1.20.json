@@ -1,0 +1,22 @@
+{
+    "package": "native/jdk@22/bootstrap-maven/pom/animal-sniffer-parent@1.20",
+    "version": "1.20",
+    "type": "native",
+    "download": [
+        {
+            "kind": "blob",
+            "path": "./animal-sniffer-parent-1.20.pom",
+            "sha256": "c493e674abe6b19ddd66a018c8ef46f2edba2ab6118eda1ca84fca3f8ad81caf",
+            "url": "https://repo1.maven.org/maven2/org/codehaus/mojo/animal-sniffer-parent/1.20/animal-sniffer-parent-1.20.pom"
+        }
+    ],
+    "dependencies": [
+        "*:*:native/coreutils"
+    ],
+    "build": {
+        "steps": [
+            "*:*:mkdir -p $STAGING_DIR$NATIVEPREFIX/share/maven/repository/org/codehaus/mojo/animal-sniffer-parent/1.20",
+            "*:*:cp animal-sniffer-parent-1.20.pom $STAGING_DIR$NATIVEPREFIX/share/maven/repository/org/codehaus/mojo/animal-sniffer-parent/1.20/animal-sniffer-parent-1.20.pom"
+        ]
+    }
+}

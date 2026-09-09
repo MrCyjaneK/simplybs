@@ -1,0 +1,40 @@
+{
+    "package": "native/jdk@22/bootstrap-maven/annotations@3.0.0",
+    "version": "3.0.0",
+    "type": "native",
+    "download": [
+        {
+            "kind": "git",
+            "sha256": "6cf7b2c64073b5aab180ec64890ab5b55808956c",
+            "url": "https://github.com/spotbugs/spotbugs.git"
+        },
+        {
+            "kind": "blob",
+            "path": "./annotations-3.0.0.pom",
+            "sha256": "8936e2f2763cbeda8ddd4834ba6415c5df4ffd7986054ae52d91e865173d117d",
+            "url": "https://repo1.maven.org/maven2/com/google/code/findbugs/annotations/3.0.0/annotations-3.0.0.pom"
+        }
+    ],
+    "dependencies": [
+        "*:*:native/bash",
+        "*:*:native/coreutils",
+        "*:*:native/findutils",
+        "*:*:native/jdk@22",
+        "*:*:native/jdk@22/bootstrap-maven/jsr305@3.0.2"
+    ],
+    "build": {
+        "env": [
+            "*:*:WORKDIR=build/annotations@3.0.0",
+            "*:*:REPO=$NATIVEPREFIX/share/maven/repository"
+        ],
+        "steps": [
+            "*:*:mkdir -p $WORKDIR",
+            "*:*:find spotbugs-annotations/src/main/java -name '*.java' >$WORKDIR/sources",
+            "*:*:$JAVA_HOME/bin/javac -cp $REPO/com/google/code/findbugs/jsr305/3.0.2/jsr305-3.0.2.jar -d $WORKDIR/classes @$WORKDIR/sources",
+            "*:*:$JAVA_HOME/bin/jar cf $WORKDIR/annotations-3.0.0.jar -C $WORKDIR/classes .",
+            "*:*:mkdir -p $STAGING_DIR$NATIVEPREFIX/share/maven/repository/com/google/code/findbugs/annotations/3.0.0",
+            "*:*:cp $WORKDIR/annotations-3.0.0.jar $STAGING_DIR$NATIVEPREFIX/share/maven/repository/com/google/code/findbugs/annotations/3.0.0/annotations-3.0.0.jar",
+            "*:*:cp annotations-3.0.0.pom $STAGING_DIR$NATIVEPREFIX/share/maven/repository/com/google/code/findbugs/annotations/3.0.0/annotations-3.0.0.pom"
+        ]
+    }
+}

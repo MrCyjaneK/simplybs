@@ -1,0 +1,56 @@
+{
+    "package": "native/jdk@22/bootstrap-maven/doxia-site-renderer@2.0.0",
+    "version": "2.0.0",
+    "type": "native",
+    "download": [
+        {
+            "kind": "git",
+            "sha256": "0f79ba1c1dad16d1b001a09fdc7eafd1049792d5",
+            "url": "https://github.com/apache/maven-doxia-sitetools.git"
+        },
+        {
+            "kind": "blob",
+            "path": "./doxia-site-renderer-2.0.0.pom",
+            "sha256": "3add9e92edb232902aaf8f663b48d9f8dbec1792436f4f9c36f3665b86266d8d",
+            "url": "https://repo1.maven.org/maven2/org/apache/maven/doxia/doxia-site-renderer/2.0.0/doxia-site-renderer-2.0.0.pom"
+        }
+    ],
+    "dependencies": [
+        "*:*:native/bash",
+        "*:*:native/coreutils",
+        "*:*:native/findutils",
+        "*:*:native/jdk@22",
+        "*:*:native/maven@3.9-bin",
+        "*:*:native/jdk@22/bootstrap-maven/pom/doxia-sitetools@2.0.0",
+        "*:*:native/jdk@22/bootstrap-maven/doxia-core@2.0.0",
+        "*:*:native/jdk@22/bootstrap-maven/doxia-sink-api@2.0.0",
+        "*:*:native/jdk@22/bootstrap-maven/doxia-site-model@2.0.0",
+        "*:*:native/jdk@22/bootstrap-maven/doxia-skin-model@2.0.0",
+        "*:*:native/jdk@22/bootstrap-maven/doxia-module-xhtml5@2.0.0",
+        "*:*:native/jdk@22/bootstrap-maven/slf4j-api@1.7.36",
+        "*:*:native/jdk@22/bootstrap-maven/javax.inject@1",
+        "*:*:native/jdk@22/bootstrap-maven/plexus-velocity@2.2.0",
+        "*:*:native/jdk@22/bootstrap-maven/plexus-utils@4.0.2",
+        "*:*:native/jdk@22/bootstrap-maven/plexus-xml@3.0.1",
+        "*:*:native/jdk@22/bootstrap-maven/velocity-engine-core@2.4.1",
+        "*:*:native/jdk@22/bootstrap-maven/velocity-tools-generic@3.1",
+        "*:*:native/jdk@22/bootstrap-maven/commons-lang3@3.17.0"
+    ],
+    "build": {
+        "env": [
+            "*:*:WORKDIR=build/doxia-site-renderer@2.0.0",
+            "*:*:REPO=$NATIVEPREFIX/share/maven/repository",
+            "*:*:BOOT_LIB=$NATIVEPREFIX/maven-3.9-bootstrap/lib"
+        ],
+        "steps": [
+            "*:*:mkdir -p $WORKDIR",
+            "*:*:find doxia-site-renderer/src/main/java -name '*.java' >$WORKDIR/sources",
+            "*:*:$JAVA_HOME/bin/javac -cp $(printf '%s:' $BOOT_LIB/*.jar)$REPO/org/slf4j/slf4j-api/1.7.36/slf4j-api-1.7.36.jar:$REPO/javax/inject/javax.inject/1/javax.inject-1.jar:$REPO/org/apache/maven/doxia/doxia-core/2.0.0/doxia-core-2.0.0.jar:$REPO/org/apache/maven/doxia/doxia-sink-api/2.0.0/doxia-sink-api-2.0.0.jar:$REPO/org/apache/maven/doxia/doxia-site-model/2.0.0/doxia-site-model-2.0.0.jar:$REPO/org/apache/maven/doxia/doxia-skin-model/2.0.0/doxia-skin-model-2.0.0.jar:$REPO/org/apache/maven/doxia/doxia-module-xhtml5/2.0.0/doxia-module-xhtml5-2.0.0.jar:$REPO/org/codehaus/plexus/plexus-velocity/2.2.0/plexus-velocity-2.2.0.jar:$REPO/org/codehaus/plexus/plexus-utils/4.0.2/plexus-utils-4.0.2.jar:$REPO/org/codehaus/plexus/plexus-xml/3.0.1/plexus-xml-3.0.1.jar:$REPO/org/apache/velocity/velocity-engine-core/2.4.1/velocity-engine-core-2.4.1.jar:$REPO/org/apache/velocity/tools/velocity-tools-generic/3.1/velocity-tools-generic-3.1.jar:$REPO/org/apache/commons/commons-lang3/3.17.0/commons-lang3-3.17.0.jar -d $WORKDIR/classes @$WORKDIR/sources",
+            "*:*:cp -R doxia-site-renderer/src/main/resources/. $WORKDIR/classes/",
+            "*:*:$JAVA_HOME/bin/jar cf $WORKDIR/doxia-site-renderer-2.0.0.jar -C $WORKDIR/classes .",
+            "*:*:mkdir -p $STAGING_DIR$NATIVEPREFIX/share/maven/repository/org/apache/maven/doxia/doxia-site-renderer/2.0.0",
+            "*:*:cp $WORKDIR/doxia-site-renderer-2.0.0.jar $STAGING_DIR$NATIVEPREFIX/share/maven/repository/org/apache/maven/doxia/doxia-site-renderer/2.0.0/doxia-site-renderer-2.0.0.jar",
+            "*:*:cp doxia-site-renderer-2.0.0.pom $STAGING_DIR$NATIVEPREFIX/share/maven/repository/org/apache/maven/doxia/doxia-site-renderer/2.0.0/doxia-site-renderer-2.0.0.pom"
+        ]
+    }
+}

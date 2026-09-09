@@ -1,0 +1,22 @@
+{
+    "package": "native/jdk@22/bootstrap-maven/pom/all@1.2.2",
+    "version": "1.2.2",
+    "type": "native",
+    "download": [
+        {
+            "kind": "blob",
+            "path": "./all-1.2.2.pom",
+            "sha256": "1973d499cc2c1264aff2d6d052a1c716ae613d018ae1c2f610dd6a4d1c24578e",
+            "url": "https://repo1.maven.org/maven2/com/sun/activation/all/1.2.2/all-1.2.2.pom"
+        }
+    ],
+    "dependencies": [
+        "*:*:native/coreutils"
+    ],
+    "build": {
+        "steps": [
+            "*:*:mkdir -p $STAGING_DIR$NATIVEPREFIX/share/maven/repository/com/sun/activation/all/1.2.2",
+            "*:*:cp all-1.2.2.pom $STAGING_DIR$NATIVEPREFIX/share/maven/repository/com/sun/activation/all/1.2.2/all-1.2.2.pom"
+        ]
+    }
+}

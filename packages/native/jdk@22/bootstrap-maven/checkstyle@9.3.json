@@ -1,0 +1,52 @@
+{
+    "package": "native/jdk@22/bootstrap-maven/checkstyle@9.3",
+    "version": "9.3",
+    "type": "native",
+    "download": [
+        {
+            "kind": "git",
+            "sha256": "5c1903792f8432243cc8ae5cd79a03a004d3c09c",
+            "url": "https://github.com/checkstyle/checkstyle.git"
+        }
+    ],
+    "dependencies": [
+        "*:*:native/bash",
+        "*:*:native/coreutils",
+        "*:*:native/findutils",
+        "*:*:native/jdk@22",
+        "*:*:native/jdk@22/bootstrap-maven/antlr4",
+        "*:*:native/jdk@22/bootstrap-maven/pom/oss-parent@9",
+        "*:*:native/jdk@22/bootstrap-maven/picocli@4.6.2",
+        "*:*:native/jdk@22/bootstrap-maven/antlr4-runtime@4.9.3",
+        "*:*:native/jdk@22/bootstrap-maven/commons-beanutils@1.9.4",
+        "*:*:native/jdk@22/bootstrap-maven/commons-logging@1.2",
+        "*:*:native/jdk@22/bootstrap-maven/guava@31.0.1-jre",
+        "*:*:native/jdk@22/bootstrap-maven/reflections@0.10.2",
+        "*:*:native/jdk@22/bootstrap-maven/Saxon-HE@10.6"
+    ],
+    "build": {
+        "env": [
+            "*:*:WORKDIR=build/checkstyle@9.3",
+            "*:*:REPO=$NATIVEPREFIX/share/maven/repository",
+            "*:*:GEN=build/checkstyle@9.3/gen",
+            "*:*:GEN_JAVA=build/checkstyle@9.3/gen/com/puppycrawl/tools/checkstyle/grammar/java",
+            "*:*:GEN_JAVADOC=build/checkstyle@9.3/gen/com/puppycrawl/tools/checkstyle/grammar/javadoc"
+        ],
+        "steps": [
+            "*:*:mkdir -p $GEN_JAVA $GEN_JAVADOC $WORKDIR/classes",
+            "*:*:cp src/main/resources/com/puppycrawl/tools/checkstyle/grammar/java/JavaLanguageLexer.g4 src/main/resources/com/puppycrawl/tools/checkstyle/grammar/java/JavaLanguageParser.g4 $GEN_JAVA/",
+            "*:*:cd $GEN_JAVA && $JAVA_HOME/bin/java -cp $NATIVEPREFIX/share/java/antlr4.jar org.antlr.v4.Tool -visitor -no-listener -package com.puppycrawl.tools.checkstyle.grammar.java -o . JavaLanguageLexer.g4",
+            "*:*:cd $GEN_JAVA && $JAVA_HOME/bin/java -cp $NATIVEPREFIX/share/java/antlr4.jar org.antlr.v4.Tool -visitor -no-listener -package com.puppycrawl.tools.checkstyle.grammar.java -o . JavaLanguageParser.g4",
+            "*:*:cp src/main/resources/com/puppycrawl/tools/checkstyle/grammar/javadoc/JavadocLexer.g4 src/main/resources/com/puppycrawl/tools/checkstyle/grammar/javadoc/JavadocParser.g4 $GEN_JAVADOC/",
+            "*:*:cd $GEN_JAVADOC && $JAVA_HOME/bin/java -cp $NATIVEPREFIX/share/java/antlr4.jar org.antlr.v4.Tool -visitor -no-listener -package com.puppycrawl.tools.checkstyle.grammar.javadoc -o . JavadocLexer.g4",
+            "*:*:cd $GEN_JAVADOC && $JAVA_HOME/bin/java -cp $NATIVEPREFIX/share/java/antlr4.jar org.antlr.v4.Tool -visitor -no-listener -package com.puppycrawl.tools.checkstyle.grammar.javadoc -o . JavadocParser.g4",
+            "*:*:find src/main/java $GEN -name '*.java' ! -path '*/ant/*' ! -name 'module-info.java' >$WORKDIR/sources",
+            "*:*:$JAVA_HOME/bin/javac -cp $REPO/info/picocli/picocli/4.6.2/picocli-4.6.2.jar:$REPO/org/antlr/antlr4-runtime/4.9.3/antlr4-runtime-4.9.3.jar:$REPO/commons-beanutils/commons-beanutils/1.9.4/commons-beanutils-1.9.4.jar:$REPO/commons-logging/commons-logging/1.2/commons-logging-1.2.jar:$REPO/com/google/guava/guava/31.0.1-jre/guava-31.0.1-jre.jar:$REPO/org/reflections/reflections/0.10.2/reflections-0.10.2.jar:$REPO/net/sf/saxon/Saxon-HE/10.6/Saxon-HE-10.6.jar -d $WORKDIR/classes @$WORKDIR/sources",
+            "*:*:cp -R src/main/resources/. $WORKDIR/classes/",
+            "*:*:$JAVA_HOME/bin/jar cf $WORKDIR/checkstyle-9.3.jar -C $WORKDIR/classes .",
+            "*:*:mkdir -p $STAGING_DIR$NATIVEPREFIX/share/maven/repository/com/puppycrawl/tools/checkstyle/9.3",
+            "*:*:cp $WORKDIR/checkstyle-9.3.jar $STAGING_DIR$NATIVEPREFIX/share/maven/repository/com/puppycrawl/tools/checkstyle/9.3/checkstyle-9.3.jar",
+            "*:*:cp pom.xml $STAGING_DIR$NATIVEPREFIX/share/maven/repository/com/puppycrawl/tools/checkstyle/9.3/checkstyle-9.3.pom"
+        ]
+    }
+}

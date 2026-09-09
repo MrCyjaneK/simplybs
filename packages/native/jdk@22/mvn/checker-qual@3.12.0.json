@@ -1,0 +1,30 @@
+{
+    "package": "native/jdk@22/mvn/checker-qual@3.12.0",
+    "version": "3.12.0",
+    "type": "native",
+    "download": [
+        {
+            "kind": "git",
+            "sha256": "1b56916ff9fb9f1caf75d6486f8f9f5cb491131d",
+            "url": "https://github.com/typetools/checker-framework.git"
+        }
+    ],
+    "dependencies": [
+        "*:*:native/coreutils",
+        "*:*:native/findutils",
+        "*:*:native/jdk@22"
+    ],
+    "build": {
+        "env": [
+            "*:*:WORKDIR=work/checker-qual@3.12.0"
+        ],
+        "steps": [
+            "*:*:mkdir -p $WORKDIR/classes",
+            "*:*:find checker-qual/src/main/java -name '*.java' >$WORKDIR/sources",
+            "*:*:$JAVA_HOME/bin/javac --release 8 -d $WORKDIR/classes @$WORKDIR/sources",
+            "*:*:$JAVA_HOME/bin/jar cf $WORKDIR/checker-qual-3.12.0.jar -C $WORKDIR/classes .",
+            "*:*:mkdir -p $STAGING_DIR$NATIVEPREFIX/share/maven/repository/org/checkerframework/checker-qual/3.12.0",
+            "*:*:cp $WORKDIR/checker-qual-3.12.0.jar $STAGING_DIR$NATIVEPREFIX/share/maven/repository/org/checkerframework/checker-qual/3.12.0/checker-qual-3.12.0.jar"
+        ]
+    }
+}

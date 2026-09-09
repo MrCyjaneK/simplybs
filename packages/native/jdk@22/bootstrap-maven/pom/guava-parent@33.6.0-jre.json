@@ -1,0 +1,22 @@
+{
+    "package": "native/jdk@22/bootstrap-maven/pom/guava-parent@33.6.0-jre",
+    "version": "33.6.0-jre",
+    "type": "native",
+    "download": [
+        {
+            "kind": "blob",
+            "path": "./guava-parent-33.6.0-jre.pom",
+            "sha256": "374bd31f61b1cf612bee9ab2e4d70bbdf77dd85a49b431f809d4fbdc901f2dd4",
+            "url": "https://repo1.maven.org/maven2/com/google/guava/guava-parent/33.6.0-jre/guava-parent-33.6.0-jre.pom"
+        }
+    ],
+    "dependencies": [
+        "*:*:native/coreutils"
+    ],
+    "build": {
+        "steps": [
+            "*:*:mkdir -p $STAGING_DIR$NATIVEPREFIX/share/maven/repository/com/google/guava/guava-parent/33.6.0-jre",
+            "*:*:cp guava-parent-33.6.0-jre.pom $STAGING_DIR$NATIVEPREFIX/share/maven/repository/com/google/guava/guava-parent/33.6.0-jre/guava-parent-33.6.0-jre.pom"
+        ]
+    }
+}

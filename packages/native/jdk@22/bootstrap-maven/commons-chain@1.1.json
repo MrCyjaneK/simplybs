@@ -1,0 +1,42 @@
+{
+    "package": "native/jdk@22/bootstrap-maven/commons-chain@1.1",
+    "version": "1.1",
+    "type": "native",
+    "download": [
+        {
+            "kind": "git",
+            "sha256": "e5f35697d1a549a556a8fd00862c16334479e743",
+            "url": "https://github.com/apache/commons-chain.git"
+        },
+        {
+            "kind": "blob",
+            "path": "./commons-chain-1.1.pom",
+            "sha256": "cf0c15c4e843507d95be11114039794494d6fc6259118581a90e03b2db5f5acb",
+            "url": "https://repo1.maven.org/maven2/commons-chain/commons-chain/1.1/commons-chain-1.1.pom"
+        }
+    ],
+    "dependencies": [
+        "*:*:native/bash",
+        "*:*:native/coreutils",
+        "*:*:native/findutils",
+        "*:*:native/jdk@22",
+        "*:*:native/jdk@22/bootstrap-maven/commons-beanutils@1.9.4",
+        "*:*:native/jdk@22/bootstrap-maven/commons-digester@1.8",
+        "*:*:native/jdk@22/bootstrap-maven/commons-logging@1.2"
+    ],
+    "build": {
+        "env": [
+            "*:*:WORKDIR=work/commons-chain@1.1",
+            "*:*:REPO=$NATIVEPREFIX/share/maven/repository"
+        ],
+        "steps": [
+            "*:*:mkdir -p $WORKDIR",
+            "*:*:find src/java -name '*.java' ! -path '*/web/*' ! -path '*/portlet/*' ! -path '*/webapp/*' >$WORKDIR/sources",
+            "*:*:$JAVA_HOME/bin/javac --release 8 -cp $REPO/commons-beanutils/commons-beanutils/1.9.4/commons-beanutils-1.9.4.jar:$REPO/commons-digester/commons-digester/1.8/commons-digester-1.8.jar:$REPO/commons-logging/commons-logging/1.2/commons-logging-1.2.jar -d $WORKDIR/classes @$WORKDIR/sources",
+            "*:*:$JAVA_HOME/bin/jar cf $WORKDIR/commons-chain-1.1.jar -C $WORKDIR/classes .",
+            "*:*:mkdir -p $STAGING_DIR$NATIVEPREFIX/share/maven/repository/commons-chain/commons-chain/1.1",
+            "*:*:cp $WORKDIR/commons-chain-1.1.jar $STAGING_DIR$NATIVEPREFIX/share/maven/repository/commons-chain/commons-chain/1.1/commons-chain-1.1.jar",
+            "*:*:cp commons-chain-1.1.pom $STAGING_DIR$NATIVEPREFIX/share/maven/repository/commons-chain/commons-chain/1.1/commons-chain-1.1.pom"
+        ]
+    }
+}

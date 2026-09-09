@@ -1,0 +1,38 @@
+{
+    "package": "native/jdk@22/bootstrap-maven/aopalliance@1.0",
+    "version": "1.0",
+    "type": "native",
+    "download": [
+        {
+            "kind": "git",
+            "sha256": "0d7757ae204e5876f69431421fe9bc2a4f01e8a0",
+            "url": "https://github.com/hoverruan/aopalliance.git"
+        },
+        {
+            "kind": "blob",
+            "path": "./aopalliance-1.0.pom",
+            "sha256": "26e82330157d6b844b67a8064945e206581e772977183e3e31fec6058aa9a59b",
+            "url": "https://repo1.maven.org/maven2/aopalliance/aopalliance/1.0/aopalliance-1.0.pom"
+        }
+    ],
+    "dependencies": [
+        "*:*:native/bash",
+        "*:*:native/coreutils",
+        "*:*:native/findutils",
+        "*:*:native/jdk@22"
+    ],
+    "build": {
+        "env": [
+            "*:*:WORKDIR=build/aopalliance@1.0"
+        ],
+        "steps": [
+            "*:*:mkdir -p $WORKDIR",
+            "*:*:find aopalliance/src/main/org/aopalliance/aop aopalliance/src/main/org/aopalliance/intercept -name '*.java' ! -name 'FieldAccess.java' ! -name 'FieldInterceptor.java' >$WORKDIR/sources",
+            "*:*:$JAVA_HOME/bin/javac -d $WORKDIR/classes @$WORKDIR/sources",
+            "*:*:$JAVA_HOME/bin/jar cf $WORKDIR/aopalliance-1.0.jar -C $WORKDIR/classes .",
+            "*:*:mkdir -p $STAGING_DIR$NATIVEPREFIX/share/maven/repository/aopalliance/aopalliance/1.0",
+            "*:*:cp $WORKDIR/aopalliance-1.0.jar $STAGING_DIR$NATIVEPREFIX/share/maven/repository/aopalliance/aopalliance/1.0/aopalliance-1.0.jar",
+            "*:*:cp aopalliance-1.0.pom $STAGING_DIR$NATIVEPREFIX/share/maven/repository/aopalliance/aopalliance/1.0/aopalliance-1.0.pom"
+        ]
+    }
+}

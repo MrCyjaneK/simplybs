@@ -1,0 +1,22 @@
+{
+    "package": "native/jdk@22/bootstrap-maven/pom/enforcer@3.6.2",
+    "version": "3.6.2",
+    "type": "native",
+    "download": [
+        {
+            "kind": "blob",
+            "path": "./enforcer-3.6.2.pom",
+            "sha256": "9c99512c5ebd887a256ea6457dadce455eee27cb6544176c830bc5ad8540035c",
+            "url": "https://repo1.maven.org/maven2/org/apache/maven/enforcer/enforcer/3.6.2/enforcer-3.6.2.pom"
+        }
+    ],
+    "dependencies": [
+        "*:*:native/coreutils"
+    ],
+    "build": {
+        "steps": [
+            "*:*:mkdir -p $STAGING_DIR$NATIVEPREFIX/share/maven/repository/org/apache/maven/enforcer/enforcer/3.6.2",
+            "*:*:cp enforcer-3.6.2.pom $STAGING_DIR$NATIVEPREFIX/share/maven/repository/org/apache/maven/enforcer/enforcer/3.6.2/enforcer-3.6.2.pom"
+        ]
+    }
+}

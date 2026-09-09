@@ -1,0 +1,37 @@
+{
+    "package": "native/jdk@22/bootstrap-maven/byte-buddy-agent@1.10.14",
+    "version": "1.10.14",
+    "type": "native",
+    "download": [
+        {
+            "kind": "git",
+            "sha256": "f370677086dbf9d090ef7a4d10331879112a28c7",
+            "url": "https://github.com/raphw/byte-buddy.git"
+        }
+    ],
+    "dependencies": [
+        "*:*:native/bash",
+        "*:*:native/coreutils",
+        "*:*:native/findutils",
+        "*:*:native/sed",
+        "*:*:native/jdk@22",
+        "*:*:native/jdk@22/bootstrap-maven/pom/byte-buddy-parent@1.10.14",
+        "*:*:native/jdk@22/bootstrap-maven/annotations@3.0.0"
+    ],
+    "build": {
+        "env": [
+            "*:*:WORKDIR=work/byte-buddy-agent@1.10.14",
+            "*:*:REPO=$NATIVEPREFIX/share/maven/repository"
+        ],
+        "steps": [
+            "*:*:mkdir -p $WORKDIR/classes",
+            "*:*:sed -i 's/return new Accessor.Simple.WithDirectAttachment(AccessController.doPrivileged(VirtualMachine.Resolver.INSTANCE));/return Accessor.Unavailable.INSTANCE;/' byte-buddy-agent/src/main/java/net/bytebuddy/agent/ByteBuddyAgent.java",
+            "*:*:find byte-buddy-agent/src/main/java -name '*.java' ! -name 'VirtualMachine.java' >$WORKDIR/sources",
+            "*:*:$JAVA_HOME/bin/javac -XDignore.symbol.file -cp $REPO/com/google/code/findbugs/annotations/3.0.0/annotations-3.0.0.jar -d $WORKDIR/classes @$WORKDIR/sources",
+            "*:*:$JAVA_HOME/bin/jar cf $WORKDIR/byte-buddy-agent-1.10.14.jar -C $WORKDIR/classes .",
+            "*:*:mkdir -p $STAGING_DIR$NATIVEPREFIX/share/maven/repository/net/bytebuddy/byte-buddy-agent/1.10.14",
+            "*:*:cp $WORKDIR/byte-buddy-agent-1.10.14.jar $STAGING_DIR$NATIVEPREFIX/share/maven/repository/net/bytebuddy/byte-buddy-agent/1.10.14/byte-buddy-agent-1.10.14.jar",
+            "*:*:cp byte-buddy-agent/pom.xml $STAGING_DIR$NATIVEPREFIX/share/maven/repository/net/bytebuddy/byte-buddy-agent/1.10.14/byte-buddy-agent-1.10.14.pom"
+        ]
+    }
+}

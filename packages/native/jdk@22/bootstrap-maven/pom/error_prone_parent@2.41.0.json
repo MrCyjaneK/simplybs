@@ -1,0 +1,22 @@
+{
+    "package": "native/jdk@22/bootstrap-maven/pom/error_prone_parent@2.41.0",
+    "version": "2.41.0",
+    "type": "native",
+    "download": [
+        {
+            "kind": "blob",
+            "path": "./error_prone_parent-2.41.0.pom",
+            "sha256": "c538388d760a5c1c98dcf06f6ed3cfe5f11a651827db5cbd2ed8288c795cad42",
+            "url": "https://repo1.maven.org/maven2/com/google/errorprone/error_prone_parent/2.41.0/error_prone_parent-2.41.0.pom"
+        }
+    ],
+    "dependencies": [
+        "*:*:native/coreutils"
+    ],
+    "build": {
+        "steps": [
+            "*:*:mkdir -p $STAGING_DIR$NATIVEPREFIX/share/maven/repository/com/google/errorprone/error_prone_parent/2.41.0",
+            "*:*:cp error_prone_parent-2.41.0.pom $STAGING_DIR$NATIVEPREFIX/share/maven/repository/com/google/errorprone/error_prone_parent/2.41.0/error_prone_parent-2.41.0.pom"
+        ]
+    }
+}

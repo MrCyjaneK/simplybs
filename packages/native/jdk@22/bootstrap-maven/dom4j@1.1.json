@@ -1,0 +1,55 @@
+{
+    "package": "native/jdk@22/bootstrap-maven/dom4j@1.1",
+    "version": "1.1",
+    "type": "native",
+    "download": [
+        {
+            "kind": "git",
+            "sha256": "badff4b336ffc82c39c3237814d196b17f1ed707",
+            "url": "https://github.com/dom4j/dom4j.git"
+        },
+        {
+            "kind": "blob",
+            "path": "./dom4j-1.1.pom",
+            "sha256": "03c18c93b1df85cbce3a21a17d9b27e399e27478c1421071f5348c58bd0ab61f",
+            "url": "https://repo1.maven.org/maven2/dom4j/dom4j/1.1/dom4j-1.1.pom"
+        }
+    ],
+    "dependencies": [
+        "*:*:native/bash",
+        "*:*:native/coreutils",
+        "*:*:native/findutils",
+        "*:*:native/jdk@22",
+        "*:*:native/sed",
+        "*:*:native/jdk@22/bootstrap-maven/jaxen@1.2.0"
+    ],
+    "build": {
+        "env": [
+            "*:*:WORKDIR=work/dom4j@1.1",
+            "*:*:REPO=$NATIVEPREFIX/share/maven/repository"
+        ],
+        "steps": [
+            "*:*:mkdir -p $WORKDIR",
+            "*:*:sed -i 's/StringTokenizer enum /StringTokenizer tokens /g' src/java/org/dom4j/DocumentHelper.java",
+            "*:*:sed -i 's/enum\\./tokens./g' src/java/org/dom4j/DocumentHelper.java",
+            "*:*:sed -i '/aelfred/d' src/java/org/dom4j/io/SAXHelper.java",
+            "*:*:sed -i 's/new SAXDriver()/null/' src/java/org/dom4j/io/SAXHelper.java",
+            "*:*:sed -i '/import org.dom4j.xpath.DefaultXPath/d' src/java/org/dom4j/DocumentFactory.java",
+            "*:*:sed -i '/import org.dom4j.xpath.XPathPattern/d' src/java/org/dom4j/DocumentFactory.java",
+            "*:*:sed -i 's/return new DefaultXPath( xpathExpression );/throw new InvalidXPathException(xpathExpression);/' src/java/org/dom4j/DocumentFactory.java",
+            "*:*:sed -i 's/DefaultXPath answer = new DefaultXPath( xpathFilterExpression );/throw new UnsupportedOperationException();/' src/java/org/dom4j/DocumentFactory.java",
+            "*:*:sed -i 's/return new DefaultXPath( xpathFilterExpression );/throw new UnsupportedOperationException();/' src/java/org/dom4j/DocumentFactory.java",
+            "*:*:sed -i 's/return new XPathPattern( xpathPattern );/throw new UnsupportedOperationException();/' src/java/org/dom4j/DocumentFactory.java",
+            "*:*:sed -i '/answer.setVariableContext( variableContext );/d' src/java/org/dom4j/DocumentFactory.java",
+            "*:*:sed -i '/throw new UnsupportedOperationException();/,+8 s/return answer;/return null;/' src/java/org/dom4j/DocumentFactory.java",
+            "*:*:sed -i '/throw new UnsupportedOperationException();/,+8 {/return null;/d;}' src/java/org/dom4j/DocumentFactory.java",
+            "*:*:find src/java -name '*.java' ! -path '*/swing/*' ! -path '*/bean/*' ! -path '*/datatype/*' ! -path '*/aelfred/*' ! -path '*/persistence/*' ! -path '*/xpath/*' ! -path '*/rule/*' ! -path '*/xslt/*' ! -name 'PullParserReader.java' ! -name 'UserDataDocumentFactory.java' ! -name 'ProxyDocumentFactory.java' >$WORKDIR/sources",
+            "*:*:echo src/java/org/dom4j/rule/Pattern.java >>$WORKDIR/sources",
+            "*:*:$JAVA_HOME/bin/javac --release 8 -cp $REPO/jaxen/jaxen/1.2.0/jaxen-1.2.0.jar -d $WORKDIR/classes @$WORKDIR/sources",
+            "*:*:$JAVA_HOME/bin/jar cf $WORKDIR/dom4j-1.1.jar -C $WORKDIR/classes .",
+            "*:*:mkdir -p $STAGING_DIR$NATIVEPREFIX/share/maven/repository/dom4j/dom4j/1.1",
+            "*:*:cp $WORKDIR/dom4j-1.1.jar $STAGING_DIR$NATIVEPREFIX/share/maven/repository/dom4j/dom4j/1.1/dom4j-1.1.jar",
+            "*:*:cp dom4j-1.1.pom $STAGING_DIR$NATIVEPREFIX/share/maven/repository/dom4j/dom4j/1.1/dom4j-1.1.pom"
+        ]
+    }
+}

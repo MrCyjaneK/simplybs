@@ -1,0 +1,39 @@
+{
+    "package": "native/jdk@22/bootstrap-maven/commons-lang3@3.10",
+    "version": "3.10",
+    "type": "native",
+    "download": [
+        {
+            "kind": "git",
+            "sha256": "e0b474c0d015f89a52c4cf8866fa157dd89e7d1c",
+            "url": "https://github.com/apache/commons-lang.git"
+        },
+        {
+            "kind": "blob",
+            "path": "./commons-lang3-3.10.pom",
+            "sha256": "005b5a3a88736bd2584f69cc59467e67c106e6a4b7a2dbd1ba2251267e96011d",
+            "url": "https://repo1.maven.org/maven2/org/apache/commons/commons-lang3/3.10/commons-lang3-3.10.pom"
+        }
+    ],
+    "dependencies": [
+        "*:*:native/bash",
+        "*:*:native/coreutils",
+        "*:*:native/findutils",
+        "*:*:native/jdk@22",
+        "*:*:native/jdk@22/bootstrap-maven/pom/commons-parent@50"
+    ],
+    "build": {
+        "env": [
+            "*:*:WORKDIR=build/commons-lang3@3.10"
+        ],
+        "steps": [
+            "*:*:mkdir -p $WORKDIR",
+            "*:*:find src/main/java -name '*.java' ! -name 'module-info.java' >$WORKDIR/sources",
+            "*:*:$JAVA_HOME/bin/javac -d $WORKDIR/classes @$WORKDIR/sources",
+            "*:*:$JAVA_HOME/bin/jar cf $WORKDIR/commons-lang3-3.10.jar -C $WORKDIR/classes .",
+            "*:*:mkdir -p $STAGING_DIR$NATIVEPREFIX/share/maven/repository/org/apache/commons/commons-lang3/3.10",
+            "*:*:cp $WORKDIR/commons-lang3-3.10.jar $STAGING_DIR$NATIVEPREFIX/share/maven/repository/org/apache/commons/commons-lang3/3.10/commons-lang3-3.10.jar",
+            "*:*:cp commons-lang3-3.10.pom $STAGING_DIR$NATIVEPREFIX/share/maven/repository/org/apache/commons/commons-lang3/3.10/commons-lang3-3.10.pom"
+        ]
+    }
+}

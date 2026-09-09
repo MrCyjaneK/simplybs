@@ -1,0 +1,42 @@
+{
+    "package": "native/jdk@22/bootstrap-maven/ST4@4.3.1",
+    "version": "4.3.1",
+    "type": "native",
+    "download": [
+        {
+            "kind": "git",
+            "sha256": "d6eb444bb4a4c386d9be8c844892659b0eae679c",
+            "url": "https://github.com/antlr/stringtemplate4.git"
+        }
+    ],
+    "dependencies": [
+        "*:*:native/bash",
+        "*:*:native/coreutils",
+        "*:*:native/findutils",
+        "*:*:native/jdk@22",
+        "*:*:native/sed",
+        "*:*:native/jdk@22/bootstrap-maven/antlr3@3.2",
+        "*:*:native/jdk@22/bootstrap-maven/pom/oss-parent@9",
+        "*:*:native/jdk@22/bootstrap-maven/antlr-runtime@3.5.2"
+    ],
+    "build": {
+        "env": [
+            "*:*:WORKDIR=build/ST4@4.3.1",
+            "*:*:REPO=$NATIVEPREFIX/share/maven/repository"
+        ],
+        "steps": [
+            "*:*:mkdir -p $WORKDIR",
+            "*:*:cd src/org/stringtemplate/v4/compiler && $JAVA_HOME/bin/java -cp $NATIVEPREFIX/share/java/antlr3.2.jar org.antlr.Tool STParser.g",
+            "*:*:cd src/org/stringtemplate/v4/compiler && $JAVA_HOME/bin/java -cp $NATIVEPREFIX/share/java/antlr3.2.jar org.antlr.Tool Group.g",
+            "*:*:cd src/org/stringtemplate/v4/compiler && $JAVA_HOME/bin/java -cp $NATIVEPREFIX/share/java/antlr3.2.jar org.antlr.Tool CodeGenerator.g",
+            "*:*:sed -i 's/impl.ast = r.getTree();/impl.ast = (org.antlr.runtime.tree.CommonTree) r.getTree();/' src/org/stringtemplate/v4/compiler/Compiler.java",
+            "*:*:find src/org -name '*.java' >$WORKDIR/sources",
+            "*:*:$JAVA_HOME/bin/javac -cp $REPO/org/antlr/antlr-runtime/3.5.2/antlr-runtime-3.5.2.jar -d $WORKDIR/classes @$WORKDIR/sources",
+            "*:*:cd src && find org -type f ! -name '*.java' | while read f; do mkdir -p $WORKDIR/classes/$(dirname $f) && cp $f $WORKDIR/classes/$f; done",
+            "*:*:$JAVA_HOME/bin/jar cf $WORKDIR/ST4-4.3.1.jar -C $WORKDIR/classes .",
+            "*:*:mkdir -p $STAGING_DIR$NATIVEPREFIX/share/maven/repository/org/antlr/ST4/4.3.1",
+            "*:*:cp $WORKDIR/ST4-4.3.1.jar $STAGING_DIR$NATIVEPREFIX/share/maven/repository/org/antlr/ST4/4.3.1/ST4-4.3.1.jar",
+            "*:*:cp pom.xml $STAGING_DIR$NATIVEPREFIX/share/maven/repository/org/antlr/ST4/4.3.1/ST4-4.3.1.pom"
+        ]
+    }
+}

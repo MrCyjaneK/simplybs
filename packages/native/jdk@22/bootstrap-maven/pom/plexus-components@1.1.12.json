@@ -1,0 +1,22 @@
+{
+    "package": "native/jdk@22/bootstrap-maven/pom/plexus-components@1.1.12",
+    "version": "1.1.12",
+    "type": "native",
+    "download": [
+        {
+            "kind": "blob",
+            "path": "./plexus-components-1.1.12.pom",
+            "sha256": "a854365061c28821ddf1a520b8a197991613fd1d56f50f42c468b789b4714f20",
+            "url": "https://repo1.maven.org/maven2/org/codehaus/plexus/plexus-components/1.1.12/plexus-components-1.1.12.pom"
+        }
+    ],
+    "dependencies": [
+        "*:*:native/coreutils"
+    ],
+    "build": {
+        "steps": [
+            "*:*:mkdir -p $STAGING_DIR$NATIVEPREFIX/share/maven/repository/org/codehaus/plexus/plexus-components/1.1.12",
+            "*:*:cp plexus-components-1.1.12.pom $STAGING_DIR$NATIVEPREFIX/share/maven/repository/org/codehaus/plexus/plexus-components/1.1.12/plexus-components-1.1.12.pom"
+        ]
+    }
+}

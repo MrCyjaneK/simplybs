@@ -1,0 +1,22 @@
+{
+    "package": "native/jdk@22/bootstrap-maven/pom/xbean@3.7",
+    "version": "3.7",
+    "type": "native",
+    "download": [
+        {
+            "kind": "blob",
+            "path": "./xbean-3.7.pom",
+            "sha256": "ea717132de8404b62fc9097a1f3215c705d525d457be9a5f12653adc68c33ab7",
+            "url": "https://repo1.maven.org/maven2/org/apache/xbean/xbean/3.7/xbean-3.7.pom"
+        }
+    ],
+    "dependencies": [
+        "*:*:native/coreutils"
+    ],
+    "build": {
+        "steps": [
+            "*:*:mkdir -p $STAGING_DIR$NATIVEPREFIX/share/maven/repository/org/apache/xbean/xbean/3.7",
+            "*:*:cp xbean-3.7.pom $STAGING_DIR$NATIVEPREFIX/share/maven/repository/org/apache/xbean/xbean/3.7/xbean-3.7.pom"
+        ]
+    }
+}

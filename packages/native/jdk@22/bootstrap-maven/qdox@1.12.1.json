@@ -1,0 +1,43 @@
+{
+    "package": "native/jdk@22/bootstrap-maven/qdox@1.12.1",
+    "version": "1.12.1",
+    "type": "native",
+    "download": [
+        {
+            "kind": "tar.gz",
+            "sha256": "702ee0a71479021a4f87cae949944d76d54cc0b6f1f3d9a08fd52b2077b899a2",
+            "url": "https://deb.debian.org/debian/pool/main/q/qdox/qdox_1.12.1.orig.tar.gz"
+        },
+        {
+            "kind": "blob",
+            "path": "./qdox-1.12.1.pom",
+            "sha256": "c52a6616d04efb30c9edeab9ee82b0591e4d04d38e030bf81e250776552d215d",
+            "url": "https://repo1.maven.org/maven2/com/thoughtworks/qdox/qdox/1.12.1/qdox-1.12.1.pom"
+        }
+    ],
+    "dependencies": [
+        "*:*:native/bash",
+        "*:*:native/coreutils",
+        "*:*:native/findutils",
+        "*:*:native/jdk@22",
+        "*:*:native/jdk@22/bootstrap-maven/jflex@1.9.1",
+        "*:*:native/byaccj@1.15"
+    ],
+    "build": {
+        "env": [
+            "*:*:WORKDIR=work/qdox@1.12.1"
+        ],
+        "steps": [
+            "*:*:mkdir -p $WORKDIR/gen $WORKDIR/classes",
+            "*:*:$JAVA_HOME/bin/java -cp $NATIVEPREFIX/share/java/jflex.jar jflex.Main --nobak -q -d $WORKDIR/gen src/grammar/lexer.flex",
+            "*:*:cp src/grammar/parser.y $WORKDIR/gen/",
+            "*:*:cd $WORKDIR/gen && byaccj -v -Jnorun -Jnoconstruct -Jclass=Parser -Jsemantic=Value -Jpackage=com.thoughtworks.qdox.parser.impl parser.y",
+            "*:*:find src/java $WORKDIR/gen -name '*.java' ! -path '*/ant/*' ! -path '*/junit/*' ! -path '*/tools/*' >$WORKDIR/sources",
+            "*:*:$JAVA_HOME/bin/javac --release 8 -d $WORKDIR/classes @$WORKDIR/sources",
+            "*:*:$JAVA_HOME/bin/jar cf $WORKDIR/qdox-1.12.1.jar -C $WORKDIR/classes .",
+            "*:*:mkdir -p $STAGING_DIR$NATIVEPREFIX/share/maven/repository/com/thoughtworks/qdox/qdox/1.12.1",
+            "*:*:cp $WORKDIR/qdox-1.12.1.jar $STAGING_DIR$NATIVEPREFIX/share/maven/repository/com/thoughtworks/qdox/qdox/1.12.1/qdox-1.12.1.jar",
+            "*:*:cp qdox-1.12.1.pom $STAGING_DIR$NATIVEPREFIX/share/maven/repository/com/thoughtworks/qdox/qdox/1.12.1/qdox-1.12.1.pom"
+        ]
+    }
+}

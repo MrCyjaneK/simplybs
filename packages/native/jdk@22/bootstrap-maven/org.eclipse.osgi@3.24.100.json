@@ -1,0 +1,78 @@
+{
+    "package": "native/jdk@22/bootstrap-maven/org.eclipse.osgi@3.24.100",
+    "version": "3.24.100",
+    "type": "native",
+    "download": [
+        {
+            "kind": "git",
+            "sha256": "d45517b2c45125b96ba1125a9ddc1070348a2937",
+            "url": "https://github.com/eclipse-equinox/equinox.git"
+        },
+        {
+            "kind": "blob",
+            "path": "./org.eclipse.osgi-3.24.100.pom",
+            "sha256": "f94e22f5036629cc73ec0338d7e0b9c05c7683bd13678c166bca7f7c87e6fa81",
+            "url": "https://repo1.maven.org/maven2/org/eclipse/platform/org.eclipse.osgi/3.24.100/org.eclipse.osgi-3.24.100.pom"
+        },
+        {
+            "kind": "blob",
+            "path": "./org.eclipse.osgi-3.18.300.pom",
+            "sha256": "e27976375999c5427fcbcfff3f3bc20fbedafad8aa45102b379f5c2f97c8feb4",
+            "url": "https://repo1.maven.org/maven2/org/eclipse/platform/org.eclipse.osgi/3.18.300/org.eclipse.osgi-3.18.300.pom"
+        },
+        {
+            "kind": "blob",
+            "path": "./osgi-ann/org/osgi/annotation/versioning/ConsumerType.java",
+            "sha256": "f9c7fc6d60a12277374d92340722e1bc1dcd9e0ff6300189651213cee49b8ea6",
+            "url": "https://raw.githubusercontent.com/osgi/osgi/8.0.0.1/org.osgi.annotation.versioning/src/org/osgi/annotation/versioning/ConsumerType.java"
+        },
+        {
+            "kind": "blob",
+            "path": "./osgi-ann/org/osgi/annotation/versioning/ProviderType.java",
+            "sha256": "08cca41d107a7a01f38904f1d138c67694d571c841475fb0c59993fb270991df",
+            "url": "https://raw.githubusercontent.com/osgi/osgi/8.0.0.1/org.osgi.annotation.versioning/src/org/osgi/annotation/versioning/ProviderType.java"
+        },
+        {
+            "kind": "blob",
+            "path": "./osgi-ann/org/osgi/annotation/versioning/Version.java",
+            "sha256": "bce25924e0695165644d2a9712b1c6c91a45b10df6298a2b81cfae2d6298e63c",
+            "url": "https://raw.githubusercontent.com/osgi/osgi/8.0.0.1/org.osgi.annotation.versioning/src/org/osgi/annotation/versioning/Version.java"
+        },
+        {
+            "kind": "blob",
+            "path": "./osgi-ann/org/osgi/annotation/versioning/package-info.java",
+            "sha256": "2ece3de2230f9db3b849b1389fcf4d80633700a86d8813fb5d3f8ec2de8ac92b",
+            "url": "https://raw.githubusercontent.com/osgi/osgi/8.0.0.1/org.osgi.annotation.versioning/src/org/osgi/annotation/versioning/package-info.java"
+        }
+    ],
+    "dependencies": [
+        "*:*:native/bash",
+        "*:*:native/coreutils",
+        "*:*:native/findutils",
+        "*:*:native/jdk@22",
+        "*:*:native/sed"
+    ],
+    "build": {
+        "env": [
+            "*:*:WORKDIR=_compile/org.eclipse.osgi"
+        ],
+        "steps": [
+            "*:*:mkdir -p $WORKDIR/classes $WORKDIR/ann",
+            "*:*:find osgi-ann -name '*.java' >$WORKDIR/ann.sources",
+            "*:*:$JAVA_HOME/bin/javac --release 8 -d $WORKDIR/ann @$WORKDIR/ann.sources",
+            "*:*:find bundles/org.eclipse.osgi/osgi/src bundles/org.eclipse.osgi/felix/src bundles/org.eclipse.osgi/supplement/src bundles/org.eclipse.osgi/container/src -name '*.java' >$WORKDIR/sources",
+            "*:*:sed -i -e '/import org.eclipse.pde.api.tools.annotations.NoImplement;/d' -e '/@NoImplement/d' bundles/org.eclipse.osgi/supplement/src/org/eclipse/osgi/report/resolution/ResolutionReport.java",
+            "*:*:$JAVA_HOME/bin/javac --release 17 -nowarn -cp $WORKDIR/ann:bundles/org.eclipse.osgi/osgi/j9stubs.jar -d $WORKDIR/classes @$WORKDIR/sources",
+            "*:*:cp -R bundles/org.eclipse.osgi/META-INF $WORKDIR/classes/",
+            "*:*:cp bundles/org.eclipse.osgi/systembundle.properties bundles/org.eclipse.osgi/plugin.xml bundles/org.eclipse.osgi/profile.list $WORKDIR/classes/",
+            "*:*:cp bundles/org.eclipse.osgi/*.profile $WORKDIR/classes/",
+            "*:*:$JAVA_HOME/bin/jar cf $WORKDIR/org.eclipse.osgi.jar -C $WORKDIR/classes .",
+            "*:*:mkdir -p $STAGING_DIR$NATIVEPREFIX/share/maven/repository/org/eclipse/platform/org.eclipse.osgi/3.24.100",
+            "*:*:cp $WORKDIR/org.eclipse.osgi.jar $STAGING_DIR$NATIVEPREFIX/share/maven/repository/org/eclipse/platform/org.eclipse.osgi/3.24.100/org.eclipse.osgi-3.24.100.jar",
+            "*:*:cp org.eclipse.osgi-3.24.100.pom $STAGING_DIR$NATIVEPREFIX/share/maven/repository/org/eclipse/platform/org.eclipse.osgi/3.24.100/org.eclipse.osgi-3.24.100.pom",
+            "*:*:mkdir -p $STAGING_DIR$NATIVEPREFIX/share/maven/repository/org/eclipse/platform/org.eclipse.osgi/3.18.300",
+            "*:*:cp $WORKDIR/org.eclipse.osgi.jar $STAGING_DIR$NATIVEPREFIX/share/maven/repository/org/eclipse/platform/org.eclipse.osgi/3.18.300/org.eclipse.osgi-3.18.300.jar",
+            "*:*:cp org.eclipse.osgi-3.18.300.pom $STAGING_DIR$NATIVEPREFIX/share/maven/repository/org/eclipse/platform/org.eclipse.osgi/3.18.300/org.eclipse.osgi-3.18.300.pom"
+        ]
+    }
+}

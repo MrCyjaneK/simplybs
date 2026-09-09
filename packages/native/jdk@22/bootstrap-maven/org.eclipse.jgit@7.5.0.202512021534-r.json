@@ -1,0 +1,38 @@
+{
+    "package": "native/jdk@22/bootstrap-maven/org.eclipse.jgit@7.5.0.202512021534-r",
+    "version": "7.5.0.202512021534-r",
+    "type": "native",
+    "download": [
+        {
+            "kind": "git",
+            "sha256": "402b0dd5c8e167cb0808fd6139e2270ada6611cc",
+            "url": "https://github.com/eclipse-jgit/jgit.git"
+        }
+    ],
+    "dependencies": [
+        "*:*:native/bash",
+        "*:*:native/coreutils",
+        "*:*:native/findutils",
+        "*:*:native/jdk@22",
+        "*:*:native/jdk@22/bootstrap-maven/pom/org.eclipse.jgit-parent@7.5.0.202512021534-r",
+        "*:*:native/jdk@22/bootstrap-maven/JavaEWAH@1.2.3",
+        "*:*:native/jdk@22/bootstrap-maven/slf4j-api@2.0.17",
+        "*:*:native/jdk@22/bootstrap-maven/commons-codec@1.20.0"
+    ],
+    "build": {
+        "env": [
+            "*:*:WORKDIR=_compile/org.eclipse.jgit",
+            "*:*:REPO=$NATIVEPREFIX/share/maven/repository"
+        ],
+        "steps": [
+            "*:*:mkdir -p $WORKDIR",
+            "*:*:find org.eclipse.jgit/src -name '*.java' >$WORKDIR/sources",
+            "*:*:$JAVA_HOME/bin/javac --release 17 -cp $REPO/com/googlecode/javaewah/JavaEWAH/1.2.3/JavaEWAH-1.2.3.jar:$REPO/org/slf4j/slf4j-api/2.0.17/slf4j-api-2.0.17.jar:$REPO/commons-codec/commons-codec/1.20.0/commons-codec-1.20.0.jar -d $WORKDIR/classes @$WORKDIR/sources",
+            "*:*:cp -R org.eclipse.jgit/resources/. $WORKDIR/classes/",
+            "*:*:$JAVA_HOME/bin/jar cf $WORKDIR/org.eclipse.jgit-7.5.0.202512021534-r.jar -C $WORKDIR/classes .",
+            "*:*:mkdir -p $STAGING_DIR$NATIVEPREFIX/share/maven/repository/org/eclipse/jgit/org.eclipse.jgit/7.5.0.202512021534-r",
+            "*:*:cp $WORKDIR/org.eclipse.jgit-7.5.0.202512021534-r.jar $STAGING_DIR$NATIVEPREFIX/share/maven/repository/org/eclipse/jgit/org.eclipse.jgit/7.5.0.202512021534-r/org.eclipse.jgit-7.5.0.202512021534-r.jar",
+            "*:*:cp org.eclipse.jgit/pom.xml $STAGING_DIR$NATIVEPREFIX/share/maven/repository/org/eclipse/jgit/org.eclipse.jgit/7.5.0.202512021534-r/org.eclipse.jgit-7.5.0.202512021534-r.pom"
+        ]
+    }
+}

@@ -1,0 +1,46 @@
+{
+    "package": "native/jdk@22/bootstrap-maven/maven-dependency-tree@3.3.0",
+    "version": "3.3.0",
+    "type": "native",
+    "download": [
+        {
+            "kind": "git",
+            "sha256": "7ea746c6336ec25d0335d86f14a4090747e26016",
+            "url": "https://github.com/apache/maven-dependency-tree.git"
+        },
+        {
+            "kind": "blob",
+            "path": "./maven-dependency-tree-3.3.0.pom",
+            "sha256": "06d3cdd58a0bcec206558ade256147aade63a166b042ef53215df6c51206d920",
+            "url": "https://repo1.maven.org/maven2/org/apache/maven/shared/maven-dependency-tree/3.3.0/maven-dependency-tree-3.3.0.pom"
+        }
+    ],
+    "dependencies": [
+        "*:*:native/bash",
+        "*:*:native/coreutils",
+        "*:*:native/findutils",
+        "*:*:native/jdk@22",
+        "*:*:native/jdk@22/bootstrap-maven/org.eclipse.sisu.inject@1.0.0",
+        "*:*:native/maven@3.9-bin",
+        "*:*:native/jdk@22/bootstrap-maven/pom/maven-shared-components@42",
+        "*:*:native/jdk@22/bootstrap-maven/javax.inject@1",
+        "*:*:native/jdk@22/bootstrap-maven/slf4j-api@1.7.36",
+        "*:*:native/jdk@22/bootstrap-maven/maven-resolver@1.9.25"
+    ],
+    "build": {
+        "env": [
+            "*:*:WORKDIR=build/maven-dependency-tree@3.3.0",
+            "*:*:REPO=$NATIVEPREFIX/share/maven/repository",
+            "*:*:BOOT_LIB=$NATIVEPREFIX/maven-3.9-bootstrap/lib"
+        ],
+        "steps": [
+            "*:*:mkdir -p $WORKDIR",
+            "*:*:find src/main/java -name '*.java' >$WORKDIR/sources",
+            "*:*:$JAVA_HOME/bin/javac -cp $(printf '%s:' $BOOT_LIB/*.jar)$REPO/org/apache/maven/resolver/maven-resolver-api/1.9.25/maven-resolver-api-1.9.25.jar:$REPO/org/apache/maven/resolver/maven-resolver-util/1.9.25/maven-resolver-util-1.9.25.jar:$REPO/org/slf4j/slf4j-api/1.7.36/slf4j-api-1.7.36.jar:$REPO/javax/inject/javax.inject/1/javax.inject-1.jar -processorpath $REPO/org/eclipse/sisu/org.eclipse.sisu.inject/1.0.0/org.eclipse.sisu.inject-1.0.0.jar:$REPO/javax/inject/javax.inject/1/javax.inject-1.jar -processor org.eclipse.sisu.space.SisuIndexAPT6 -d $WORKDIR/classes @$WORKDIR/sources",
+            "*:*:$JAVA_HOME/bin/jar cf $WORKDIR/maven-dependency-tree-3.3.0.jar -C $WORKDIR/classes .",
+            "*:*:mkdir -p $STAGING_DIR$NATIVEPREFIX/share/maven/repository/org/apache/maven/shared/maven-dependency-tree/3.3.0",
+            "*:*:cp $WORKDIR/maven-dependency-tree-3.3.0.jar $STAGING_DIR$NATIVEPREFIX/share/maven/repository/org/apache/maven/shared/maven-dependency-tree/3.3.0/maven-dependency-tree-3.3.0.jar",
+            "*:*:cp maven-dependency-tree-3.3.0.pom $STAGING_DIR$NATIVEPREFIX/share/maven/repository/org/apache/maven/shared/maven-dependency-tree/3.3.0/maven-dependency-tree-3.3.0.pom"
+        ]
+    }
+}

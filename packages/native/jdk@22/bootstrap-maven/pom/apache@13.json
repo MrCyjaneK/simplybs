@@ -1,0 +1,22 @@
+{
+    "package": "native/jdk@22/bootstrap-maven/pom/apache@13",
+    "version": "13",
+    "type": "native",
+    "download": [
+        {
+            "kind": "blob",
+            "path": "./apache-13.pom",
+            "sha256": "ff513db0361fd41237bef4784968bc15aae478d4ec0a9496f811072ccaf3841d",
+            "url": "https://repo1.maven.org/maven2/org/apache/apache/13/apache-13.pom"
+        }
+    ],
+    "dependencies": [
+        "*:*:native/coreutils"
+    ],
+    "build": {
+        "steps": [
+            "*:*:mkdir -p $STAGING_DIR$NATIVEPREFIX/share/maven/repository/org/apache/apache/13",
+            "*:*:cp apache-13.pom $STAGING_DIR$NATIVEPREFIX/share/maven/repository/org/apache/apache/13/apache-13.pom"
+        ]
+    }
+}

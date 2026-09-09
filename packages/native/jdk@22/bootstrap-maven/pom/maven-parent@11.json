@@ -1,0 +1,22 @@
+{
+    "package": "native/jdk@22/bootstrap-maven/pom/maven-parent@11",
+    "version": "11",
+    "type": "native",
+    "download": [
+        {
+            "kind": "blob",
+            "path": "./maven-parent-11.pom",
+            "sha256": "7450c3330cf06c254db9f0dc5ef49eac15502311cf19e0208ba473076ee043d6",
+            "url": "https://repo1.maven.org/maven2/org/apache/maven/maven-parent/11/maven-parent-11.pom"
+        }
+    ],
+    "dependencies": [
+        "*:*:native/coreutils"
+    ],
+    "build": {
+        "steps": [
+            "*:*:mkdir -p $STAGING_DIR$NATIVEPREFIX/share/maven/repository/org/apache/maven/maven-parent/11",
+            "*:*:cp maven-parent-11.pom $STAGING_DIR$NATIVEPREFIX/share/maven/repository/org/apache/maven/maven-parent/11/maven-parent-11.pom"
+        ]
+    }
+}

@@ -1,0 +1,36 @@
+{
+    "package": "native/jdk@22/bootstrap-maven/okio@1.17.2",
+    "version": "1.17.2",
+    "type": "native",
+    "download": [
+        {
+            "kind": "git",
+            "sha256": "f95aabc6605d3ea8349385cf2de34e229d58d60e",
+            "url": "https://github.com/square/okio.git"
+        }
+    ],
+    "dependencies": [
+        "*:*:native/bash",
+        "*:*:native/coreutils",
+        "*:*:native/findutils",
+        "*:*:native/jdk@22",
+        "*:*:native/jdk@22/bootstrap-maven/pom/okio-parent@1.17.2",
+        "*:*:native/jdk@22/bootstrap-maven/jsr305@3.0.2",
+        "*:*:native/jdk@22/bootstrap-maven/animal-sniffer-annotations@1.20"
+    ],
+    "build": {
+        "env": [
+            "*:*:WORKDIR=build/okio@1.17.2",
+            "*:*:REPO=$NATIVEPREFIX/share/maven/repository"
+        ],
+        "steps": [
+            "*:*:mkdir -p $WORKDIR",
+            "*:*:find okio/src/main/java -name '*.java' >$WORKDIR/sources",
+            "*:*:$JAVA_HOME/bin/javac -cp $REPO/com/google/code/findbugs/jsr305/3.0.2/jsr305-3.0.2.jar:$REPO/org/codehaus/mojo/animal-sniffer-annotations/1.20/animal-sniffer-annotations-1.20.jar -d $WORKDIR/classes @$WORKDIR/sources",
+            "*:*:$JAVA_HOME/bin/jar cf $WORKDIR/okio-1.17.2.jar -C $WORKDIR/classes .",
+            "*:*:mkdir -p $STAGING_DIR$NATIVEPREFIX/share/maven/repository/com/squareup/okio/okio/1.17.2",
+            "*:*:cp $WORKDIR/okio-1.17.2.jar $STAGING_DIR$NATIVEPREFIX/share/maven/repository/com/squareup/okio/okio/1.17.2/okio-1.17.2.jar",
+            "*:*:cp okio/pom.xml $STAGING_DIR$NATIVEPREFIX/share/maven/repository/com/squareup/okio/okio/1.17.2/okio-1.17.2.pom"
+        ]
+    }
+}

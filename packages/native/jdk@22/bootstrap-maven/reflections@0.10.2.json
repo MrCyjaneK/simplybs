@@ -1,0 +1,50 @@
+{
+    "package": "native/jdk@22/bootstrap-maven/reflections@0.10.2",
+    "version": "0.10.2",
+    "type": "native",
+    "download": [
+        {
+            "kind": "git",
+            "sha256": "5ff7a1d366e8656dfa0f2f476991b558b037e919",
+            "url": "https://github.com/ronmamo/reflections.git"
+        },
+        {
+            "kind": "blob",
+            "path": "./reflections-0.10.2.pom",
+            "sha256": "b6caa3eb7d35bd756ed6eb0a2a81868b8d3c0f6f42244feae41760ac66306d87",
+            "url": "https://repo1.maven.org/maven2/org/reflections/reflections/0.10.2/reflections-0.10.2.pom"
+        }
+    ],
+    "dependencies": [
+        "*:*:native/bash",
+        "*:*:native/coreutils",
+        "*:*:native/findutils",
+        "*:*:native/jdk@22",
+        "*:*:native/sed",
+        "*:*:native/jdk@22/bootstrap-maven/javassist@3.28.0-GA",
+        "*:*:native/jdk@22/bootstrap-maven/jsr305@3.0.2",
+        "*:*:native/jdk@22/bootstrap-maven/slf4j-api@1.7.32"
+    ],
+    "build": {
+        "env": [
+            "*:*:WORKDIR=build/reflections@0.10.2",
+            "*:*:REPO=$NATIVEPREFIX/share/maven/repository"
+        ],
+        "steps": [
+            "*:*:mkdir -p $WORKDIR",
+            "*:*:sed -i '/import javax.servlet.ServletContext;/d' src/main/java/org/reflections/util/ClasspathHelper.java",
+            "*:*:sed -i '/public static Collection<URL> forWebInfLib/,/^    }$/d' src/main/java/org/reflections/util/ClasspathHelper.java",
+            "*:*:sed -i '/public static URL forWebInfClasses/,/^    }$/d' src/main/java/org/reflections/util/ClasspathHelper.java",
+            "*:*:sed -i '/import org.reflections.serializers.XmlSerializer;/d' src/main/java/org/reflections/Reflections.java",
+            "*:*:sed -i 's/return collect(packagePrefix, resourceNameFilter, new XmlSerializer());/throw new UnsupportedOperationException(\"xml serializer\");/' src/main/java/org/reflections/Reflections.java",
+            "*:*:sed -i 's/return save(filename, new XmlSerializer());/throw new UnsupportedOperationException(\"xml serializer\");/' src/main/java/org/reflections/Reflections.java",
+            "*:*:sed -i 's/return JbossDir.createDir(url);/throw new UnsupportedOperationException(\"jboss vfs\");/' src/main/java/org/reflections/vfs/Vfs.java",
+            "*:*:find src/main/java -name '*.java' ! -name 'module-info.java' ! -name 'JbossDir.java' ! -name 'JbossFile.java' ! -name 'XmlSerializer.java' ! -name 'JsonSerializer.java' >$WORKDIR/sources",
+            "*:*:$JAVA_HOME/bin/javac -cp $REPO/org/javassist/javassist/3.28.0-GA/javassist-3.28.0-GA.jar:$REPO/com/google/code/findbugs/jsr305/3.0.2/jsr305-3.0.2.jar:$REPO/org/slf4j/slf4j-api/1.7.32/slf4j-api-1.7.32.jar -d $WORKDIR/classes @$WORKDIR/sources",
+            "*:*:$JAVA_HOME/bin/jar cf $WORKDIR/reflections-0.10.2.jar -C $WORKDIR/classes .",
+            "*:*:mkdir -p $STAGING_DIR$NATIVEPREFIX/share/maven/repository/org/reflections/reflections/0.10.2",
+            "*:*:cp $WORKDIR/reflections-0.10.2.jar $STAGING_DIR$NATIVEPREFIX/share/maven/repository/org/reflections/reflections/0.10.2/reflections-0.10.2.jar",
+            "*:*:cp reflections-0.10.2.pom $STAGING_DIR$NATIVEPREFIX/share/maven/repository/org/reflections/reflections/0.10.2/reflections-0.10.2.pom"
+        ]
+    }
+}

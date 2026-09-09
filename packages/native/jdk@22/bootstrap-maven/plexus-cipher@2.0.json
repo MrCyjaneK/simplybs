@@ -1,0 +1,42 @@
+{
+    "package": "native/jdk@22/bootstrap-maven/plexus-cipher@2.0",
+    "version": "2.0",
+    "type": "native",
+    "download": [
+        {
+            "kind": "git",
+            "sha256": "cf2470d59f83d16a82c41a66b4e009356ebc9ace",
+            "url": "https://github.com/codehaus-plexus/plexus-cipher.git"
+        },
+        {
+            "kind": "blob",
+            "path": "./plexus-cipher-2.0.pom",
+            "sha256": "04842f331b0225b85a5e20439710d228ea7a6302abe6d53c9c9846fbc5bf99ff",
+            "url": "https://repo1.maven.org/maven2/org/codehaus/plexus/plexus-cipher/2.0/plexus-cipher-2.0.pom"
+        }
+    ],
+    "dependencies": [
+        "*:*:native/bash",
+        "*:*:native/coreutils",
+        "*:*:native/findutils",
+        "*:*:native/jdk@22",
+        "*:*:native/jdk@22/bootstrap-maven/org.eclipse.sisu.inject@1.0.0",
+        "*:*:native/jdk@22/bootstrap-maven/pom/plexus@8",
+        "*:*:native/jdk@22/bootstrap-maven/javax.inject@1"
+    ],
+    "build": {
+        "env": [
+            "*:*:WORKDIR=work/plexus-cipher@2.0",
+            "*:*:REPO=$NATIVEPREFIX/share/maven/repository"
+        ],
+        "steps": [
+            "*:*:mkdir -p $WORKDIR",
+            "*:*:find src/main/java -name '*.java' >$WORKDIR/sources",
+            "*:*:$JAVA_HOME/bin/javac --release 8 -cp $REPO/javax/inject/javax.inject/1/javax.inject-1.jar:$REPO/org/eclipse/sisu/org.eclipse.sisu.inject/1.0.0/org.eclipse.sisu.inject-1.0.0.jar -processorpath $REPO/org/eclipse/sisu/org.eclipse.sisu.inject/1.0.0/org.eclipse.sisu.inject-1.0.0.jar:$REPO/javax/inject/javax.inject/1/javax.inject-1.jar -processor org.eclipse.sisu.space.SisuIndexAPT6 -d $WORKDIR/classes @$WORKDIR/sources",
+            "*:*:$JAVA_HOME/bin/jar cf $WORKDIR/plexus-cipher-2.0.jar -C $WORKDIR/classes .",
+            "*:*:mkdir -p $STAGING_DIR$NATIVEPREFIX/share/maven/repository/org/codehaus/plexus/plexus-cipher/2.0",
+            "*:*:cp $WORKDIR/plexus-cipher-2.0.jar $STAGING_DIR$NATIVEPREFIX/share/maven/repository/org/codehaus/plexus/plexus-cipher/2.0/plexus-cipher-2.0.jar",
+            "*:*:cp plexus-cipher-2.0.pom $STAGING_DIR$NATIVEPREFIX/share/maven/repository/org/codehaus/plexus/plexus-cipher/2.0/plexus-cipher-2.0.pom"
+        ]
+    }
+}

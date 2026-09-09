@@ -1,0 +1,46 @@
+{
+    "package": "native/jdk@22/bootstrap-maven/qdox@2.0.3",
+    "version": "2.0.3",
+    "type": "native",
+    "download": [
+        {
+            "kind": "git",
+            "sha256": "53d77bb3855f9768bc75317f148ce09dbe34e34c",
+            "url": "https://github.com/paul-hammant/qdox.git"
+        },
+        {
+            "kind": "blob",
+            "path": "./qdox-2.0.3.pom",
+            "sha256": "e7ebaead3c95e74934451fc5b5ae9d02066303db67430f59fe219714efcf3bf3",
+            "url": "https://repo1.maven.org/maven2/com/thoughtworks/qdox/qdox/2.0.3/qdox-2.0.3.pom"
+        }
+    ],
+    "dependencies": [
+        "*:*:native/bash",
+        "*:*:native/coreutils",
+        "*:*:native/findutils",
+        "*:*:native/jdk@22",
+        "*:*:native/jdk@22/bootstrap-maven/jflex@1.9.1",
+        "*:*:native/byaccj@1.15",
+        "*:*:native/jdk@22/bootstrap-maven/pom/oss-parent@9"
+    ],
+    "build": {
+        "env": [
+            "*:*:WORKDIR=work/qdox@2.0.3"
+        ],
+        "steps": [
+            "*:*:mkdir -p $WORKDIR/gen $WORKDIR/classes",
+            "*:*:$JAVA_HOME/bin/java -cp $NATIVEPREFIX/share/java/jflex.jar jflex.Main --nobak -q -d $WORKDIR/gen src/grammar/lexer.flex",
+            "*:*:$JAVA_HOME/bin/java -cp $NATIVEPREFIX/share/java/jflex.jar jflex.Main --nobak -q -d $WORKDIR/gen src/grammar/commentlexer.flex",
+            "*:*:cp src/grammar/parser.y src/grammar/commentparser.y $WORKDIR/gen/",
+            "*:*:cd $WORKDIR/gen && byaccj -v -Jnorun -Jnoconstruct -Jclass=DefaultJavaCommentParser -Jpackage=com.thoughtworks.qdox.parser.impl commentparser.y",
+            "*:*:cd $WORKDIR/gen && byaccj -v -Jnorun -Jnoconstruct -Jclass=Parser -Jimplements=CommentHandler -Jsemantic=Value -Jpackage=com.thoughtworks.qdox.parser.impl -Jstack=500 parser.y",
+            "*:*:find src/main/java $WORKDIR/gen -name '*.java' ! -name 'module-info.java' >$WORKDIR/sources",
+            "*:*:$JAVA_HOME/bin/javac --release 8 -d $WORKDIR/classes @$WORKDIR/sources",
+            "*:*:$JAVA_HOME/bin/jar cf $WORKDIR/qdox-2.0.3.jar -C $WORKDIR/classes .",
+            "*:*:mkdir -p $STAGING_DIR$NATIVEPREFIX/share/maven/repository/com/thoughtworks/qdox/qdox/2.0.3",
+            "*:*:cp $WORKDIR/qdox-2.0.3.jar $STAGING_DIR$NATIVEPREFIX/share/maven/repository/com/thoughtworks/qdox/qdox/2.0.3/qdox-2.0.3.jar",
+            "*:*:cp qdox-2.0.3.pom $STAGING_DIR$NATIVEPREFIX/share/maven/repository/com/thoughtworks/qdox/qdox/2.0.3/qdox-2.0.3.pom"
+        ]
+    }
+}

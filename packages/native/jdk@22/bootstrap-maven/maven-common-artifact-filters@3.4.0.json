@@ -1,0 +1,42 @@
+{
+    "package": "native/jdk@22/bootstrap-maven/maven-common-artifact-filters@3.4.0",
+    "version": "3.4.0",
+    "type": "native",
+    "download": [
+        {
+            "kind": "git",
+            "sha256": "d3cd1e4a9646de2a2f30ddd34e1e4471b2a75f8f",
+            "url": "https://github.com/apache/maven-common-artifact-filters.git"
+        },
+        {
+            "kind": "blob",
+            "path": "./maven-common-artifact-filters-3.4.0.pom",
+            "sha256": "c93581d69b337c1fcc0957c727c430180b6387276ef1d3c2976c175e93765eb1",
+            "url": "https://repo1.maven.org/maven2/org/apache/maven/shared/maven-common-artifact-filters/3.4.0/maven-common-artifact-filters-3.4.0.pom"
+        }
+    ],
+    "dependencies": [
+        "*:*:native/bash",
+        "*:*:native/coreutils",
+        "*:*:native/findutils",
+        "*:*:native/jdk@22",
+        "*:*:native/maven@3.9-bin",
+        "*:*:native/jdk@22/bootstrap-maven/slf4j-api@1.7.36"
+    ],
+    "build": {
+        "env": [
+            "*:*:WORKDIR=build/maven-common-artifact-filters@3.4.0",
+            "*:*:REPO=$NATIVEPREFIX/share/maven/repository",
+            "*:*:BOOT_LIB=$NATIVEPREFIX/maven-3.9-bootstrap/lib"
+        ],
+        "steps": [
+            "*:*:mkdir -p $WORKDIR",
+            "*:*:find src/main/java -name '*.java' >$WORKDIR/sources",
+            "*:*:$JAVA_HOME/bin/javac -cp $(printf '%s:' $BOOT_LIB/*.jar)$REPO/org/slf4j/slf4j-api/1.7.36/slf4j-api-1.7.36.jar -d $WORKDIR/classes @$WORKDIR/sources",
+            "*:*:$JAVA_HOME/bin/jar cf $WORKDIR/maven-common-artifact-filters-3.4.0.jar -C $WORKDIR/classes .",
+            "*:*:mkdir -p $STAGING_DIR$NATIVEPREFIX/share/maven/repository/org/apache/maven/shared/maven-common-artifact-filters/3.4.0",
+            "*:*:cp $WORKDIR/maven-common-artifact-filters-3.4.0.jar $STAGING_DIR$NATIVEPREFIX/share/maven/repository/org/apache/maven/shared/maven-common-artifact-filters/3.4.0/maven-common-artifact-filters-3.4.0.jar",
+            "*:*:cp maven-common-artifact-filters-3.4.0.pom $STAGING_DIR$NATIVEPREFIX/share/maven/repository/org/apache/maven/shared/maven-common-artifact-filters/3.4.0/maven-common-artifact-filters-3.4.0.pom"
+        ]
+    }
+}

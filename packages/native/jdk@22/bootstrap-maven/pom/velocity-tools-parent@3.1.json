@@ -1,0 +1,22 @@
+{
+    "package": "native/jdk@22/bootstrap-maven/pom/velocity-tools-parent@3.1",
+    "version": "3.1",
+    "type": "native",
+    "download": [
+        {
+            "kind": "blob",
+            "path": "./velocity-tools-parent-3.1.pom",
+            "sha256": "5a597b88dba795090e77015bcdf53461b41d45da2d7d1764e4ece8b30a226fcd",
+            "url": "https://repo1.maven.org/maven2/org/apache/velocity/tools/velocity-tools-parent/3.1/velocity-tools-parent-3.1.pom"
+        }
+    ],
+    "dependencies": [
+        "*:*:native/coreutils"
+    ],
+    "build": {
+        "steps": [
+            "*:*:mkdir -p $STAGING_DIR$NATIVEPREFIX/share/maven/repository/org/apache/velocity/tools/velocity-tools-parent/3.1",
+            "*:*:cp velocity-tools-parent-3.1.pom $STAGING_DIR$NATIVEPREFIX/share/maven/repository/org/apache/velocity/tools/velocity-tools-parent/3.1/velocity-tools-parent-3.1.pom"
+        ]
+    }
+}

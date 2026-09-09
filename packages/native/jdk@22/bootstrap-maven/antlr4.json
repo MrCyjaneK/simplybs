@@ -1,0 +1,56 @@
+{
+    "package": "native/jdk@22/bootstrap-maven/antlr4",
+    "version": "4.9.3",
+    "type": "native",
+    "download": [
+        {
+            "kind": "git",
+            "sha256": "e4c1a74c66bd5290364ea2b36c97cd724b247357",
+            "url": "https://github.com/antlr/antlr4.git"
+        }
+    ],
+    "dependencies": [
+        "*:*:native/bash",
+        "*:*:native/coreutils",
+        "*:*:native/findutils",
+        "*:*:native/jdk@22",
+        "*:*:native/sed",
+        "*:*:native/jdk@22/bootstrap-maven/antlr3",
+        "*:*:native/jdk@22/bootstrap-maven/antlr4-runtime@4.9.3",
+        "*:*:native/jdk@22/bootstrap-maven/antlr-runtime@3.5.2",
+        "*:*:native/jdk@22/bootstrap-maven/ST4@4.3.1",
+        "*:*:native/jdk@22/bootstrap-maven/org.abego.treelayout.core@1.0.3",
+        "*:*:native/jdk@22/bootstrap-maven/icu4j@69.1"
+    ],
+    "build": {
+        "env": [
+            "*:*:WORKDIR=build/antlr4",
+            "*:*:REPO=$NATIVEPREFIX/share/maven/repository",
+            "*:*:GEN=build/antlr4/gen"
+        ],
+        "steps": [
+            "*:*:mkdir -p $GEN $WORKDIR/classes $WORKDIR/unigen $WORKDIR/unicode/org/antlr/v4/unicode $STAGING_DIR$NATIVEPREFIX/share/java",
+            "*:*:$JAVA_HOME/bin/java -cp $NATIVEPREFIX/share/java/antlr3.jar org.antlr.Tool -fo $GEN -lib $GEN tool/src/org/antlr/v4/parse/ANTLRLexer.g",
+            "*:*:$JAVA_HOME/bin/java -cp $NATIVEPREFIX/share/java/antlr3.jar org.antlr.Tool -fo $GEN -lib $GEN tool/src/org/antlr/v4/parse/ANTLRParser.g",
+            "*:*:$JAVA_HOME/bin/java -cp $NATIVEPREFIX/share/java/antlr3.jar org.antlr.Tool -fo $GEN -lib $GEN tool/src/org/antlr/v4/parse/ATNBuilder.g",
+            "*:*:$JAVA_HOME/bin/java -cp $NATIVEPREFIX/share/java/antlr3.jar org.antlr.Tool -fo $GEN -lib $GEN tool/src/org/antlr/v4/parse/ActionSplitter.g",
+            "*:*:$JAVA_HOME/bin/java -cp $NATIVEPREFIX/share/java/antlr3.jar org.antlr.Tool -fo $GEN -lib $GEN tool/src/org/antlr/v4/parse/BlockSetTransformer.g",
+            "*:*:$JAVA_HOME/bin/java -cp $NATIVEPREFIX/share/java/antlr3.jar org.antlr.Tool -fo $GEN -lib $GEN tool/src/org/antlr/v4/parse/GrammarTreeVisitor.g",
+            "*:*:$JAVA_HOME/bin/java -cp $NATIVEPREFIX/share/java/antlr3.jar org.antlr.Tool -fo $GEN -lib $GEN tool/src/org/antlr/v4/parse/LeftRecursiveRuleWalker.g",
+            "*:*:$JAVA_HOME/bin/java -cp $NATIVEPREFIX/share/java/antlr3.jar org.antlr.Tool -fo $GEN -lib $GEN tool/src/org/antlr/v4/codegen/SourceGenTriggers.g",
+            "*:*:cp tool/resources/org/antlr/v4/tool/templates/unicodedata.st $WORKDIR/unicodedata.stg",
+            "*:*:printf '%s\\n' 'import java.nio.charset.StandardCharsets;' 'import java.nio.file.Files;' 'import java.nio.file.Paths;' 'import java.util.Map;' 'import org.antlr.v4.unicode.UnicodeDataTemplateController;' 'import org.stringtemplate.v4.ST;' 'import org.stringtemplate.v4.STGroupFile;' '' 'public class GenerateUnicodeData {' '    public static void main(String[] args) throws Exception {' '        STGroupFile group = new STGroupFile(args[0], \"UTF-8\", (char)60, (char)62);' '        ST st = group.getInstanceOf(\"unicodedata\");' '        Map<String, Object> props = UnicodeDataTemplateController.getProperties();' '        st.add(\"propertyCodePointRanges\", props.get(\"propertyCodePointRanges\"));' '        st.add(\"propertyAliases\", props.get(\"propertyAliases\"));' '        Files.createDirectories(Paths.get(args[1]).getParent());' '        Files.write(Paths.get(args[1]), st.render().getBytes(StandardCharsets.UTF_8));' '    }' '}' > $WORKDIR/GenerateUnicodeData.java",
+            "*:*:$JAVA_HOME/bin/javac -cp $REPO/com/ibm/icu/icu4j/69.1/icu4j-69.1.jar:$REPO/org/antlr/antlr4-runtime/4.9.3/antlr4-runtime-4.9.3.jar:$REPO/org/antlr/ST4/4.3.1/ST4-4.3.1.jar:$REPO/org/antlr/antlr-runtime/3.5.2/antlr-runtime-3.5.2.jar -d $WORKDIR/unigen tool/src/org/antlr/v4/unicode/UnicodeDataTemplateController.java $WORKDIR/GenerateUnicodeData.java",
+            "*:*:$JAVA_HOME/bin/java -cp $WORKDIR/unigen:$REPO/com/ibm/icu/icu4j/69.1/icu4j-69.1.jar:$REPO/org/antlr/antlr4-runtime/4.9.3/antlr4-runtime-4.9.3.jar:$REPO/org/antlr/ST4/4.3.1/ST4-4.3.1.jar:$REPO/org/antlr/antlr-runtime/3.5.2/antlr-runtime-3.5.2.jar GenerateUnicodeData $PWD/$WORKDIR/unicodedata.stg $PWD/$WORKDIR/unicode/org/antlr/v4/unicode/UnicodeData.java",
+            "*:*:sed -i 's/\\\\>/>/g' $WORKDIR/unicode/org/antlr/v4/unicode/UnicodeData.java",
+            "*:*:find tool/src $GEN $WORKDIR/unicode -name '*.java' ! -name 'UnicodeDataTemplateController.java' ! -name 'SwiftTarget.java' >$WORKDIR/sources",
+            "*:*:$JAVA_HOME/bin/javac -cp $REPO/org/antlr/antlr4-runtime/4.9.3/antlr4-runtime-4.9.3.jar:$REPO/org/antlr/antlr-runtime/3.5.2/antlr-runtime-3.5.2.jar:$REPO/org/antlr/ST4/4.3.1/ST4-4.3.1.jar:$REPO/org/abego/treelayout/org.abego.treelayout.core/1.0.3/org.abego.treelayout.core-1.0.3.jar -d $WORKDIR/classes @$WORKDIR/sources",
+            "*:*:cp -R tool/resources/. $WORKDIR/classes/",
+            "*:*:cd $WORKDIR/classes && $JAVA_HOME/bin/jar xf $REPO/org/antlr/antlr4-runtime/4.9.3/antlr4-runtime-4.9.3.jar",
+            "*:*:cd $WORKDIR/classes && $JAVA_HOME/bin/jar xf $REPO/org/antlr/antlr-runtime/3.5.2/antlr-runtime-3.5.2.jar",
+            "*:*:cd $WORKDIR/classes && $JAVA_HOME/bin/jar xf $REPO/org/antlr/ST4/4.3.1/ST4-4.3.1.jar",
+            "*:*:cd $WORKDIR/classes && $JAVA_HOME/bin/jar xf $REPO/org/abego/treelayout/org.abego.treelayout.core/1.0.3/org.abego.treelayout.core-1.0.3.jar",
+            "*:*:$JAVA_HOME/bin/jar cf $STAGING_DIR$NATIVEPREFIX/share/java/antlr4.jar -C $WORKDIR/classes ."
+        ]
+    }
+}

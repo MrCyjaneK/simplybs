@@ -1,0 +1,22 @@
+{
+    "package": "native/jdk@22/bootstrap-maven/pom/antlr-master@3.5.2",
+    "version": "3.5.2",
+    "type": "native",
+    "download": [
+        {
+            "kind": "blob",
+            "path": "./antlr-master-3.5.2.pom",
+            "sha256": "42d91a531ea5100eb09b541aa002c3b908e8f282bd73b6e2f52f371ef1331bd6",
+            "url": "https://repo1.maven.org/maven2/org/antlr/antlr-master/3.5.2/antlr-master-3.5.2.pom"
+        }
+    ],
+    "dependencies": [
+        "*:*:native/coreutils"
+    ],
+    "build": {
+        "steps": [
+            "*:*:mkdir -p $STAGING_DIR$NATIVEPREFIX/share/maven/repository/org/antlr/antlr-master/3.5.2",
+            "*:*:cp antlr-master-3.5.2.pom $STAGING_DIR$NATIVEPREFIX/share/maven/repository/org/antlr/antlr-master/3.5.2/antlr-master-3.5.2.pom"
+        ]
+    }
+}

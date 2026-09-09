@@ -1,0 +1,33 @@
+{
+    "package": "native/jdk@22/bootstrap-maven/failureaccess@1.0.1",
+    "version": "1.0.1",
+    "type": "native",
+    "download": [
+        {
+            "kind": "git",
+            "sha256": "b8d5ecd40b9cfbd9cafc08bf50bd2382369812e9",
+            "url": "https://github.com/google/guava.git"
+        }
+    ],
+    "dependencies": [
+        "*:*:native/bash",
+        "*:*:native/coreutils",
+        "*:*:native/findutils",
+        "*:*:native/jdk@22",
+        "*:*:native/jdk@22/bootstrap-maven/pom/guava-parent@26.0-android"
+    ],
+    "build": {
+        "env": [
+            "*:*:WORKDIR=build/failureaccess@1.0.1"
+        ],
+        "steps": [
+            "*:*:mkdir -p $WORKDIR",
+            "*:*:find futures/failureaccess/src -name '*.java' >$WORKDIR/sources",
+            "*:*:$JAVA_HOME/bin/javac -d $WORKDIR/classes @$WORKDIR/sources",
+            "*:*:$JAVA_HOME/bin/jar cf $WORKDIR/failureaccess-1.0.1.jar -C $WORKDIR/classes .",
+            "*:*:mkdir -p $STAGING_DIR$NATIVEPREFIX/share/maven/repository/com/google/guava/failureaccess/1.0.1",
+            "*:*:cp $WORKDIR/failureaccess-1.0.1.jar $STAGING_DIR$NATIVEPREFIX/share/maven/repository/com/google/guava/failureaccess/1.0.1/failureaccess-1.0.1.jar",
+            "*:*:cp futures/failureaccess/pom.xml $STAGING_DIR$NATIVEPREFIX/share/maven/repository/com/google/guava/failureaccess/1.0.1/failureaccess-1.0.1.pom"
+        ]
+    }
+}

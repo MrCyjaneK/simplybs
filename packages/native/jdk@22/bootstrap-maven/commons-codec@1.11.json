@@ -1,0 +1,39 @@
+{
+    "package": "native/jdk@22/bootstrap-maven/commons-codec@1.11",
+    "version": "1.11",
+    "type": "native",
+    "download": [
+        {
+            "kind": "git",
+            "sha256": "9ceef2231549e95f7868266f38b0c7e1a0a40ed4",
+            "url": "https://github.com/apache/commons-codec.git"
+        },
+        {
+            "kind": "blob",
+            "path": "./commons-codec-1.11.pom",
+            "sha256": "c1e7140d1dea8fdf3528bc1e3c5444ac0b541297311f45f9806c213ec3ee9a10",
+            "url": "https://repo1.maven.org/maven2/commons-codec/commons-codec/1.11/commons-codec-1.11.pom"
+        }
+    ],
+    "dependencies": [
+        "*:*:native/bash",
+        "*:*:native/coreutils",
+        "*:*:native/findutils",
+        "*:*:native/jdk@22",
+        "*:*:native/jdk@22/bootstrap-maven/pom/commons-parent@42"
+    ],
+    "build": {
+        "env": [
+            "*:*:WORKDIR=build/commons-codec@1.11"
+        ],
+        "steps": [
+            "*:*:mkdir -p $WORKDIR",
+            "*:*:find src/main/java -name '*.java' ! -name 'module-info.java' >$WORKDIR/sources",
+            "*:*:$JAVA_HOME/bin/javac --release 8 -d $WORKDIR/classes @$WORKDIR/sources",
+            "*:*:$JAVA_HOME/bin/jar cf $WORKDIR/commons-codec-1.11.jar -C $WORKDIR/classes .",
+            "*:*:mkdir -p $STAGING_DIR$NATIVEPREFIX/share/maven/repository/commons-codec/commons-codec/1.11",
+            "*:*:cp $WORKDIR/commons-codec-1.11.jar $STAGING_DIR$NATIVEPREFIX/share/maven/repository/commons-codec/commons-codec/1.11/commons-codec-1.11.jar",
+            "*:*:cp commons-codec-1.11.pom $STAGING_DIR$NATIVEPREFIX/share/maven/repository/commons-codec/commons-codec/1.11/commons-codec-1.11.pom"
+        ]
+    }
+}

@@ -1,0 +1,22 @@
+{
+    "package": "native/jdk@22/bootstrap-maven/pom/okio-parent@1.17.2",
+    "version": "1.17.2",
+    "type": "native",
+    "download": [
+        {
+            "kind": "blob",
+            "path": "./okio-parent-1.17.2.pom",
+            "sha256": "e81f40146f2a0eb394b10fa3a175c85ab9fbe757aa418aa44d4b760efe16f024",
+            "url": "https://repo1.maven.org/maven2/com/squareup/okio/okio-parent/1.17.2/okio-parent-1.17.2.pom"
+        }
+    ],
+    "dependencies": [
+        "*:*:native/coreutils"
+    ],
+    "build": {
+        "steps": [
+            "*:*:mkdir -p $STAGING_DIR$NATIVEPREFIX/share/maven/repository/com/squareup/okio/okio-parent/1.17.2",
+            "*:*:cp okio-parent-1.17.2.pom $STAGING_DIR$NATIVEPREFIX/share/maven/repository/com/squareup/okio/okio-parent/1.17.2/okio-parent-1.17.2.pom"
+        ]
+    }
+}

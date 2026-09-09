@@ -1,0 +1,22 @@
+{
+    "package": "native/jdk@22/bootstrap-maven/pom/genesis-java5-flava@2.0",
+    "version": "2.0",
+    "type": "native",
+    "download": [
+        {
+            "kind": "blob",
+            "path": "./genesis-java5-flava-2.0.pom",
+            "sha256": "e7c5358bbbbc27daa5b327f63bc12650a75ddc9f9ac6d4bfa12789be1f2c29db",
+            "url": "https://repo1.maven.org/maven2/org/apache/geronimo/genesis/genesis-java5-flava/2.0/genesis-java5-flava-2.0.pom"
+        }
+    ],
+    "dependencies": [
+        "*:*:native/coreutils"
+    ],
+    "build": {
+        "steps": [
+            "*:*:mkdir -p $STAGING_DIR$NATIVEPREFIX/share/maven/repository/org/apache/geronimo/genesis/genesis-java5-flava/2.0",
+            "*:*:cp genesis-java5-flava-2.0.pom $STAGING_DIR$NATIVEPREFIX/share/maven/repository/org/apache/geronimo/genesis/genesis-java5-flava/2.0/genesis-java5-flava-2.0.pom"
+        ]
+    }
+}

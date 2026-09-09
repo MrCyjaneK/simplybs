@@ -1,0 +1,39 @@
+{
+    "package": "native/jdk@22/bootstrap-maven/javax.activation-api@1.2.0",
+    "version": "1.2.0",
+    "type": "native",
+    "download": [
+        {
+            "kind": "git",
+            "sha256": "41bad0bd6ba821abd8652c80e8e3c50b55851da2",
+            "url": "https://github.com/eclipse-ee4j/jaf.git"
+        },
+        {
+            "kind": "blob",
+            "path": "./javax.activation-api-1.2.0.pom",
+            "sha256": "da2926f3c8be898643cc10acdec6de0b0351a57fb2735770fa0177b06ade71b9",
+            "url": "https://repo1.maven.org/maven2/javax/activation/javax.activation-api/1.2.0/javax.activation-api-1.2.0.pom"
+        }
+    ],
+    "dependencies": [
+        "*:*:native/bash",
+        "*:*:native/coreutils",
+        "*:*:native/findutils",
+        "*:*:native/jdk@22",
+        "*:*:native/jdk@22/bootstrap-maven/pom/all@1.2.0"
+    ],
+    "build": {
+        "env": [
+            "*:*:WORKDIR=work/javax.activation-api@1.2.0"
+        ],
+        "steps": [
+            "*:*:mkdir -p $WORKDIR",
+            "*:*:find activation/src/main/java -name '*.java' ! -name 'module-info.java' >$WORKDIR/sources",
+            "*:*:$JAVA_HOME/bin/javac --release 8 -d $WORKDIR/classes @$WORKDIR/sources",
+            "*:*:$JAVA_HOME/bin/jar cf $WORKDIR/javax.activation-api-1.2.0.jar -C $WORKDIR/classes .",
+            "*:*:mkdir -p $STAGING_DIR$NATIVEPREFIX/share/maven/repository/javax/activation/javax.activation-api/1.2.0",
+            "*:*:cp $WORKDIR/javax.activation-api-1.2.0.jar $STAGING_DIR$NATIVEPREFIX/share/maven/repository/javax/activation/javax.activation-api/1.2.0/javax.activation-api-1.2.0.jar",
+            "*:*:cp javax.activation-api-1.2.0.pom $STAGING_DIR$NATIVEPREFIX/share/maven/repository/javax/activation/javax.activation-api/1.2.0/javax.activation-api-1.2.0.pom"
+        ]
+    }
+}

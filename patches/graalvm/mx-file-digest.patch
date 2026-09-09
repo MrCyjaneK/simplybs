@@ -1,0 +1,21 @@
+--- a/src/mx/_impl/mx.py
++++ b/src/mx/_impl/mx.py
+@@ -4187,7 +4187,9 @@ def download_file_with_digest(name, path, urls, digest, resolve, mustExist, ext=None, sources=False, canSymlink=True):
+     Manages an internal cache of downloads and will link `path` to the cache entry unless `canSymLink=False`
+     in which case it copies the cache entry.
+     """
+     check_digest = digest and digest.value != 'NOCHECK'
++    if urls and urls[0].startswith('file:'):
++        check_digest = False
+     canSymlink = canSymlink and can_symlink()
+ 
+     if len(urls) == 0 and not check_digest:
+@@ -4245,7 +4247,7 @@ def download_file_with_digest(name, path, urls, digest, resolve, mustExist, ext=None, sources=False, canSymlink=True):
+         if path != cachePath:
+             _copy_or_symlink(cachePath, path)
+ 
+-        if not _check_file_with_digest(path, digest, newFile=True, logErrors=True):
++        if check_digest and not _check_file_with_digest(path, digest, newFile=True, logErrors=True):
+             abort(f"No valid file for {path} after download. Broken download? {digest.name} not updated in suite.py file?")
+ 
+     return path

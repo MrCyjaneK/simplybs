@@ -1,0 +1,38 @@
+{
+    "package": "native/jdk@22/bootstrap-maven/java-cup-runtime@11b-20160615-1",
+    "version": "11b-20160615-1",
+    "type": "native",
+    "download": [
+        {
+            "kind": "tar.xz",
+            "sha256": "885f4f54d7cfc52b8b9a10d8da25e8fa18b2df6bdb12e4c3d06e9c188463e24c",
+            "url": "https://deb.debian.org/debian/pool/main/c/cup/cup_0.11b-20160615.orig.tar.xz"
+        },
+        {
+            "kind": "blob",
+            "path": "./java-cup-runtime-11b-20160615-1.pom",
+            "sha256": "3d215f749f8f98f9951f16dac8a0f1761ec99093f7cb11155195c7283e723d74",
+            "url": "https://repo1.maven.org/maven2/com/github/vbmacher/java-cup-runtime/11b-20160615-1/java-cup-runtime-11b-20160615-1.pom"
+        }
+    ],
+    "dependencies": [
+        "*:*:native/bash",
+        "*:*:native/coreutils",
+        "*:*:native/findutils",
+        "*:*:native/jdk@22"
+    ],
+    "build": {
+        "env": [
+            "*:*:WORKDIR=build/java-cup-runtime@11b-20160615-1"
+        ],
+        "steps": [
+            "*:*:mkdir -p $WORKDIR",
+            "*:*:find src/java_cup/runtime -name '*.java' >$WORKDIR/sources",
+            "*:*:$JAVA_HOME/bin/javac --release 8 -d $WORKDIR/classes @$WORKDIR/sources",
+            "*:*:$JAVA_HOME/bin/jar cf $WORKDIR/java-cup-runtime-11b-20160615-1.jar -C $WORKDIR/classes .",
+            "*:*:mkdir -p $STAGING_DIR$NATIVEPREFIX/share/maven/repository/com/github/vbmacher/java-cup-runtime/11b-20160615-1",
+            "*:*:cp $WORKDIR/java-cup-runtime-11b-20160615-1.jar $STAGING_DIR$NATIVEPREFIX/share/maven/repository/com/github/vbmacher/java-cup-runtime/11b-20160615-1/java-cup-runtime-11b-20160615-1.jar",
+            "*:*:cp java-cup-runtime-11b-20160615-1.pom $STAGING_DIR$NATIVEPREFIX/share/maven/repository/com/github/vbmacher/java-cup-runtime/11b-20160615-1/java-cup-runtime-11b-20160615-1.pom"
+        ]
+    }
+}

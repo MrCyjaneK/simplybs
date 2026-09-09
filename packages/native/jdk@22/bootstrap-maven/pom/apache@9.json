@@ -1,0 +1,22 @@
+{
+    "package": "native/jdk@22/bootstrap-maven/pom/apache@9",
+    "version": "9",
+    "type": "native",
+    "download": [
+        {
+            "kind": "blob",
+            "path": "./apache-9.pom",
+            "sha256": "4946e60a547c8eda69f3bc23c5b6f0dadcf8469ea49b1d1da7de34aecfcf18dd",
+            "url": "https://repo1.maven.org/maven2/org/apache/apache/9/apache-9.pom"
+        }
+    ],
+    "dependencies": [
+        "*:*:native/coreutils"
+    ],
+    "build": {
+        "steps": [
+            "*:*:mkdir -p $STAGING_DIR$NATIVEPREFIX/share/maven/repository/org/apache/apache/9",
+            "*:*:cp apache-9.pom $STAGING_DIR$NATIVEPREFIX/share/maven/repository/org/apache/apache/9/apache-9.pom"
+        ]
+    }
+}

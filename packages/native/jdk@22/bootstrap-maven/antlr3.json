@@ -1,0 +1,40 @@
+{
+    "package": "native/jdk@22/bootstrap-maven/antlr3",
+    "version": "3.5.2",
+    "type": "native",
+    "download": [
+        {
+            "kind": "git",
+            "sha256": "88318343d48c13b5af377ef45c2363b66e587451",
+            "url": "https://github.com/antlr/antlr3.git"
+        },
+        {
+            "kind": "tar.xz",
+            "sha256": "debe7311886bd6a5e54de6665dbd36d2b5cf9d4cf15c62f556bf3c75416888be",
+            "url": "https://deb.debian.org/debian/pool/main/a/antlr3/antlr3_3.5.2-9.debian.tar.xz"
+        }
+    ],
+    "dependencies": [
+        "*:*:native/bash",
+        "*:*:native/coreutils",
+        "*:*:native/findutils",
+        "*:*:native/jdk@22",
+        "*:*:native/jdk@22/bootstrap-maven/antlr-runtime@3.5.2",
+        "*:*:native/jdk@22/bootstrap-maven/ST4@4.3.1"
+    ],
+    "build": {
+        "env": [
+            "*:*:WORKDIR=build/antlr3",
+            "*:*:REPO=$NATIVEPREFIX/share/maven/repository"
+        ],
+        "steps": [
+            "*:*:mkdir -p $WORKDIR/classes $STAGING_DIR$NATIVEPREFIX/share/java",
+            "*:*:find tool/src/main/java generated-sources/antlr3 -name '*.java' >$WORKDIR/sources",
+            "*:*:$JAVA_HOME/bin/javac -cp $REPO/org/antlr/antlr-runtime/3.5.2/antlr-runtime-3.5.2.jar:$REPO/org/antlr/ST4/4.3.1/ST4-4.3.1.jar -d $WORKDIR/classes @$WORKDIR/sources",
+            "*:*:cp -R tool/src/main/resources/. $WORKDIR/classes/",
+            "*:*:cd $WORKDIR/classes && $JAVA_HOME/bin/jar xf $REPO/org/antlr/antlr-runtime/3.5.2/antlr-runtime-3.5.2.jar",
+            "*:*:cd $WORKDIR/classes && $JAVA_HOME/bin/jar xf $REPO/org/antlr/ST4/4.3.1/ST4-4.3.1.jar",
+            "*:*:$JAVA_HOME/bin/jar cf $STAGING_DIR$NATIVEPREFIX/share/java/antlr3.jar -C $WORKDIR/classes ."
+        ]
+    }
+}

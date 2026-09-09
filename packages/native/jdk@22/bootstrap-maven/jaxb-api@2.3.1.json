@@ -1,0 +1,39 @@
+{
+    "package": "native/jdk@22/bootstrap-maven/jaxb-api@2.3.1",
+    "version": "2.3.1",
+    "type": "native",
+    "download": [
+        {
+            "kind": "git",
+            "sha256": "18b50028fd7dbd1305c359cd5624b1cddb1724a8",
+            "url": "https://github.com/eclipse-ee4j/jaxb-api.git"
+        },
+        {
+            "kind": "blob",
+            "path": "./jaxb-api-2.3.1.pom",
+            "sha256": "12b20cf922773445c3445c2883cbf671fa982111e9bf9f875020f9313b3814b1",
+            "url": "https://repo1.maven.org/maven2/javax/xml/bind/jaxb-api/2.3.1/jaxb-api-2.3.1.pom"
+        }
+    ],
+    "dependencies": [
+        "*:*:native/bash",
+        "*:*:native/coreutils",
+        "*:*:native/findutils",
+        "*:*:native/jdk@22",
+        "*:*:native/jdk@22/bootstrap-maven/pom/jaxb-api-parent@2.3.1"
+    ],
+    "build": {
+        "env": [
+            "*:*:WORKDIR=work/jaxb-api@2.3.1"
+        ],
+        "steps": [
+            "*:*:mkdir -p $WORKDIR",
+            "*:*:find jaxb-api/src/main/java -name '*.java' ! -name 'module-info.java' >$WORKDIR/sources",
+            "*:*:$JAVA_HOME/bin/javac --release 8 -d $WORKDIR/classes @$WORKDIR/sources",
+            "*:*:$JAVA_HOME/bin/jar cf $WORKDIR/jaxb-api-2.3.1.jar -C $WORKDIR/classes .",
+            "*:*:mkdir -p $STAGING_DIR$NATIVEPREFIX/share/maven/repository/javax/xml/bind/jaxb-api/2.3.1",
+            "*:*:cp $WORKDIR/jaxb-api-2.3.1.jar $STAGING_DIR$NATIVEPREFIX/share/maven/repository/javax/xml/bind/jaxb-api/2.3.1/jaxb-api-2.3.1.jar",
+            "*:*:cp jaxb-api-2.3.1.pom $STAGING_DIR$NATIVEPREFIX/share/maven/repository/javax/xml/bind/jaxb-api/2.3.1/jaxb-api-2.3.1.pom"
+        ]
+    }
+}

@@ -1,0 +1,33 @@
+{
+    "package": "native/jdk@22/bootstrap-maven/commons-codec@1.20.0",
+    "version": "1.20.0",
+    "type": "native",
+    "download": [
+        {
+            "kind": "git",
+            "sha256": "b20db1f1fa6ee7b0536f6a25c9c33f8289c22098",
+            "url": "https://github.com/apache/commons-codec.git"
+        }
+    ],
+    "dependencies": [
+        "*:*:native/bash",
+        "*:*:native/coreutils",
+        "*:*:native/findutils",
+        "*:*:native/jdk@22",
+        "*:*:native/jdk@22/bootstrap-maven/pom/commons-parent@91"
+    ],
+    "build": {
+        "env": [
+            "*:*:WORKDIR=build/commons-codec@1.20.0"
+        ],
+        "steps": [
+            "*:*:mkdir -p $WORKDIR",
+            "*:*:find src/main/java -name '*.java' ! -name 'module-info.java' >$WORKDIR/sources",
+            "*:*:$JAVA_HOME/bin/javac -d $WORKDIR/classes @$WORKDIR/sources",
+            "*:*:$JAVA_HOME/bin/jar cf $WORKDIR/commons-codec-1.20.0.jar -C $WORKDIR/classes .",
+            "*:*:mkdir -p $STAGING_DIR$NATIVEPREFIX/share/maven/repository/commons-codec/commons-codec/1.20.0",
+            "*:*:cp $WORKDIR/commons-codec-1.20.0.jar $STAGING_DIR$NATIVEPREFIX/share/maven/repository/commons-codec/commons-codec/1.20.0/commons-codec-1.20.0.jar",
+            "*:*:cp pom.xml $STAGING_DIR$NATIVEPREFIX/share/maven/repository/commons-codec/commons-codec/1.20.0/commons-codec-1.20.0.pom"
+        ]
+    }
+}

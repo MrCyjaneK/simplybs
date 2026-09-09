@@ -1,0 +1,22 @@
+{
+    "package": "native/jdk@22/bootstrap-maven/pom/apache@21",
+    "version": "21",
+    "type": "native",
+    "download": [
+        {
+            "kind": "blob",
+            "path": "./apache-21.pom",
+            "sha256": "af10c108da014f17cafac7b52b2b4b5a3a1c18265fa2af97a325d9143537b380",
+            "url": "https://repo1.maven.org/maven2/org/apache/apache/21/apache-21.pom"
+        }
+    ],
+    "dependencies": [
+        "*:*:native/coreutils"
+    ],
+    "build": {
+        "steps": [
+            "*:*:mkdir -p $STAGING_DIR$NATIVEPREFIX/share/maven/repository/org/apache/apache/21",
+            "*:*:cp apache-21.pom $STAGING_DIR$NATIVEPREFIX/share/maven/repository/org/apache/apache/21/apache-21.pom"
+        ]
+    }
+}

@@ -1,0 +1,36 @@
+{
+    "package": "native/jdk@22/bootstrap-maven/janino@3.0.6",
+    "version": "3.0.6",
+    "type": "native",
+    "download": [
+        {
+            "kind": "git",
+            "sha256": "9c1d4a8586fa8b2c3c55ddd6c3f0dc2da589a247",
+            "url": "https://github.com/janino-compiler/janino.git"
+        }
+    ],
+    "dependencies": [
+        "*:*:native/bash",
+        "*:*:native/coreutils",
+        "*:*:native/findutils",
+        "*:*:native/jdk@22",
+        "*:*:native/jdk@22/bootstrap-maven/pom/janino-parent@3.0.6",
+        "*:*:native/jdk@22/bootstrap-maven/commons-compiler@3.0.6"
+    ],
+    "build": {
+        "env": [
+            "*:*:WORKDIR=work/janino@3.0.6",
+            "*:*:REPO=$NATIVEPREFIX/share/maven/repository"
+        ],
+        "steps": [
+            "*:*:mkdir -p $WORKDIR/classes",
+            "*:*:find janino/src/main/java -name '*.java' ! -name 'AntCompilerAdapter.java' >$WORKDIR/sources",
+            "*:*:$JAVA_HOME/bin/javac --release 8 -cp $REPO/org/codehaus/janino/commons-compiler/3.0.6/commons-compiler-3.0.6.jar -d $WORKDIR/classes @$WORKDIR/sources",
+            "*:*:if [ -d janino/src/main/resources ]; then cp -R janino/src/main/resources/. $WORKDIR/classes/; fi",
+            "*:*:$JAVA_HOME/bin/jar cf $WORKDIR/janino-3.0.6.jar -C $WORKDIR/classes .",
+            "*:*:mkdir -p $STAGING_DIR$NATIVEPREFIX/share/maven/repository/org/codehaus/janino/janino/3.0.6",
+            "*:*:cp $WORKDIR/janino-3.0.6.jar $STAGING_DIR$NATIVEPREFIX/share/maven/repository/org/codehaus/janino/janino/3.0.6/janino-3.0.6.jar",
+            "*:*:cp janino/pom.xml $STAGING_DIR$NATIVEPREFIX/share/maven/repository/org/codehaus/janino/janino/3.0.6/janino-3.0.6.pom"
+        ]
+    }
+}

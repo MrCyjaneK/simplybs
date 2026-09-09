@@ -1,0 +1,36 @@
+{
+    "package": "native/jdk@22/bootstrap-maven/xbean-reflect@3.7",
+    "version": "3.7",
+    "type": "native",
+    "download": [
+        {
+            "kind": "git",
+            "sha256": "32468977fd32ebe12880b5fc8f73a8097ed88778",
+            "url": "https://github.com/apache/geronimo-xbean.git"
+        }
+    ],
+    "dependencies": [
+        "*:*:native/bash",
+        "*:*:native/coreutils",
+        "*:*:native/findutils",
+        "*:*:native/jdk@22",
+        "*:*:native/sed",
+        "*:*:native/jdk@22/bootstrap-maven/pom/xbean@3.7"
+    ],
+    "build": {
+        "env": [
+            "*:*:WORKDIR=build/xbean-reflect@3.7"
+        ],
+        "steps": [
+            "*:*:mkdir -p $WORKDIR",
+            "*:*:sed -i '/registerConverter(new Log4jConverter())/d' xbean-reflect/src/main/java/org/apache/xbean/propertyeditor/PropertyEditors.java",
+            "*:*:sed -i '/registerConverter(new CommonsLoggingConverter())/d' xbean-reflect/src/main/java/org/apache/xbean/propertyeditor/PropertyEditors.java",
+            "*:*:find xbean-reflect/src/main/java -name '*.java' ! -name 'AsmParameterNameLoader.java' ! -name 'XbeanAsmParameterNameLoader.java' ! -name 'CommonsLoggingConverter.java' ! -name 'Log4jConverter.java' >$WORKDIR/sources",
+            "*:*:$JAVA_HOME/bin/javac --release 8 -d $WORKDIR/classes @$WORKDIR/sources",
+            "*:*:$JAVA_HOME/bin/jar cf $WORKDIR/xbean-reflect-3.7.jar -C $WORKDIR/classes .",
+            "*:*:mkdir -p $STAGING_DIR$NATIVEPREFIX/share/maven/repository/org/apache/xbean/xbean-reflect/3.7",
+            "*:*:cp $WORKDIR/xbean-reflect-3.7.jar $STAGING_DIR$NATIVEPREFIX/share/maven/repository/org/apache/xbean/xbean-reflect/3.7/xbean-reflect-3.7.jar",
+            "*:*:cp xbean-reflect/pom.xml $STAGING_DIR$NATIVEPREFIX/share/maven/repository/org/apache/xbean/xbean-reflect/3.7/xbean-reflect-3.7.pom"
+        ]
+    }
+}

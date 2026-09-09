@@ -1,0 +1,22 @@
+{
+    "package": "native/jdk@22/bootstrap-maven/pom/apache@32",
+    "version": "32",
+    "type": "native",
+    "download": [
+        {
+            "kind": "blob",
+            "path": "./apache-32.pom",
+            "sha256": "cfd872c0ec27f53ae68f43dbc0fecded8add773079a53afbd390e407b42ce72f",
+            "url": "https://repo1.maven.org/maven2/org/apache/apache/32/apache-32.pom"
+        }
+    ],
+    "dependencies": [
+        "*:*:native/coreutils"
+    ],
+    "build": {
+        "steps": [
+            "*:*:mkdir -p $STAGING_DIR$NATIVEPREFIX/share/maven/repository/org/apache/apache/32",
+            "*:*:cp apache-32.pom $STAGING_DIR$NATIVEPREFIX/share/maven/repository/org/apache/apache/32/apache-32.pom"
+        ]
+    }
+}

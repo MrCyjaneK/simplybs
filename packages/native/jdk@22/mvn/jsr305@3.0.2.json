@@ -1,0 +1,30 @@
+{
+    "package": "native/jdk@22/mvn/jsr305@3.0.2",
+    "version": "3.0.2",
+    "type": "native",
+    "download": [
+        {
+            "kind": "git",
+            "sha256": "d7734b13c61492982784560ed5b4f4bd6cf9bb2c",
+            "url": "https://github.com/amaembo/jsr-305.git"
+        }
+    ],
+    "dependencies": [
+        "*:*:native/coreutils",
+        "*:*:native/findutils",
+        "*:*:native/jdk@22"
+    ],
+    "build": {
+        "env": [
+            "*:*:WORKDIR=work/jsr305@3.0.2"
+        ],
+        "steps": [
+            "*:*:mkdir -p $WORKDIR/classes",
+            "*:*:find ri/src/main/java -name '*.java' >$WORKDIR/sources",
+            "*:*:$JAVA_HOME/bin/javac --release 8 -d $WORKDIR/classes @$WORKDIR/sources",
+            "*:*:$JAVA_HOME/bin/jar cf $WORKDIR/jsr305-3.0.2.jar -C $WORKDIR/classes .",
+            "*:*:mkdir -p $STAGING_DIR$NATIVEPREFIX/share/maven/repository/com/google/code/findbugs/jsr305/3.0.2",
+            "*:*:cp $WORKDIR/jsr305-3.0.2.jar $STAGING_DIR$NATIVEPREFIX/share/maven/repository/com/google/code/findbugs/jsr305/3.0.2/jsr305-3.0.2.jar"
+        ]
+    }
+}

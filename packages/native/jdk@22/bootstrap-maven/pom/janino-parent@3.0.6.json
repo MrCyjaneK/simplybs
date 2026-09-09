@@ -1,0 +1,22 @@
+{
+    "package": "native/jdk@22/bootstrap-maven/pom/janino-parent@3.0.6",
+    "version": "3.0.6",
+    "type": "native",
+    "download": [
+        {
+            "kind": "blob",
+            "path": "./janino-parent-3.0.6.pom",
+            "sha256": "6c72fd0477a964df4e4502d580868ac4ea026b867e43fba8463befcaaf528d8f",
+            "url": "https://repo1.maven.org/maven2/org/codehaus/janino/janino-parent/3.0.6/janino-parent-3.0.6.pom"
+        }
+    ],
+    "dependencies": [
+        "*:*:native/coreutils"
+    ],
+    "build": {
+        "steps": [
+            "*:*:mkdir -p $STAGING_DIR$NATIVEPREFIX/share/maven/repository/org/codehaus/janino/janino-parent/3.0.6",
+            "*:*:cp janino-parent-3.0.6.pom $STAGING_DIR$NATIVEPREFIX/share/maven/repository/org/codehaus/janino/janino-parent/3.0.6/janino-parent-3.0.6.pom"
+        ]
+    }
+}

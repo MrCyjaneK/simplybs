@@ -1,0 +1,22 @@
+{
+    "package": "native/jdk@22/bootstrap-maven/pom/asm-parent@3.3.1",
+    "version": "3.3.1",
+    "type": "native",
+    "download": [
+        {
+            "kind": "blob",
+            "path": "./asm-parent-3.3.1.pom",
+            "sha256": "2c62f613e86db57b58fe3d5f443dccf0a51f09d1c9c2cb39776afde06d0f7ff0",
+            "url": "https://repo1.maven.org/maven2/asm/asm-parent/3.3.1/asm-parent-3.3.1.pom"
+        }
+    ],
+    "dependencies": [
+        "*:*:native/coreutils"
+    ],
+    "build": {
+        "steps": [
+            "*:*:mkdir -p $STAGING_DIR$NATIVEPREFIX/share/maven/repository/asm/asm-parent/3.3.1",
+            "*:*:cp asm-parent-3.3.1.pom $STAGING_DIR$NATIVEPREFIX/share/maven/repository/asm/asm-parent/3.3.1/asm-parent-3.3.1.pom"
+        ]
+    }
+}

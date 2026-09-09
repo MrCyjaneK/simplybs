@@ -1,0 +1,49 @@
+{
+    "package": "native/jdk@22/bootstrap-maven/sshd@2.9.2",
+    "version": "2.9.2",
+    "type": "native",
+    "download": [
+        {
+            "kind": "git",
+            "sha256": "fbbbb7b6af7fdf1765f297a96dfec3f198f5fd7d",
+            "url": "https://github.com/apache/mina-sshd.git"
+        }
+    ],
+    "dependencies": [
+        "*:*:native/bash",
+        "*:*:native/coreutils",
+        "*:*:native/findutils",
+        "*:*:native/sed",
+        "*:*:native/jdk@22",
+        "*:*:native/jdk@22/bootstrap-maven/pom/apache@23",
+        "*:*:native/jdk@22/bootstrap-maven/slf4j-api@1.7.32",
+        "*:*:native/jdk@22/bootstrap-maven/jcl-over-slf4j@1.7.32",
+        "*:*:native/jdk@22/bootstrap-maven/eddsa@0.3.0",
+        "*:*:native/jdk@22/bootstrap-maven/bouncycastle@1.70"
+    ],
+    "build": {
+        "env": [
+            "*:*:WORKDIR=work/sshd@2.9.2",
+            "*:*:SSHD_COMPILE=3",
+            "*:*:REPO=$NATIVEPREFIX/share/maven/repository"
+        ],
+        "steps": [
+            "*:*:mkdir -p $WORKDIR/common $WORKDIR/core",
+            "*:*:mkdir -p $STAGING_DIR$NATIVEPREFIX/share/maven/repository/org/apache/sshd/sshd/2.9.2",
+            "*:*:cp pom.xml $STAGING_DIR$NATIVEPREFIX/share/maven/repository/org/apache/sshd/sshd/2.9.2/sshd-2.9.2.pom",
+            "*:*:find sshd-common/src/main/java -name '*.java' ! -name 'module-info.java' >$WORKDIR/common.sources",
+            "*:*:$JAVA_HOME/bin/javac --release 8 -cp $REPO/org/slf4j/slf4j-api/1.7.32/slf4j-api-1.7.32.jar:$REPO/net/i2p/crypto/eddsa/0.3.0/eddsa-0.3.0.jar:$REPO/org/bouncycastle/bcprov-jdk15on/1.70/bcprov-jdk15on-1.70.jar:$REPO/org/bouncycastle/bcutil-jdk15on/1.70/bcutil-jdk15on-1.70.jar:$REPO/org/bouncycastle/bcpkix-jdk15on/1.70/bcpkix-jdk15on-1.70.jar:$REPO/org/bouncycastle/bcpg-jdk15on/1.70/bcpg-jdk15on-1.70.jar -d $WORKDIR/common @$WORKDIR/common.sources",
+            "*:*:$JAVA_HOME/bin/jar cf $WORKDIR/sshd-common-2.9.2.jar -C $WORKDIR/common .",
+            "*:*:mkdir -p $STAGING_DIR$NATIVEPREFIX/share/maven/repository/org/apache/sshd/sshd-common/2.9.2",
+            "*:*:cp $WORKDIR/sshd-common-2.9.2.jar $STAGING_DIR$NATIVEPREFIX/share/maven/repository/org/apache/sshd/sshd-common/2.9.2/sshd-common-2.9.2.jar",
+            "*:*:cp sshd-common/pom.xml $STAGING_DIR$NATIVEPREFIX/share/maven/repository/org/apache/sshd/sshd-common/2.9.2/sshd-common-2.9.2.pom",
+            "*:*:find sshd-core/src/main/java -name '*.java' ! -name 'module-info.java' ! -path '*/agent/unix/*' >$WORKDIR/core.sources",
+            "*:*:sed -i -e '/import org.apache.sshd.agent.unix.AprLibrary;/d' -e '/import org.apache.sshd.agent.unix.UnixAgentFactory;/d' -e 's/UnixAgentFactory.DEFAULT_FORWARDING_CHANNELS/LocalAgentFactory.DEFAULT_FORWARDING_CHANNELS/' -e 's/AprLibrary.getInstance() != null/false/' sshd-core/src/main/java/org/apache/sshd/agent/local/ProxyAgentFactory.java",
+            "*:*:$JAVA_HOME/bin/javac --release 8 -cp $WORKDIR/sshd-common-2.9.2.jar:$REPO/org/slf4j/slf4j-api/1.7.32/slf4j-api-1.7.32.jar:$REPO/net/i2p/crypto/eddsa/0.3.0/eddsa-0.3.0.jar:$REPO/org/bouncycastle/bcprov-jdk15on/1.70/bcprov-jdk15on-1.70.jar:$REPO/org/bouncycastle/bcutil-jdk15on/1.70/bcutil-jdk15on-1.70.jar:$REPO/org/bouncycastle/bcpkix-jdk15on/1.70/bcpkix-jdk15on-1.70.jar:$REPO/org/bouncycastle/bcpg-jdk15on/1.70/bcpg-jdk15on-1.70.jar -d $WORKDIR/core @$WORKDIR/core.sources",
+            "*:*:$JAVA_HOME/bin/jar cf $WORKDIR/sshd-core-2.9.2.jar -C $WORKDIR/core .",
+            "*:*:mkdir -p $STAGING_DIR$NATIVEPREFIX/share/maven/repository/org/apache/sshd/sshd-core/2.9.2",
+            "*:*:cp $WORKDIR/sshd-core-2.9.2.jar $STAGING_DIR$NATIVEPREFIX/share/maven/repository/org/apache/sshd/sshd-core/2.9.2/sshd-core-2.9.2.jar",
+            "*:*:cp sshd-core/pom.xml $STAGING_DIR$NATIVEPREFIX/share/maven/repository/org/apache/sshd/sshd-core/2.9.2/sshd-core-2.9.2.pom"
+        ]
+    }
+}

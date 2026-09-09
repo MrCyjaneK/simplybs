@@ -1,0 +1,30 @@
+{
+    "package": "native/jdk@22/bootstrap-maven/stringtemplate3",
+    "version": "3.2.1",
+    "type": "native",
+    "download": [
+        {
+            "kind": "tar.gz",
+            "sha256": "6b266b26e10ad07770da06b3964e99d32fb31fff43c94a4c980ea5471a2a147e",
+            "url": "https://deb.debian.org/debian/pool/main/s/stringtemplate/stringtemplate_3.2.1.orig.tar.gz"
+        }
+    ],
+    "dependencies": [
+        "*:*:native/bash",
+        "*:*:native/coreutils",
+        "*:*:native/findutils",
+        "*:*:native/jdk@22",
+        "*:*:native/jdk@22/bootstrap-maven/antlr2"
+    ],
+    "build": {
+        "env": [
+            "*:*:WORKDIR=build/stringtemplate3"
+        ],
+        "steps": [
+            "*:*:mkdir -p $WORKDIR/classes $STAGING_DIR$NATIVEPREFIX/share/java",
+            "*:*:find src/org target/generated-sources/antlr -name '*.java' >$WORKDIR/sources",
+            "*:*:$JAVA_HOME/bin/javac -encoding ISO-8859-1 --release 8 -cp $NATIVEPREFIX/share/java/antlr2.jar -d $WORKDIR/classes @$WORKDIR/sources",
+            "*:*:$JAVA_HOME/bin/jar cf $STAGING_DIR$NATIVEPREFIX/share/java/stringtemplate3.jar -C $WORKDIR/classes ."
+        ]
+    }
+}

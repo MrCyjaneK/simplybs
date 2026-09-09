@@ -1,0 +1,42 @@
+{
+    "package": "native/jdk@22/bootstrap-maven/powermock-reflect@2.0.9",
+    "version": "2.0.9",
+    "type": "native",
+    "download": [
+        {
+            "kind": "git",
+            "sha256": "42c72daf9d8b04129178d1d3f1fb4e485d3c13dc",
+            "url": "https://github.com/powermock/powermock.git"
+        },
+        {
+            "kind": "blob",
+            "path": "./powermock-reflect-2.0.9.pom",
+            "sha256": "316ff63f5b09e3e240a4d4e1cafeb7fcfb27208ccabaaf17fee8a455e8654a24",
+            "url": "https://repo1.maven.org/maven2/org/powermock/powermock-reflect/2.0.9/powermock-reflect-2.0.9.pom"
+        }
+    ],
+    "dependencies": [
+        "*:*:native/bash",
+        "*:*:native/coreutils",
+        "*:*:native/findutils",
+        "*:*:native/jdk@22",
+        "*:*:native/jdk@22/bootstrap-maven/objenesis@3.0.1",
+        "*:*:native/jdk@22/bootstrap-maven/byte-buddy@1.10.14",
+        "*:*:native/jdk@22/bootstrap-maven/byte-buddy-agent@1.10.14"
+    ],
+    "build": {
+        "env": [
+            "*:*:WORKDIR=work/powermock-reflect@2.0.9",
+            "*:*:REPO=$NATIVEPREFIX/share/maven/repository"
+        ],
+        "steps": [
+            "*:*:mkdir -p $WORKDIR",
+            "*:*:find powermock-reflect/src/main/java -name '*.java' >$WORKDIR/sources",
+            "*:*:$JAVA_HOME/bin/javac -XDignore.symbol.file -cp $REPO/org/objenesis/objenesis/3.0.1/objenesis-3.0.1.jar:$REPO/net/bytebuddy/byte-buddy/1.10.14/byte-buddy-1.10.14.jar:$REPO/net/bytebuddy/byte-buddy-agent/1.10.14/byte-buddy-agent-1.10.14.jar -d $WORKDIR/classes @$WORKDIR/sources",
+            "*:*:$JAVA_HOME/bin/jar cf $WORKDIR/powermock-reflect-2.0.9.jar -C $WORKDIR/classes .",
+            "*:*:mkdir -p $STAGING_DIR$NATIVEPREFIX/share/maven/repository/org/powermock/powermock-reflect/2.0.9",
+            "*:*:cp $WORKDIR/powermock-reflect-2.0.9.jar $STAGING_DIR$NATIVEPREFIX/share/maven/repository/org/powermock/powermock-reflect/2.0.9/powermock-reflect-2.0.9.jar",
+            "*:*:cp powermock-reflect-2.0.9.pom $STAGING_DIR$NATIVEPREFIX/share/maven/repository/org/powermock/powermock-reflect/2.0.9/powermock-reflect-2.0.9.pom"
+        ]
+    }
+}

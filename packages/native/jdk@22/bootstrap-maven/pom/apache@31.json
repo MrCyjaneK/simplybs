@@ -1,0 +1,22 @@
+{
+    "package": "native/jdk@22/bootstrap-maven/pom/apache@31",
+    "version": "31",
+    "type": "native",
+    "download": [
+        {
+            "kind": "blob",
+            "path": "./apache-31.pom",
+            "sha256": "555d0c9eaa69c042aff924927b9381e8f8174136d355eead445224452e6291cc",
+            "url": "https://repo1.maven.org/maven2/org/apache/apache/31/apache-31.pom"
+        }
+    ],
+    "dependencies": [
+        "*:*:native/coreutils"
+    ],
+    "build": {
+        "steps": [
+            "*:*:mkdir -p $STAGING_DIR$NATIVEPREFIX/share/maven/repository/org/apache/apache/31",
+            "*:*:cp apache-31.pom $STAGING_DIR$NATIVEPREFIX/share/maven/repository/org/apache/apache/31/apache-31.pom"
+        ]
+    }
+}

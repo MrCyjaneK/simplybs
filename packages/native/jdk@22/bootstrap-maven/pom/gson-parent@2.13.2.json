@@ -1,0 +1,22 @@
+{
+    "package": "native/jdk@22/bootstrap-maven/pom/gson-parent@2.13.2",
+    "version": "2.13.2",
+    "type": "native",
+    "download": [
+        {
+            "kind": "blob",
+            "path": "./gson-parent-2.13.2.pom",
+            "sha256": "83ab528a9d50fd76aeb8ad6f727b3ee9cb766586255774ed16ca8c4c76d9dacd",
+            "url": "https://repo1.maven.org/maven2/com/google/code/gson/gson-parent/2.13.2/gson-parent-2.13.2.pom"
+        }
+    ],
+    "dependencies": [
+        "*:*:native/coreutils"
+    ],
+    "build": {
+        "steps": [
+            "*:*:mkdir -p $STAGING_DIR$NATIVEPREFIX/share/maven/repository/com/google/code/gson/gson-parent/2.13.2",
+            "*:*:cp gson-parent-2.13.2.pom $STAGING_DIR$NATIVEPREFIX/share/maven/repository/com/google/code/gson/gson-parent/2.13.2/gson-parent-2.13.2.pom"
+        ]
+    }
+}

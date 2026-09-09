@@ -1,0 +1,22 @@
+{
+    "package": "native/jdk@22/bootstrap-maven/pom/byte-buddy-parent@1.10.14",
+    "version": "1.10.14",
+    "type": "native",
+    "download": [
+        {
+            "kind": "blob",
+            "path": "./byte-buddy-parent-1.10.14.pom",
+            "sha256": "1fceef152e3962c8fbb3a860110324c7b14f417b925b07edf6ba997cdcf52eb9",
+            "url": "https://repo1.maven.org/maven2/net/bytebuddy/byte-buddy-parent/1.10.14/byte-buddy-parent-1.10.14.pom"
+        }
+    ],
+    "dependencies": [
+        "*:*:native/coreutils"
+    ],
+    "build": {
+        "steps": [
+            "*:*:mkdir -p $STAGING_DIR$NATIVEPREFIX/share/maven/repository/net/bytebuddy/byte-buddy-parent/1.10.14",
+            "*:*:cp byte-buddy-parent-1.10.14.pom $STAGING_DIR$NATIVEPREFIX/share/maven/repository/net/bytebuddy/byte-buddy-parent/1.10.14/byte-buddy-parent-1.10.14.pom"
+        ]
+    }
+}

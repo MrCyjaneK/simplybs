@@ -1,0 +1,41 @@
+{
+    "package": "native/jdk@22/bootstrap-maven/guava@33.6.0-jre",
+    "version": "33.6.0-jre",
+    "type": "native",
+    "download": [
+        {
+            "kind": "git",
+            "sha256": "de1d87eabff93cb4a7fa8e52df5fc46802c95b17",
+            "url": "https://github.com/google/guava.git"
+        }
+    ],
+    "dependencies": [
+        "*:*:native/bash",
+        "*:*:native/coreutils",
+        "*:*:native/findutils",
+        "*:*:native/jdk@22",
+        "*:*:native/jdk@22/bootstrap-maven/pom/guava-parent@33.6.0-jre",
+        "*:*:native/jdk@22/bootstrap-maven/failureaccess@1.0.3",
+        "*:*:native/jdk@22/bootstrap-maven/listenablefuture@9999.0-empty-to-avoid-conflict-with-guava",
+        "*:*:native/jdk@22/bootstrap-maven/jspecify@1.0.0",
+        "*:*:native/jdk@22/bootstrap-maven/error_prone_annotations@2.47.0",
+        "*:*:native/jdk@22/bootstrap-maven/j2objc-annotations@3.1",
+        "*:*:native/jdk@22/bootstrap-maven/checker-qual@3.12.0",
+        "*:*:native/jdk@22/bootstrap-maven/jsr305@3.0.2"
+    ],
+    "build": {
+        "env": [
+            "*:*:WORKDIR=work/guava@33.6.0-jre",
+            "*:*:REPO=$NATIVEPREFIX/share/maven/repository"
+        ],
+        "steps": [
+            "*:*:mkdir -p $WORKDIR",
+            "*:*:find guava/src -name '*.java' ! -name 'module-info.java' >$WORKDIR/sources",
+            "*:*:$JAVA_HOME/bin/javac -XDignore.symbol.file -cp $REPO/com/google/guava/failureaccess/1.0.3/failureaccess-1.0.3.jar:$REPO/org/jspecify/jspecify/1.0.0/jspecify-1.0.0.jar:$REPO/com/google/errorprone/error_prone_annotations/2.47.0/error_prone_annotations-2.47.0.jar:$REPO/com/google/j2objc/j2objc-annotations/3.1/j2objc-annotations-3.1.jar:$REPO/org/checkerframework/checker-qual/3.12.0/checker-qual-3.12.0.jar:$REPO/com/google/code/findbugs/jsr305/3.0.2/jsr305-3.0.2.jar -d $WORKDIR/classes @$WORKDIR/sources",
+            "*:*:$JAVA_HOME/bin/jar cf $WORKDIR/guava-33.6.0-jre.jar -C $WORKDIR/classes .",
+            "*:*:mkdir -p $STAGING_DIR$NATIVEPREFIX/share/maven/repository/com/google/guava/guava/33.6.0-jre",
+            "*:*:cp $WORKDIR/guava-33.6.0-jre.jar $STAGING_DIR$NATIVEPREFIX/share/maven/repository/com/google/guava/guava/33.6.0-jre/guava-33.6.0-jre.jar",
+            "*:*:cp guava/pom.xml $STAGING_DIR$NATIVEPREFIX/share/maven/repository/com/google/guava/guava/33.6.0-jre/guava-33.6.0-jre.pom"
+        ]
+    }
+}

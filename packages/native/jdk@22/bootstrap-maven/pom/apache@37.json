@@ -1,0 +1,22 @@
+{
+    "package": "native/jdk@22/bootstrap-maven/pom/apache@37",
+    "version": "37",
+    "type": "native",
+    "download": [
+        {
+            "kind": "blob",
+            "path": "./apache-37.pom",
+            "sha256": "524ec4787aff73af6b3a9fafa154c7f1881b648299b663fdbfcadda1286f2353",
+            "url": "https://repo1.maven.org/maven2/org/apache/apache/37/apache-37.pom"
+        }
+    ],
+    "dependencies": [
+        "*:*:native/coreutils"
+    ],
+    "build": {
+        "steps": [
+            "*:*:mkdir -p $STAGING_DIR$NATIVEPREFIX/share/maven/repository/org/apache/apache/37",
+            "*:*:cp apache-37.pom $STAGING_DIR$NATIVEPREFIX/share/maven/repository/org/apache/apache/37/apache-37.pom"
+        ]
+    }
+}

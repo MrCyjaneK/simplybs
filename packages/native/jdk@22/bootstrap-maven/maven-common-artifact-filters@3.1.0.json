@@ -1,0 +1,41 @@
+{
+    "package": "native/jdk@22/bootstrap-maven/maven-common-artifact-filters@3.1.0",
+    "version": "3.1.0",
+    "type": "native",
+    "download": [
+        {
+            "kind": "git",
+            "sha256": "f8e5dcc61a8eb74739c30218fe265ae221e16767",
+            "url": "https://github.com/apache/maven-common-artifact-filters.git"
+        },
+        {
+            "kind": "blob",
+            "path": "./maven-common-artifact-filters-3.1.0.pom",
+            "sha256": "034e12a9d1d5f5618a9e0dda23aadda4ed659ec55240876b6e954cc2172be456",
+            "url": "https://repo1.maven.org/maven2/org/apache/maven/shared/maven-common-artifact-filters/3.1.0/maven-common-artifact-filters-3.1.0.pom"
+        }
+    ],
+    "dependencies": [
+        "*:*:native/bash",
+        "*:*:native/coreutils",
+        "*:*:native/findutils",
+        "*:*:native/jdk@22",
+        "*:*:native/maven@3.9-bin",
+        "*:*:native/jdk@22/bootstrap-maven/pom/maven-shared-components@33"
+    ],
+    "build": {
+        "env": [
+            "*:*:WORKDIR=work/maven-common-artifact-filters@3.1.0",
+            "*:*:BOOT_LIB=$NATIVEPREFIX/maven-3.9-bootstrap/lib"
+        ],
+        "steps": [
+            "*:*:mkdir -p $WORKDIR/classes",
+            "*:*:find src/main/java -name '*.java' ! -name 'SonatypeAether*.java' ! -name 'ArtifactTransitivityFilter.java' >$WORKDIR/sources",
+            "*:*:$JAVA_HOME/bin/javac --release 8 -cp $(printf '%s:' $BOOT_LIB/*.jar) -d $WORKDIR/classes @$WORKDIR/sources",
+            "*:*:$JAVA_HOME/bin/jar cf $WORKDIR/maven-common-artifact-filters-3.1.0.jar -C $WORKDIR/classes .",
+            "*:*:mkdir -p $STAGING_DIR$NATIVEPREFIX/share/maven/repository/org/apache/maven/shared/maven-common-artifact-filters/3.1.0",
+            "*:*:cp $WORKDIR/maven-common-artifact-filters-3.1.0.jar $STAGING_DIR$NATIVEPREFIX/share/maven/repository/org/apache/maven/shared/maven-common-artifact-filters/3.1.0/maven-common-artifact-filters-3.1.0.jar",
+            "*:*:cp maven-common-artifact-filters-3.1.0.pom $STAGING_DIR$NATIVEPREFIX/share/maven/repository/org/apache/maven/shared/maven-common-artifact-filters/3.1.0/maven-common-artifact-filters-3.1.0.pom"
+        ]
+    }
+}

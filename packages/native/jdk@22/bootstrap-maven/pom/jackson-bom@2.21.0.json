@@ -1,0 +1,22 @@
+{
+    "package": "native/jdk@22/bootstrap-maven/pom/jackson-bom@2.21.0",
+    "version": "2.21.0",
+    "type": "native",
+    "download": [
+        {
+            "kind": "blob",
+            "path": "./jackson-bom-2.21.0.pom",
+            "sha256": "28b06c4e5f51330c4fced2b3bd6194188cfd237068ea17e592139164537721ff",
+            "url": "https://repo1.maven.org/maven2/com/fasterxml/jackson/jackson-bom/2.21.0/jackson-bom-2.21.0.pom"
+        }
+    ],
+    "dependencies": [
+        "*:*:native/coreutils"
+    ],
+    "build": {
+        "steps": [
+            "*:*:mkdir -p $STAGING_DIR$NATIVEPREFIX/share/maven/repository/com/fasterxml/jackson/jackson-bom/2.21.0",
+            "*:*:cp jackson-bom-2.21.0.pom $STAGING_DIR$NATIVEPREFIX/share/maven/repository/com/fasterxml/jackson/jackson-bom/2.21.0/jackson-bom-2.21.0.pom"
+        ]
+    }
+}

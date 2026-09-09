@@ -1,0 +1,22 @@
+{
+    "package": "native/jdk@22/bootstrap-maven/pom/oss-parent@75",
+    "version": "75",
+    "type": "native",
+    "download": [
+        {
+            "kind": "blob",
+            "path": "./oss-parent-75.pom",
+            "sha256": "fcbbf1c18c9047e6917d384f2064e21b42a58fc85fb0523a9e2e015eff7c619d",
+            "url": "https://repo1.maven.org/maven2/com/fasterxml/oss-parent/75/oss-parent-75.pom"
+        }
+    ],
+    "dependencies": [
+        "*:*:native/coreutils"
+    ],
+    "build": {
+        "steps": [
+            "*:*:mkdir -p $STAGING_DIR$NATIVEPREFIX/share/maven/repository/com/fasterxml/oss-parent/75",
+            "*:*:cp oss-parent-75.pom $STAGING_DIR$NATIVEPREFIX/share/maven/repository/com/fasterxml/oss-parent/75/oss-parent-75.pom"
+        ]
+    }
+}

@@ -1,0 +1,22 @@
+{
+    "package": "native/jdk@22/bootstrap-maven/pom/antlr-master@3.4",
+    "version": "3.4",
+    "type": "native",
+    "download": [
+        {
+            "kind": "blob",
+            "path": "./antlr-master-3.4.pom",
+            "sha256": "0328b31d9f1c7f063e37e00f62c56c8e5d03fea1d572982c1ad8e6f1872f0eee",
+            "url": "https://repo1.maven.org/maven2/org/antlr/antlr-master/3.4/antlr-master-3.4.pom"
+        }
+    ],
+    "dependencies": [
+        "*:*:native/coreutils"
+    ],
+    "build": {
+        "steps": [
+            "*:*:mkdir -p $STAGING_DIR$NATIVEPREFIX/share/maven/repository/org/antlr/antlr-master/3.4",
+            "*:*:cp antlr-master-3.4.pom $STAGING_DIR$NATIVEPREFIX/share/maven/repository/org/antlr/antlr-master/3.4/antlr-master-3.4.pom"
+        ]
+    }
+}

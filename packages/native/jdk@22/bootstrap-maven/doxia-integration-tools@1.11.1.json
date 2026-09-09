@@ -1,0 +1,55 @@
+{
+    "package": "native/jdk@22/bootstrap-maven/doxia-integration-tools@1.11.1",
+    "version": "1.11.1",
+    "type": "native",
+    "download": [
+        {
+            "kind": "git",
+            "sha256": "1f9fcf561c3a4e7ccd39dfd49bb905a296bfac1b",
+            "url": "https://github.com/apache/maven-doxia-sitetools.git"
+        },
+        {
+            "kind": "blob",
+            "path": "./doxia-integration-tools-1.11.1.pom",
+            "sha256": "1ad03814f59e835fbe6ba81d214b7f27cc6a8a688ac80791c2baa036ca53ec12",
+            "url": "https://repo1.maven.org/maven2/org/apache/maven/doxia/doxia-integration-tools/1.11.1/doxia-integration-tools-1.11.1.pom"
+        }
+    ],
+    "dependencies": [
+        "*:*:native/bash",
+        "*:*:native/coreutils",
+        "*:*:native/findutils",
+        "*:*:native/jdk@22",
+        "*:*:native/maven@3.9-bin",
+        "*:*:native/jdk@22/bootstrap-maven/pom/doxia-sitetools@1.11.1",
+        "*:*:native/jdk@22/bootstrap-maven/maven-reporting-api@3.1.1",
+        "*:*:native/jdk@22/bootstrap-maven/commons-io@2.15.1",
+        "*:*:native/jdk@22/bootstrap-maven/maven-artifact@2.2.1",
+        "*:*:native/jdk@22/bootstrap-maven/maven-model@2.2.1",
+        "*:*:native/jdk@22/bootstrap-maven/maven-plugin-api@2.2.1",
+        "*:*:native/jdk@22/bootstrap-maven/doxia-logging-api@1.12.0",
+        "*:*:native/jdk@22/bootstrap-maven/doxia-decoration-model@1.11.1",
+        "*:*:native/jdk@22/bootstrap-maven/plexus-container-default@2.1.0",
+        "*:*:native/jdk@22/bootstrap-maven/plexus-i18n@1.0-beta-10",
+        "*:*:native/jdk@22/bootstrap-maven/plexus-utils@3.5.1",
+        "*:*:native/jdk@22/bootstrap-maven/plexus-component-annotations@2.1.0",
+        "*:*:native/jdk@22/bootstrap-maven/plexus-interpolation@1.26"
+    ],
+    "build": {
+        "env": [
+            "*:*:WORKDIR=work/doxia-integration-tools@1.11.1",
+            "*:*:REPO=$NATIVEPREFIX/share/maven/repository",
+            "*:*:BOOT_LIB=$NATIVEPREFIX/maven-3.9-bootstrap/lib"
+        ],
+        "steps": [
+            "*:*:mkdir -p $WORKDIR",
+            "*:*:find doxia-integration-tools/src/main/java -name '*.java' >$WORKDIR/sources",
+            "*:*:$JAVA_HOME/bin/javac --release 8 -cp $(printf '%s:' $BOOT_LIB/*.jar)$REPO/org/apache/maven/reporting/maven-reporting-api/3.1.1/maven-reporting-api-3.1.1.jar:$REPO/commons-io/commons-io/2.15.1/commons-io-2.15.1.jar:$REPO/org/apache/maven/maven-artifact/2.2.1/maven-artifact-2.2.1.jar:$REPO/org/apache/maven/maven-model/2.2.1/maven-model-2.2.1.jar:$REPO/org/apache/maven/maven-plugin-api/2.2.1/maven-plugin-api-2.2.1.jar:$REPO/org/apache/maven/doxia/doxia-logging-api/1.12.0/doxia-logging-api-1.12.0.jar:$REPO/org/apache/maven/doxia/doxia-decoration-model/1.11.1/doxia-decoration-model-1.11.1.jar:$REPO/org/codehaus/plexus/plexus-container-default/2.1.0/plexus-container-default-2.1.0.jar:$REPO/org/codehaus/plexus/plexus-i18n/1.0-beta-10/plexus-i18n-1.0-beta-10.jar:$REPO/org/codehaus/plexus/plexus-utils/3.5.1/plexus-utils-3.5.1.jar:$REPO/org/codehaus/plexus/plexus-component-annotations/2.1.0/plexus-component-annotations-2.1.0.jar:$REPO/org/codehaus/plexus/plexus-interpolation/1.26/plexus-interpolation-1.26.jar -d $WORKDIR/classes @$WORKDIR/sources",
+            "*:*:cp -R doxia-integration-tools/src/main/resources/. $WORKDIR/classes/",
+            "*:*:$JAVA_HOME/bin/jar cf $WORKDIR/doxia-integration-tools-1.11.1.jar -C $WORKDIR/classes .",
+            "*:*:mkdir -p $STAGING_DIR$NATIVEPREFIX/share/maven/repository/org/apache/maven/doxia/doxia-integration-tools/1.11.1",
+            "*:*:cp $WORKDIR/doxia-integration-tools-1.11.1.jar $STAGING_DIR$NATIVEPREFIX/share/maven/repository/org/apache/maven/doxia/doxia-integration-tools/1.11.1/doxia-integration-tools-1.11.1.jar",
+            "*:*:cp doxia-integration-tools-1.11.1.pom $STAGING_DIR$NATIVEPREFIX/share/maven/repository/org/apache/maven/doxia/doxia-integration-tools/1.11.1/doxia-integration-tools-1.11.1.pom"
+        ]
+    }
+}

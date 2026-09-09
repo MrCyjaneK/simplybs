@@ -1,0 +1,42 @@
+{
+    "package": "native/jdk@22/bootstrap-maven/sqljet@1.1.15",
+    "version": "1.1.15",
+    "type": "native",
+    "download": [
+        {
+            "kind": "git",
+            "sha256": "930328fc3afcb87d6122b9c470cb205c13012aab",
+            "url": "https://github.com/MrCyjaneK/mirror-sqljet.git"
+        },
+        {
+            "kind": "blob",
+            "path": "./sqljet-1.1.15.pom",
+            "sha256": "2020b0583a6002823645ae846aa2499ee54385da61b0d97e771b16b973e51ce5",
+            "url": "https://repo1.maven.org/maven2/org/tmatesoft/sqljet/sqljet/1.1.15/sqljet-1.1.15.pom"
+        }
+    ],
+    "dependencies": [
+        "*:*:native/bash",
+        "*:*:native/coreutils",
+        "*:*:native/findutils",
+        "*:*:native/jdk@22",
+        "*:*:native/jdk@22/bootstrap-maven/antlr3@3.2",
+        "*:*:native/jdk@22/bootstrap-maven/antlr-runtime@3.4"
+    ],
+    "build": {
+        "env": [
+            "*:*:WORKDIR=work/sqljet@1.1.15",
+            "*:*:REPO=$NATIVEPREFIX/share/maven/repository"
+        ],
+        "steps": [
+            "*:*:mkdir -p $WORKDIR/gen $WORKDIR/classes",
+            "*:*:$JAVA_HOME/bin/java -cp $NATIVEPREFIX/share/java/antlr3.2.jar org.antlr.Tool -fo $WORKDIR/gen sqljet/src/main/antlr/org/tmatesoft/sqljet/core/internal/lang/Sql.g",
+            "*:*:find sqljet/src/main/java $WORKDIR/gen -name '*.java' >$WORKDIR/sources",
+            "*:*:$JAVA_HOME/bin/javac --release 8 -cp $REPO/org/antlr/antlr-runtime/3.4/antlr-runtime-3.4.jar -d $WORKDIR/classes @$WORKDIR/sources",
+            "*:*:$JAVA_HOME/bin/jar cf $WORKDIR/sqljet-1.1.15.jar -C $WORKDIR/classes .",
+            "*:*:mkdir -p $STAGING_DIR$NATIVEPREFIX/share/maven/repository/org/tmatesoft/sqljet/sqljet/1.1.15",
+            "*:*:cp $WORKDIR/sqljet-1.1.15.jar $STAGING_DIR$NATIVEPREFIX/share/maven/repository/org/tmatesoft/sqljet/sqljet/1.1.15/sqljet-1.1.15.jar",
+            "*:*:cp sqljet-1.1.15.pom $STAGING_DIR$NATIVEPREFIX/share/maven/repository/org/tmatesoft/sqljet/sqljet/1.1.15/sqljet-1.1.15.pom"
+        ]
+    }
+}

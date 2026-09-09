@@ -1,0 +1,22 @@
+{
+    "package": "native/jdk@22/bootstrap-maven/pom/jaxb-api-parent@2.3.1",
+    "version": "2.3.1",
+    "type": "native",
+    "download": [
+        {
+            "kind": "blob",
+            "path": "./jaxb-api-parent-2.3.1.pom",
+            "sha256": "cd1beaa4560dc4dfdb826b9d809e464db22526dfb54264bae78a6ff7efb08e1f",
+            "url": "https://repo1.maven.org/maven2/javax/xml/bind/jaxb-api-parent/2.3.1/jaxb-api-parent-2.3.1.pom"
+        }
+    ],
+    "dependencies": [
+        "*:*:native/coreutils"
+    ],
+    "build": {
+        "steps": [
+            "*:*:mkdir -p $STAGING_DIR$NATIVEPREFIX/share/maven/repository/javax/xml/bind/jaxb-api-parent/2.3.1",
+            "*:*:cp jaxb-api-parent-2.3.1.pom $STAGING_DIR$NATIVEPREFIX/share/maven/repository/javax/xml/bind/jaxb-api-parent/2.3.1/jaxb-api-parent-2.3.1.pom"
+        ]
+    }
+}

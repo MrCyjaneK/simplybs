@@ -1,0 +1,22 @@
+{
+    "package": "native/jdk@22/bootstrap-maven/pom/commons-parent@9",
+    "version": "9",
+    "type": "native",
+    "download": [
+        {
+            "kind": "blob",
+            "path": "./commons-parent-9.pom",
+            "sha256": "5331b7d3e0aed59728c80f1118e4dbf78565d4109e81d16602c9cadbdb23a128",
+            "url": "https://repo1.maven.org/maven2/org/apache/commons/commons-parent/9/commons-parent-9.pom"
+        }
+    ],
+    "dependencies": [
+        "*:*:native/coreutils"
+    ],
+    "build": {
+        "steps": [
+            "*:*:mkdir -p $STAGING_DIR$NATIVEPREFIX/share/maven/repository/org/apache/commons/commons-parent/9",
+            "*:*:cp commons-parent-9.pom $STAGING_DIR$NATIVEPREFIX/share/maven/repository/org/apache/commons/commons-parent/9/commons-parent-9.pom"
+        ]
+    }
+}

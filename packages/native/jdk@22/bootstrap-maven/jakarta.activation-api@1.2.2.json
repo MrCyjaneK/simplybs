@@ -1,0 +1,39 @@
+{
+    "package": "native/jdk@22/bootstrap-maven/jakarta.activation-api@1.2.2",
+    "version": "1.2.2",
+    "type": "native",
+    "download": [
+        {
+            "kind": "git",
+            "sha256": "e199f61f414fa3455734a407a6e56469b3ad97b4",
+            "url": "https://github.com/eclipse-ee4j/jaf.git"
+        },
+        {
+            "kind": "blob",
+            "path": "./jakarta.activation-api-1.2.2.pom",
+            "sha256": "5e50fe938068471f504a7efc4071823425b520eabc6f80c72d935ebd54683091",
+            "url": "https://repo1.maven.org/maven2/jakarta/activation/jakarta.activation-api/1.2.2/jakarta.activation-api-1.2.2.pom"
+        }
+    ],
+    "dependencies": [
+        "*:*:native/bash",
+        "*:*:native/coreutils",
+        "*:*:native/findutils",
+        "*:*:native/jdk@22",
+        "*:*:native/jdk@22/bootstrap-maven/pom/all@1.2.2"
+    ],
+    "build": {
+        "env": [
+            "*:*:WORKDIR=work/jakarta.activation-api@1.2.2"
+        ],
+        "steps": [
+            "*:*:mkdir -p $WORKDIR",
+            "*:*:find activation/src/main/java -name '*.java' ! -name 'module-info.java' >$WORKDIR/sources",
+            "*:*:$JAVA_HOME/bin/javac --release 8 -d $WORKDIR/classes @$WORKDIR/sources",
+            "*:*:$JAVA_HOME/bin/jar cf $WORKDIR/jakarta.activation-api-1.2.2.jar -C $WORKDIR/classes .",
+            "*:*:mkdir -p $STAGING_DIR$NATIVEPREFIX/share/maven/repository/jakarta/activation/jakarta.activation-api/1.2.2",
+            "*:*:cp $WORKDIR/jakarta.activation-api-1.2.2.jar $STAGING_DIR$NATIVEPREFIX/share/maven/repository/jakarta/activation/jakarta.activation-api/1.2.2/jakarta.activation-api-1.2.2.jar",
+            "*:*:cp jakarta.activation-api-1.2.2.pom $STAGING_DIR$NATIVEPREFIX/share/maven/repository/jakarta/activation/jakarta.activation-api/1.2.2/jakarta.activation-api-1.2.2.pom"
+        ]
+    }
+}

@@ -1,0 +1,22 @@
+{
+    "package": "native/jdk@22/bootstrap-maven/pom/javadoc-parser-parent@0.3.1",
+    "version": "0.3.1",
+    "type": "native",
+    "download": [
+        {
+            "kind": "blob",
+            "path": "./javadoc-parser-parent-0.3.1.pom",
+            "sha256": "2dc0aa0eabd6f9f5a1f2fe62acfaa74caab834ced78518fed3750813e5dbd481",
+            "url": "https://repo1.maven.org/maven2/com/github/chhorz/javadoc-parser-parent/0.3.1/javadoc-parser-parent-0.3.1.pom"
+        }
+    ],
+    "dependencies": [
+        "*:*:native/coreutils"
+    ],
+    "build": {
+        "steps": [
+            "*:*:mkdir -p $STAGING_DIR$NATIVEPREFIX/share/maven/repository/com/github/chhorz/javadoc-parser-parent/0.3.1",
+            "*:*:cp javadoc-parser-parent-0.3.1.pom $STAGING_DIR$NATIVEPREFIX/share/maven/repository/com/github/chhorz/javadoc-parser-parent/0.3.1/javadoc-parser-parent-0.3.1.pom"
+        ]
+    }
+}

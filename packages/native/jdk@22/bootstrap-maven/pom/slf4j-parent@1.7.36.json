@@ -1,0 +1,22 @@
+{
+    "package": "native/jdk@22/bootstrap-maven/pom/slf4j-parent@1.7.36",
+    "version": "1.7.36",
+    "type": "native",
+    "download": [
+        {
+            "kind": "blob",
+            "path": "./slf4j-parent-1.7.36.pom",
+            "sha256": "bb388d37fbcdd3cde64c3cede21838693218dc451f04040c5df360a78ed7e812",
+            "url": "https://repo1.maven.org/maven2/org/slf4j/slf4j-parent/1.7.36/slf4j-parent-1.7.36.pom"
+        }
+    ],
+    "dependencies": [
+        "*:*:native/coreutils"
+    ],
+    "build": {
+        "steps": [
+            "*:*:mkdir -p $STAGING_DIR$NATIVEPREFIX/share/maven/repository/org/slf4j/slf4j-parent/1.7.36",
+            "*:*:cp slf4j-parent-1.7.36.pom $STAGING_DIR$NATIVEPREFIX/share/maven/repository/org/slf4j/slf4j-parent/1.7.36/slf4j-parent-1.7.36.pom"
+        ]
+    }
+}

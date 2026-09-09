@@ -1,0 +1,22 @@
+{
+    "package": "native/jdk@22/bootstrap-maven/pom/mojo-parent@95",
+    "version": "95",
+    "type": "native",
+    "download": [
+        {
+            "kind": "blob",
+            "path": "./mojo-parent-95.pom",
+            "sha256": "4fdf1aa46d1fb722e15508b4edeb7b651344c6e29774cd2b76cbec3a84c23a11",
+            "url": "https://repo1.maven.org/maven2/org/codehaus/mojo/mojo-parent/95/mojo-parent-95.pom"
+        }
+    ],
+    "dependencies": [
+        "*:*:native/coreutils"
+    ],
+    "build": {
+        "steps": [
+            "*:*:mkdir -p $STAGING_DIR$NATIVEPREFIX/share/maven/repository/org/codehaus/mojo/mojo-parent/95",
+            "*:*:cp mojo-parent-95.pom $STAGING_DIR$NATIVEPREFIX/share/maven/repository/org/codehaus/mojo/mojo-parent/95/mojo-parent-95.pom"
+        ]
+    }
+}

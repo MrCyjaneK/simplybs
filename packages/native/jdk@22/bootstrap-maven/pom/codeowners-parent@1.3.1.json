@@ -1,0 +1,22 @@
+{
+    "package": "native/jdk@22/bootstrap-maven/pom/codeowners-parent@1.3.1",
+    "version": "1.3.1",
+    "type": "native",
+    "download": [
+        {
+            "kind": "blob",
+            "path": "./codeowners-parent-1.3.1.pom",
+            "sha256": "6080016e148acf31bd0763ce0d73e4b49f68a7d7c0e35b71ac7ebe3561e6d59e",
+            "url": "https://repo1.maven.org/maven2/nl/basjes/codeowners/codeowners-parent/1.3.1/codeowners-parent-1.3.1.pom"
+        }
+    ],
+    "dependencies": [
+        "*:*:native/coreutils"
+    ],
+    "build": {
+        "steps": [
+            "*:*:mkdir -p $STAGING_DIR$NATIVEPREFIX/share/maven/repository/nl/basjes/codeowners/codeowners-parent/1.3.1",
+            "*:*:cp codeowners-parent-1.3.1.pom $STAGING_DIR$NATIVEPREFIX/share/maven/repository/nl/basjes/codeowners/codeowners-parent/1.3.1/codeowners-parent-1.3.1.pom"
+        ]
+    }
+}

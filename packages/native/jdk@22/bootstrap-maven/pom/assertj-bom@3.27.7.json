@@ -1,0 +1,22 @@
+{
+    "package": "native/jdk@22/bootstrap-maven/pom/assertj-bom@3.27.7",
+    "version": "3.27.7",
+    "type": "native",
+    "download": [
+        {
+            "kind": "blob",
+            "path": "./assertj-bom-3.27.7.pom",
+            "sha256": "1c09f6c04c905e1e5cdb22d5dfa5f11a496e19e881de0850b523ed53a0519f5b",
+            "url": "https://repo1.maven.org/maven2/org/assertj/assertj-bom/3.27.7/assertj-bom-3.27.7.pom"
+        }
+    ],
+    "dependencies": [
+        "*:*:native/coreutils"
+    ],
+    "build": {
+        "steps": [
+            "*:*:mkdir -p $STAGING_DIR$NATIVEPREFIX/share/maven/repository/org/assertj/assertj-bom/3.27.7",
+            "*:*:cp assertj-bom-3.27.7.pom $STAGING_DIR$NATIVEPREFIX/share/maven/repository/org/assertj/assertj-bom/3.27.7/assertj-bom-3.27.7.pom"
+        ]
+    }
+}

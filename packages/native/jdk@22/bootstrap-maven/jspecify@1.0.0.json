@@ -1,0 +1,38 @@
+{
+    "package": "native/jdk@22/bootstrap-maven/jspecify@1.0.0",
+    "version": "1.0.0",
+    "type": "native",
+    "download": [
+        {
+            "kind": "git",
+            "sha256": "b2a10e14bb81c1b7cb6e488c112fe55cb2218d7d",
+            "url": "https://github.com/jspecify/jspecify.git"
+        },
+        {
+            "kind": "blob",
+            "path": "./jspecify-1.0.0.pom",
+            "sha256": "cdab929a3b95211f43d2090c5e2d0dfe8465960e378bc32b35841dab324433a6",
+            "url": "https://repo1.maven.org/maven2/org/jspecify/jspecify/1.0.0/jspecify-1.0.0.pom"
+        }
+    ],
+    "dependencies": [
+        "*:*:native/bash",
+        "*:*:native/coreutils",
+        "*:*:native/findutils",
+        "*:*:native/jdk@22"
+    ],
+    "build": {
+        "env": [
+            "*:*:WORKDIR=build/jspecify@1.0.0"
+        ],
+        "steps": [
+            "*:*:mkdir -p $WORKDIR",
+            "*:*:find src/main/java -name '*.java' >$WORKDIR/sources",
+            "*:*:$JAVA_HOME/bin/javac -d $WORKDIR/classes @$WORKDIR/sources",
+            "*:*:$JAVA_HOME/bin/jar cf $WORKDIR/jspecify-1.0.0.jar -C $WORKDIR/classes .",
+            "*:*:mkdir -p $STAGING_DIR$NATIVEPREFIX/share/maven/repository/org/jspecify/jspecify/1.0.0",
+            "*:*:cp $WORKDIR/jspecify-1.0.0.jar $STAGING_DIR$NATIVEPREFIX/share/maven/repository/org/jspecify/jspecify/1.0.0/jspecify-1.0.0.jar",
+            "*:*:cp jspecify-1.0.0.pom $STAGING_DIR$NATIVEPREFIX/share/maven/repository/org/jspecify/jspecify/1.0.0/jspecify-1.0.0.pom"
+        ]
+    }
+}

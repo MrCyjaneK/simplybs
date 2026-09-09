@@ -1,0 +1,44 @@
+{
+    "package": "native/jdk@22/bootstrap-maven/modello-maven-plugin@2.6.0",
+    "version": "2.6.0",
+    "type": "native",
+    "download": [
+        {
+            "kind": "git",
+            "sha256": "e69d432be8e07b23270f1e707c5532dada29d155",
+            "url": "https://github.com/codehaus-plexus/modello.git"
+        }
+    ],
+    "dependencies": [
+        "*:*:native/bash",
+        "*:*:native/coreutils",
+        "*:*:native/findutils",
+        "*:*:native/jdk@22",
+        "*:*:native/maven@3.9-bin",
+        "*:*:native/jdk@22/bootstrap-maven/modello@2.6.0",
+        "*:*:native/jdk@22/bootstrap-maven/javax.inject@1",
+        "*:*:native/jdk@22/bootstrap-maven/slf4j-api@1.7.36",
+        "*:*:native/jdk@22/bootstrap-maven/plexus-utils@4.0.2",
+        "*:*:native/jdk@22/bootstrap-maven/plexus-xml@3.0.1",
+        "*:*:native/jdk@22/bootstrap-maven/plexus-build-api@1.2.0",
+        "*:*:native/jdk@22/bootstrap-maven/maven-plugin-annotations@3.15.2",
+        "*:*:native/jdk@22/bootstrap-maven/maven-plugin-tools-generators@3.15.2"
+    ],
+    "build": {
+        "env": [
+            "*:*:WORKDIR=build/modello-maven-plugin@2.6.0",
+            "*:*:REPO=$NATIVEPREFIX/share/maven/repository",
+            "*:*:BOOT_LIB=$NATIVEPREFIX/maven-3.9-bootstrap/lib"
+        ],
+        "steps": [
+            "*:*:mkdir -p $WORKDIR/classes $WORKDIR/pluginxml/META-INF/maven",
+            "*:*:find modello-maven-plugin/src/main/java -name '*.java' >$WORKDIR/sources",
+            "*:*:$JAVA_HOME/bin/javac -cp $(printf '%s:' $BOOT_LIB/*.jar)$REPO/org/apache/maven/plugin-tools/maven-plugin-annotations/3.15.2/maven-plugin-annotations-3.15.2.jar:$REPO/javax/inject/javax.inject/1/javax.inject-1.jar:$REPO/org/slf4j/slf4j-api/1.7.36/slf4j-api-1.7.36.jar:$REPO/org/codehaus/plexus/plexus-utils/4.0.2/plexus-utils-4.0.2.jar:$REPO/org/codehaus/plexus/plexus-xml/3.0.1/plexus-xml-3.0.1.jar:$REPO/org/codehaus/plexus/plexus-build-api/1.2.0/plexus-build-api-1.2.0.jar:$REPO/org/codehaus/modello/modello-core/2.6.0/modello-core-2.6.0.jar:$REPO/org/codehaus/modello/modello-plugin-velocity/2.6.0/modello-plugin-velocity-2.6.0.jar -d $WORKDIR/classes @$WORKDIR/sources",
+            "*:*:$JAVA_HOME/bin/java -cp $PLUGINXML_JAR:$(printf '%s:' $BOOT_LIB/*.jar) org.apache.maven.tools.plugin.generator.GeneratePluginXml org.codehaus.modello modello-maven-plugin 2.6.0 modello $WORKDIR/classes $WORKDIR/pluginxml/META-INF/maven $(printf '%s:' $BOOT_LIB/*.jar)$REPO/org/apache/maven/plugin-tools/maven-plugin-annotations/3.15.2/maven-plugin-annotations-3.15.2.jar:$REPO/javax/inject/javax.inject/1/javax.inject-1.jar:$REPO/org/slf4j/slf4j-api/1.7.36/slf4j-api-1.7.36.jar:$REPO/org/codehaus/plexus/plexus-utils/4.0.2/plexus-utils-4.0.2.jar:$REPO/org/codehaus/plexus/plexus-xml/3.0.1/plexus-xml-3.0.1.jar:$REPO/org/codehaus/plexus/plexus-build-api/1.2.0/plexus-build-api-1.2.0.jar:$REPO/org/codehaus/modello/modello-core/2.6.0/modello-core-2.6.0.jar:$REPO/org/codehaus/modello/modello-plugin-velocity/2.6.0/modello-plugin-velocity-2.6.0.jar",
+            "*:*:$JAVA_HOME/bin/jar cf $WORKDIR/modello-maven-plugin-2.6.0.jar -C $WORKDIR/classes . -C $WORKDIR/pluginxml .",
+            "*:*:mkdir -p $STAGING_DIR$NATIVEPREFIX/share/maven/repository/org/codehaus/modello/modello-maven-plugin/2.6.0",
+            "*:*:cp $WORKDIR/modello-maven-plugin-2.6.0.jar $STAGING_DIR$NATIVEPREFIX/share/maven/repository/org/codehaus/modello/modello-maven-plugin/2.6.0/modello-maven-plugin-2.6.0.jar",
+            "*:*:cp modello-maven-plugin/pom.xml $STAGING_DIR$NATIVEPREFIX/share/maven/repository/org/codehaus/modello/modello-maven-plugin/2.6.0/modello-maven-plugin-2.6.0.pom"
+        ]
+    }
+}

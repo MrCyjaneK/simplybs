@@ -1,0 +1,38 @@
+{
+    "package": "native/jdk@22/bootstrap-maven/sequence-library@1.0.4",
+    "version": "1.0.4",
+    "type": "native",
+    "download": [
+        {
+            "kind": "git",
+            "sha256": "63794eccc15f3f50cf8e164faefef8b840ef8791",
+            "url": "https://salsa.debian.org/java-team/libsequence-library-java.git"
+        },
+        {
+            "kind": "blob",
+            "path": "./sequence-library-1.0.4.pom",
+            "sha256": "4adee65d24ef4b03ed9ebbff7fbefe4e90a6919d6e2066d0875facd360111338",
+            "url": "https://repo1.maven.org/maven2/de/regnis/q/sequence/sequence-library/1.0.4/sequence-library-1.0.4.pom"
+        }
+    ],
+    "dependencies": [
+        "*:*:native/bash",
+        "*:*:native/coreutils",
+        "*:*:native/findutils",
+        "*:*:native/jdk@22"
+    ],
+    "build": {
+        "env": [
+            "*:*:WORKDIR=work/sequence-library@1.0.4"
+        ],
+        "steps": [
+            "*:*:mkdir -p $WORKDIR",
+            "*:*:find src/main/java -name '*.java' >$WORKDIR/sources",
+            "*:*:$JAVA_HOME/bin/javac --release 8 -d $WORKDIR/classes @$WORKDIR/sources",
+            "*:*:$JAVA_HOME/bin/jar cf $WORKDIR/sequence-library-1.0.4.jar -C $WORKDIR/classes .",
+            "*:*:mkdir -p $STAGING_DIR$NATIVEPREFIX/share/maven/repository/de/regnis/q/sequence/sequence-library/1.0.4",
+            "*:*:cp $WORKDIR/sequence-library-1.0.4.jar $STAGING_DIR$NATIVEPREFIX/share/maven/repository/de/regnis/q/sequence/sequence-library/1.0.4/sequence-library-1.0.4.jar",
+            "*:*:cp sequence-library-1.0.4.pom $STAGING_DIR$NATIVEPREFIX/share/maven/repository/de/regnis/q/sequence/sequence-library/1.0.4/sequence-library-1.0.4.pom"
+        ]
+    }
+}

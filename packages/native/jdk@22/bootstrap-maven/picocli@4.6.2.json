@@ -1,0 +1,38 @@
+{
+    "package": "native/jdk@22/bootstrap-maven/picocli@4.6.2",
+    "version": "4.6.2",
+    "type": "native",
+    "download": [
+        {
+            "kind": "git",
+            "sha256": "03541f6d411e2bd511915ab18fdc262d4a03a8b2",
+            "url": "https://github.com/remkop/picocli.git"
+        },
+        {
+            "kind": "blob",
+            "path": "./picocli-4.6.2.pom",
+            "sha256": "deae29da5c51e3fe9d95af6e8f39156c2bc1b749e242d0136e9e232083481799",
+            "url": "https://repo1.maven.org/maven2/info/picocli/picocli/4.6.2/picocli-4.6.2.pom"
+        }
+    ],
+    "dependencies": [
+        "*:*:native/bash",
+        "*:*:native/coreutils",
+        "*:*:native/findutils",
+        "*:*:native/jdk@22"
+    ],
+    "build": {
+        "env": [
+            "*:*:WORKDIR=build/picocli@4.6.2"
+        ],
+        "steps": [
+            "*:*:mkdir -p $WORKDIR",
+            "*:*:find src/main/java -name '*.java' ! -name 'module-info.java' >$WORKDIR/sources",
+            "*:*:$JAVA_HOME/bin/javac -d $WORKDIR/classes @$WORKDIR/sources",
+            "*:*:$JAVA_HOME/bin/jar cf $WORKDIR/picocli-4.6.2.jar -C $WORKDIR/classes .",
+            "*:*:mkdir -p $STAGING_DIR$NATIVEPREFIX/share/maven/repository/info/picocli/picocli/4.6.2",
+            "*:*:cp $WORKDIR/picocli-4.6.2.jar $STAGING_DIR$NATIVEPREFIX/share/maven/repository/info/picocli/picocli/4.6.2/picocli-4.6.2.jar",
+            "*:*:cp picocli-4.6.2.pom $STAGING_DIR$NATIVEPREFIX/share/maven/repository/info/picocli/picocli/4.6.2/picocli-4.6.2.pom"
+        ]
+    }
+}

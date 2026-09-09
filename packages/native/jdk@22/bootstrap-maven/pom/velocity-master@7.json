@@ -1,0 +1,22 @@
+{
+    "package": "native/jdk@22/bootstrap-maven/pom/velocity-master@7",
+    "version": "7",
+    "type": "native",
+    "download": [
+        {
+            "kind": "blob",
+            "path": "./velocity-master-7.pom",
+            "sha256": "943a046c1fe36b28b3cea11fb0d34e8b836b245433087f8fa916c0a752393181",
+            "url": "https://repo1.maven.org/maven2/org/apache/velocity/velocity-master/7/velocity-master-7.pom"
+        }
+    ],
+    "dependencies": [
+        "*:*:native/coreutils"
+    ],
+    "build": {
+        "steps": [
+            "*:*:mkdir -p $STAGING_DIR$NATIVEPREFIX/share/maven/repository/org/apache/velocity/velocity-master/7",
+            "*:*:cp velocity-master-7.pom $STAGING_DIR$NATIVEPREFIX/share/maven/repository/org/apache/velocity/velocity-master/7/velocity-master-7.pom"
+        ]
+    }
+}

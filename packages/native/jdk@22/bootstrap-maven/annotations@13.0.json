@@ -1,0 +1,40 @@
+{
+    "package": "native/jdk@22/bootstrap-maven/annotations@13.0",
+    "version": "13.0",
+    "type": "native",
+    "download": [
+        {
+            "kind": "blob",
+            "path": "./annotations-13.0-sources.jar",
+            "sha256": "42a5e144b8e81d50d6913d1007b695e62e614705268d8cf9f13dbdc478c2c68e",
+            "url": "https://repo1.maven.org/maven2/org/jetbrains/annotations/13.0/annotations-13.0-sources.jar"
+        },
+        {
+            "kind": "blob",
+            "path": "./annotations-13.0.pom",
+            "sha256": "965aeb2bedff369819bdde1bf7a0b3b89b8247dd69c88b86375d76163bb8c397",
+            "url": "https://repo1.maven.org/maven2/org/jetbrains/annotations/13.0/annotations-13.0.pom"
+        }
+    ],
+    "dependencies": [
+        "*:*:native/bash",
+        "*:*:native/coreutils",
+        "*:*:native/findutils",
+        "*:*:native/jdk@22"
+    ],
+    "build": {
+        "env": [
+            "*:*:WORKDIR=work/annotations@13.0"
+        ],
+        "steps": [
+            "*:*:mkdir -p $WORKDIR/src $WORKDIR/classes",
+            "*:*:cd $WORKDIR/src && $JAVA_HOME/bin/jar xf $OLDPWD/annotations-13.0-sources.jar",
+            "*:*:find $WORKDIR/src -name '*.java' >$WORKDIR/sources",
+            "*:*:$JAVA_HOME/bin/javac --release 8 -d $WORKDIR/classes @$WORKDIR/sources",
+            "*:*:$JAVA_HOME/bin/jar cf $WORKDIR/annotations-13.0.jar -C $WORKDIR/classes .",
+            "*:*:mkdir -p $STAGING_DIR$NATIVEPREFIX/share/maven/repository/org/jetbrains/annotations/13.0",
+            "*:*:cp $WORKDIR/annotations-13.0.jar $STAGING_DIR$NATIVEPREFIX/share/maven/repository/org/jetbrains/annotations/13.0/annotations-13.0.jar",
+            "*:*:cp annotations-13.0.pom $STAGING_DIR$NATIVEPREFIX/share/maven/repository/org/jetbrains/annotations/13.0/annotations-13.0.pom"
+        ]
+    }
+}

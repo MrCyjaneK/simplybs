@@ -1,0 +1,37 @@
+{
+    "package": "native/jdk@22/bootstrap-maven/httpclient@4.5.13",
+    "version": "4.5.13",
+    "type": "native",
+    "download": [
+        {
+            "kind": "git",
+            "sha256": "dd76cf91c8f9125c7e0e29770622271f9417b46d",
+            "url": "https://github.com/apache/httpcomponents-client.git"
+        }
+    ],
+    "dependencies": [
+        "*:*:native/bash",
+        "*:*:native/coreutils",
+        "*:*:native/findutils",
+        "*:*:native/jdk@22",
+        "*:*:native/jdk@22/bootstrap-maven/pom/httpcomponents-client@4.5.13",
+        "*:*:native/jdk@22/bootstrap-maven/httpcore@4.4.14",
+        "*:*:native/jdk@22/bootstrap-maven/commons-logging@1.2",
+        "*:*:native/jdk@22/bootstrap-maven/commons-codec@1.11"
+    ],
+    "build": {
+        "env": [
+            "*:*:WORKDIR=build/httpclient@4.5.13",
+            "*:*:REPO=$NATIVEPREFIX/share/maven/repository"
+        ],
+        "steps": [
+            "*:*:mkdir -p $WORKDIR",
+            "*:*:find httpclient/src/main -name '*.java' >$WORKDIR/sources",
+            "*:*:$JAVA_HOME/bin/javac --release 8 -cp $REPO/org/apache/httpcomponents/httpcore/4.4.14/httpcore-4.4.14.jar:$REPO/commons-logging/commons-logging/1.2/commons-logging-1.2.jar:$REPO/commons-codec/commons-codec/1.11/commons-codec-1.11.jar -d $WORKDIR/classes @$WORKDIR/sources",
+            "*:*:$JAVA_HOME/bin/jar cf $WORKDIR/httpclient-4.5.13.jar -C $WORKDIR/classes .",
+            "*:*:mkdir -p $STAGING_DIR$NATIVEPREFIX/share/maven/repository/org/apache/httpcomponents/httpclient/4.5.13",
+            "*:*:cp $WORKDIR/httpclient-4.5.13.jar $STAGING_DIR$NATIVEPREFIX/share/maven/repository/org/apache/httpcomponents/httpclient/4.5.13/httpclient-4.5.13.jar",
+            "*:*:cp httpclient/pom.xml $STAGING_DIR$NATIVEPREFIX/share/maven/repository/org/apache/httpcomponents/httpclient/4.5.13/httpclient-4.5.13.pom"
+        ]
+    }
+}

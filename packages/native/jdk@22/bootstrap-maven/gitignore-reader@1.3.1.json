@@ -1,0 +1,37 @@
+{
+    "package": "native/jdk@22/bootstrap-maven/gitignore-reader@1.3.1",
+    "version": "1.3.1",
+    "type": "native",
+    "download": [
+        {
+            "kind": "git",
+            "sha256": "41f9daaf97f10945c110d1bcaaf2a44daff6ef69",
+            "url": "https://github.com/nielsbasjes/codeowners.git"
+        }
+    ],
+    "dependencies": [
+        "*:*:native/bash",
+        "*:*:native/coreutils",
+        "*:*:native/findutils",
+        "*:*:native/jdk@22",
+        "*:*:native/jdk@22/bootstrap-maven/pom/codeowners-parent@1.3.1",
+        "*:*:native/jdk@22/bootstrap-maven/commons-io@2.15.1",
+        "*:*:native/jdk@22/bootstrap-maven/slf4j-api@1.7.36",
+        "*:*:native/jdk@22/bootstrap-maven/pom/slf4j-parent@1.7.36"
+    ],
+    "build": {
+        "env": [
+            "*:*:WORKDIR=build/gitignore-reader@1.3.1",
+            "*:*:REPO=$NATIVEPREFIX/share/maven/repository"
+        ],
+        "steps": [
+            "*:*:mkdir -p $WORKDIR",
+            "*:*:find gitignore-reader/src/main/java -name '*.java' >$WORKDIR/sources",
+            "*:*:$JAVA_HOME/bin/javac -cp $REPO/commons-io/commons-io/2.15.1/commons-io-2.15.1.jar:$REPO/org/slf4j/slf4j-api/1.7.36/slf4j-api-1.7.36.jar -d $WORKDIR/classes @$WORKDIR/sources",
+            "*:*:$JAVA_HOME/bin/jar cf $WORKDIR/gitignore-reader-1.3.1.jar -C $WORKDIR/classes .",
+            "*:*:mkdir -p $STAGING_DIR$NATIVEPREFIX/share/maven/repository/nl/basjes/gitignore/gitignore-reader/1.3.1",
+            "*:*:cp $WORKDIR/gitignore-reader-1.3.1.jar $STAGING_DIR$NATIVEPREFIX/share/maven/repository/nl/basjes/gitignore/gitignore-reader/1.3.1/gitignore-reader-1.3.1.jar",
+            "*:*:cp gitignore-reader/pom.xml $STAGING_DIR$NATIVEPREFIX/share/maven/repository/nl/basjes/gitignore/gitignore-reader/1.3.1/gitignore-reader-1.3.1.pom"
+        ]
+    }
+}

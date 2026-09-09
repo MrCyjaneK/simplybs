@@ -1,0 +1,30 @@
+{
+    "package": "native/jdk@22/mvn/json@20231013",
+    "version": "20231013",
+    "type": "native",
+    "download": [
+        {
+            "kind": "git",
+            "sha256": "f346203cd663bb680cad0d5894e7c147e36f31cd",
+            "url": "https://github.com/stleary/JSON-java.git"
+        }
+    ],
+    "dependencies": [
+        "*:*:native/coreutils",
+        "*:*:native/findutils",
+        "*:*:native/jdk@22"
+    ],
+    "build": {
+        "env": [
+            "*:*:WORKDIR=work/json@20231013"
+        ],
+        "steps": [
+            "*:*:mkdir -p $WORKDIR/classes",
+            "*:*:find src/main/java -name '*.java' ! -name 'module-info.java' >$WORKDIR/sources",
+            "*:*:$JAVA_HOME/bin/javac --release 8 -d $WORKDIR/classes @$WORKDIR/sources",
+            "*:*:$JAVA_HOME/bin/jar cf $WORKDIR/json-20231013.jar -C $WORKDIR/classes .",
+            "*:*:mkdir -p $STAGING_DIR$NATIVEPREFIX/share/maven/repository/org/json/json/20231013",
+            "*:*:cp $WORKDIR/json-20231013.jar $STAGING_DIR$NATIVEPREFIX/share/maven/repository/org/json/json/20231013/json-20231013.jar"
+        ]
+    }
+}

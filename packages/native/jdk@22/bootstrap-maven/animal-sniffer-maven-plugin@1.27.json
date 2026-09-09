@@ -1,0 +1,66 @@
+{
+    "package": "native/jdk@22/bootstrap-maven/animal-sniffer-maven-plugin@1.27",
+    "version": "1.27",
+    "type": "native",
+    "download": [
+        {
+            "kind": "git",
+            "sha256": "5adf3aad06658c44de48ba2fddf9819685230e5f",
+            "url": "https://github.com/mojohaus/animal-sniffer.git"
+        }
+    ],
+    "dependencies": [
+        "*:*:native/bash",
+        "*:*:native/coreutils",
+        "*:*:native/findutils",
+        "*:*:native/jdk@22",
+        "*:*:native/jdk@22/bootstrap-maven/org.eclipse.sisu.inject@1.0.0",
+        "*:*:native/jdk@22/bootstrap-maven/javax.inject@1",
+        "*:*:native/maven@3.9-bin",
+        "*:*:native/jdk@22/bootstrap-maven/pom/mojo-parent@95",
+        "*:*:native/jdk@22/bootstrap-maven/asm@9.9.1",
+        "*:*:native/jdk@22/bootstrap-maven/commons-lang3@3.20.0",
+        "*:*:native/jdk@22/bootstrap-maven/maven-plugin-annotations@3.15.2",
+        "*:*:native/jdk@22/bootstrap-maven/maven-plugin-tools-generators@3.15.2",
+        "*:*:native/jdk@22/bootstrap-maven/maven-common-artifact-filters@3.4.0",
+        "*:*:native/jdk@22/bootstrap-maven/plexus-utils@4.0.2"
+    ],
+    "build": {
+        "env": [
+            "*:*:WORKDIR=work/animal-sniffer-maven-plugin@1.27",
+            "*:*:REPO=$NATIVEPREFIX/share/maven/repository",
+            "*:*:BOOT_LIB=$NATIVEPREFIX/maven-3.9-bootstrap/lib"
+        ],
+        "steps": [
+            "*:*:mkdir -p $WORKDIR",
+            "*:*:mkdir -p $STAGING_DIR$NATIVEPREFIX/share/maven/repository/org/codehaus/mojo/animal-sniffer-parent/1.27",
+            "*:*:cp pom.xml $STAGING_DIR$NATIVEPREFIX/share/maven/repository/org/codehaus/mojo/animal-sniffer-parent/1.27/animal-sniffer-parent-1.27.pom",
+            "*:*:find animal-sniffer-annotations/src/main/java -name '*.java' >$WORKDIR/ann.sources",
+            "*:*:$JAVA_HOME/bin/javac -d $WORKDIR/ann @$WORKDIR/ann.sources",
+            "*:*:$JAVA_HOME/bin/jar cf $WORKDIR/animal-sniffer-annotations-1.27.jar -C $WORKDIR/ann .",
+            "*:*:mkdir -p $STAGING_DIR$NATIVEPREFIX/share/maven/repository/org/codehaus/mojo/animal-sniffer-annotations/1.27",
+            "*:*:cp $WORKDIR/animal-sniffer-annotations-1.27.jar $STAGING_DIR$NATIVEPREFIX/share/maven/repository/org/codehaus/mojo/animal-sniffer-annotations/1.27/animal-sniffer-annotations-1.27.jar",
+            "*:*:cp animal-sniffer-annotations/pom.xml $STAGING_DIR$NATIVEPREFIX/share/maven/repository/org/codehaus/mojo/animal-sniffer-annotations/1.27/animal-sniffer-annotations-1.27.pom",
+            "*:*:find java-boot-classpath-detector/src/main/java -name '*.java' >$WORKDIR/jbcpd.sources",
+            "*:*:$JAVA_HOME/bin/javac -d $WORKDIR/jbcpd @$WORKDIR/jbcpd.sources",
+            "*:*:$JAVA_HOME/bin/jar cf $WORKDIR/java-boot-classpath-detector-1.27.jar -C $WORKDIR/jbcpd .",
+            "*:*:mkdir -p $STAGING_DIR$NATIVEPREFIX/share/maven/repository/org/codehaus/mojo/java-boot-classpath-detector/1.27",
+            "*:*:cp $WORKDIR/java-boot-classpath-detector-1.27.jar $STAGING_DIR$NATIVEPREFIX/share/maven/repository/org/codehaus/mojo/java-boot-classpath-detector/1.27/java-boot-classpath-detector-1.27.jar",
+            "*:*:cp java-boot-classpath-detector/pom.xml $STAGING_DIR$NATIVEPREFIX/share/maven/repository/org/codehaus/mojo/java-boot-classpath-detector/1.27/java-boot-classpath-detector-1.27.pom",
+            "*:*:find animal-sniffer/src/main/java -name '*.java' >$WORKDIR/core.sources",
+            "*:*:$JAVA_HOME/bin/javac -cp $WORKDIR/animal-sniffer-annotations-1.27.jar:$REPO/org/ow2/asm/asm/9.9.1/asm-9.9.1.jar -d $WORKDIR/core @$WORKDIR/core.sources",
+            "*:*:$JAVA_HOME/bin/jar cf $WORKDIR/animal-sniffer-1.27.jar -C $WORKDIR/core .",
+            "*:*:mkdir -p $STAGING_DIR$NATIVEPREFIX/share/maven/repository/org/codehaus/mojo/animal-sniffer/1.27",
+            "*:*:cp $WORKDIR/animal-sniffer-1.27.jar $STAGING_DIR$NATIVEPREFIX/share/maven/repository/org/codehaus/mojo/animal-sniffer/1.27/animal-sniffer-1.27.jar",
+            "*:*:cp animal-sniffer/pom.xml $STAGING_DIR$NATIVEPREFIX/share/maven/repository/org/codehaus/mojo/animal-sniffer/1.27/animal-sniffer-1.27.pom",
+            "*:*:find animal-sniffer-maven-plugin/src/main/java -name '*.java' >$WORKDIR/plugin.sources",
+            "*:*:$JAVA_HOME/bin/javac -cp $(printf '%s:' $BOOT_LIB/*.jar)$REPO/org/apache/maven/plugin-tools/maven-plugin-annotations/3.15.2/maven-plugin-annotations-3.15.2.jar:$WORKDIR/animal-sniffer-1.27.jar:$WORKDIR/java-boot-classpath-detector-1.27.jar:$REPO/org/apache/maven/shared/maven-common-artifact-filters/3.4.0/maven-common-artifact-filters-3.4.0.jar:$REPO/org/codehaus/plexus/plexus-utils/4.0.2/plexus-utils-4.0.2.jar:$REPO/org/apache/commons/commons-lang3/3.20.0/commons-lang3-3.20.0.jar -processorpath $REPO/org/eclipse/sisu/org.eclipse.sisu.inject/1.0.0/org.eclipse.sisu.inject-1.0.0.jar:$REPO/javax/inject/javax.inject/1/javax.inject-1.jar -processor org.eclipse.sisu.space.SisuIndexAPT6 -d $WORKDIR/plugin @$WORKDIR/plugin.sources",
+            "*:*:mkdir -p $WORKDIR/plugin-res/META-INF/maven",
+            "*:*:$JAVA_HOME/bin/java -cp $PLUGINXML_JAR:$(printf '%s:' $BOOT_LIB/*.jar) org.apache.maven.tools.plugin.generator.GeneratePluginXml org.codehaus.mojo animal-sniffer-maven-plugin 1.27 animal-sniffer $WORKDIR/plugin $WORKDIR/plugin-res/META-INF/maven $(printf '%s:' $BOOT_LIB/*.jar)$REPO/org/apache/maven/plugin-tools/maven-plugin-annotations/3.15.2/maven-plugin-annotations-3.15.2.jar:$WORKDIR/animal-sniffer-1.27.jar:$WORKDIR/java-boot-classpath-detector-1.27.jar:$REPO/org/apache/maven/shared/maven-common-artifact-filters/3.4.0/maven-common-artifact-filters-3.4.0.jar:$REPO/org/codehaus/plexus/plexus-utils/4.0.2/plexus-utils-4.0.2.jar:$REPO/org/apache/commons/commons-lang3/3.20.0/commons-lang3-3.20.0.jar",
+            "*:*:$JAVA_HOME/bin/jar cf $WORKDIR/animal-sniffer-maven-plugin-1.27.jar -C $WORKDIR/plugin . -C $WORKDIR/plugin-res .",
+            "*:*:mkdir -p $STAGING_DIR$NATIVEPREFIX/share/maven/repository/org/codehaus/mojo/animal-sniffer-maven-plugin/1.27",
+            "*:*:cp $WORKDIR/animal-sniffer-maven-plugin-1.27.jar $STAGING_DIR$NATIVEPREFIX/share/maven/repository/org/codehaus/mojo/animal-sniffer-maven-plugin/1.27/animal-sniffer-maven-plugin-1.27.jar",
+            "*:*:cp animal-sniffer-maven-plugin/pom.xml $STAGING_DIR$NATIVEPREFIX/share/maven/repository/org/codehaus/mojo/animal-sniffer-maven-plugin/1.27/animal-sniffer-maven-plugin-1.27.pom"
+        ]
+    }
+}

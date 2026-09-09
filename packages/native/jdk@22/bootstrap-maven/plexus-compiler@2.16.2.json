@@ -1,0 +1,62 @@
+{
+    "package": "native/jdk@22/bootstrap-maven/plexus-compiler@2.16.2",
+    "version": "2.16.2",
+    "type": "native",
+    "download": [
+        {
+            "kind": "git",
+            "sha256": "36237da5f5a6c9e1dce4479596e975f5cc045793",
+            "url": "https://github.com/codehaus-plexus/plexus-compiler.git"
+        }
+    ],
+    "dependencies": [
+        "*:*:native/bash",
+        "*:*:native/coreutils",
+        "*:*:native/findutils",
+        "*:*:native/jdk@22",
+        "*:*:native/jdk@22/bootstrap-maven/org.eclipse.sisu.inject@1.0.0",
+        "*:*:native/jdk@22/bootstrap-maven/pom/plexus@25",
+        "*:*:native/jdk@22/bootstrap-maven/javax.inject@1",
+        "*:*:native/jdk@22/bootstrap-maven/slf4j-api@1.7.36",
+        "*:*:native/jdk@22/bootstrap-maven/plexus-utils@4.0.2",
+        "*:*:native/jdk@22/bootstrap-maven/plexus-xml@3.0.1",
+        "*:*:native/jdk@22/bootstrap-maven/plexus-container-default@2.1.0"
+    ],
+    "build": {
+        "env": [
+            "*:*:WORKDIR=build/plexus-compiler@2.16.2",
+            "*:*:REPO=$NATIVEPREFIX/share/maven/repository",
+            "*:*:CP_API=$REPO/org/codehaus/plexus/plexus-utils/4.0.2/plexus-utils-4.0.2.jar:$REPO/org/slf4j/slf4j-api/1.7.36/slf4j-api-1.7.36.jar:$REPO/org/codehaus/plexus/plexus-container-default/2.1.0/plexus-container-default-2.1.0.jar",
+            "*:*:CP_MGR=$CP_API:$WORKDIR/plexus-compiler-api-2.16.2.jar:$REPO/javax/inject/javax.inject/1/javax.inject-1.jar:$REPO/org/codehaus/plexus/plexus-xml/3.0.1/plexus-xml-3.0.1.jar",
+            "*:*:CP_JAVAC=$CP_API:$WORKDIR/plexus-compiler-api-2.16.2.jar:$REPO/javax/inject/javax.inject/1/javax.inject-1.jar"
+        ],
+        "steps": [
+            "*:*:mkdir -p $WORKDIR",
+            "*:*:mkdir -p $STAGING_DIR$NATIVEPREFIX/share/maven/repository/org/codehaus/plexus/plexus-compiler/2.16.2",
+            "*:*:cp pom.xml $STAGING_DIR$NATIVEPREFIX/share/maven/repository/org/codehaus/plexus/plexus-compiler/2.16.2/plexus-compiler-2.16.2.pom",
+            "*:*:mkdir -p $STAGING_DIR$NATIVEPREFIX/share/maven/repository/org/codehaus/plexus/plexus-compilers/2.16.2",
+            "*:*:cp plexus-compilers/pom.xml $STAGING_DIR$NATIVEPREFIX/share/maven/repository/org/codehaus/plexus/plexus-compilers/2.16.2/plexus-compilers-2.16.2.pom",
+            "*:*:mkdir -p $WORKDIR/plexus-compiler-api",
+            "*:*:find plexus-compiler-api/src/main/java -name '*.java' >$WORKDIR/plexus-compiler-api.sources",
+            "*:*:$JAVA_HOME/bin/javac -cp $CP_API -d $WORKDIR/plexus-compiler-api @$WORKDIR/plexus-compiler-api.sources",
+            "*:*:$JAVA_HOME/bin/jar cf $WORKDIR/plexus-compiler-api-2.16.2.jar -C $WORKDIR/plexus-compiler-api .",
+            "*:*:mkdir -p $STAGING_DIR$NATIVEPREFIX/share/maven/repository/org/codehaus/plexus/plexus-compiler-api/2.16.2",
+            "*:*:cp $WORKDIR/plexus-compiler-api-2.16.2.jar $STAGING_DIR$NATIVEPREFIX/share/maven/repository/org/codehaus/plexus/plexus-compiler-api/2.16.2/plexus-compiler-api-2.16.2.jar",
+            "*:*:cp plexus-compiler-api/pom.xml $STAGING_DIR$NATIVEPREFIX/share/maven/repository/org/codehaus/plexus/plexus-compiler-api/2.16.2/plexus-compiler-api-2.16.2.pom",
+            "*:*:mkdir -p $WORKDIR/plexus-compiler-manager",
+            "*:*:find plexus-compiler-manager/src/main/java -name '*.java' >$WORKDIR/plexus-compiler-manager.sources",
+            "*:*:$JAVA_HOME/bin/javac -cp $CP_MGR -processorpath $REPO/org/eclipse/sisu/org.eclipse.sisu.inject/1.0.0/org.eclipse.sisu.inject-1.0.0.jar:$REPO/javax/inject/javax.inject/1/javax.inject-1.jar -processor org.eclipse.sisu.space.SisuIndexAPT6 -d $WORKDIR/plexus-compiler-manager @$WORKDIR/plexus-compiler-manager.sources",
+            "*:*:$JAVA_HOME/bin/jar cf $WORKDIR/plexus-compiler-manager-2.16.2.jar -C $WORKDIR/plexus-compiler-manager .",
+            "*:*:mkdir -p $STAGING_DIR$NATIVEPREFIX/share/maven/repository/org/codehaus/plexus/plexus-compiler-manager/2.16.2",
+            "*:*:cp $WORKDIR/plexus-compiler-manager-2.16.2.jar $STAGING_DIR$NATIVEPREFIX/share/maven/repository/org/codehaus/plexus/plexus-compiler-manager/2.16.2/plexus-compiler-manager-2.16.2.jar",
+            "*:*:cp plexus-compiler-manager/pom.xml $STAGING_DIR$NATIVEPREFIX/share/maven/repository/org/codehaus/plexus/plexus-compiler-manager/2.16.2/plexus-compiler-manager-2.16.2.pom",
+            "*:*:mkdir -p $WORKDIR/plexus-compiler-javac",
+            "*:*:find plexus-compilers/plexus-compiler-javac/src/main/java -name '*.java' >$WORKDIR/plexus-compiler-javac.sources",
+            "*:*:$JAVA_HOME/bin/javac -cp $CP_JAVAC -processorpath $REPO/org/eclipse/sisu/org.eclipse.sisu.inject/1.0.0/org.eclipse.sisu.inject-1.0.0.jar:$REPO/javax/inject/javax.inject/1/javax.inject-1.jar -processor org.eclipse.sisu.space.SisuIndexAPT6 -d $WORKDIR/plexus-compiler-javac @$WORKDIR/plexus-compiler-javac.sources",
+            "*:*:$JAVA_HOME/bin/jar cf $WORKDIR/plexus-compiler-javac-2.16.2.jar -C $WORKDIR/plexus-compiler-javac .",
+            "*:*:mkdir -p $STAGING_DIR$NATIVEPREFIX/share/maven/repository/org/codehaus/plexus/plexus-compiler-javac/2.16.2",
+            "*:*:cp $WORKDIR/plexus-compiler-javac-2.16.2.jar $STAGING_DIR$NATIVEPREFIX/share/maven/repository/org/codehaus/plexus/plexus-compiler-javac/2.16.2/plexus-compiler-javac-2.16.2.jar",
+            "*:*:cp plexus-compilers/plexus-compiler-javac/pom.xml $STAGING_DIR$NATIVEPREFIX/share/maven/repository/org/codehaus/plexus/plexus-compiler-javac/2.16.2/plexus-compiler-javac-2.16.2.pom"
+        ]
+    }
+}

@@ -1,0 +1,33 @@
+{
+    "package": "native/jdk@22/bootstrap-maven/animal-sniffer-annotations@1.20",
+    "version": "1.20",
+    "type": "native",
+    "download": [
+        {
+            "kind": "git",
+            "sha256": "a69b280569ff52694cb2cec65b907b85ee41c517",
+            "url": "https://github.com/mojohaus/animal-sniffer.git"
+        }
+    ],
+    "dependencies": [
+        "*:*:native/bash",
+        "*:*:native/coreutils",
+        "*:*:native/findutils",
+        "*:*:native/jdk@22",
+        "*:*:native/jdk@22/bootstrap-maven/pom/animal-sniffer-parent@1.20"
+    ],
+    "build": {
+        "env": [
+            "*:*:WORKDIR=build/animal-sniffer-annotations@1.20"
+        ],
+        "steps": [
+            "*:*:mkdir -p $WORKDIR",
+            "*:*:find animal-sniffer-annotations/src/main/java -name '*.java' >$WORKDIR/sources",
+            "*:*:$JAVA_HOME/bin/javac -d $WORKDIR/classes @$WORKDIR/sources",
+            "*:*:$JAVA_HOME/bin/jar cf $WORKDIR/animal-sniffer-annotations-1.20.jar -C $WORKDIR/classes .",
+            "*:*:mkdir -p $STAGING_DIR$NATIVEPREFIX/share/maven/repository/org/codehaus/mojo/animal-sniffer-annotations/1.20",
+            "*:*:cp $WORKDIR/animal-sniffer-annotations-1.20.jar $STAGING_DIR$NATIVEPREFIX/share/maven/repository/org/codehaus/mojo/animal-sniffer-annotations/1.20/animal-sniffer-annotations-1.20.jar",
+            "*:*:cp animal-sniffer-annotations/pom.xml $STAGING_DIR$NATIVEPREFIX/share/maven/repository/org/codehaus/mojo/animal-sniffer-annotations/1.20/animal-sniffer-annotations-1.20.pom"
+        ]
+    }
+}

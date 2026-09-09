@@ -1,0 +1,22 @@
+{
+    "package": "native/jdk@22/bootstrap-maven/pom/slf4j-bom@2.0.17",
+    "version": "2.0.17",
+    "type": "native",
+    "download": [
+        {
+            "kind": "blob",
+            "path": "./slf4j-bom-2.0.17.pom",
+            "sha256": "f78d27b642b4b886eb839fc102b5cd9fe7f30f37599ffe68185be4e1609031e9",
+            "url": "https://repo1.maven.org/maven2/org/slf4j/slf4j-bom/2.0.17/slf4j-bom-2.0.17.pom"
+        }
+    ],
+    "dependencies": [
+        "*:*:native/coreutils"
+    ],
+    "build": {
+        "steps": [
+            "*:*:mkdir -p $STAGING_DIR$NATIVEPREFIX/share/maven/repository/org/slf4j/slf4j-bom/2.0.17",
+            "*:*:cp slf4j-bom-2.0.17.pom $STAGING_DIR$NATIVEPREFIX/share/maven/repository/org/slf4j/slf4j-bom/2.0.17/slf4j-bom-2.0.17.pom"
+        ]
+    }
+}

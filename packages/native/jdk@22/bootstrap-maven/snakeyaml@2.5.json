@@ -1,0 +1,32 @@
+{
+    "package": "native/jdk@22/bootstrap-maven/snakeyaml@2.5",
+    "version": "2.5",
+    "type": "native",
+    "download": [
+        {
+            "kind": "git",
+            "sha256": "225cf7b0166c7d8b25ed0000d03f2a02105347ee",
+            "url": "https://bitbucket.org/snakeyaml/snakeyaml.git"
+        }
+    ],
+    "dependencies": [
+        "*:*:native/bash",
+        "*:*:native/coreutils",
+        "*:*:native/findutils",
+        "*:*:native/jdk@22"
+    ],
+    "build": {
+        "env": [
+            "*:*:WORKDIR=build/snakeyaml@2.5"
+        ],
+        "steps": [
+            "*:*:mkdir -p $WORKDIR",
+            "*:*:find src/main/java -name '*.java' ! -name 'module-info.java' >$WORKDIR/sources",
+            "*:*:$JAVA_HOME/bin/javac --release 8 -d $WORKDIR/classes @$WORKDIR/sources",
+            "*:*:$JAVA_HOME/bin/jar cf $WORKDIR/snakeyaml-2.5.jar -C $WORKDIR/classes .",
+            "*:*:mkdir -p $STAGING_DIR$NATIVEPREFIX/share/maven/repository/org/yaml/snakeyaml/2.5",
+            "*:*:cp $WORKDIR/snakeyaml-2.5.jar $STAGING_DIR$NATIVEPREFIX/share/maven/repository/org/yaml/snakeyaml/2.5/snakeyaml-2.5.jar",
+            "*:*:cp pom.xml $STAGING_DIR$NATIVEPREFIX/share/maven/repository/org/yaml/snakeyaml/2.5/snakeyaml-2.5.pom"
+        ]
+    }
+}

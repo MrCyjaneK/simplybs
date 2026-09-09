@@ -1,0 +1,38 @@
+{
+    "package": "native/jdk@22/bootstrap-maven/checker-qual@3.12.0",
+    "version": "3.12.0",
+    "type": "native",
+    "download": [
+        {
+            "kind": "git",
+            "sha256": "1b56916ff9fb9f1caf75d6486f8f9f5cb491131d",
+            "url": "https://github.com/typetools/checker-framework.git"
+        },
+        {
+            "kind": "blob",
+            "path": "./checker-qual-3.12.0.pom",
+            "sha256": "775b7ae36e62820b3b86dc1aa39af37c0ac4b85ff48f7fe485a922a2790f46b9",
+            "url": "https://repo1.maven.org/maven2/org/checkerframework/checker-qual/3.12.0/checker-qual-3.12.0.pom"
+        }
+    ],
+    "dependencies": [
+        "*:*:native/bash",
+        "*:*:native/coreutils",
+        "*:*:native/findutils",
+        "*:*:native/jdk@22"
+    ],
+    "build": {
+        "env": [
+            "*:*:WORKDIR=build/checker-qual@3.12.0"
+        ],
+        "steps": [
+            "*:*:mkdir -p $WORKDIR",
+            "*:*:find checker-qual/src/main/java -name '*.java' >$WORKDIR/sources",
+            "*:*:$JAVA_HOME/bin/javac -d $WORKDIR/classes @$WORKDIR/sources",
+            "*:*:$JAVA_HOME/bin/jar cf $WORKDIR/checker-qual-3.12.0.jar -C $WORKDIR/classes .",
+            "*:*:mkdir -p $STAGING_DIR$NATIVEPREFIX/share/maven/repository/org/checkerframework/checker-qual/3.12.0",
+            "*:*:cp $WORKDIR/checker-qual-3.12.0.jar $STAGING_DIR$NATIVEPREFIX/share/maven/repository/org/checkerframework/checker-qual/3.12.0/checker-qual-3.12.0.jar",
+            "*:*:cp checker-qual-3.12.0.pom $STAGING_DIR$NATIVEPREFIX/share/maven/repository/org/checkerframework/checker-qual/3.12.0/checker-qual-3.12.0.pom"
+        ]
+    }
+}

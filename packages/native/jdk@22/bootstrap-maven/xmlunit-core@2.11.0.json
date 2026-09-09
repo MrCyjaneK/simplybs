@@ -1,0 +1,33 @@
+{
+    "package": "native/jdk@22/bootstrap-maven/xmlunit-core@2.11.0",
+    "version": "2.11.0",
+    "type": "native",
+    "download": [
+        {
+            "kind": "git",
+            "sha256": "02aef5d5950d4f113d26b3bc6d32320a0d1ec6f1",
+            "url": "https://github.com/xmlunit/xmlunit.git"
+        }
+    ],
+    "dependencies": [
+        "*:*:native/bash",
+        "*:*:native/coreutils",
+        "*:*:native/findutils",
+        "*:*:native/jdk@22",
+        "*:*:native/jdk@22/bootstrap-maven/pom/xmlunit-parent@2.11.0"
+    ],
+    "build": {
+        "env": [
+            "*:*:WORKDIR=work/xmlunit-core@2.11.0"
+        ],
+        "steps": [
+            "*:*:mkdir -p $WORKDIR",
+            "*:*:find xmlunit-core/src/main/java -name '*.java' >$WORKDIR/sources",
+            "*:*:$JAVA_HOME/bin/javac --release 8 -d $WORKDIR/classes @$WORKDIR/sources",
+            "*:*:$JAVA_HOME/bin/jar cf $WORKDIR/xmlunit-core-2.11.0.jar -C $WORKDIR/classes .",
+            "*:*:mkdir -p $STAGING_DIR$NATIVEPREFIX/share/maven/repository/org/xmlunit/xmlunit-core/2.11.0",
+            "*:*:cp $WORKDIR/xmlunit-core-2.11.0.jar $STAGING_DIR$NATIVEPREFIX/share/maven/repository/org/xmlunit/xmlunit-core/2.11.0/xmlunit-core-2.11.0.jar",
+            "*:*:cp xmlunit-core/pom.xml $STAGING_DIR$NATIVEPREFIX/share/maven/repository/org/xmlunit/xmlunit-core/2.11.0/xmlunit-core-2.11.0.pom"
+        ]
+    }
+}

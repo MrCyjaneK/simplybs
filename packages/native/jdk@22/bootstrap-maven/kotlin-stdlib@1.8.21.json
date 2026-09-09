@@ -1,0 +1,56 @@
+{
+    "package": "native/jdk@22/bootstrap-maven/kotlin-stdlib@1.8.21",
+    "version": "1.8.21",
+    "type": "native",
+    "download": [
+        {
+            "kind": "blob",
+            "path": "./kotlin-stdlib-1.8.21.pom",
+            "sha256": "fe0cd9e32193e453333fd2b1f577e662fb5abc6907102bb967817bc131280fd7",
+            "url": "https://repo1.maven.org/maven2/org/jetbrains/kotlin/kotlin-stdlib/1.8.21/kotlin-stdlib-1.8.21.pom"
+        },
+        {
+            "kind": "blob",
+            "path": "./kotlin-stdlib-common-1.8.21.pom",
+            "sha256": "e19a5577cbcea89728970db5333c8264c8c69ae722eeb79cbf41d5f0b0c9ae65",
+            "url": "https://repo1.maven.org/maven2/org/jetbrains/kotlin/kotlin-stdlib-common/1.8.21/kotlin-stdlib-common-1.8.21.pom"
+        },
+        {
+            "kind": "blob",
+            "path": "./kotlin-stdlib-jdk7-1.8.21.pom",
+            "sha256": "9bb107d5d5e3930bc5977f007a43cd20b7d24d91b1c1e528ea6ee0f248f14d36",
+            "url": "https://repo1.maven.org/maven2/org/jetbrains/kotlin/kotlin-stdlib-jdk7/1.8.21/kotlin-stdlib-jdk7-1.8.21.pom"
+        },
+        {
+            "kind": "blob",
+            "path": "./kotlin-stdlib-jdk8-1.8.21.pom",
+            "sha256": "3839d728d7c309a5c368b0270b44b4f1c7878ff5ca5d32a9a204faa3491459d8",
+            "url": "https://repo1.maven.org/maven2/org/jetbrains/kotlin/kotlin-stdlib-jdk8/1.8.21/kotlin-stdlib-jdk8-1.8.21.pom"
+        }
+    ],
+    "dependencies": [
+        "*:*:native/bash",
+        "*:*:native/coreutils",
+        "*:*:native/kotlin@1.8.21",
+        "*:*:native/jdk@22/bootstrap-maven/annotations@13.0"
+    ],
+    "build": {
+        "env": [
+            "*:*:KOTLIN_HOME=$NATIVEPREFIX/kotlin-1.8.21"
+        ],
+        "steps": [
+            "*:*:mkdir -p $STAGING_DIR$NATIVEPREFIX/share/maven/repository/org/jetbrains/kotlin/kotlin-stdlib/1.8.21",
+            "*:*:cp $KOTLIN_HOME/lib/kotlin-stdlib.jar $STAGING_DIR$NATIVEPREFIX/share/maven/repository/org/jetbrains/kotlin/kotlin-stdlib/1.8.21/kotlin-stdlib-1.8.21.jar",
+            "*:*:cp kotlin-stdlib-1.8.21.pom $STAGING_DIR$NATIVEPREFIX/share/maven/repository/org/jetbrains/kotlin/kotlin-stdlib/1.8.21/kotlin-stdlib-1.8.21.pom",
+            "*:*:mkdir -p $STAGING_DIR$NATIVEPREFIX/share/maven/repository/org/jetbrains/kotlin/kotlin-stdlib-common/1.8.21",
+            "*:*:if [ -f $KOTLIN_HOME/lib/kotlin-stdlib-common.jar ]; then cp $KOTLIN_HOME/lib/kotlin-stdlib-common.jar $STAGING_DIR$NATIVEPREFIX/share/maven/repository/org/jetbrains/kotlin/kotlin-stdlib-common/1.8.21/kotlin-stdlib-common-1.8.21.jar; else cp $KOTLIN_HOME/lib/kotlin-stdlib.jar $STAGING_DIR$NATIVEPREFIX/share/maven/repository/org/jetbrains/kotlin/kotlin-stdlib-common/1.8.21/kotlin-stdlib-common-1.8.21.jar; fi",
+            "*:*:cp kotlin-stdlib-common-1.8.21.pom $STAGING_DIR$NATIVEPREFIX/share/maven/repository/org/jetbrains/kotlin/kotlin-stdlib-common/1.8.21/kotlin-stdlib-common-1.8.21.pom",
+            "*:*:mkdir -p $STAGING_DIR$NATIVEPREFIX/share/maven/repository/org/jetbrains/kotlin/kotlin-stdlib-jdk7/1.8.21",
+            "*:*:cp $KOTLIN_HOME/lib/kotlin-stdlib-jdk7.jar $STAGING_DIR$NATIVEPREFIX/share/maven/repository/org/jetbrains/kotlin/kotlin-stdlib-jdk7/1.8.21/kotlin-stdlib-jdk7-1.8.21.jar",
+            "*:*:cp kotlin-stdlib-jdk7-1.8.21.pom $STAGING_DIR$NATIVEPREFIX/share/maven/repository/org/jetbrains/kotlin/kotlin-stdlib-jdk7/1.8.21/kotlin-stdlib-jdk7-1.8.21.pom",
+            "*:*:mkdir -p $STAGING_DIR$NATIVEPREFIX/share/maven/repository/org/jetbrains/kotlin/kotlin-stdlib-jdk8/1.8.21",
+            "*:*:cp $KOTLIN_HOME/lib/kotlin-stdlib-jdk8.jar $STAGING_DIR$NATIVEPREFIX/share/maven/repository/org/jetbrains/kotlin/kotlin-stdlib-jdk8/1.8.21/kotlin-stdlib-jdk8-1.8.21.jar",
+            "*:*:cp kotlin-stdlib-jdk8-1.8.21.pom $STAGING_DIR$NATIVEPREFIX/share/maven/repository/org/jetbrains/kotlin/kotlin-stdlib-jdk8/1.8.21/kotlin-stdlib-jdk8-1.8.21.pom"
+        ]
+    }
+}

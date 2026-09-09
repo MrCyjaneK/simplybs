@@ -1,0 +1,34 @@
+{
+    "package": "native/jdk@22/mvn/jmh-generator-annprocess@1.21",
+    "version": "1.21",
+    "type": "native",
+    "download": [
+        {
+            "kind": "git",
+            "sha256": "5772a465e06b341feeec4ceb986c54e26fb8bdfb",
+            "url": "https://github.com/openjdk/jmh.git"
+        }
+    ],
+    "dependencies": [
+        "*:*:native/bash",
+        "*:*:native/coreutils",
+        "*:*:native/findutils",
+        "*:*:native/jdk@22",
+        "*:*:native/jdk@22/mvn/jmh-core@1.21"
+    ],
+    "build": {
+        "env": [
+            "*:*:WORKDIR=work/jmh-generator-annprocess@1.21",
+            "*:*:REPO=$NATIVEPREFIX/share/maven/repository"
+        ],
+        "steps": [
+            "*:*:mkdir -p $WORKDIR/classes",
+            "*:*:find jmh-generator-annprocess/src/main/java -name '*.java' >$WORKDIR/sources",
+            "*:*:$JAVA_HOME/bin/javac --release 8 -cp $REPO/org/openjdk/jmh/jmh-core/1.21/jmh-core-1.21.jar -d $WORKDIR/classes @$WORKDIR/sources",
+            "*:*:find jmh-generator-annprocess/src/main/resources -type f 2>/dev/null | while IFS= read -r f; do rel=${f#jmh-generator-annprocess/src/main/resources/}; mkdir -p $WORKDIR/classes/$(dirname $rel); cp $f $WORKDIR/classes/$rel; done",
+            "*:*:$JAVA_HOME/bin/jar cf $WORKDIR/jmh-generator-annprocess-1.21.jar -C $WORKDIR/classes .",
+            "*:*:mkdir -p $STAGING_DIR$NATIVEPREFIX/share/maven/repository/org/openjdk/jmh/jmh-generator-annprocess/1.21",
+            "*:*:cp $WORKDIR/jmh-generator-annprocess-1.21.jar $STAGING_DIR$NATIVEPREFIX/share/maven/repository/org/openjdk/jmh/jmh-generator-annprocess/1.21/jmh-generator-annprocess-1.21.jar"
+        ]
+    }
+}

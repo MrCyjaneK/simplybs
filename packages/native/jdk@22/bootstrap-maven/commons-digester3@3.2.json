@@ -1,0 +1,37 @@
+{
+    "package": "native/jdk@22/bootstrap-maven/commons-digester3@3.2",
+    "version": "3.2",
+    "type": "native",
+    "download": [
+        {
+            "kind": "git",
+            "sha256": "ec75748096c8639be7b4998d99c37bb2e3a9c206",
+            "url": "https://github.com/apache/commons-digester.git"
+        }
+    ],
+    "dependencies": [
+        "*:*:native/bash",
+        "*:*:native/coreutils",
+        "*:*:native/findutils",
+        "*:*:native/jdk@22",
+        "*:*:native/jdk@22/bootstrap-maven/pom/commons-parent@22",
+        "*:*:native/jdk@22/bootstrap-maven/cglib@2.2.2",
+        "*:*:native/jdk@22/bootstrap-maven/commons-beanutils@1.8.3",
+        "*:*:native/jdk@22/bootstrap-maven/commons-logging@1.1.1"
+    ],
+    "build": {
+        "env": [
+            "*:*:WORKDIR=build/commons-digester3@3.2",
+            "*:*:REPO=$NATIVEPREFIX/share/maven/repository"
+        ],
+        "steps": [
+            "*:*:mkdir -p $WORKDIR",
+            "*:*:find src/main/java -name '*.java' >$WORKDIR/sources",
+            "*:*:$JAVA_HOME/bin/javac --release 8 -cp $REPO/cglib/cglib/2.2.2/cglib-2.2.2.jar:$REPO/commons-beanutils/commons-beanutils/1.8.3/commons-beanutils-1.8.3.jar:$REPO/commons-logging/commons-logging/1.1.1/commons-logging-1.1.1.jar -d $WORKDIR/classes @$WORKDIR/sources",
+            "*:*:$JAVA_HOME/bin/jar cf $WORKDIR/commons-digester3-3.2.jar -C $WORKDIR/classes .",
+            "*:*:mkdir -p $STAGING_DIR$NATIVEPREFIX/share/maven/repository/org/apache/commons/commons-digester3/3.2",
+            "*:*:cp $WORKDIR/commons-digester3-3.2.jar $STAGING_DIR$NATIVEPREFIX/share/maven/repository/org/apache/commons/commons-digester3/3.2/commons-digester3-3.2.jar",
+            "*:*:cp pom.xml $STAGING_DIR$NATIVEPREFIX/share/maven/repository/org/apache/commons/commons-digester3/3.2/commons-digester3-3.2.pom"
+        ]
+    }
+}

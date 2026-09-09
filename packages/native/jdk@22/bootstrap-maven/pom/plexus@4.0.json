@@ -1,0 +1,22 @@
+{
+    "package": "native/jdk@22/bootstrap-maven/pom/plexus@4.0",
+    "version": "4.0",
+    "type": "native",
+    "download": [
+        {
+            "kind": "blob",
+            "path": "./plexus-4.0.pom",
+            "sha256": "0a1b692d7fcc90d6a45dae2e50f4660d48f7a44504f174aa60ef34fbe1327f6a",
+            "url": "https://repo1.maven.org/maven2/org/codehaus/plexus/plexus/4.0/plexus-4.0.pom"
+        }
+    ],
+    "dependencies": [
+        "*:*:native/coreutils"
+    ],
+    "build": {
+        "steps": [
+            "*:*:mkdir -p $STAGING_DIR$NATIVEPREFIX/share/maven/repository/org/codehaus/plexus/plexus/4.0",
+            "*:*:cp plexus-4.0.pom $STAGING_DIR$NATIVEPREFIX/share/maven/repository/org/codehaus/plexus/plexus/4.0/plexus-4.0.pom"
+        ]
+    }
+}

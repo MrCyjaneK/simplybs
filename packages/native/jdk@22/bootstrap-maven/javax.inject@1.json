@@ -1,0 +1,32 @@
+{
+    "package": "native/jdk@22/bootstrap-maven/javax.inject@1",
+    "version": "1",
+    "type": "native",
+    "download": [
+        {
+            "kind": "git",
+            "sha256": "1e4a33307a1a2c5f38dd87e9458591a02b6f2f41",
+            "url": "https://github.com/javax-inject/javax-inject.git"
+        }
+    ],
+    "dependencies": [
+        "*:*:native/bash",
+        "*:*:native/coreutils",
+        "*:*:native/findutils",
+        "*:*:native/jdk@22"
+    ],
+    "build": {
+        "env": [
+            "*:*:WORKDIR=build/javax.inject@1"
+        ],
+        "steps": [
+            "*:*:mkdir -p $WORKDIR",
+            "*:*:find src/javax/inject -name '*.java' >$WORKDIR/sources",
+            "*:*:$JAVA_HOME/bin/javac -d $WORKDIR/classes @$WORKDIR/sources",
+            "*:*:$JAVA_HOME/bin/jar cf $WORKDIR/javax.inject-1.jar -C $WORKDIR/classes .",
+            "*:*:mkdir -p $STAGING_DIR$NATIVEPREFIX/share/maven/repository/javax/inject/javax.inject/1",
+            "*:*:cp $WORKDIR/javax.inject-1.jar $STAGING_DIR$NATIVEPREFIX/share/maven/repository/javax/inject/javax.inject/1/javax.inject-1.jar",
+            "*:*:cp pom.xml $STAGING_DIR$NATIVEPREFIX/share/maven/repository/javax/inject/javax.inject/1/javax.inject-1.pom"
+        ]
+    }
+}

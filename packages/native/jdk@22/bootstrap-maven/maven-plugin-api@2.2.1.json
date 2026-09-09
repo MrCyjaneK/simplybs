@@ -1,0 +1,33 @@
+{
+    "package": "native/jdk@22/bootstrap-maven/maven-plugin-api@2.2.1",
+    "version": "2.2.1",
+    "type": "native",
+    "download": [
+        {
+            "kind": "git",
+            "sha256": "847203c6346f4b8d5ae27285f11eda8818af283f",
+            "url": "https://github.com/apache/maven.git"
+        }
+    ],
+    "dependencies": [
+        "*:*:native/bash",
+        "*:*:native/coreutils",
+        "*:*:native/findutils",
+        "*:*:native/jdk@22",
+        "*:*:native/jdk@22/bootstrap-maven/pom/maven@2.2.1"
+    ],
+    "build": {
+        "env": [
+            "*:*:WORKDIR=work/maven-plugin-api@2.2.1"
+        ],
+        "steps": [
+            "*:*:mkdir -p $WORKDIR",
+            "*:*:find maven-plugin-api/src/main/java -name '*.java' >$WORKDIR/sources",
+            "*:*:$JAVA_HOME/bin/javac --release 8 -d $WORKDIR/classes @$WORKDIR/sources",
+            "*:*:$JAVA_HOME/bin/jar cf $WORKDIR/maven-plugin-api-2.2.1.jar -C $WORKDIR/classes .",
+            "*:*:mkdir -p $STAGING_DIR$NATIVEPREFIX/share/maven/repository/org/apache/maven/maven-plugin-api/2.2.1",
+            "*:*:cp $WORKDIR/maven-plugin-api-2.2.1.jar $STAGING_DIR$NATIVEPREFIX/share/maven/repository/org/apache/maven/maven-plugin-api/2.2.1/maven-plugin-api-2.2.1.jar",
+            "*:*:cp maven-plugin-api/pom.xml $STAGING_DIR$NATIVEPREFIX/share/maven/repository/org/apache/maven/maven-plugin-api/2.2.1/maven-plugin-api-2.2.1.pom"
+        ]
+    }
+}

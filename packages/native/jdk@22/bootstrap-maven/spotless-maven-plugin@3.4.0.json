@@ -1,0 +1,83 @@
+{
+    "package": "native/jdk@22/bootstrap-maven/spotless-maven-plugin@3.4.0",
+    "version": "3.4.0",
+    "type": "native",
+    "download": [
+        {
+            "kind": "git",
+            "sha256": "708a1b0e6383ad2dd34cf3def185bb085a786789",
+            "url": "https://github.com/diffplug/spotless.git"
+        },
+        {
+            "kind": "blob",
+            "path": "./spotless-lib-4.5.0.pom",
+            "sha256": "4af4a588a775ac284fad50bf114924670004f6b80a092913f5048e6fd1a3d9f2",
+            "url": "https://repo1.maven.org/maven2/com/diffplug/spotless/spotless-lib/4.5.0/spotless-lib-4.5.0.pom"
+        },
+        {
+            "kind": "blob",
+            "path": "./spotless-lib-extra-4.5.0.pom",
+            "sha256": "50f24df8a386b59e3cad2db29618c7398804819010604342b17e63c6e6dd3c65",
+            "url": "https://repo1.maven.org/maven2/com/diffplug/spotless/spotless-lib-extra/4.5.0/spotless-lib-extra-4.5.0.pom"
+        },
+        {
+            "kind": "blob",
+            "path": "./spotless-maven-plugin-3.4.0.pom",
+            "sha256": "c6ba4933fb70b917311b9ff6fa690ddb32b017a74acbf6c14717aa12faa47801",
+            "url": "https://repo1.maven.org/maven2/com/diffplug/spotless/spotless-maven-plugin/3.4.0/spotless-maven-plugin-3.4.0.pom"
+        }
+    ],
+    "dependencies": [
+        "*:*:native/bash",
+        "*:*:native/coreutils",
+        "*:*:native/findutils",
+        "*:*:native/jdk@22",
+        "*:*:native/jdk@22/bootstrap-maven/org.eclipse.sisu.inject@1.0.0",
+        "*:*:native/jdk@22/bootstrap-maven/javax.inject@1",
+        "*:*:native/maven@3.9-bin",
+        "*:*:native/jdk@22/bootstrap-maven/maven-plugin-annotations@3.15.2",
+        "*:*:native/jdk@22/bootstrap-maven/maven-plugin-tools-generators@3.15.2",
+        "*:*:native/jdk@22/bootstrap-maven/durian-core@1.2.0",
+        "*:*:native/jdk@22/bootstrap-maven/plexus-resources@1.3.1",
+        "*:*:native/jdk@22/bootstrap-maven/plexus-build-api@0.0.7",
+        "*:*:native/jdk@22/bootstrap-maven/org.eclipse.jgit@7.5.0.202512021534-r",
+        "*:*:native/jdk@22/bootstrap-maven/concurrent-trees@2.6.1",
+        "*:*:native/jdk@22/bootstrap-maven/slf4j-api@1.7.36",
+        "*:*:native/jdk@22/bootstrap-maven/jsr305@3.0.2",
+        "*:*:native/jdk@22/bootstrap-maven/annotations@3.0.0",
+        "*:*:native/jdk@22/bootstrap-maven/solstice@1.8.1",
+        "*:*:native/sed"
+    ],
+    "build": {
+        "env": [
+            "*:*:WORKDIR=build/spotless-maven-plugin@3.4.0",
+            "*:*:REPO=$NATIVEPREFIX/share/maven/repository",
+            "*:*:BOOT_LIB=$NATIVEPREFIX/maven-3.9-bootstrap/lib"
+        ],
+        "steps": [
+            "*:*:mkdir -p $WORKDIR",
+            "*:*:find lib/src/main/java -name '*.java' >$WORKDIR/lib.sources",
+            "*:*:$JAVA_HOME/bin/javac --add-exports jdk.unsupported/sun.misc=ALL-UNNAMED -cp $REPO/org/slf4j/slf4j-api/1.7.36/slf4j-api-1.7.36.jar:$REPO/com/google/code/findbugs/jsr305/3.0.2/jsr305-3.0.2.jar:$REPO/com/google/code/findbugs/annotations/3.0.0/annotations-3.0.0.jar -d $WORKDIR/lib @$WORKDIR/lib.sources",
+            "*:*:cp -R lib/src/main/resources/. $WORKDIR/lib/",
+            "*:*:$JAVA_HOME/bin/jar cf $WORKDIR/spotless-lib-4.5.0.jar -C $WORKDIR/lib .",
+            "*:*:mkdir -p $STAGING_DIR$NATIVEPREFIX/share/maven/repository/com/diffplug/spotless/spotless-lib/4.5.0",
+            "*:*:cp $WORKDIR/spotless-lib-4.5.0.jar $STAGING_DIR$NATIVEPREFIX/share/maven/repository/com/diffplug/spotless/spotless-lib/4.5.0/spotless-lib-4.5.0.jar",
+            "*:*:cp spotless-lib-4.5.0.pom $STAGING_DIR$NATIVEPREFIX/share/maven/repository/com/diffplug/spotless/spotless-lib/4.5.0/spotless-lib-4.5.0.pom",
+            "*:*:find lib-extra/src/main/java -name '*.java' ! -path '*/eclipse/*' >$WORKDIR/extra.sources",
+            "*:*:$JAVA_HOME/bin/javac -cp $WORKDIR/spotless-lib-4.5.0.jar:$REPO/com/diffplug/durian/durian-core/1.2.0/durian-core-1.2.0.jar:$REPO/com/diffplug/durian/durian-collect/1.2.0/durian-collect-1.2.0.jar:$REPO/org/eclipse/jgit/org.eclipse.jgit/7.5.0.202512021534-r/org.eclipse.jgit-7.5.0.202512021534-r.jar:$REPO/com/googlecode/concurrent-trees/concurrent-trees/2.6.1/concurrent-trees-2.6.1.jar:$REPO/com/google/code/findbugs/jsr305/3.0.2/jsr305-3.0.2.jar:$REPO/com/google/code/findbugs/annotations/3.0.0/annotations-3.0.0.jar:$REPO/org/slf4j/slf4j-api/1.7.36/slf4j-api-1.7.36.jar:$REPO/dev/equo/ide/solstice/1.8.1/solstice-1.8.1.jar:$REPO/com/diffplug/durian/durian-swt.os/4.3.0/durian-swt.os-4.3.0.jar -d $WORKDIR/extra @$WORKDIR/extra.sources",
+            "*:*:$JAVA_HOME/bin/jar cf $WORKDIR/spotless-lib-extra-4.5.0.jar -C $WORKDIR/extra .",
+            "*:*:mkdir -p $STAGING_DIR$NATIVEPREFIX/share/maven/repository/com/diffplug/spotless/spotless-lib-extra/4.5.0",
+            "*:*:cp $WORKDIR/spotless-lib-extra-4.5.0.jar $STAGING_DIR$NATIVEPREFIX/share/maven/repository/com/diffplug/spotless/spotless-lib-extra/4.5.0/spotless-lib-extra-4.5.0.jar",
+            "*:*:cp spotless-lib-extra-4.5.0.pom $STAGING_DIR$NATIVEPREFIX/share/maven/repository/com/diffplug/spotless/spotless-lib-extra/4.5.0/spotless-lib-extra-4.5.0.pom",
+            "*:*:find plugin-maven/src/main/java -name '*.java' >$WORKDIR/plugin.sources",
+            "*:*:find plugin-maven/src/main/java -name '*.java' -exec sed -i 's/jakarta.annotation/javax.annotation/g' {} +",
+            "*:*:$JAVA_HOME/bin/javac -cp $(printf '%s:' $BOOT_LIB/*.jar)$WORKDIR/spotless-lib-4.5.0.jar:$WORKDIR/spotless-lib-extra-4.5.0.jar:$REPO/org/apache/maven/plugin-tools/maven-plugin-annotations/3.15.2/maven-plugin-annotations-3.15.2.jar:$REPO/com/diffplug/durian/durian-core/1.2.0/durian-core-1.2.0.jar:$REPO/com/diffplug/durian/durian-io/1.2.0/durian-io-1.2.0.jar:$REPO/com/diffplug/durian/durian-collect/1.2.0/durian-collect-1.2.0.jar:$REPO/org/codehaus/plexus/plexus-resources/1.3.1/plexus-resources-1.3.1.jar:$REPO/org/sonatype/plexus/plexus-build-api/0.0.7/plexus-build-api-0.0.7.jar:$REPO/org/eclipse/jgit/org.eclipse.jgit/7.5.0.202512021534-r/org.eclipse.jgit-7.5.0.202512021534-r.jar:$REPO/com/google/code/findbugs/jsr305/3.0.2/jsr305-3.0.2.jar:$REPO/com/google/code/findbugs/annotations/3.0.0/annotations-3.0.0.jar -processorpath $REPO/org/eclipse/sisu/org.eclipse.sisu.inject/1.0.0/org.eclipse.sisu.inject-1.0.0.jar:$REPO/javax/inject/javax.inject/1/javax.inject-1.jar -processor org.eclipse.sisu.space.SisuIndexAPT6 -d $WORKDIR/plugin @$WORKDIR/plugin.sources",
+            "*:*:mkdir -p $WORKDIR/plugin-res/META-INF/maven",
+            "*:*:$JAVA_HOME/bin/java -cp $PLUGINXML_JAR:$(printf '%s:' $BOOT_LIB/*.jar) org.apache.maven.tools.plugin.generator.GeneratePluginXml com.diffplug.spotless spotless-maven-plugin 3.4.0 spotless $WORKDIR/plugin $WORKDIR/plugin-res/META-INF/maven $(printf '%s:' $BOOT_LIB/*.jar)$WORKDIR/spotless-lib-4.5.0.jar:$WORKDIR/spotless-lib-extra-4.5.0.jar:$REPO/org/apache/maven/plugin-tools/maven-plugin-annotations/3.15.2/maven-plugin-annotations-3.15.2.jar:$REPO/com/diffplug/durian/durian-core/1.2.0/durian-core-1.2.0.jar:$REPO/com/diffplug/durian/durian-io/1.2.0/durian-io-1.2.0.jar:$REPO/com/diffplug/durian/durian-collect/1.2.0/durian-collect-1.2.0.jar:$REPO/org/codehaus/plexus/plexus-resources/1.3.1/plexus-resources-1.3.1.jar:$REPO/org/sonatype/plexus/plexus-build-api/0.0.7/plexus-build-api-0.0.7.jar:$REPO/org/eclipse/jgit/org.eclipse.jgit/7.5.0.202512021534-r/org.eclipse.jgit-7.5.0.202512021534-r.jar:$REPO/com/google/code/findbugs/jsr305/3.0.2/jsr305-3.0.2.jar:$REPO/com/google/code/findbugs/annotations/3.0.0/annotations-3.0.0.jar",
+            "*:*:$JAVA_HOME/bin/jar cf $WORKDIR/spotless-maven-plugin-3.4.0.jar -C $WORKDIR/plugin . -C $WORKDIR/plugin-res .",
+            "*:*:mkdir -p $STAGING_DIR$NATIVEPREFIX/share/maven/repository/com/diffplug/spotless/spotless-maven-plugin/3.4.0",
+            "*:*:cp $WORKDIR/spotless-maven-plugin-3.4.0.jar $STAGING_DIR$NATIVEPREFIX/share/maven/repository/com/diffplug/spotless/spotless-maven-plugin/3.4.0/spotless-maven-plugin-3.4.0.jar",
+            "*:*:cp spotless-maven-plugin-3.4.0.pom $STAGING_DIR$NATIVEPREFIX/share/maven/repository/com/diffplug/spotless/spotless-maven-plugin/3.4.0/spotless-maven-plugin-3.4.0.pom"
+        ]
+    }
+}

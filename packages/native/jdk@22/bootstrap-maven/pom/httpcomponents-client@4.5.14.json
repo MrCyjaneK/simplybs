@@ -1,0 +1,22 @@
+{
+    "package": "native/jdk@22/bootstrap-maven/pom/httpcomponents-client@4.5.14",
+    "version": "4.5.14",
+    "type": "native",
+    "download": [
+        {
+            "kind": "blob",
+            "path": "./httpcomponents-client-4.5.14.pom",
+            "sha256": "5bad1de4f101447659f89d089868ccbad64a68cc503d2d65410b51f6904aa061",
+            "url": "https://repo1.maven.org/maven2/org/apache/httpcomponents/httpcomponents-client/4.5.14/httpcomponents-client-4.5.14.pom"
+        }
+    ],
+    "dependencies": [
+        "*:*:native/coreutils"
+    ],
+    "build": {
+        "steps": [
+            "*:*:mkdir -p $STAGING_DIR$NATIVEPREFIX/share/maven/repository/org/apache/httpcomponents/httpcomponents-client/4.5.14",
+            "*:*:cp httpcomponents-client-4.5.14.pom $STAGING_DIR$NATIVEPREFIX/share/maven/repository/org/apache/httpcomponents/httpcomponents-client/4.5.14/httpcomponents-client-4.5.14.pom"
+        ]
+    }
+}

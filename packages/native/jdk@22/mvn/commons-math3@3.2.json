@@ -1,0 +1,31 @@
+{
+    "package": "native/jdk@22/mvn/commons-math3@3.2",
+    "version": "3.2",
+    "type": "native",
+    "download": [
+        {
+            "kind": "git",
+            "sha256": "7ec508828f62c2a3df31cde2a2f3aa32c5135fdb",
+            "url": "https://github.com/apache/commons-math.git"
+        }
+    ],
+    "dependencies": [
+        "*:*:native/coreutils",
+        "*:*:native/findutils",
+        "*:*:native/jdk@22"
+    ],
+    "build": {
+        "env": [
+            "*:*:WORKDIR=work/commons-math3@3.2"
+        ],
+        "steps": [
+            "*:*:mkdir -p $WORKDIR/classes",
+            "*:*:find src/main/java -name '*.java' ! -name 'module-info.java' >$WORKDIR/sources",
+            "*:*:$JAVA_HOME/bin/javac --release 8 -d $WORKDIR/classes @$WORKDIR/sources",
+            "*:*:find src/main/java src/main/resources -type f ! -name '*.java' 2>/dev/null | while IFS= read -r f; do rel=${f#src/main/java/}; rel=${rel#src/main/resources/}; mkdir -p $WORKDIR/classes/$(dirname $rel); cp $f $WORKDIR/classes/$rel; done",
+            "*:*:$JAVA_HOME/bin/jar cf $WORKDIR/commons-math3-3.2.jar -C $WORKDIR/classes .",
+            "*:*:mkdir -p $STAGING_DIR$NATIVEPREFIX/share/maven/repository/org/apache/commons/commons-math3/3.2",
+            "*:*:cp $WORKDIR/commons-math3-3.2.jar $STAGING_DIR$NATIVEPREFIX/share/maven/repository/org/apache/commons/commons-math3/3.2/commons-math3-3.2.jar"
+        ]
+    }
+}

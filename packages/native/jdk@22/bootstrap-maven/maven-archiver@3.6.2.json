@@ -1,0 +1,38 @@
+{
+    "package": "native/jdk@22/bootstrap-maven/maven-archiver@3.6.2",
+    "version": "3.6.2",
+    "type": "native",
+    "download": [
+        {
+            "kind": "git",
+            "sha256": "8a2e44f48348d52e3653e88275f19233a8de80e0",
+            "url": "https://github.com/apache/maven-archiver.git"
+        }
+    ],
+    "dependencies": [
+        "*:*:native/bash",
+        "*:*:native/coreutils",
+        "*:*:native/findutils",
+        "*:*:native/jdk@22",
+        "*:*:native/maven@3.9-bin",
+        "*:*:native/jdk@22/bootstrap-maven/pom/maven-shared-components@41",
+        "*:*:native/jdk@22/bootstrap-maven/plexus-interpolation@1.27",
+        "*:*:native/jdk@22/bootstrap-maven/plexus-archiver@4.10.0"
+    ],
+    "build": {
+        "env": [
+            "*:*:WORKDIR=build/maven-archiver@3.6.2",
+            "*:*:REPO=$NATIVEPREFIX/share/maven/repository",
+            "*:*:BOOT_LIB=$NATIVEPREFIX/maven-3.9-bootstrap/lib"
+        ],
+        "steps": [
+            "*:*:mkdir -p $WORKDIR",
+            "*:*:find src/main/java -name '*.java' >$WORKDIR/sources",
+            "*:*:$JAVA_HOME/bin/javac -cp $(printf '%s:' $BOOT_LIB/*.jar)$REPO/org/codehaus/plexus/plexus-interpolation/1.27/plexus-interpolation-1.27.jar:$REPO/org/codehaus/plexus/plexus-archiver/4.10.0/plexus-archiver-4.10.0.jar -d $WORKDIR/classes @$WORKDIR/sources",
+            "*:*:$JAVA_HOME/bin/jar cf $WORKDIR/maven-archiver-3.6.2.jar -C $WORKDIR/classes .",
+            "*:*:mkdir -p $STAGING_DIR$NATIVEPREFIX/share/maven/repository/org/apache/maven/maven-archiver/3.6.2",
+            "*:*:cp $WORKDIR/maven-archiver-3.6.2.jar $STAGING_DIR$NATIVEPREFIX/share/maven/repository/org/apache/maven/maven-archiver/3.6.2/maven-archiver-3.6.2.jar",
+            "*:*:cp pom.xml $STAGING_DIR$NATIVEPREFIX/share/maven/repository/org/apache/maven/maven-archiver/3.6.2/maven-archiver-3.6.2.pom"
+        ]
+    }
+}

@@ -1,0 +1,39 @@
+{
+    "package": "native/jdk@22/bootstrap-maven/commons-lang@2.6",
+    "version": "2.6",
+    "type": "native",
+    "download": [
+        {
+            "kind": "git",
+            "sha256": "0fe6a434f20b45c027badd89bd393dd4085cf1f2",
+            "url": "https://github.com/apache/commons-lang.git"
+        },
+        {
+            "kind": "blob",
+            "path": "./commons-lang-2.6.pom",
+            "sha256": "ed76b8891c30b566289c743656f8a4d435986982438d40c567c626233247e711",
+            "url": "https://repo1.maven.org/maven2/commons-lang/commons-lang/2.6/commons-lang-2.6.pom"
+        }
+    ],
+    "dependencies": [
+        "*:*:native/bash",
+        "*:*:native/coreutils",
+        "*:*:native/findutils",
+        "*:*:native/jdk@22",
+        "*:*:native/jdk@22/bootstrap-maven/pom/commons-parent@17"
+    ],
+    "build": {
+        "env": [
+            "*:*:WORKDIR=work/commons-lang@2.6"
+        ],
+        "steps": [
+            "*:*:mkdir -p $WORKDIR",
+            "*:*:find src/main/java -name '*.java' ! -path '*/lang/enum/*' >$WORKDIR/sources",
+            "*:*:$JAVA_HOME/bin/javac -encoding ISO-8859-1 --release 8 -d $WORKDIR/classes @$WORKDIR/sources",
+            "*:*:$JAVA_HOME/bin/jar cf $WORKDIR/commons-lang-2.6.jar -C $WORKDIR/classes .",
+            "*:*:mkdir -p $STAGING_DIR$NATIVEPREFIX/share/maven/repository/commons-lang/commons-lang/2.6",
+            "*:*:cp $WORKDIR/commons-lang-2.6.jar $STAGING_DIR$NATIVEPREFIX/share/maven/repository/commons-lang/commons-lang/2.6/commons-lang-2.6.jar",
+            "*:*:cp commons-lang-2.6.pom $STAGING_DIR$NATIVEPREFIX/share/maven/repository/commons-lang/commons-lang/2.6/commons-lang-2.6.pom"
+        ]
+    }
+}

@@ -1,0 +1,42 @@
+{
+    "package": "native/jdk@22/bootstrap-maven/velocity-tools@2.0",
+    "version": "2.0",
+    "type": "native",
+    "download": [
+        {
+            "kind": "git",
+            "sha256": "261bf1924b2bdc40efbac3aa8152ee82a544cd2d",
+            "url": "https://github.com/apache/velocity-tools.git"
+        }
+    ],
+    "dependencies": [
+        "*:*:native/bash",
+        "*:*:native/coreutils",
+        "*:*:native/findutils",
+        "*:*:native/jdk@22",
+        "*:*:native/jdk@22/bootstrap-maven/commons-beanutils@1.9.4",
+        "*:*:native/jdk@22/bootstrap-maven/commons-digester@1.8",
+        "*:*:native/jdk@22/bootstrap-maven/commons-chain@1.1",
+        "*:*:native/jdk@22/bootstrap-maven/commons-collections@3.2.2",
+        "*:*:native/jdk@22/bootstrap-maven/commons-lang@2.4",
+        "*:*:native/jdk@22/bootstrap-maven/commons-logging@1.2",
+        "*:*:native/jdk@22/bootstrap-maven/oro@2.0.8",
+        "*:*:native/jdk@22/bootstrap-maven/velocity@1.7",
+        "*:*:native/jdk@22/bootstrap-maven/dom4j@1.1"
+    ],
+    "build": {
+        "env": [
+            "*:*:WORKDIR=work/velocity-tools@2.0",
+            "*:*:REPO=$NATIVEPREFIX/share/maven/repository"
+        ],
+        "steps": [
+            "*:*:mkdir -p $WORKDIR",
+            "*:*:find src/main/java -name '*.java' ! -path '*/struts/*' ! -path '*/view/*' ! -path '*/generic/xml/*' ! -name '*Servlet*' ! -name '*Struts*' ! -name '*Tiles*' ! -name '*Validator*' ! -name '*Dom4j*' ! -name '*SecureLinkTool*' >$WORKDIR/sources",
+            "*:*:$JAVA_HOME/bin/javac --release 8 -cp $REPO/commons-beanutils/commons-beanutils/1.9.4/commons-beanutils-1.9.4.jar:$REPO/commons-digester/commons-digester/1.8/commons-digester-1.8.jar:$REPO/commons-chain/commons-chain/1.1/commons-chain-1.1.jar:$REPO/commons-collections/commons-collections/3.2.2/commons-collections-3.2.2.jar:$REPO/commons-lang/commons-lang/2.4/commons-lang-2.4.jar:$REPO/commons-logging/commons-logging/1.2/commons-logging-1.2.jar:$REPO/oro/oro/2.0.8/oro-2.0.8.jar:$REPO/org/apache/velocity/velocity/1.7/velocity-1.7.jar:$REPO/dom4j/dom4j/1.1/dom4j-1.1.jar -d $WORKDIR/classes @$WORKDIR/sources",
+            "*:*:$JAVA_HOME/bin/jar cf $WORKDIR/velocity-tools-2.0.jar -C $WORKDIR/classes .",
+            "*:*:mkdir -p $STAGING_DIR$NATIVEPREFIX/share/maven/repository/org/apache/velocity/velocity-tools/2.0",
+            "*:*:cp $WORKDIR/velocity-tools-2.0.jar $STAGING_DIR$NATIVEPREFIX/share/maven/repository/org/apache/velocity/velocity-tools/2.0/velocity-tools-2.0.jar",
+            "*:*:cp pom.xml $STAGING_DIR$NATIVEPREFIX/share/maven/repository/org/apache/velocity/velocity-tools/2.0/velocity-tools-2.0.pom"
+        ]
+    }
+}

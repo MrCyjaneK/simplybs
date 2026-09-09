@@ -1,0 +1,38 @@
+{
+    "package": "native/jdk@22/bootstrap-maven/xz@1.11",
+    "version": "1.11",
+    "type": "native",
+    "download": [
+        {
+            "kind": "git",
+            "sha256": "eec2ad9de0525bbadeaabc7ba7c02ae9a7fceeec",
+            "url": "https://github.com/tukaani-project/xz-java.git"
+        },
+        {
+            "kind": "blob",
+            "path": "./xz-1.11.pom",
+            "sha256": "7bd2fe2f145c8479824757ab76130c0815a7b55850714ef0c28b39bd5d692ca4",
+            "url": "https://repo1.maven.org/maven2/org/tukaani/xz/1.11/xz-1.11.pom"
+        }
+    ],
+    "dependencies": [
+        "*:*:native/bash",
+        "*:*:native/coreutils",
+        "*:*:native/findutils",
+        "*:*:native/jdk@22"
+    ],
+    "build": {
+        "env": [
+            "*:*:WORKDIR=build/xz@1.11"
+        ],
+        "steps": [
+            "*:*:mkdir -p $WORKDIR/classes",
+            "*:*:find src -name '*.java' ! -name 'module-info.java' >$WORKDIR/sources",
+            "*:*:$JAVA_HOME/bin/javac -d $WORKDIR/classes @$WORKDIR/sources",
+            "*:*:$JAVA_HOME/bin/jar cf $WORKDIR/xz-1.11.jar -C $WORKDIR/classes .",
+            "*:*:mkdir -p $STAGING_DIR$NATIVEPREFIX/share/maven/repository/org/tukaani/xz/1.11",
+            "*:*:cp $WORKDIR/xz-1.11.jar $STAGING_DIR$NATIVEPREFIX/share/maven/repository/org/tukaani/xz/1.11/xz-1.11.jar",
+            "*:*:cp xz-1.11.pom $STAGING_DIR$NATIVEPREFIX/share/maven/repository/org/tukaani/xz/1.11/xz-1.11.pom"
+        ]
+    }
+}

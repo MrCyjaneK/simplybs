@@ -1,0 +1,33 @@
+{
+    "package": "native/jdk@22/bootstrap-maven/httpcore@4.4.16",
+    "version": "4.4.16",
+    "type": "native",
+    "download": [
+        {
+            "kind": "git",
+            "sha256": "0665b2684e4dc2b53d11f6cb02360fb54c1c1e72",
+            "url": "https://github.com/apache/httpcomponents-core.git"
+        }
+    ],
+    "dependencies": [
+        "*:*:native/bash",
+        "*:*:native/coreutils",
+        "*:*:native/findutils",
+        "*:*:native/jdk@22",
+        "*:*:native/jdk@22/bootstrap-maven/pom/httpcomponents-core@4.4.16"
+    ],
+    "build": {
+        "env": [
+            "*:*:WORKDIR=build/httpcore@4.4.16"
+        ],
+        "steps": [
+            "*:*:mkdir -p $WORKDIR",
+            "*:*:find httpcore/src/main -name '*.java' >$WORKDIR/sources",
+            "*:*:$JAVA_HOME/bin/javac -d $WORKDIR/classes @$WORKDIR/sources",
+            "*:*:$JAVA_HOME/bin/jar cf $WORKDIR/httpcore-4.4.16.jar -C $WORKDIR/classes .",
+            "*:*:mkdir -p $STAGING_DIR$NATIVEPREFIX/share/maven/repository/org/apache/httpcomponents/httpcore/4.4.16",
+            "*:*:cp $WORKDIR/httpcore-4.4.16.jar $STAGING_DIR$NATIVEPREFIX/share/maven/repository/org/apache/httpcomponents/httpcore/4.4.16/httpcore-4.4.16.jar",
+            "*:*:cp httpcore/pom.xml $STAGING_DIR$NATIVEPREFIX/share/maven/repository/org/apache/httpcomponents/httpcore/4.4.16/httpcore-4.4.16.pom"
+        ]
+    }
+}

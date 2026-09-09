@@ -1,0 +1,29 @@
+{
+    "package": "native/jdk@22/bootstrap-maven/antlr2",
+    "version": "2.7.7",
+    "type": "native",
+    "download": [
+        {
+            "kind": "tar.gz",
+            "sha256": "1a01f8080da10a93b3f3b78c70cc87893474111bd2d4e0fdb2cca2016b1a3771",
+            "url": "https://deb.debian.org/debian/pool/main/a/antlr/antlr_2.7.7+dfsg.orig.tar.gz"
+        }
+    ],
+    "dependencies": [
+        "*:*:native/bash",
+        "*:*:native/coreutils",
+        "*:*:native/findutils",
+        "*:*:native/jdk@22"
+    ],
+    "build": {
+        "env": [
+            "*:*:WORKDIR=build/antlr2"
+        ],
+        "steps": [
+            "*:*:mkdir -p $WORKDIR/classes $STAGING_DIR$NATIVEPREFIX/share/java",
+            "*:*:find antlr -name '*.java' >$WORKDIR/sources",
+            "*:*:$JAVA_HOME/bin/javac -encoding ISO-8859-1 --release 8 -d $WORKDIR/classes @$WORKDIR/sources",
+            "*:*:$JAVA_HOME/bin/jar cf $STAGING_DIR$NATIVEPREFIX/share/java/antlr2.jar -C $WORKDIR/classes ."
+        ]
+    }
+}

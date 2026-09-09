@@ -1,0 +1,33 @@
+{
+    "package": "native/jdk@22/mvn/asm-util@9.5",
+    "version": "9.5",
+    "type": "native",
+    "download": [
+        {
+            "kind": "git",
+            "sha256": "443339a964352dcec4dd3915de8f13188920d3ac",
+            "url": "https://gitlab.ow2.org/asm/asm.git"
+        }
+    ],
+    "dependencies": [
+        "*:*:native/coreutils",
+        "*:*:native/findutils",
+        "*:*:native/jdk@22",
+        "*:*:native/jdk@22/mvn/asm@9.5",
+        "*:*:native/jdk@22/mvn/asm-tree@9.5"
+    ],
+    "build": {
+        "env": [
+            "*:*:WORKDIR=work/asm-util@9.5",
+            "*:*:REPO=$NATIVEPREFIX/share/maven/repository"
+        ],
+        "steps": [
+            "*:*:mkdir -p $WORKDIR/classes",
+            "*:*:find asm-util/src/main/java -name '*.java' ! -name 'Check*.java' >$WORKDIR/sources",
+            "*:*:$JAVA_HOME/bin/javac -cp $REPO/org/ow2/asm/asm/9.5/asm-9.5.jar:$REPO/org/ow2/asm/asm-tree/9.5/asm-tree-9.5.jar -d $WORKDIR/classes @$WORKDIR/sources",
+            "*:*:$JAVA_HOME/bin/jar cf $WORKDIR/asm-util-9.5.jar -C $WORKDIR/classes .",
+            "*:*:mkdir -p $STAGING_DIR$NATIVEPREFIX/share/maven/repository/org/ow2/asm/asm-util/9.5",
+            "*:*:cp $WORKDIR/asm-util-9.5.jar $STAGING_DIR$NATIVEPREFIX/share/maven/repository/org/ow2/asm/asm-util/9.5/asm-util-9.5.jar"
+        ]
+    }
+}

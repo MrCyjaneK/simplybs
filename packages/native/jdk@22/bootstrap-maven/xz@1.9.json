@@ -1,0 +1,38 @@
+{
+    "package": "native/jdk@22/bootstrap-maven/xz@1.9",
+    "version": "1.9",
+    "type": "native",
+    "download": [
+        {
+            "kind": "git",
+            "sha256": "a6e4dc6aca696af220ca64f9336786d5fbff3c0b",
+            "url": "https://github.com/tukaani-project/xz-java.git"
+        },
+        {
+            "kind": "blob",
+            "path": "./xz-1.9.pom",
+            "sha256": "093be1b03331bce2932d6825c37e98272d7621e6a9e9fb93289a002518b8dd5a",
+            "url": "https://repo1.maven.org/maven2/org/tukaani/xz/1.9/xz-1.9.pom"
+        }
+    ],
+    "dependencies": [
+        "*:*:native/bash",
+        "*:*:native/coreutils",
+        "*:*:native/findutils",
+        "*:*:native/jdk@22"
+    ],
+    "build": {
+        "env": [
+            "*:*:WORKDIR=build/xz@1.9"
+        ],
+        "steps": [
+            "*:*:mkdir -p $WORKDIR",
+            "*:*:find src -name '*.java' >$WORKDIR/sources",
+            "*:*:$JAVA_HOME/bin/javac -d $WORKDIR/classes @$WORKDIR/sources",
+            "*:*:$JAVA_HOME/bin/jar cf $WORKDIR/xz-1.9.jar -C $WORKDIR/classes .",
+            "*:*:mkdir -p $STAGING_DIR$NATIVEPREFIX/share/maven/repository/org/tukaani/xz/1.9",
+            "*:*:cp $WORKDIR/xz-1.9.jar $STAGING_DIR$NATIVEPREFIX/share/maven/repository/org/tukaani/xz/1.9/xz-1.9.jar",
+            "*:*:cp xz-1.9.pom $STAGING_DIR$NATIVEPREFIX/share/maven/repository/org/tukaani/xz/1.9/xz-1.9.pom"
+        ]
+    }
+}

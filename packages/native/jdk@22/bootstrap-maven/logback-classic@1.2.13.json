@@ -1,0 +1,49 @@
+{
+    "package": "native/jdk@22/bootstrap-maven/logback-classic@1.2.13",
+    "version": "1.2.13",
+    "type": "native",
+    "download": [
+        {
+            "kind": "git",
+            "sha256": "2648b9e7fbb47426c89b9c93b411c07484e8f277",
+            "url": "https://github.com/qos-ch/logback.git"
+        },
+        {
+            "kind": "blob",
+            "path": "./logback-classic-1.2.13.pom",
+            "sha256": "901aa9a2b52aa5fb14c853fabcdd66090c915306b623c41e91e43c11ec85f301",
+            "url": "https://repo1.maven.org/maven2/ch/qos/logback/logback-classic/1.2.13/logback-classic-1.2.13.pom"
+        }
+    ],
+    "dependencies": [
+        "*:*:native/bash",
+        "*:*:native/coreutils",
+        "*:*:native/findutils",
+        "*:*:native/sed",
+        "*:*:native/jdk@22",
+        "*:*:native/jdk@22/bootstrap-maven/pom/logback-parent@1.2.13",
+        "*:*:native/jdk@22/bootstrap-maven/logback-core@1.2.13",
+        "*:*:native/jdk@22/bootstrap-maven/slf4j-api@1.7.32",
+        "*:*:native/jdk@22/bootstrap-maven/janino@3.0.6",
+        "*:*:native/jdk@22/bootstrap-maven/commons-compiler@3.0.6"
+    ],
+    "build": {
+        "env": [
+            "*:*:WORKDIR=work/logback-classic@1.2.13",
+            "*:*:REPO=$NATIVEPREFIX/share/maven/repository"
+        ],
+        "steps": [
+            "*:*:mkdir -p $WORKDIR/classes",
+            "*:*:sed -i '/import sun.reflect.Reflection;/d' logback-classic/src/main/java/ch/qos/logback/classic/spi/PackagingDataCalculator.java",
+            "*:*:sed -i 's/Reflection.getCallerClass(2);//' logback-classic/src/main/java/ch/qos/logback/classic/spi/PackagingDataCalculator.java",
+            "*:*:sed -i 's/callerClass = Reflection.getCallerClass(localFirstCommon + i - missfireCount + 1);//' logback-classic/src/main/java/ch/qos/logback/classic/spi/PackagingDataCalculator.java",
+            "*:*:find logback-classic/src/main/java -name '*.java' ! -name 'ViewStatusMessagesServlet.java' ! -name 'MDCInsertingServletFilter.java' ! -name 'SMTPAppender.java' ! -name 'LogbackServletContainerInitializer.java' ! -name 'LogbackServletContextListener.java' ! -name 'ContextDetachingSCL.java' ! -name 'LoggerContextFilter.java' >$WORKDIR/sources",
+            "*:*:$JAVA_HOME/bin/javac --release 8 -cp $REPO/ch/qos/logback/logback-core/1.2.13/logback-core-1.2.13.jar:$REPO/org/slf4j/slf4j-api/1.7.32/slf4j-api-1.7.32.jar:$REPO/org/codehaus/janino/commons-compiler/3.0.6/commons-compiler-3.0.6.jar:$REPO/org/codehaus/janino/janino/3.0.6/janino-3.0.6.jar -d $WORKDIR/classes @$WORKDIR/sources",
+            "*:*:if [ -d logback-classic/src/main/resources ]; then cp -R logback-classic/src/main/resources/. $WORKDIR/classes/; fi",
+            "*:*:$JAVA_HOME/bin/jar cf $WORKDIR/logback-classic-1.2.13.jar -C $WORKDIR/classes .",
+            "*:*:mkdir -p $STAGING_DIR$NATIVEPREFIX/share/maven/repository/ch/qos/logback/logback-classic/1.2.13",
+            "*:*:cp $WORKDIR/logback-classic-1.2.13.jar $STAGING_DIR$NATIVEPREFIX/share/maven/repository/ch/qos/logback/logback-classic/1.2.13/logback-classic-1.2.13.jar",
+            "*:*:cp logback-classic-1.2.13.pom $STAGING_DIR$NATIVEPREFIX/share/maven/repository/ch/qos/logback/logback-classic/1.2.13/logback-classic-1.2.13.pom"
+        ]
+    }
+}

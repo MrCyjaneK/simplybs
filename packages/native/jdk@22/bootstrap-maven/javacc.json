@@ -1,0 +1,35 @@
+{
+    "package": "native/jdk@22/bootstrap-maven/javacc",
+    "version": "7.0.13",
+    "type": "native",
+    "download": [
+        {
+            "kind": "git",
+            "sha256": "e64881dcd7175db6150d70bfc9c8cad86ccee9b0",
+            "url": "https://github.com/javacc/javacc.git"
+        }
+    ],
+    "dependencies": [
+        "*:*:native/bash",
+        "*:*:native/coreutils",
+        "*:*:native/findutils",
+        "*:*:native/jdk@22"
+    ],
+    "build": {
+        "env": [
+            "*:*:WORKDIR=build/javacc"
+        ],
+        "steps": [
+            "*:*:mkdir -p $WORKDIR/classes",
+            "*:*:$JAVA_HOME/bin/java -cp bootstrap/javacc.jar javacc -OUTPUT_DIRECTORY=src/main/java/org/javacc/parser src/main/javacc/JavaCC.jj",
+            "*:*:$JAVA_HOME/bin/java -cp bootstrap/javacc.jar javacc -OUTPUT_DIRECTORY=src/main/java/org/javacc/utils src/main/javacc/ConditionParser.jj",
+            "*:*:$JAVA_HOME/bin/java -cp bootstrap/javacc.jar jjtree -OUTPUT_DIRECTORY=src/main/java/org/javacc/jjtree src/main/jjtree/JJTree.jjt",
+            "*:*:$JAVA_HOME/bin/java -cp bootstrap/javacc.jar javacc -OUTPUT_DIRECTORY=src/main/java/org/javacc/jjtree src/main/java/org/javacc/jjtree/JJTree.jj",
+            "*:*:find src/main/java -name '*.java' >$WORKDIR/sources",
+            "*:*:$JAVA_HOME/bin/javac -d $WORKDIR/classes @$WORKDIR/sources",
+            "*:*:cp -R src/main/resources/. $WORKDIR/classes/",
+            "*:*:mkdir -p $STAGING_DIR$NATIVEPREFIX/share/java",
+            "*:*:$JAVA_HOME/bin/jar cf $STAGING_DIR$NATIVEPREFIX/share/java/javacc.jar -C $WORKDIR/classes ."
+        ]
+    }
+}

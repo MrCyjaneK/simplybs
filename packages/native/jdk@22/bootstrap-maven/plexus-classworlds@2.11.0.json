@@ -1,0 +1,33 @@
+{
+    "package": "native/jdk@22/bootstrap-maven/plexus-classworlds@2.11.0",
+    "version": "2.11.0",
+    "type": "native",
+    "download": [
+        {
+            "kind": "git",
+            "sha256": "4ed724d0fbcea1730c5c115ca15c1b91c5aa6b27",
+            "url": "https://github.com/codehaus-plexus/plexus-classworlds.git"
+        }
+    ],
+    "dependencies": [
+        "*:*:native/bash",
+        "*:*:native/coreutils",
+        "*:*:native/findutils",
+        "*:*:native/jdk@22",
+        "*:*:native/jdk@22/bootstrap-maven/pom/plexus@25"
+    ],
+    "build": {
+        "env": [
+            "*:*:WORKDIR=work/plexus-classworlds@2.11.0"
+        ],
+        "steps": [
+            "*:*:mkdir -p $WORKDIR",
+            "*:*:find src/main/java -name '*.java' >$WORKDIR/sources",
+            "*:*:$JAVA_HOME/bin/javac --release 8 -d $WORKDIR/classes @$WORKDIR/sources",
+            "*:*:$JAVA_HOME/bin/jar cf $WORKDIR/plexus-classworlds-2.11.0.jar -C $WORKDIR/classes .",
+            "*:*:mkdir -p $STAGING_DIR$NATIVEPREFIX/share/maven/repository/org/codehaus/plexus/plexus-classworlds/2.11.0",
+            "*:*:cp $WORKDIR/plexus-classworlds-2.11.0.jar $STAGING_DIR$NATIVEPREFIX/share/maven/repository/org/codehaus/plexus/plexus-classworlds/2.11.0/plexus-classworlds-2.11.0.jar",
+            "*:*:cp pom.xml $STAGING_DIR$NATIVEPREFIX/share/maven/repository/org/codehaus/plexus/plexus-classworlds/2.11.0/plexus-classworlds-2.11.0.pom"
+        ]
+    }
+}

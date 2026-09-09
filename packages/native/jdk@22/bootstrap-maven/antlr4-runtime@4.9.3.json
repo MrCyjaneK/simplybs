@@ -1,0 +1,39 @@
+{
+    "package": "native/jdk@22/bootstrap-maven/antlr4-runtime@4.9.3",
+    "version": "4.9.3",
+    "type": "native",
+    "download": [
+        {
+            "kind": "git",
+            "sha256": "e4c1a74c66bd5290364ea2b36c97cd724b247357",
+            "url": "https://github.com/antlr/antlr4.git"
+        },
+        {
+            "kind": "blob",
+            "path": "./antlr4-runtime-4.9.3.pom",
+            "sha256": "4f7e44e4ea0629fa3a759b1116feb9fb28814e95f791e1eeedd20c12889d7aa4",
+            "url": "https://repo1.maven.org/maven2/org/antlr/antlr4-runtime/4.9.3/antlr4-runtime-4.9.3.pom"
+        }
+    ],
+    "dependencies": [
+        "*:*:native/bash",
+        "*:*:native/coreutils",
+        "*:*:native/findutils",
+        "*:*:native/jdk@22",
+        "*:*:native/jdk@22/bootstrap-maven/pom/antlr4-master@4.9.3"
+    ],
+    "build": {
+        "env": [
+            "*:*:WORKDIR=build/antlr4-runtime@4.9.3"
+        ],
+        "steps": [
+            "*:*:mkdir -p $WORKDIR",
+            "*:*:find runtime/Java/src/org -name '*.java' >$WORKDIR/sources",
+            "*:*:$JAVA_HOME/bin/javac -d $WORKDIR/classes @$WORKDIR/sources",
+            "*:*:$JAVA_HOME/bin/jar cf $WORKDIR/antlr4-runtime-4.9.3.jar -C $WORKDIR/classes .",
+            "*:*:mkdir -p $STAGING_DIR$NATIVEPREFIX/share/maven/repository/org/antlr/antlr4-runtime/4.9.3",
+            "*:*:cp $WORKDIR/antlr4-runtime-4.9.3.jar $STAGING_DIR$NATIVEPREFIX/share/maven/repository/org/antlr/antlr4-runtime/4.9.3/antlr4-runtime-4.9.3.jar",
+            "*:*:cp antlr4-runtime-4.9.3.pom $STAGING_DIR$NATIVEPREFIX/share/maven/repository/org/antlr/antlr4-runtime/4.9.3/antlr4-runtime-4.9.3.pom"
+        ]
+    }
+}

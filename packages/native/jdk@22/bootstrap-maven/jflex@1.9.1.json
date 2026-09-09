@@ -1,0 +1,37 @@
+{
+    "package": "native/jdk@22/bootstrap-maven/jflex@1.9.1",
+    "version": "1.9.1",
+    "type": "native",
+    "download": [
+        {
+            "kind": "git",
+            "sha256": "0679cc1098f0f8119905bcd2ff07ea0e7e965284",
+            "url": "https://github.com/jflex-de/jflex.git"
+        }
+    ],
+    "dependencies": [
+        "*:*:native/bash",
+        "*:*:native/coreutils",
+        "*:*:native/findutils",
+        "*:*:native/jdk@22",
+        "*:*:native/jdk@22/bootstrap-maven/auto-value-annotations@1.9",
+        "*:*:native/jdk@22/bootstrap-maven/jsr305@3.0.2",
+        "*:*:native/jdk@22/bootstrap-maven/java-cup-runtime@11b-20160615-1"
+    ],
+    "build": {
+        "env": [
+            "*:*:WORKDIR=build/jflex@1.9.1",
+            "*:*:REPO=$NATIVEPREFIX/share/maven/repository"
+        ],
+        "steps": [
+            "*:*:mkdir -p $WORKDIR/classes",
+            "*:*:find java -name '*.java' >$WORKDIR/sources",
+            "*:*:$JAVA_HOME/bin/javac -encoding UTF-8 -cp $REPO/com/google/auto/value/auto-value-annotations/1.9/auto-value-annotations-1.9.jar:$REPO/com/google/code/findbugs/jsr305/3.0.2/jsr305-3.0.2.jar:$REPO/com/github/vbmacher/java-cup-runtime/11b-20160615-1/java-cup-runtime-11b-20160615-1.jar -d $WORKDIR/classes @$WORKDIR/sources",
+            "*:*:cp java/jflex/Messages.properties $WORKDIR/classes/jflex/Messages.properties",
+            "*:*:cp java/jflex/skeleton.default $WORKDIR/classes/jflex/skeleton.default",
+            "*:*:cd $WORKDIR/classes && $JAVA_HOME/bin/jar xf $REPO/com/github/vbmacher/java-cup-runtime/11b-20160615-1/java-cup-runtime-11b-20160615-1.jar",
+            "*:*:mkdir -p $STAGING_DIR$NATIVEPREFIX/share/java",
+            "*:*:$JAVA_HOME/bin/jar cf $STAGING_DIR$NATIVEPREFIX/share/java/jflex.jar -C $WORKDIR/classes ."
+        ]
+    }
+}

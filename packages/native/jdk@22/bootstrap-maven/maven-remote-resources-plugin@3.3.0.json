@@ -1,0 +1,57 @@
+{
+    "package": "native/jdk@22/bootstrap-maven/maven-remote-resources-plugin@3.3.0",
+    "version": "3.3.0",
+    "type": "native",
+    "download": [
+        {
+            "kind": "git",
+            "sha256": "1ea5c305431a4b175339fb1339f841c2c7eb4162",
+            "url": "https://github.com/apache/maven-remote-resources-plugin.git"
+        }
+    ],
+    "dependencies": [
+        "*:*:native/bash",
+        "*:*:native/coreutils",
+        "*:*:native/findutils",
+        "*:*:native/jdk@22",
+        "*:*:native/jdk@22/bootstrap-maven/org.eclipse.sisu.inject@1.0.0",
+        "*:*:native/maven@3.9-bin",
+        "*:*:native/jdk@22/bootstrap-maven/pom/maven-plugins@43",
+        "*:*:native/jdk@22/bootstrap-maven/javax.inject@1",
+        "*:*:native/jdk@22/bootstrap-maven/slf4j-api@1.7.36",
+        "*:*:native/jdk@22/bootstrap-maven/plexus-utils@4.0.2",
+        "*:*:native/jdk@22/bootstrap-maven/plexus-xml@3.0.1",
+        "*:*:native/jdk@22/bootstrap-maven/plexus-build-api@1.2.0",
+        "*:*:native/jdk@22/bootstrap-maven/modello@2.6.0",
+        "*:*:native/jdk@22/bootstrap-maven/maven-plugin-annotations@3.15.2",
+        "*:*:native/jdk@22/bootstrap-maven/maven-plugin-tools-generators@3.15.2",
+        "*:*:native/jdk@22/bootstrap-maven/commons-lang3@3.17.0",
+        "*:*:native/jdk@22/bootstrap-maven/velocity-engine-core@2.4.1",
+        "*:*:native/jdk@22/bootstrap-maven/plexus-resources@1.3.0",
+        "*:*:native/jdk@22/bootstrap-maven/maven-common-artifact-filters@3.4.0",
+        "*:*:native/jdk@22/bootstrap-maven/maven-filtering@3.4.0",
+        "*:*:native/jdk@22/bootstrap-maven/maven-archiver@3.6.3"
+    ],
+    "build": {
+        "env": [
+            "*:*:WORKDIR=build/maven-remote-resources-plugin@3.3.0",
+            "*:*:REPO=$NATIVEPREFIX/share/maven/repository",
+            "*:*:BOOT_LIB=$NATIVEPREFIX/maven-3.9-bootstrap/lib",
+            "*:*:MODELLO_CP=$NATIVEPREFIX/share/maven/repository/javax/inject/javax.inject/1/javax.inject-1.jar:$NATIVEPREFIX/share/maven/repository/org/slf4j/slf4j-api/1.7.36/slf4j-api-1.7.36.jar:$NATIVEPREFIX/share/maven/repository/org/codehaus/plexus/plexus-utils/4.0.2/plexus-utils-4.0.2.jar:$NATIVEPREFIX/share/maven/repository/org/codehaus/plexus/plexus-xml/3.0.1/plexus-xml-3.0.1.jar:$NATIVEPREFIX/share/maven/repository/org/codehaus/plexus/plexus-build-api/1.2.0/plexus-build-api-1.2.0.jar:$NATIVEPREFIX/share/maven/repository/org/codehaus/modello/modello-core/2.6.0/modello-core-2.6.0.jar:$NATIVEPREFIX/share/maven/repository/org/codehaus/modello/modello-plugin-java/2.6.0/modello-plugin-java-2.6.0.jar:$NATIVEPREFIX/share/maven/repository/org/codehaus/modello/modello-plugin-xml/2.6.0/modello-plugin-xml-2.6.0.jar:$NATIVEPREFIX/share/maven/repository/org/codehaus/modello/modello-plugin-xpp3/2.6.0/modello-plugin-xpp3-2.6.0.jar"
+        ],
+        "steps": [
+            "*:*:mkdir -p $WORKDIR/generated $WORKDIR/pluginxml",
+            "*:*:$JAVA_HOME/bin/javac -cp $MODELLO_CP -d $WORKDIR $PATCH_DIR/maven/RunModello.java",
+            "*:*:$JAVA_HOME/bin/java -cp $WORKDIR:$MODELLO_CP RunModello src/main/mdo/remote-resources.mdo 1.2.0 $WORKDIR/generated java xpp3-reader xpp3-writer",
+            "*:*:$JAVA_HOME/bin/java -cp $WORKDIR:$MODELLO_CP RunModello src/main/mdo/supplemental-model.mdo 1.0.0 $WORKDIR/generated java xpp3-reader xpp3-writer",
+            "*:*:find src/main/java $WORKDIR/generated -name '*.java' >$WORKDIR/sources",
+            "*:*:$JAVA_HOME/bin/javac -cp $(printf '%s:' $BOOT_LIB/*.jar)$REPO/org/apache/maven/plugin-tools/maven-plugin-annotations/3.15.2/maven-plugin-annotations-3.15.2.jar:$REPO/org/apache/commons/commons-lang3/3.17.0/commons-lang3-3.17.0.jar:$REPO/org/apache/velocity/velocity-engine-core/2.4.1/velocity-engine-core-2.4.1.jar:$REPO/org/codehaus/plexus/plexus-resources/1.3.0/plexus-resources-1.3.0.jar:$REPO/org/apache/maven/shared/maven-common-artifact-filters/3.4.0/maven-common-artifact-filters-3.4.0.jar:$REPO/org/apache/maven/shared/maven-filtering/3.4.0/maven-filtering-3.4.0.jar:$REPO/org/apache/maven/maven-archiver/3.6.3/maven-archiver-3.6.3.jar:$REPO/org/codehaus/plexus/plexus-utils/4.0.2/plexus-utils-4.0.2.jar:$REPO/org/codehaus/plexus/plexus-xml/3.0.1/plexus-xml-3.0.1.jar:$REPO/javax/inject/javax.inject/1/javax.inject-1.jar -processorpath $REPO/org/eclipse/sisu/org.eclipse.sisu.inject/1.0.0/org.eclipse.sisu.inject-1.0.0.jar:$REPO/javax/inject/javax.inject/1/javax.inject-1.jar -processor org.eclipse.sisu.space.SisuIndexAPT6 -d $WORKDIR/classes @$WORKDIR/sources",
+            "*:*:mkdir -p $WORKDIR/pluginxml/META-INF/maven",
+            "*:*:$JAVA_HOME/bin/java -cp $PLUGINXML_JAR:$(printf '%s:' $BOOT_LIB/*.jar) org.apache.maven.tools.plugin.generator.GeneratePluginXml org.apache.maven.plugins maven-remote-resources-plugin 3.3.0 remote-resources $WORKDIR/classes $WORKDIR/pluginxml/META-INF/maven $(printf '%s:' $BOOT_LIB/*.jar)$REPO/org/apache/maven/plugin-tools/maven-plugin-annotations/3.15.2/maven-plugin-annotations-3.15.2.jar:$REPO/org/apache/commons/commons-lang3/3.17.0/commons-lang3-3.17.0.jar:$REPO/org/apache/velocity/velocity-engine-core/2.4.1/velocity-engine-core-2.4.1.jar:$REPO/org/codehaus/plexus/plexus-resources/1.3.0/plexus-resources-1.3.0.jar:$REPO/org/apache/maven/shared/maven-common-artifact-filters/3.4.0/maven-common-artifact-filters-3.4.0.jar:$REPO/org/apache/maven/shared/maven-filtering/3.4.0/maven-filtering-3.4.0.jar:$REPO/org/apache/maven/maven-archiver/3.6.3/maven-archiver-3.6.3.jar:$REPO/org/codehaus/plexus/plexus-utils/4.0.2/plexus-utils-4.0.2.jar:$REPO/org/codehaus/plexus/plexus-xml/3.0.1/plexus-xml-3.0.1.jar:$REPO/javax/inject/javax.inject/1/javax.inject-1.jar",
+            "*:*:$JAVA_HOME/bin/jar cf $WORKDIR/maven-remote-resources-plugin-3.3.0.jar -C $WORKDIR/classes . -C $WORKDIR/pluginxml .",
+            "*:*:mkdir -p $STAGING_DIR$NATIVEPREFIX/share/maven/repository/org/apache/maven/plugins/maven-remote-resources-plugin/3.3.0",
+            "*:*:cp $WORKDIR/maven-remote-resources-plugin-3.3.0.jar $STAGING_DIR$NATIVEPREFIX/share/maven/repository/org/apache/maven/plugins/maven-remote-resources-plugin/3.3.0/maven-remote-resources-plugin-3.3.0.jar",
+            "*:*:cp pom.xml $STAGING_DIR$NATIVEPREFIX/share/maven/repository/org/apache/maven/plugins/maven-remote-resources-plugin/3.3.0/maven-remote-resources-plugin-3.3.0.pom"
+        ]
+    }
+}

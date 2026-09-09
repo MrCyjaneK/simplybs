@@ -1,0 +1,46 @@
+{
+    "package": "native/jdk@22/bootstrap-maven/wagon-http@3.5.3",
+    "version": "3.5.3",
+    "type": "native",
+    "download": [
+        {
+            "kind": "git",
+            "sha256": "20b847446bb60f49af0428d592eadee774b5bff2",
+            "url": "https://github.com/apache/maven-wagon.git"
+        },
+        {
+            "kind": "blob",
+            "path": "./wagon-http-3.5.3.pom",
+            "sha256": "934f2f9c87e497c4f795be4bb05b360b8c231467d460103c19012b79b8c03c6b",
+            "url": "https://repo1.maven.org/maven2/org/apache/maven/wagon/wagon-http/3.5.3/wagon-http-3.5.3.pom"
+        }
+    ],
+    "dependencies": [
+        "*:*:native/bash",
+        "*:*:native/coreutils",
+        "*:*:native/findutils",
+        "*:*:native/jdk@22",
+        "*:*:native/jdk@22/bootstrap-maven/pom/wagon-providers@3.5.3",
+        "*:*:native/jdk@22/bootstrap-maven/wagon-http-shared@3.5.3",
+        "*:*:native/jdk@22/bootstrap-maven/wagon-provider-api@3.5.3",
+        "*:*:native/jdk@22/bootstrap-maven/httpclient@4.5.14",
+        "*:*:native/jdk@22/bootstrap-maven/jcl-over-slf4j@1.7.36",
+        "*:*:native/jdk@22/bootstrap-maven/slf4j-simple@1.7.36"
+    ],
+    "build": {
+        "env": [
+            "*:*:WORKDIR=work/wagon-http@3.5.3",
+            "*:*:REPO=$NATIVEPREFIX/share/maven/repository"
+        ],
+        "steps": [
+            "*:*:mkdir -p $WORKDIR/classes",
+            "*:*:find wagon-providers/wagon-http/src/main/java -name '*.java' ! -name 'module-info.java' >$WORKDIR/sources",
+            "*:*:$JAVA_HOME/bin/javac --release 8 -cp $REPO/org/apache/maven/wagon/wagon-http-shared/3.5.3/wagon-http-shared-3.5.3.jar:$REPO/org/apache/maven/wagon/wagon-provider-api/3.5.3/wagon-provider-api-3.5.3.jar:$REPO/org/apache/httpcomponents/httpclient/4.5.14/httpclient-4.5.14.jar:$REPO/org/apache/httpcomponents/httpcore/4.4.16/httpcore-4.4.16.jar -d $WORKDIR/classes @$WORKDIR/sources",
+            "*:*:if [ -d wagon-providers/wagon-http/src/main/resources ]; then cp -R wagon-providers/wagon-http/src/main/resources/. $WORKDIR/classes/; fi",
+            "*:*:$JAVA_HOME/bin/jar cf $WORKDIR/wagon-http-3.5.3.jar -C $WORKDIR/classes .",
+            "*:*:mkdir -p $STAGING_DIR$NATIVEPREFIX/share/maven/repository/org/apache/maven/wagon/wagon-http/3.5.3",
+            "*:*:cp $WORKDIR/wagon-http-3.5.3.jar $STAGING_DIR$NATIVEPREFIX/share/maven/repository/org/apache/maven/wagon/wagon-http/3.5.3/wagon-http-3.5.3.jar",
+            "*:*:cp wagon-http-3.5.3.pom $STAGING_DIR$NATIVEPREFIX/share/maven/repository/org/apache/maven/wagon/wagon-http/3.5.3/wagon-http-3.5.3.pom"
+        ]
+    }
+}

@@ -1,0 +1,35 @@
+{
+    "package": "native/jdk@22/bootstrap-maven/commons-text@1.12.0",
+    "version": "1.12.0",
+    "type": "native",
+    "download": [
+        {
+            "kind": "git",
+            "sha256": "2c2d0818b0540c59f055f5174db51d0574af46da",
+            "url": "https://github.com/apache/commons-text.git"
+        }
+    ],
+    "dependencies": [
+        "*:*:native/bash",
+        "*:*:native/coreutils",
+        "*:*:native/findutils",
+        "*:*:native/jdk@22",
+        "*:*:native/jdk@22/bootstrap-maven/pom/commons-parent@69",
+        "*:*:native/jdk@22/bootstrap-maven/commons-lang3@3.14.0"
+    ],
+    "build": {
+        "env": [
+            "*:*:WORKDIR=build/commons-text@1.12.0",
+            "*:*:REPO=$NATIVEPREFIX/share/maven/repository"
+        ],
+        "steps": [
+            "*:*:mkdir -p $WORKDIR",
+            "*:*:find src/main/java -name '*.java' ! -name 'module-info.java' >$WORKDIR/sources",
+            "*:*:$JAVA_HOME/bin/javac -encoding ISO-8859-1 -cp $REPO/org/apache/commons/commons-lang3/3.14.0/commons-lang3-3.14.0.jar -d $WORKDIR/classes @$WORKDIR/sources",
+            "*:*:$JAVA_HOME/bin/jar cf $WORKDIR/commons-text-1.12.0.jar -C $WORKDIR/classes .",
+            "*:*:mkdir -p $STAGING_DIR$NATIVEPREFIX/share/maven/repository/org/apache/commons/commons-text/1.12.0",
+            "*:*:cp $WORKDIR/commons-text-1.12.0.jar $STAGING_DIR$NATIVEPREFIX/share/maven/repository/org/apache/commons/commons-text/1.12.0/commons-text-1.12.0.jar",
+            "*:*:cp pom.xml $STAGING_DIR$NATIVEPREFIX/share/maven/repository/org/apache/commons/commons-text/1.12.0/commons-text-1.12.0.pom"
+        ]
+    }
+}

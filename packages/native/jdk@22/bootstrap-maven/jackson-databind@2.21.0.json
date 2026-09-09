@@ -1,0 +1,37 @@
+{
+    "package": "native/jdk@22/bootstrap-maven/jackson-databind@2.21.0",
+    "version": "2.21.0",
+    "type": "native",
+    "download": [
+        {
+            "kind": "git",
+            "sha256": "220ee04ec724e5f5ea60fe5e638670e83e994765",
+            "url": "https://github.com/FasterXML/jackson-databind.git"
+        }
+    ],
+    "dependencies": [
+        "*:*:native/bash",
+        "*:*:native/coreutils",
+        "*:*:native/findutils",
+        "*:*:native/jdk@22",
+        "*:*:native/jdk@22/bootstrap-maven/pom/jackson-base@2.21.0",
+        "*:*:native/jdk@22/bootstrap-maven/jackson-annotations@2.21",
+        "*:*:native/jdk@22/bootstrap-maven/jackson-core@2.21.0"
+    ],
+    "build": {
+        "env": [
+            "*:*:WORKDIR=build/jackson-databind@2.21.0",
+            "*:*:REPO=$NATIVEPREFIX/share/maven/repository"
+        ],
+        "steps": [
+            "*:*:mkdir -p $WORKDIR/gen/com/fasterxml/jackson/databind/cfg",
+            "*:*:printf '%s\\n' 'package com.fasterxml.jackson.databind.cfg;' '' 'import com.fasterxml.jackson.core.Version;' 'import com.fasterxml.jackson.core.Versioned;' 'import com.fasterxml.jackson.core.util.VersionUtil;' '' 'public final class PackageVersion implements Versioned {' '    public final static Version VERSION = VersionUtil.parseVersion(' '        \"2.21.0\", \"com.fasterxml.jackson.core\", \"jackson-databind\");' '' '    @Override' '    public Version version() {' '        return VERSION;' '    }' '}' > $WORKDIR/gen/com/fasterxml/jackson/databind/cfg/PackageVersion.java",
+            "*:*:find src/main/java $WORKDIR/gen -name '*.java' ! -name 'module-info.java' ! -name 'PackageVersion.java.in' >$WORKDIR/sources",
+            "*:*:$JAVA_HOME/bin/javac --release 8 -cp $REPO/com/fasterxml/jackson/core/jackson-core/2.21.0/jackson-core-2.21.0.jar:$REPO/com/fasterxml/jackson/core/jackson-annotations/2.21/jackson-annotations-2.21.jar -d $WORKDIR/classes @$WORKDIR/sources",
+            "*:*:$JAVA_HOME/bin/jar cf $WORKDIR/jackson-databind-2.21.0.jar -C $WORKDIR/classes .",
+            "*:*:mkdir -p $STAGING_DIR$NATIVEPREFIX/share/maven/repository/com/fasterxml/jackson/core/jackson-databind/2.21.0",
+            "*:*:cp $WORKDIR/jackson-databind-2.21.0.jar $STAGING_DIR$NATIVEPREFIX/share/maven/repository/com/fasterxml/jackson/core/jackson-databind/2.21.0/jackson-databind-2.21.0.jar",
+            "*:*:cp pom.xml $STAGING_DIR$NATIVEPREFIX/share/maven/repository/com/fasterxml/jackson/core/jackson-databind/2.21.0/jackson-databind-2.21.0.pom"
+        ]
+    }
+}

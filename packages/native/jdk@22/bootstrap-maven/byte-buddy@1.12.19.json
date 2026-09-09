@@ -1,0 +1,49 @@
+{
+    "package": "native/jdk@22/bootstrap-maven/byte-buddy@1.12.19",
+    "version": "1.12.19",
+    "type": "native",
+    "download": [
+        {
+            "kind": "git",
+            "sha256": "c93425a1e92bd246c053968512226ff391c54b5c",
+            "url": "https://github.com/raphw/byte-buddy.git"
+        },
+        {
+            "kind": "blob",
+            "path": "./byte-buddy-1.12.19.pom",
+            "sha256": "435fb8664aa9b7e120c8dd6c707d4eafa642fa262dff6d5e3f71dc25c69e89eb",
+            "url": "https://repo1.maven.org/maven2/net/bytebuddy/byte-buddy/1.12.19/byte-buddy-1.12.19.pom"
+        }
+    ],
+    "dependencies": [
+        "*:*:native/bash",
+        "*:*:native/coreutils",
+        "*:*:native/findutils",
+        "*:*:native/jdk@22",
+        "*:*:native/jdk@22/bootstrap-maven/pom/byte-buddy-parent@1.12.19",
+        "*:*:native/jdk@22/bootstrap-maven/asm@9.9.1",
+        "*:*:native/jdk@22/bootstrap-maven/asm-tree@9.9.1",
+        "*:*:native/jdk@22/bootstrap-maven/asm-commons@9.9.1",
+        "*:*:native/jdk@22/bootstrap-maven/jsr305@3.0.2",
+        "*:*:native/jdk@22/bootstrap-maven/annotations@3.0.0",
+        "*:*:native/jdk@22/bootstrap-maven/jna@5.12.1"
+    ],
+    "build": {
+        "env": [
+            "*:*:SHADE_ASM=1",
+            "*:*:WORKDIR=work/byte-buddy@1.12.19",
+            "*:*:REPO=$NATIVEPREFIX/share/maven/repository"
+        ],
+        "steps": [
+            "*:*:mkdir -p $WORKDIR/classes",
+            "*:*:find byte-buddy-dep/src/main/java byte-buddy-dep/src/main/precompiled-6 -name '*.java' >$WORKDIR/sources",
+            "*:*:$JAVA_HOME/bin/javac -XDignore.symbol.file -cp $REPO/com/google/code/findbugs/annotations/3.0.0/annotations-3.0.0.jar:$REPO/com/google/code/findbugs/jsr305/3.0.2/jsr305-3.0.2.jar:$REPO/org/ow2/asm/asm/9.9.1/asm-9.9.1.jar:$REPO/org/ow2/asm/asm-tree/9.9.1/asm-tree-9.9.1.jar:$REPO/org/ow2/asm/asm-commons/9.9.1/asm-commons-9.9.1.jar:$REPO/net/java/dev/jna/jna/5.12.1/jna-5.12.1.jar:$REPO/net/java/dev/jna/jna-platform/5.12.1/jna-platform-5.12.1.jar -d $WORKDIR/classes @$WORKDIR/sources",
+            "*:*:$JAVA_HOME/bin/jar cf $WORKDIR/byte-buddy-unshaded.jar -C $WORKDIR/classes .",
+            "*:*:$JAVA_HOME/bin/javac -d $WORKDIR $PATCH_DIR/maven/RelocateJar.java",
+            "*:*:$JAVA_HOME/bin/java -cp $WORKDIR RelocateJar -o $WORKDIR/byte-buddy-1.12.19.jar $WORKDIR/byte-buddy-unshaded.jar $REPO/org/ow2/asm/asm/9.9.1/asm-9.9.1.jar $REPO/org/ow2/asm/asm-tree/9.9.1/asm-tree-9.9.1.jar $REPO/org/ow2/asm/asm-commons/9.9.1/asm-commons-9.9.1.jar -- org.objectweb.asm net.bytebuddy.jar.asm",
+            "*:*:mkdir -p $STAGING_DIR$NATIVEPREFIX/share/maven/repository/net/bytebuddy/byte-buddy/1.12.19",
+            "*:*:cp $WORKDIR/byte-buddy-1.12.19.jar $STAGING_DIR$NATIVEPREFIX/share/maven/repository/net/bytebuddy/byte-buddy/1.12.19/byte-buddy-1.12.19.jar",
+            "*:*:cp byte-buddy-1.12.19.pom $STAGING_DIR$NATIVEPREFIX/share/maven/repository/net/bytebuddy/byte-buddy/1.12.19/byte-buddy-1.12.19.pom"
+        ]
+    }
+}
