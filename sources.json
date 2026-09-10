@@ -978,7 +978,8 @@
             "refs": [
                 "b7a785a538a31ab0cf5baf62d936e3e41182e0b7",
                 "3a40aeb71885044b78f1b4438c10497dd5df3bae",
-                "0bc783fabcb2890463c01278c3779c9fde6a6180"
+                "0bc783fabcb2890463c01278c3779c9fde6a6180",
+                "10a8d069467c03b268c94f21c6bc93c2c052ecf7"
             ]
         },
         "https://github.com/SELinuxProject/selinux": {
