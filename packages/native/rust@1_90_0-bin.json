@@ -1,0 +1,44 @@
+{
+    "package": "native/rust@1_90_0-bin",
+    "version": "1.90.0",
+    "type": "native",
+    "download": [
+        {
+            "kind": "blob",
+            "path": "./rust-1.90.0-x86_64-unknown-linux-gnu.tar.gz",
+            "sha256": "e453bae1c68d02fe2eae065c5452d5731308164cd154154c6ee442d2fa590685",
+            "url": "https://static.rust-lang.org/dist/rust-1.90.0-x86_64-unknown-linux-gnu.tar.gz"
+        },
+        {
+            "kind": "blob",
+            "path": "./rust-1.90.0-aarch64-unknown-linux-gnu.tar.gz",
+            "sha256": "293f412e3412c3aa3398c78ebbdf898fa08eacad80c85a7332ce1a455504c5fc",
+            "url": "https://static.rust-lang.org/dist/rust-1.90.0-aarch64-unknown-linux-gnu.tar.gz"
+        },
+        {
+            "kind": "blob",
+            "path": "./rust-1.90.0-aarch64-apple-darwin.tar.gz",
+            "sha256": "a11b52e34f5e80cb25d49f7943ae60e0b069b431727a4c09b2c890ceebee3687",
+            "url": "https://static.rust-lang.org/dist/rust-1.90.0-aarch64-apple-darwin.tar.gz"
+        }
+    ],
+    "dependencies": [
+        "*:*:native/_/_",
+        "*:*:native/bash",
+        "*:*:native/gzip",
+        "*:*:native/tar"
+    ],
+    "build": {
+        "env": [
+            "*:*:PATH=$NATIVEPREFIX/_/bin:$PATH"
+        ],
+        "steps": [
+            "linux_amd64:*:tar -xzf rust-1.90.0-x86_64-unknown-linux-gnu.tar.gz",
+            "linux_amd64:*:cd rust-1.90.0-x86_64-unknown-linux-gnu && ./install.sh --prefix=$STAGING_DIR$NATIVEPREFIX --disable-ldconfig",
+            "linux_arm64:*:tar -xzf rust-1.90.0-aarch64-unknown-linux-gnu.tar.gz",
+            "linux_arm64:*:cd rust-1.90.0-aarch64-unknown-linux-gnu && ./install.sh --prefix=$STAGING_DIR$NATIVEPREFIX --disable-ldconfig",
+            "darwin_arm64:*:tar -xzf rust-1.90.0-aarch64-apple-darwin.tar.gz",
+            "darwin_arm64:*:cd rust-1.90.0-aarch64-apple-darwin && ./install.sh --prefix=$STAGING_DIR$NATIVEPREFIX --disable-ldconfig"
+        ]
+    }
+}

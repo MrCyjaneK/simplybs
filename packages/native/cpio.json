@@ -1,0 +1,24 @@
+{
+    "package": "native/cpio",
+    "version": "2.15",
+    "type": "native",
+    "download": [
+        {
+            "kind": "tar.gz",
+            "sha256": "efa50ef983137eefc0a02fdb51509d624b5e3295c980aa127ceee4183455499e",
+            "url": "http://ftpmirror.gnu.org/cpio/cpio-2.15.tar.gz"
+        }
+    ],
+    "dependencies": [
+        "*:*:native/_/_",
+        "*:*:native/make"
+    ],
+    "build": {
+        "env": [],
+        "steps": [
+            "*:*:./configure --prefix=$NATIVEPREFIX",
+            "*:*:make -j$NUM_CORES",
+            "*:*:make DESTDIR=$STAGING_DIR install"
+        ]
+    }
+}

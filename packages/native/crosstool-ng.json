@@ -1,29 +1,60 @@
 {
     "package": "native/crosstool-ng",
-    "version": "1.27.0",
+    "version": "1.28.0-dirty",
     "type": "native",
-    "download": {
-        "kind": "tar.xz",
-        "sha256": "0506ab98fa0ad6d263a555feeb2c7fff9bc24a434635d4b0cdff9137fe5b4477",
-        "url": "http://crosstool-ng.org/download/crosstool-ng/crosstool-ng-1.27.0.tar.xz"
-    },
+    "download": [
+        {
+            "kind": "git",
+            "sha256": "620b909cd0713f68084378b63cf61b5232757b90",
+            "url": "https://github.com/crosstool-ng/crosstool-ng"
+        }
+    ],
     "dependencies": [
-        "*-linux-gnu:native/autoconf",
-        "*-linux-gnu:native/bash",
-        "*-linux-gnu:native/binutils@2.42",
-        "*-linux-gnu:native/make",
-        "*-linux-gnu:native/make",
-        "*-linux-gnu:native/sed"
+        "*:*:native/_/_",
+        "*:*:native/autoconf",
+        "*:*:native/automake",
+        "*:*:native/bash",
+        "*:*:native/binutils@2.46.0",
+        "*:*:native/bison",
+        "*:*:native/bzip2",
+        "*:*:native/file",
+        "*:*:native/flex",
+        "*:*:native/gawk",
+        "*:*:native/gettext",
+        "*:*:native/grep",
+        "*:*:native/help2man",
+        "*:*:native/libtool",
+        "*:*:native/m4",
+        "*:*:native/make",
+        "*:*:native/ncurses",
+        "*:*:native/patch",
+        "*:*:native/perl",
+        "*:*:native/python@3.11",
+        "*:*:native/rsync",
+        "*:*:native/sed",
+        "*:*:native/texinfo",
+        "*:*:native/unzip",
+        "*:*:native/xz",
+        "*:*:native/zlib"
     ],
     "build": {
         "env": [
-            "x86_64-linux-gnu:TOOL_TARGET=x86_64-linux-gnu"
+            "*:x86_64-linux-gnu:TOOL_TARGET=x86_64-linux-gnu",
+            "*:x86_64-w64-mingw32:TOOL_TARGET=x86_64-w64-mingw32",
+            "*:aarch64-linux-gnu:TOOL_TARGET=aarch64-linux-gnu",
+            "*:x86_64-linux-musl:TOOL_TARGET=x86_64-linux-musl"
         ],
         "steps": [
-            "*-linux-gnu:./bootstrap",
-            "*-linux-gnu:./configure --prefix=$PREFIX/native",
-            "*-linux-gnu:make -j$NUM_CORES",
-            "*-linux-gnu:make install DESTDIR=$STAGING_DIR"
+            "*:*:test -e $NATIVEPREFIX/bin/makeinfo || cp -f $NATIVEPREFIX/bin/texi2any $NATIVEPREFIX/bin/makeinfo",
+            "*:*:test -e $NATIVEPREFIX/bin/which || printf '%s\\n' '#!/bin/sh' 'command -v \"$1\"' >$NATIVEPREFIX/bin/which && chmod +x $NATIVEPREFIX/bin/which",
+            "*:*:./bootstrap",
+            "*:*:./configure --prefix=$NATIVEPREFIX",
+            "*:*:make -j$NUM_CORES",
+            "*:*:make install DESTDIR=$STAGING_DIR",
+            "*:*:rm -f $STAGING_DIR$NATIVEPREFIX/share/crosstool-ng/LICENSE && cp -f $STAGING_DIR$NATIVEPREFIX/share/crosstool-ng/COPYING $STAGING_DIR$NATIVEPREFIX/share/crosstool-ng/LICENSE",
+            "*:*:mkdir -p $STAGING_DIR$NATIVEPREFIX/bin",
+            "*:*:printf '%s\\n' '#!/bin/sh' 'command -v \"$1\"' >$STAGING_DIR$NATIVEPREFIX/bin/which && chmod +x $STAGING_DIR$NATIVEPREFIX/bin/which",
+            "*:*:test -e $STAGING_DIR$NATIVEPREFIX/bin/makeinfo || cp -f $STAGING_DIR$NATIVEPREFIX/bin/texi2any $STAGING_DIR$NATIVEPREFIX/bin/makeinfo 2>/dev/null || true"
         ]
     }
 }

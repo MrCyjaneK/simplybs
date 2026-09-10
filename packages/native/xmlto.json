@@ -1,0 +1,34 @@
+{
+    "package": "native/xmlto",
+    "version": "0.0.29",
+    "type": "native",
+    "download": [
+        {
+            "kind": "git",
+            "sha256": "13a831d76467c88f9e79f9804e2471137ec05331",
+            "url": "https://pagure.io/xmlto.git"
+        }
+    ],
+    "dependencies": [
+        "*:*:native/_/_",
+        "*:*:native/autoconf",
+        "*:*:native/automake",
+        "*:*:native/bash",
+        "*:*:native/flex",
+        "*:*:native/gawk",
+        "*:*:native/gettext",
+        "*:*:native/libxml2",
+        "*:*:native/m4",
+        "*:*:native/make",
+        "*:*:native/perl"
+    ],
+    "build": {
+        "env": [],
+        "steps": [
+            "*:*:autoreconf -f -i",
+            "*:*:bash ./configure --prefix=$NATIVEPREFIX",
+            "*:*:make xmlto -j$NUM_CORES",
+            "*:*:make DESTDIR=$STAGING_DIR install-exec"
+        ]
+    }
+}

@@ -1,0 +1,32 @@
+{
+    "package": "native/pcre2",
+    "version": "10.47",
+    "type": "native",
+    "download": [
+        {
+            "kind": "tar.bz2",
+            "sha256": "47fe8c99461250d42f89e6e8fdaeba9da057855d06eb7fc08d9ca03fd08d7bc7",
+            "url": "https://github.com/PCRE2Project/pcre2/releases/download/pcre2-10.47/pcre2-10.47.tar.bz2"
+        }
+    ],
+    "dependencies": [
+        "*:*:native/_/_",
+        "*:*:native/autoconf",
+        "*:*:native/automake",
+        "*:*:native/bash",
+        "*:*:native/libtool",
+        "*:*:native/make",
+        "*:*:native/perl",
+        "*:*:native/pkgconf"
+    ],
+    "build": {
+        "env": [
+            "*:*:config_opts=--prefix=$NATIVEPREFIX"
+        ],
+        "steps": [
+            "*:*:bash ./configure $config_opts",
+            "*:*:make -j$NUM_CORES",
+            "*:*:make DESTDIR=$STAGING_DIR install"
+        ]
+    }
+}

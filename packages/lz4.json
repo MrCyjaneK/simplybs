@@ -1,0 +1,33 @@
+{
+    "package": "lz4",
+    "version": "v1.10.0",
+    "type": "host",
+    "download": [
+        {
+            "kind": "git",
+            "sha256": "ebb370ca83af193212df4dcbadcc5d87bc0de2f0",
+            "url": "https://github.com/lz4/lz4.git"
+        }
+    ],
+    "dependencies": [
+        "*:*:native/_",
+        "*:*:native/cmake",
+        "*:*:native/cmake-toolchain",
+        "*:*:native/make"
+    ],
+    "patches": [
+        "fix_declaration.patch"
+    ],
+    "build": {
+        "env": [
+            "*:*:config_opts=-DCMAKE_TOOLCHAIN_FILE=$CMAKE_TOOLCHAIN_FILE",
+            "*:*:config_opts=$config_opts -DCMAKE_INSTALL_PREFIX=$PREFIX"
+        ],
+        "steps": [
+            "*:*:mkdir -p build/cmake/build",
+            "*:*:cd build/cmake/build && cmake .. $config_opts",
+            "*:*:cd build/cmake/build && make -j$NUM_CORES",
+            "*:*:cd build/cmake/build && make DESTDIR=$STAGING_DIR install"
+        ]
+    }
+}

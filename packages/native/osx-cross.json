@@ -1,0 +1,91 @@
+{
+    "package": "native/osx-cross",
+    "version": "master",
+    "type": "native",
+    "download": [
+        {
+            "kind": "git",
+            "sha256": "ea17212e41970b9f602fb30898b5a4013a1fb7af",
+            "url": "https://github.com/MrCyjaneK/osxcross.git"
+        },
+        {
+            "kind": "blob",
+            "path": "tarballs/llvmorg-20.1.8.zip",
+            "sha256": "b115ce6285dd9f3f401459912c12d28eb2e2d81e2387a71f6300aa11f7bc3288",
+            "url": "https://github.com/llvm/llvm-project/archive/refs/tags/llvmorg-20.1.8.zip"
+        },
+        {
+            "kind": "blob",
+            "path": "tarballs/20250402.zip",
+            "sha256": "b8e87f026e19259e6eac347746661e11592e0ff8bcdb657e177800223d7438ce",
+            "url": "https://github.com/apple/llvm-project/archive/refs/heads/stable/20250402.zip"
+        }
+    ],
+    "dependencies": [
+        "*:*-apple-*:native/7zip",
+        "*:*-apple-*:native/_/_",
+        "*:*-apple-*:native/apple-sdk",
+        "*:*-apple-*:native/bash",
+        "*:*-apple-*:native/bzip2",
+        "*:*-apple-*:native/cmake",
+        "*:*-apple-*:native/coreutils",
+        "*:*-apple-*:native/cpio",
+        "*:*-apple-*:native/curl",
+        "*:*-apple-*:native/gettext",
+        "*:*-apple-*:native/git",
+        "*:*-apple-*:native/libtapi",
+        "*:*-apple-*:native/libxml2",
+        "*:*-apple-*:native/make",
+        "*:*-apple-*:native/openssl",
+        "*:*-apple-*:native/patch",
+        "*:*-apple-*:native/pbzx",
+        "*:*-apple-*:native/perl",
+        "*:*-apple-*:native/pkgconf",
+        "*:*-apple-*:native/python@3.11",
+        "*:*-apple-*:native/sed",
+        "*:*-apple-*:native/unzip",
+        "*:*-apple-*:native/xar",
+        "*:*-apple-*:native/xz"
+    ],
+    "build": {
+        "env": [
+            "*:*-apple-*:SKIP_BUILD_XAR=yes",
+            "*:*-apple-*:SKIP_BUILD_P7ZIP=yes",
+            "*:*-apple-*:SKIP_BUILD_PBXZ=yes",
+            "*:*-apple-*:SKIP_GIT=yes",
+            "*:*-apple-*:SKIP_DOWNLOAD=yes",
+            "*:*-apple-*:ENABLE_FULL_BOOTSTRAP=yes",
+            "*:*-apple-*:SKIP_TAPI_BUILD=yes",
+            "*:*-apple-*:SKIP_CCTOOLS_BUILD=yes",
+            "*:*-apple-*:JOBS=$NUM_CORES",
+            "*:*-apple-*:PORTABLE=1",
+            "*:*-apple-*:TARGET_DIR=$NATIVEPREFIX/",
+            "*:*-apple-*:UNATTENDED=1",
+            "*:*-apple-*:SDK_VERSION=26.1",
+            "*:*-apple-*:COMPRESSLEVEL=6",
+            "darwin_arm64:*-apple-*:LDFLAGS=-fuse-ld=$NATIVEPREFIX/_/bin/ld",
+            "{linux_*,windows_*}:*-apple-*:LDFLAGS=$LDFLAGS -fuse-ld=lld -L$NATIVEPREFIX/_/sysroot/lib",
+            "{linux_*,windows_*}:*-apple-*:CXXFLAGS=$CXXFLAGS -fuse-ld=lld"
+        ],
+        "steps": [
+            "*:*-apple-*:mkdir -p wrapper/bin",
+            "*:*-apple-*:printf '#!/bin/sh\\ncase \"$1\" in\\n  -productVersion) echo %s ;;\\n  *) echo %s ;;\\nesac\\n' \"${SDK_VERSION}\" \"${SDK_VERSION}\" > wrapper/bin/sw_vers",
+            "*:*-apple-*:chmod +x wrapper/bin/sw_vers",
+            "darwin_arm64:*-apple-*:rm -f $NATIVEPREFIX/_/bin/ld $NATIVEPREFIX/_/bin/ld64.lld",
+            "darwin_arm64:*-apple-*:sed \"s|@LD64_LLD@|$NATIVEPREFIX/_/bin/lld|g; s|@SDK_VERSION@|$SDK_VERSION|g\" $PATCH_DIR/native/osx-cross/classic-ld-wrapper.sh > $NATIVEPREFIX/_/bin/ld && chmod +x $NATIVEPREFIX/_/bin/ld",
+            "darwin_arm64:*-apple-*:cp $NATIVEPREFIX/_/bin/ld $NATIVEPREFIX/_/bin/ld64.lld && chmod +x $NATIVEPREFIX/_/bin/ld64.lld",
+            "*:*-apple-*:sed -i.bak 's/--with-libtapi=$TARGET_DIR/--with-libtapi=$PREFIX\\/native/g' build.sh",
+            "*:*-apple-*:sed -i.bak 's/--with-libxar=$TARGET_DIR/--with-libxar=$PREFIX\\/native/g' build.sh",
+            "*:*-apple-*:mv $NATIVEPREFIX/share/xcode-sdk/*${SDK_VERSION}* tarballs",
+            "darwin_arm64:*-apple-*:sed -i.bak 's|-DLLVM_TEMPORARILY_ALLOW_OLD_TOOLCHAIN=1|-DLLVM_TEMPORARILY_ALLOW_OLD_TOOLCHAIN=1 -DCMAKE_OSX_SYSROOT=$NATIVEPREFIX/_/SDK/MacOSX${SDK_VERSION}.sdk -DCMAKE_OSX_DEPLOYMENT_TARGET=$OSX_MIN_VERSION -DHOST_LINK_VERSION=711 -DCMAKE_EXE_LINKER_FLAGS=-fuse-ld=$NATIVEPREFIX/_/bin/ld -DCMAKE_SHARED_LINKER_FLAGS=-fuse-ld=$NATIVEPREFIX/_/bin/ld|' build_clang.sh",
+            "{linux_*,windows_*}:*-apple-*:sed -i.bak 's|-DLLVM_TEMPORARILY_ALLOW_OLD_TOOLCHAIN=1|-DLLVM_TEMPORARILY_ALLOW_OLD_TOOLCHAIN=1 -DCMAKE_OSX_SYSROOT=$NATIVEPREFIX/_/SDK/MacOSX${SDK_VERSION}.sdk -DCMAKE_OSX_DEPLOYMENT_TARGET=$OSX_MIN_VERSION|' build_clang.sh",
+            "{linux_*,windows_*}:*-apple-*:sed -i.bak 's|export CFLAGS=\"\"|export CFLAGS=\"--gcc-toolchain=$NATIVEPREFIX/_/libexec/gcc-toolchain --sysroot=$NATIVEPREFIX/_/sysroot\"|' build_clang.sh",
+            "{linux_*,windows_*}:*-apple-*:sed -i.bak 's|export CXXFLAGS=\"\"|export CXXFLAGS=\"--gcc-toolchain=$NATIVEPREFIX/_/libexec/gcc-toolchain --sysroot=$NATIVEPREFIX/_/sysroot\"|' build_clang.sh",
+            "*:*-apple-*:export PATH=$PWD/wrapper/bin:$PATH && CC=$NATIVEPREFIX/_/bin/clang-21 CXX=$NATIVEPREFIX/_/bin/clang++-21 LDFLAGS=-fuse-ld=$NATIVEPREFIX/_/bin/ld yes | INSTALLPREFIX=$NATIVEPREFIX ./build_apple_clang.sh",
+            "*:*-apple-*:cd build/clang-21/build_stage3 && make -j$NUM_CORES install DESTDIR=$STAGING_DIR && make -j$NUM_CORES install",
+            "*:*-apple-*:sed -i.bak 's/## Compiler test ##/exit 0/g' build.sh",
+            "*:*-apple-*:export PATH=$PWD/wrapper/bin:$PATH && OCDEBUG=1 TARGET_DIR=$STAGING_DIR$NATIVEPREFIX bash -x ./build.sh",
+            "*:*-apple-*:rm $STAGING_DIR$NATIVEPREFIX/bin/*pkg-config"
+        ]
+    }
+}

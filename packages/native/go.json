@@ -1,0 +1,33 @@
+{
+    "package": "native/go",
+    "version": "1.25.5",
+    "type": "native",
+    "download": [
+        {
+            "kind": "tar.gz",
+            "sha256": "22a5fd0a91efcd28a1b0537106b9959b2804b61f59c3758b51e8e5429c1a954f",
+            "url": "https://go.dev/dl/go1.25.5.src.tar.gz"
+        }
+    ],
+    "dependencies": [
+        "*:*:native/7zip",
+        "*:*:native/_/_",
+        "*:*:native/bash",
+        "*:*:native/go@1.25",
+        "*:*:native/sed"
+    ],
+    "build": {
+        "env": [
+            "*:*:GO_VERSION=1.25.5"
+        ],
+        "steps": [
+            "*:*:cd src && bash ./make.bash",
+            "*:*:mkdir -p $STAGING_DIR$NATIVEPREFIX/go$GO_VERSION",
+            "*:*:mkdir -p $STAGING_DIR$NATIVEPREFIX/bin",
+            "*:*:mv * $STAGING_DIR$NATIVEPREFIX/go$GO_VERSION",
+            "*:*:cat $PATCH_DIR/go_wrapper.sh | sed \"s/@GO_VERSION@/$GO_VERSION/g\" > $STAGING_DIR$NATIVEPREFIX/bin/go$GO_VERSION",
+            "*:*:chmod +x $STAGING_DIR$NATIVEPREFIX/bin/go$GO_VERSION",
+            "*:*:cp $STAGING_DIR$NATIVEPREFIX/bin/go$GO_VERSION $STAGING_DIR$NATIVEPREFIX/bin/go"
+        ]
+    }
+}

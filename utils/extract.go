@@ -52,11 +52,40 @@ func detectCommonPrefix(readerFactory readerFactory) (string, error) {
 
 	if len(firstLevelDirs) == 1 && rootFiles == 0 {
 		for dirName := range firstLevelDirs {
+			if (dirName == "native") {
+				return "", nil
+			}
 			return dirName + "/", nil
 		}
 	}
 
 	return "", nil
+}
+
+func ensureParentDirsPermissions(target, destPath string) error {
+	parentDir := filepath.Dir(target)
+
+	for {
+		if parentDir == destPath || parentDir == filepath.Dir(destPath) {
+			break
+		}
+
+		if err := os.MkdirAll(parentDir, 0755); err != nil {
+			return err
+		}
+
+		if err := os.Chmod(parentDir, 0755); err != nil {
+			return err
+		}
+
+		nextParent := filepath.Dir(parentDir)
+		if nextParent == parentDir {
+			break
+		}
+		parentDir = nextParent
+	}
+
+	return nil
 }
 
 func extractTar(tr *tar.Reader, destPath, commonPrefix string) error {
@@ -85,17 +114,21 @@ func extractTar(tr *tar.Reader, destPath, commonPrefix string) error {
 			continue
 		}
 
+		// Ensure parent directories have rwx permissions up to destPath
+		if err := ensureParentDirsPermissions(target, destPath); err != nil {
+			log.Printf("Warning: Failed to set permissions for parent directories of %s: %v", target, err)
+		}
+
 		switch header.Typeflag {
 		case tar.TypeDir:
 			dirMode := os.FileMode(header.Mode) & 0777
 			if dirMode == 0 {
 				dirMode = 0755
 			}
-			if dirMode&0111 == 0 {
-				dirMode |= 0755
-			}
+			dirMode |= 0700
 
-			if err := os.MkdirAll(target, dirMode); err != nil {
+			if err := os.MkdirAll(target, dirMode); err != nil && !os.IsExist(err) {
+				log.Fatalln(err)
 				return err
 			}
 
@@ -103,7 +136,8 @@ func extractTar(tr *tar.Reader, destPath, commonPrefix string) error {
 				log.Printf("Warning: Failed to set timestamps for directory %s: %v", target, err)
 			}
 		case tar.TypeReg:
-			if err := os.MkdirAll(filepath.Dir(target), 0755); err != nil {
+			if err := os.MkdirAll(filepath.Dir(target), 0755); err != nil && !os.IsExist(err) {
+				log.Fatalln(err)
 				return err
 			}
 
@@ -113,6 +147,7 @@ func extractTar(tr *tar.Reader, destPath, commonPrefix string) error {
 			}
 			fileMode &^= (os.ModeSetuid | os.ModeSetgid | os.ModeSticky)
 
+			os.Chmod(target, 0777)
 			os.Remove(target)
 
 			outFile, err := os.OpenFile(target, os.O_CREATE|os.O_RDWR, fileMode)
@@ -131,6 +166,7 @@ func extractTar(tr *tar.Reader, destPath, commonPrefix string) error {
 			}
 		case tar.TypeSymlink:
 			if err := os.MkdirAll(filepath.Dir(target), 0755); err != nil {
+				panic(err)
 				return err
 			}
 
@@ -140,7 +176,7 @@ func extractTar(tr *tar.Reader, destPath, commonPrefix string) error {
 				log.Printf("Warning: Failed to create symbolic link %s -> %s: %v", target, header.Linkname, err)
 			} else {
 				if err := os.Chtimes(target, header.AccessTime, header.ModTime); err != nil {
-					log.Printf("Warning: Failed to set timestamps for symlink %s: %v", target, err)
+					// log.Printf("Warning: Failed to set timestamps for symlink %s: %v", target, err)
 				}
 			}
 		}
@@ -205,17 +241,13 @@ func createXzTarReader(archivePath string) (*tar.Reader, func(), error) {
 	return tr, cleanup, nil
 }
 
-func ExtractTarGz(archivePath, destPath string) error {
+func extractTarArchive(archivePath, destPath, logLabel string, readerFactory func() (*tar.Reader, func(), error)) error {
 	if _, err := os.Stat(archivePath); os.IsNotExist(err) {
 		log.Printf("Archive not found: %s", archivePath)
 		return err
 	}
 
-	log.Printf("Extracting archive: %s into %s", archivePath, destPath)
-
-	readerFactory := func() (*tar.Reader, func(), error) {
-		return createGzipTarReader(archivePath)
-	}
+	log.Printf("%s: %s into %s", logLabel, archivePath, destPath)
 
 	commonPrefix, err := detectCommonPrefix(readerFactory)
 	if err != nil {
@@ -237,74 +269,24 @@ func ExtractTarGz(archivePath, destPath string) error {
 	}
 
 	return nil
+}
+
+func ExtractTarGz(archivePath, destPath string) error {
+	return extractTarArchive(archivePath, destPath, "Extracting archive", func() (*tar.Reader, func(), error) {
+		return createGzipTarReader(archivePath)
+	})
 }
 
 func ExtractTarBz2(archivePath, destPath string) error {
-	if _, err := os.Stat(archivePath); os.IsNotExist(err) {
-		log.Printf("Archive not found: %s", archivePath)
-		return err
-	}
-
-	log.Printf("Extracting bz2 archive: %s into %s", archivePath, destPath)
-
-	readerFactory := func() (*tar.Reader, func(), error) {
+	return extractTarArchive(archivePath, destPath, "Extracting bz2 archive", func() (*tar.Reader, func(), error) {
 		return createBzip2TarReader(archivePath)
-	}
-
-	commonPrefix, err := detectCommonPrefix(readerFactory)
-	if err != nil {
-		return err
-	}
-
-	tr, cleanup, err := readerFactory()
-	if err != nil {
-		return err
-	}
-	defer cleanup()
-
-	if err := extractTar(tr, destPath, commonPrefix); err != nil {
-		return err
-	}
-
-	if commonPrefix != "" {
-		log.Printf("Stripped common directory prefix: %s", commonPrefix)
-	}
-
-	return nil
+	})
 }
 
 func ExtractTarXz(archivePath, destPath string) error {
-	if _, err := os.Stat(archivePath); os.IsNotExist(err) {
-		log.Printf("Archive not found: %s", archivePath)
-		return err
-	}
-
-	log.Printf("Extracting xz archive: %s into %s", archivePath, destPath)
-
-	readerFactory := func() (*tar.Reader, func(), error) {
+	return extractTarArchive(archivePath, destPath, "Extracting xz archive", func() (*tar.Reader, func(), error) {
 		return createXzTarReader(archivePath)
-	}
-
-	commonPrefix, err := detectCommonPrefix(readerFactory)
-	if err != nil {
-		return err
-	}
-
-	tr, cleanup, err := readerFactory()
-	if err != nil {
-		return err
-	}
-	defer cleanup()
-
-	if err := extractTar(tr, destPath, commonPrefix); err != nil {
-		return err
-	}
-
-	if commonPrefix != "" {
-		log.Printf("Stripped common directory prefix: %s", commonPrefix)
-	}
-
-	return nil
+	})
 }
 
 func writeFileToTar(tw *tar.Writer, header *tar.Header, filePath string) error {
@@ -374,6 +356,12 @@ func CreateTarGz(sourcePath, archivePath string) error {
 
 		header, err := tar.FileInfoHeader(info, "")
 		if err != nil {
+			// Windows reparse points / Cygwin native symlinks show up as
+			// ModeIrregular and cannot be archived by archive/tar.
+			if info.Mode()&os.ModeIrregular != 0 {
+				log.Printf("skipping irregular file (not archivable): %s", path)
+				continue
+			}
 			return err
 		}
 
@@ -393,19 +381,8 @@ func CreateTarGz(sourcePath, archivePath string) error {
 		}
 
 		if info.Mode().IsRegular() {
-			var filePath string
-			var cleanup func()
+			var filePath = path
 
-			if strings.HasSuffix(strings.ToLower(relPath), ".a") {
-				// TODO: repack static libraries
-				filePath = path
-				cleanup = func() {}
-			} else {
-				filePath = path
-				cleanup = func() {}
-			}
-
-			defer cleanup()
 			if err := writeFileToTar(tw, header, filePath); err != nil {
 				return err
 			}

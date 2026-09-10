@@ -1,0 +1,35 @@
+{
+    "package": "xcb_proto@1_17_0",
+    "version": "1_17_0",
+    "type": "host",
+    "download": [
+        {
+            "kind": "tar.gz",
+            "sha256": "392d3c9690f8c8202a68fdb89c16fd55159ab8d65000a6da213f4a1576e97a16",
+            "url": "https://xorg.freedesktop.org/archive/individual/proto/xcb-proto-1.17.0.tar.gz"
+        }
+    ],
+    "dependencies": [
+        "*:*-linux-gnu:native/_",
+        "*:*-linux-gnu:native/bash",
+        "*:*-linux-gnu:native/coreutils",
+        "*:*-linux-gnu:native/grep",
+        "*:*-linux-gnu:native/pkgconf",
+        "*:*-linux-gnu:native/gawk",
+        "*:*-linux-gnu:native/findutils",
+        "*:*-linux-gnu:native/make",
+        "*:*-linux-gnu:native/python@3.14",
+        "*:*-linux-gnu:native/sed"
+    ],
+    "build": {
+        "env": [
+            "*:*-linux-gnu:config_opts=--host=$HOST --prefix=$PREFIX"
+        ],
+        "steps": [
+            "*:*-linux-gnu:bash ./configure $config_opts",
+            "*:*-linux-gnu:make -j$NUM_CORES",
+            "*:*-linux-gnu:make DESTDIR=$STAGING_DIR install",
+            "*:*-linux-gnu:rm -rf $STAGING_DIR$PREFIX/lib/python*/site-packages/xcbgen/__pycache__"
+        ]
+    }
+}

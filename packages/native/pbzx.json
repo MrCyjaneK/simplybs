@@ -1,0 +1,25 @@
+{
+    "package": "native/pbzx",
+    "version": "1.6.1-patch",
+    "type": "native",
+    "download": [
+        {
+            "kind": "tar.gz",
+            "sha256": "a9b3e9f29d9f020f75e4edf203359fbed6c1b0d2085f386bf770feaf07ae1694",
+            "url": "https://github.com/tpoechtrager/pbzx/archive/2a4d7c3300c826d918def713a24d25c237c8ed53.tar.gz"
+        }
+    ],
+    "dependencies": [
+        "*:*:native/_/_",
+        "*:*:native/make",
+        "*:*:native/xar",
+        "*:*:native/xz"
+    ],
+    "build": {
+        "env": [],
+        "steps": [
+            "*:*:mkdir -p $STAGING_DIR$NATIVEPREFIX/bin",
+            "*:*:$CC -O2 -Wall -I $NATIVEPREFIX/include -L $NATIVEPREFIX/lib pbzx.c -o $STAGING_DIR$NATIVEPREFIX/bin/pbzx -llzma -lxar -Wl,-rpath,$NATIVEPREFIX/lib"
+        ]
+    }
+}

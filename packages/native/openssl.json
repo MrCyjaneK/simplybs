@@ -2,29 +2,54 @@
     "package": "native/openssl",
     "version": "3.5.1",
     "type": "native",
-    "download": {
-        "kind": "tar.gz",
-        "sha256": "529043b15cffa5f36077a4d0af83f3de399807181d607441d734196d889b641f",
-        "url": "http://www.openssl.org/source/openssl-3.5.1.tar.gz"
-    },
+    "download": [
+        {
+            "kind": "tar.gz",
+            "sha256": "529043b15cffa5f36077a4d0af83f3de399807181d607441d734196d889b641f",
+            "url": "http://www.openssl.org/source/openssl-3.5.1.tar.gz"
+        }
+    ],
     "dependencies": [
-        "all:native/make",
-        "all:native/perl"
+        "*:*:native/_/_",
+        "*:*:native/make",
+        "*:*:native/perl"
     ],
     "build": {
         "env": [
-            "all:config_opts=--prefix=$PREFIX/native --openssldir=$PREFIX/native/etc/openssl --libdir=$PREFIX/native/lib",
-            "all:config_opts=$config_opts no-ec_nistp_64_gcc_128",
-            "all:config_opts=$config_opts no-shared",
-            "all:config_opts=$config_opts no-tests",
-            "all:config_opts=$config_opts no-unit-test"
+            "*:*:config_opts=--prefix=$NATIVEPREFIX --openssldir=$NATIVEPREFIX/etc/openssl --libdir=lib",
+            "*:*:config_opts=$config_opts no-capieng",
+            "*:*:config_opts=$config_opts no-dso",
+            "*:*:config_opts=$config_opts no-dtls1",
+            "*:*:config_opts=$config_opts no-ec_nistp_64_gcc_128",
+            "*:*:config_opts=$config_opts no-gost",
+            "*:*:config_opts=$config_opts no-md2",
+            "*:*:config_opts=$config_opts no-rc5",
+            "*:*:config_opts=$config_opts no-rdrand",
+            "*:*:config_opts=$config_opts no-rfc3779",
+            "*:*:config_opts=$config_opts no-sctp",
+            "*:*:config_opts=$config_opts no-shared",
+            "*:*:config_opts=$config_opts no-ssl-trace",
+            "*:*:config_opts=$config_opts no-ssl3",
+            "*:*:config_opts=$config_opts no-tests",
+            "*:*:config_opts=$config_opts no-unit-test",
+            "*:*:config_opts=$config_opts no-weak-ssl-ciphers",
+            "*:*:config_opts=$config_opts no-zlib",
+            "*:*:config_opts=$config_opts no-zlib-dynamic",
+            "linux_*:*:config_opts=$config_opts -fPIC -Wa,--noexecstack",
+            "linux_amd64:*:config_opts=$config_opts linux-x86_64",
+            "linux_arm64:*:config_opts=$config_opts linux-generic64",
+            "darwin_arm64:*:config_opts=$config_opts darwin64-arm64-cc",
+            "darwin_amd64:*:config_opts=$config_opts darwin64-x86_64-cc",
+            "windows_amd64:*:config_opts=$config_opts -fPIC",
+            "windows_amd64:*:config_opts=$config_opts no-winstore",
+            "windows_amd64:*:config_opts=$config_opts Cygwin-x86_64"
         ],
         "steps": [
-            "all:sed -i.bak 's/#define DATE \"built on: \\$date\"/#define DATE \"built on: Jan  1 1970 00:00:01\"/' util/mkbuildinf.pl",
-            "all:sed -i.bak 's|crypto ssl apps util tools fuzz providers doc|crypto ssl util tools providers|' build.info",
-            "all:./Configure $config_opts",
-            "all:make -j$NUM_CORES build_libs",
-            "all:make -j$NUM_CORES DESTDIR=$STAGING_DIR install_sw"
+            "*:*:sed -i.bak 's/#define DATE \"built on: \\$date\"/#define DATE \"built on: Jan  1 1970 00:00:01\"/' util/mkbuildinf.pl",
+            "*:*:sed -i.bak 's|crypto ssl apps util tools fuzz providers doc|crypto ssl util tools providers|' build.info",
+            "*:*:./Configure $config_opts",
+            "*:*:make -j$NUM_CORES build_libs",
+            "*:*:make -j$NUM_CORES DESTDIR=$STAGING_DIR install_sw"
         ]
     }
 }

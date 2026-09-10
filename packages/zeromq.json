@@ -2,31 +2,55 @@
     "package": "zeromq",
     "version": "4.3.5",
     "type": "host",
-    "download": {
-        "kind": "tar.gz",
-        "sha256": "6653ef5910f17954861fe72332e68b03ca6e4d9c7160eb3a8de5a5a913bfab43",
-        "url": "http://github.com/zeromq/libzmq/releases/download/v4.3.5/zeromq-4.3.5.tar.gz"
-    },
+    "download": [
+        {
+            "kind": "git",
+            "sha256": "b946c18f676760387276cd095bbdd8c0e18c09bf",
+            "url": "http://github.com/zeromq/libzmq.git"
+        }
+    ],
     "dependencies": [
-        "*-android*:native/android_ndk"
+        "*:*:native/_",
+        "*:*:native/autoconf",
+        "*:*:native/automake",
+        "*:*:native/bash",
+        "*:*:native/coreutils",
+        "*:*:native/gawk",
+        "*:*:native/gettext",
+        "*:*:native/grep",
+        "*:*:native/libtool",
+        "*:*:native/m4",
+        "*:*:native/make",
+        "*:*:native/patch",
+        "*:*:native/perl",
+        "*:*:native/pkgconf",
+        "*:*:native/sed"
     ],
     "patches": [
         "fix_declaration.patch"
     ],
     "build": {
         "env": [
-            "aarch64-apple-ios*:HOST=aarch64-apple-darwin",
-            "all:config_opts=--prefix=$PREFIX --host=$HOST --without-documentation --disable-shared --without-libsodium --disable-curve",
-            "*-linux-gnu:config_opts=$config_opts --with-pic",
-            "all:cxxflags=-std=c++11"
+            "*:aarch64-apple-ios*:HOST=aarch64-apple-darwin",
+            "*:*:config_opts=--prefix=$PREFIX --host=$HOST --without-documentation --disable-shared --without-libsodium --disable-curve --disable-libbsd",
+            "*:*-w64-mingw32:config_opts=$config_opts --disable-pedantic --disable-Werror",
+            "*:*-linux-gnu:config_opts=$config_opts --with-pic",
+            "*:*:cxxflags=$CXXFLAGS -std=c++17",
+            "*:*:SED=$NATIVEPREFIX/bin/sed",
+            "*:*:GREP=$NATIVEPREFIX/bin/grep",
+            "*:*:PKG_CONFIG=$NATIVEPREFIX/bin/pkgconf"
         ],
         "steps": [
-            "all:patch -p1 < $PATCH_DIR/zeromq/fix_declaration.patch",
-            "all:./configure $config_opts",
-            "all:make -j$NUM_CORES src/libzmq.la",
-            "all:make -j$NUM_CORES DESTDIR=$STAGING_DIR install-pkgconfigDATA VERBOSE=1",
-            "all:make -j$NUM_CORES DESTDIR=$STAGING_DIR install-libLTLIBRARIES VERBOSE=1",
-            "all:make -j$NUM_CORES DESTDIR=$STAGING_DIR install-includeHEADERS VERBOSE=1"
+            "*:*:mkdir -p config",
+            "*:*:libtoolize --copy --force",
+            "*:*:test -f config/ltmain.sh || cp -f ltmain.sh config/ltmain.sh",
+            "*:*:bash ./autogen.sh",
+            "*:*:patch -p1 < $PATCH_DIR/zeromq/fix_declaration.patch",
+            "*:*:bash ./configure $config_opts",
+            "*:*:make -j$NUM_CORES src/libzmq.la",
+            "*:*:make -j1 DESTDIR=$STAGING_DIR install-pkgconfigDATA VERBOSE=1",
+            "*:*:make -j1 DESTDIR=$STAGING_DIR install-libLTLIBRARIES VERBOSE=1",
+            "*:*:make -j1 DESTDIR=$STAGING_DIR install-includeHEADERS VERBOSE=1"
         ]
     }
 }

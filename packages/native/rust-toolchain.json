@@ -1,0 +1,17 @@
+{
+    "package": "native/rust-toolchain",
+    "version": "1.95.0",
+    "type": "native",
+    "dependencies": [
+        "*:*:native/coreutils",
+        "*:*:native/rust"
+    ],
+    "build": {
+        "steps": [
+            "*:*:$NATIVEPREFIX/bin/mkdir -p $STAGING_DIR$NATIVEPREFIX/bin",
+            "*:*:cp -a $NATIVEPREFIX/bin/rustc $NATIVEPREFIX/bin/cargo $STAGING_DIR$NATIVEPREFIX/bin/",
+            "*:*:cp -a $NATIVEPREFIX/lib $STAGING_DIR$NATIVEPREFIX/",
+            "*:*:rm -rf $STAGING_DIR$NATIVEPREFIX/lib/rustlib"
+        ]
+    }
+}

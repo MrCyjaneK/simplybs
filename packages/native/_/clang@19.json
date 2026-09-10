@@ -1,0 +1,52 @@
+{
+    "package": "native/_/clang@19",
+    "version": "19.1.7",
+    "type": "native",
+    "download": [
+        {
+            "kind": "tar.xz",
+            "sha256": "82401fea7b79d0078043f7598b835284d6650a75b93e64b6f761ea7b63097501",
+            "url": "https://github.com/llvm/llvm-project/releases/download/llvmorg-19.1.7/llvm-project-19.1.7.src.tar.xz"
+        }
+    ],
+    "dependencies": [
+        "*:*:native/_/_",
+        "*:*:native/bash",
+        "*:*:native/cmake",
+        "*:*:native/libc++",
+        "*:*:native/make",
+        "*:*:native/ninja",
+        "*:*:native/python@3.11",
+        "*:*:native/zlib"
+    ],
+    "build": {
+        "env": [
+            "*:*:config_opts=-G Ninja -S llvm -B build",
+            "*:*:config_opts=$config_opts -DCMAKE_BUILD_TYPE=Release",
+            "*:*:config_opts=$config_opts -DCMAKE_INSTALL_PREFIX=$NATIVEPREFIX/clang@19",
+            "*:*:config_opts=$config_opts -DLLVM_ENABLE_PROJECTS='clang;lld'",
+            "*:*:config_opts=$config_opts -DLLVM_INCLUDE_TESTS=OFF",
+            "*:*:config_opts=$config_opts -DLLVM_INCLUDE_BENCHMARKS=OFF",
+            "*:*:config_opts=$config_opts -DLLVM_ENABLE_TERMINFO=OFF",
+            "*:*:config_opts=$config_opts -DLLVM_ENABLE_LIBCXX=ON",
+            "linux_amd64:*:config_opts=$config_opts -DLLVM_HOST_TRIPLE=x86_64-linux-gnu",
+            "linux_amd64:*:config_opts=$config_opts -DLLVM_TARGETS_TO_BUILD='X86;AArch64'",
+            "linux_arm64:*:config_opts=$config_opts -DLLVM_HOST_TRIPLE=aarch64-linux-gnu",
+            "linux_arm64:*:config_opts=$config_opts -DLLVM_TARGETS_TO_BUILD='AArch64;X86'",
+            "linux_*:*:CC=$NATIVEPREFIX/_/bin/clang",
+            "linux_*:*:CXX=$NATIVEPREFIX/_/bin/clang++",
+            "linux_*:*:config_opts=$config_opts -DCMAKE_C_COMPILER=$NATIVEPREFIX/_/bin/clang",
+            "linux_*:*:config_opts=$config_opts -DCMAKE_CXX_COMPILER=$NATIVEPREFIX/_/bin/clang++",
+            "linux_*:*:CMAKE_CXX_FLAGS=-stdlib=libc++ -I$NATIVEPREFIX/include/c++/v1",
+            "linux_*:*:CMAKE_EXE_LINKER_FLAGS=-L$NATIVEPREFIX/lib -stdlib=libc++ -lc++ -lc++abi -lunwind -latomic -Wl,-rpath,$NATIVEPREFIX/lib",
+            "linux_*:*:CMAKE_SHARED_LINKER_FLAGS=-L$NATIVEPREFIX/lib -stdlib=libc++ -lc++ -lc++abi -lunwind -Wl,-rpath,$NATIVEPREFIX/lib"
+        ],
+        "steps": [
+            "linux_*:*:cmake $config_opts -DCMAKE_CXX_FLAGS=\"$CMAKE_CXX_FLAGS\" -DCMAKE_EXE_LINKER_FLAGS=\"$CMAKE_EXE_LINKER_FLAGS\" -DCMAKE_SHARED_LINKER_FLAGS=\"$CMAKE_SHARED_LINKER_FLAGS\"",
+            "*:*:cmake --build build --target clang lld -j$NUM_CORES",
+            "*:*:DESTDIR=$STAGING_DIR cmake --install build --component clang",
+            "*:*:DESTDIR=$STAGING_DIR cmake --install build --component clang-resource-headers",
+            "*:*:DESTDIR=$STAGING_DIR cmake --install build --component lld"
+        ]
+    }
+}

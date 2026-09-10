@@ -1,0 +1,18 @@
+{
+    "package": "native/_/linux_amd64_clang21",
+    "version": "0.0.0",
+    "type": "native",
+    "download": [
+        {
+            "kind": "tar.xz",
+            "sha256": "9442ba966d3a1d3134e55ab21bf55ee3d4f281c0b850e3ef476a6314d373524d",
+            "url": "https://github.com/MrCyjaneK/easybs/releases/download/r0/clang21-x86_64-linux-gnu.tar.xz"
+        }
+    ],
+    "build": {
+        "steps": [
+            "*:*:./bin/mkdir -p $STAGING_DIR$NATIVEPREFIX/_/",
+            "*:*:./bin/cp -a * $STAGING_DIR$NATIVEPREFIX/_/"
+        ]
+    }
+}

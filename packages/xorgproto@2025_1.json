@@ -1,0 +1,33 @@
+{
+    "package": "xorgproto@2025_1",
+    "version": "2025_1",
+    "type": "host",
+    "download": [
+        {
+            "kind": "tar.gz",
+            "sha256": "d6f89f65bafb8c9b735e0515882b8a1511e8e864dde5e9513e191629369f2256",
+            "url": "https://xorg.freedesktop.org/archive/individual/proto/xorgproto-2025.1.tar.gz"
+        }
+    ],
+    "dependencies": [
+        "*:*-linux-gnu:native/_",
+        "*:*-linux-gnu:native/bash",
+        "*:*-linux-gnu:native/coreutils",
+        "*:*-linux-gnu:native/findutils",
+        "*:*-linux-gnu:native/gawk",
+        "*:*-linux-gnu:native/grep",
+        "*:*-linux-gnu:native/make",
+        "*:*-linux-gnu:native/pkgconf",
+        "*:*-linux-gnu:native/sed"
+    ],
+    "build": {
+        "env": [
+            "*:*-linux-gnu:config_opts=--host=$HOST --prefix=$PREFIX --without-fop --without-xmlto --without-xsltproc --disable-specs --disable-dependency-tracking --enable-option-checking"
+        ],
+        "steps": [
+            "*:*-linux-gnu:bash ./configure $config_opts",
+            "*:*-linux-gnu:make -j$NUM_CORES",
+            "*:*-linux-gnu:make DESTDIR=$STAGING_DIR install"
+        ]
+    }
+}

@@ -6,7 +6,7 @@ import (
 	"log"
 	"strings"
 
-	cmd "github.com/mrcyjanek/simplybs/cmd/buildweb"
+	"github.com/mrcyjanek/simplybs/cmd/archive"
 	"github.com/mrcyjanek/simplybs/cmd/lint"
 	"github.com/mrcyjanek/simplybs/crash"
 	"github.com/mrcyjanek/simplybs/host"
@@ -14,7 +14,7 @@ import (
 )
 
 func main() {
-	log.SetFlags(log.LstdFlags | log.Lshortfile)
+	log.SetFlags(log.Lshortfile)
 	argList := flag.Bool("list", false, "List all supported hosts (value is depth)")
 	argHost := flag.String("host", "", "The host to build for")
 	argPkg := flag.String("package", "", "The package(s) to build (comma-separated)")
@@ -22,18 +22,17 @@ func main() {
 	argExtract := flag.Bool("extract", false, "Extract packages")
 	argDownload := flag.Bool("download", false, "Download package sources")
 	argBuild := flag.Bool("build", false, "Build packages")
-	argBuildWeb := flag.Bool("buildweb", false, "Generate static website with package information")
 	argLint := flag.Bool("lint", false, "Lint packages")
+	argArchive := flag.Bool("archive", false, "Download all sources from sources.json")
 	argVersion := flag.Bool("v", false, "Show version")
 	argShell := flag.Bool("shell", false, "Extract source and start shell with build environment")
 	argCleanup := flag.Bool("cleanup", false, "Remove everything except current built archives")
+	argCachePull := flag.Bool("cache-pull", false, "Download needed build-cache artifacts (requires SIMPLYBS_CACHE_TAG and SIMPLYBS_CACHE_REPO)")
+	argCachePush := flag.Bool("cache-push", false, "Upload new/changed local build-cache artifacts (requires SIMPLYBS_CACHE_TAG and SIMPLYBS_CACHE_REPO)")
+	// argQuiet := flag.Bool("quiet", false, "Redirect stdout and stderr to /dev/null")
 	flag.Parse()
 	if *argVersion {
 		fmt.Println("simplybs version 0.0.0")
-		return
-	}
-	if *argBuildWeb {
-		cmd.BuildWeb()
 		return
 	}
 	if *argCleanup {
@@ -44,12 +43,24 @@ func main() {
 		lint.Lint()
 		return
 	}
+	if *argArchive {
+		archive.Archive()
+		return
+	}
 
 	packageNames := []*pack.Package{}
 	if *argWorld {
 		packageNames = pack.GetAllPackages()
-	} else {
+	} else if *argPkg != "" {
 		packageNames = pack.GetPackagesByList(*argPkg)
+	}
+
+	if *argCachePush && *argPkg == "" && !*argWorld {
+		// Push every local built artifact for this builder that is not on the release.
+		if err := pack.CachePush(nil, nil); err != nil {
+			crash.Handle(err)
+		}
+		return
 	}
 
 	if len(packageNames) == 0 {
@@ -57,22 +68,45 @@ func main() {
 	}
 	if *argDownload {
 		for _, pkg := range packageNames {
-			pkg.DownloadSource()
+			for _, download := range pkg.Download {
+				pkg.DownloadSource(download)
+			}
 		}
 		log.Println("Downloaded all sources")
 		return
 	}
 
-	hosts := strings.Split(*argHost, ",")
-	for _, h := range hosts {
+	if *argCachePull || *argCachePush {
+		if *argHost == "" {
+			crash.Handle(fmt.Errorf("-cache-pull/-cache-push with -package requires -host"))
+		}
+		hosts := strings.SplitSeq(*argHost, ",")
+		for h := range hosts {
+			host := host.SupportedHosts[h]
+			if host == nil {
+				crash.Handle(fmt.Errorf("host %s not supported", h))
+			}
+			if *argCachePull {
+				if err := pack.CachePull(packageNames, host); err != nil {
+					crash.Handle(err)
+				}
+			}
+			if *argCachePush {
+				if err := pack.CachePush(packageNames, host); err != nil {
+					crash.Handle(err)
+				}
+			}
+		}
+		return
+	}
+
+	hosts := strings.SplitSeq(*argHost, ",")
+	for h := range hosts {
 		host := host.SupportedHosts[h]
 		if host == nil {
 			crash.Handle(fmt.Errorf("host %s not supported", h))
 		}
 		buildForHost(host, packageNames, *argList, *argExtract, *argBuild, *argShell)
-		if *argBuildWeb {
-			cmd.BuildWeb()
-		}
 	}
 }
 
@@ -84,21 +118,26 @@ func buildForHost(host *host.Host, packageNames []*pack.Package, list bool, extr
 		return
 	}
 
-	if extract {
-		for _, pkg := range packageNames {
-			pkg.ExtractEnv(host, host.GetEnvPath())
-		}
-	}
-
 	if build {
+		if pack.CacheEnabled() {
+			log.Printf("cache: enabled (tag=%s repo=%s); auto pull/push", pack.CacheTag(), pack.CacheRepo())
+			if err := pack.CachePull(packageNames, host); err != nil {
+				log.Printf("cache: auto-pull failed: %v", err)
+			}
+		}
 		for _, pkg := range packageNames {
 			pkg.EnsureBuilt(host, true)
+		}
+		if pack.CacheEnabled() {
+			if err := pack.CachePush(packageNames, host); err != nil {
+				log.Printf("cache: auto-push failed: %v", err)
+			}
 		}
 	}
 	if extract {
 		for _, pkg := range packageNames {
 			log.Printf("Extracting env for package: %s", pkg.Package)
-			pkg.ExtractEnv(host, host.GetEnvPath())
+			pkg.ExtractEnv(host, host.GetEnvPath(), host.GetNativeEnvPath())
 		}
 	}
 

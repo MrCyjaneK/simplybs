@@ -2,21 +2,28 @@
     "package": "native/libtool",
     "version": "2.5.4",
     "type": "native",
-    "download": {
-        "kind": "tar.gz",
-        "sha256": "da8ebb2ce4dcf46b90098daf962cffa68f4b4f62ea60f798d0ef12929ede6adf",
-        "url": "http://ftpmirror.gnu.org/gnu/libtool/libtool-2.5.4.tar.gz"
-    },
+    "download": [
+        {
+            "kind": "tar.gz",
+            "sha256": "da8ebb2ce4dcf46b90098daf962cffa68f4b4f62ea60f798d0ef12929ede6adf",
+            "url": "http://ftpmirror.gnu.org/gnu/libtool/libtool-2.5.4.tar.gz"
+        }
+    ],
     "dependencies": [
-        "all:native/m4",
-        "all:native/make"
+        "*:*:native/_/_",
+        "*:*:native/bash",
+        "*:*:native/grep",
+        "*:*:native/m4",
+        "*:*:native/make",
+        "*:*:native/sed"
     ],
     "build": {
         "env": [],
         "steps": [
-            "all:./configure --prefix=$PREFIX/native",
-            "all:make -j$NUM_CORES",
-            "all:make DESTDIR=$STAGING_DIR install"
+            "*:*:bash ./configure --prefix=$NATIVEPREFIX",
+            "*:*:make -j$NUM_CORES",
+            "*:*:make DESTDIR=$STAGING_DIR install",
+            "*:*:ln -sf libtoolize $STAGING_DIR$NATIVEPREFIX/bin/glibtoolize"
         ]
     }
 }

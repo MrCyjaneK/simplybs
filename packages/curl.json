@@ -1,0 +1,29 @@
+{
+    "package": "curl",
+    "version": "8.15.0",
+    "type": "host",
+    "download": [
+        {
+            "kind": "tar.gz",
+            "sha256": "d85cfc79dc505ff800cb1d321a320183035011fa08cb301356425d86be8fc53c",
+            "url": "https://curl.se/download/curl-8.15.0.tar.gz"
+        }
+    ],
+    "dependencies": [
+        "*:*:native/_",
+        "*:*:native/make",
+        "*:*:native/pkgconf",
+        "*:*:openssl",
+        "*:*:zlib"
+    ],
+    "build": {
+        "env": [
+            "*:*:config_opts=--with-openssl --with-zlib --without-libpsl --disable-shared --enable-static --enable-static --disable-ldap --host=$HOST --prefix=$PREFIX"
+        ],
+        "steps": [
+            "*:*:./configure $config_opts",
+            "*:*:make -j$NUM_CORES",
+            "*:*:make DESTDIR=$STAGING_DIR install"
+        ]
+    }
+}

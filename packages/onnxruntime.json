@@ -1,0 +1,136 @@
+{
+    "package": "onnxruntime",
+    "version": "1.20.1",
+    "type": "host",
+    "download": [
+        {
+            "kind": "tar.gz",
+            "sha256": "d4c005506a2bbf88a838b14f8d1578406b8be2fb64abb50beeff908fb272529e",
+            "url": "https://github.com/microsoft/onnxruntime/archive/refs/tags/v1.20.1.tar.gz"
+        },
+        {
+            "kind": "git",
+            "path": "deps/eigen",
+            "sha256": "e7248b26a1ed53fa030c5c459f7ea095dfd276ac",
+            "url": "https://gitlab.com/libeigen/eigen.git"
+        },
+        {
+            "kind": "tar.gz",
+            "path": "deps/abseil_cpp",
+            "sha256": "f50e5ac311a81382da7fa75b97310e4b9006474f9560ac46f54a9967f07d4ae3",
+            "url": "https://github.com/abseil/abseil-cpp/archive/refs/tags/20240722.0.tar.gz"
+        },
+        {
+            "kind": "tar.gz",
+            "path": "deps/re2",
+            "sha256": "eb2df807c781601c14a260a507a5bb4509be1ee626024cb45acbd57cb9d4032b",
+            "url": "https://github.com/google/re2/archive/refs/tags/2024-07-02.tar.gz"
+        },
+        {
+            "kind": "tar.gz",
+            "path": "deps/google_nsync",
+            "sha256": "80fc1e605bb3cf5f272811ece39c4fb6761ffcb9b30563301845cc9ff381eb8b",
+            "url": "https://github.com/google/nsync/archive/refs/tags/1.26.0.tar.gz"
+        },
+        {
+            "kind": "tar.gz",
+            "path": "deps/utf8_range",
+            "sha256": "e008768a46ee0ee646b8e4ef02f55af3634b3ad38b750489eb793774331ca5bd",
+            "url": "https://github.com/protocolbuffers/utf8_range/archive/72c943dea2b9240cd09efde15191e144bc7c7d38.tar.gz"
+        },
+        {
+            "kind": "tar.gz",
+            "path": "deps/protobuf",
+            "sha256": "22fdaf641b31655d4b2297f9981fa5203b2866f8332d3c6333f6b0107bb320de",
+            "url": "https://github.com/protocolbuffers/protobuf/archive/refs/tags/v21.12.tar.gz"
+        },
+        {
+            "kind": "tar.gz",
+            "path": "deps/date",
+            "sha256": "7a390f200f0ccd207e8cff6757e04817c1a0aec3e327b006b7eb451c57ee3538",
+            "url": "https://github.com/HowardHinnant/date/archive/refs/tags/v3.0.1.tar.gz"
+        },
+        {
+            "kind": "tar.gz",
+            "path": "deps/mp11",
+            "sha256": "1705680b0849cac3258e528270c9071b440b95372e5be0b9197da89e84a794eb",
+            "url": "https://github.com/boostorg/mp11/archive/refs/tags/boost-1.82.0.tar.gz"
+        },
+        {
+            "kind": "tar.gz",
+            "path": "deps/nlohmann_json",
+            "sha256": "5daca6ca216495edf89d167f808d1d03c4a4d929cef7da5e10f135ae1540c7e4",
+            "url": "https://github.com/nlohmann/json/archive/refs/tags/v3.10.5.tar.gz"
+        },
+        {
+            "kind": "tar.gz",
+            "path": "deps/pytorch_cpuinfo",
+            "sha256": "c8f43b307fa7d911d88fec05448161eb1949c3fc0cb62f3a7a2c61928cdf2e9b",
+            "url": "https://github.com/pytorch/cpuinfo/archive/ca678952a9a8eaa6de112d154e8e104b22f9ab3f.tar.gz"
+        },
+        {
+            "kind": "tar.gz",
+            "path": "deps/GSL",
+            "sha256": "f0e32cb10654fea91ad56bde89170d78cfbf4363ee0b01d8f097de2ba49f6ce9",
+            "url": "https://github.com/microsoft/GSL/archive/refs/tags/v4.0.0.tar.gz"
+        },
+        {
+            "kind": "tar.gz",
+            "path": "deps/safeint",
+            "sha256": "d6b164bcea92a746e4d44132e505c7ab1816d1089ba99ebc674ccd4b70262ed5",
+            "url": "https://github.com/dcleblanc/SafeInt/archive/refs/tags/3.0.28.tar.gz"
+        },
+        {
+            "kind": "tar.gz",
+            "path": "deps/flatbuffers",
+            "sha256": "1cce06b17cddd896b6d73cc047e36a254fb8df4d7ea18a46acf16c4c0cd3f3f3",
+            "url": "https://github.com/google/flatbuffers/archive/refs/tags/v23.5.26.tar.gz"
+        },
+        {
+            "kind": "tar.gz",
+            "path": "deps/onnx",
+            "sha256": "0e6aa2c0a59bb2d90858ad0040ea1807117cc2f05b97702170f18e6cd6b66fb3",
+            "url": "https://github.com/onnx/onnx/archive/refs/tags/v1.16.1.tar.gz"
+        }
+    ],
+    "dependencies": [
+        "*:*:native/_",
+        "*:*:native/cmake",
+        "*:*:native/cmake-toolchain",
+        "*:*:native/make",
+        "*:*:native/coreutils",
+        "*:*:native/bash",
+        "*:*:native/python@3.11",
+        "*:*:native/patch",
+        "*:*:native/protobuf@21.12",
+        "*:*-android*:libiconv"
+    ],
+    "build": {
+        "env": [
+            "*:*:ort_extra=",
+            "*:*-linux-gnu:ort_extra=CMAKE_SHARED_LINKER_FLAGS=-static-libstdc++",
+            "*:*-android*:ort_extra=Iconv_INCLUDE_DIR=$PREFIX/include Iconv_LIBRARY=$PREFIX/lib/libiconv.a",
+            "*:aarch64-apple-darwin:ort_extra=CMAKE_OSX_ARCHITECTURES=arm64",
+            "*:x86_64-apple-darwin:ort_extra=CMAKE_OSX_ARCHITECTURES=x86_64",
+            "*:aarch64-apple-ios:ort_extra=CMAKE_OSX_ARCHITECTURES=arm64 CMAKE_OSX_DEPLOYMENT_TARGET=14.0",
+            "*:aarch64-apple-ios-simulator:ort_extra=CMAKE_OSX_ARCHITECTURES=arm64 CMAKE_OSX_DEPLOYMENT_TARGET=14.0",
+            "*:aarch64-apple-ios:CC=$NATIVEPREFIX/bin/aarch64-apple-ios-clang -target aarch64-apple-ios -mios-version-min=14.0 -isysroot $SDK_PATH -I$PREFIX/include",
+            "*:aarch64-apple-ios:CXX=$NATIVEPREFIX/bin/aarch64-apple-ios-clang++ -target aarch64-apple-ios -mios-version-min=14.0 -isysroot $SDK_PATH -I$PREFIX/include",
+            "*:aarch64-apple-ios-simulator:CC=$NATIVEPREFIX/bin/aarch64-apple-ios-simulator-clang -target aarch64-apple-ios-simulator -mios-version-min=14.0 -isysroot $SDK_PATH -I$PREFIX/include",
+            "*:aarch64-apple-ios-simulator:CXX=$NATIVEPREFIX/bin/aarch64-apple-ios-simulator-clang++ -target aarch64-apple-ios-simulator -mios-version-min=14.0 -isysroot $SDK_PATH -I$PREFIX/include"
+        ],
+        "steps": [
+            "*:*:patch -p1 < $PATCH_DIR/onnxruntime/cstdint-optimizer-api.patch",
+            "*:*-android*:patch -p1 < $PATCH_DIR/onnxruntime/android-log-and-sink.patch",
+            "*:*:patch -p1 -d deps/google_nsync < cmake/patches/nsync/nsync_1.26.0.patch",
+            "*:*:patch -p1 -d deps/protobuf < cmake/patches/protobuf/protobuf_cmake.patch",
+            "*:*:patch -p1 -d deps/flatbuffers < cmake/patches/flatbuffers/flatbuffers.patch",
+            "*:*:patch -p1 -d deps/onnx < cmake/patches/onnx/onnx.patch",
+            "*:*-android*:patch -p1 -d deps/pytorch_cpuinfo < $PATCH_DIR/onnxruntime/cpuinfo-android-properties.patch",
+            "*:*:./build.sh --config Release --build_shared_lib --parallel --skip_tests --allow_running_as_root --compile_no_warning_as_error --skip_submodule_sync --path_to_protoc_exe $NATIVEPREFIX/bin/protoc --cmake_extra_defines CMAKE_TOOLCHAIN_FILE=$CMAKE_TOOLCHAIN_FILE CMAKE_INSTALL_PREFIX=$PREFIX FETCHCONTENT_FULLY_DISCONNECTED=ON FETCHCONTENT_SOURCE_DIR_ABSEIL_CPP=$PWD/deps/abseil_cpp FETCHCONTENT_SOURCE_DIR_RE2=$PWD/deps/re2 FETCHCONTENT_SOURCE_DIR_GOOGLE_NSYNC=$PWD/deps/google_nsync FETCHCONTENT_SOURCE_DIR_UTF8_RANGE=$PWD/deps/utf8_range FETCHCONTENT_SOURCE_DIR_PROTOBUF=$PWD/deps/protobuf FETCHCONTENT_SOURCE_DIR_DATE=$PWD/deps/date FETCHCONTENT_SOURCE_DIR_MP11=$PWD/deps/mp11 FETCHCONTENT_SOURCE_DIR_NLOHMANN_JSON=$PWD/deps/nlohmann_json FETCHCONTENT_SOURCE_DIR_PYTORCH_CPUINFO=$PWD/deps/pytorch_cpuinfo FETCHCONTENT_SOURCE_DIR_PYTORCH_CLOG=$PWD/deps/pytorch_cpuinfo FETCHCONTENT_SOURCE_DIR_GSL=$PWD/deps/GSL FETCHCONTENT_SOURCE_DIR_SAFEINT=$PWD/deps/safeint FETCHCONTENT_SOURCE_DIR_FLATBUFFERS=$PWD/deps/flatbuffers FETCHCONTENT_SOURCE_DIR_ONNX=$PWD/deps/onnx onnxruntime_USE_PREINSTALLED_EIGEN=ON eigen_SOURCE_PATH=$PWD/deps/eigen CMAKE_POLICY_VERSION_MINIMUM=3.5 onnxruntime_BUILD_UNIT_TESTS=OFF FLATBUFFERS_BUILD_FLATC=OFF $ort_extra",
+            "linux_*:*:DESTDIR=$STAGING_DIR cmake --install build/Linux/Release --prefix \"$PREFIX\"",
+            "darwin_*:*:DESTDIR=$STAGING_DIR cmake --install build/MacOS/Release --prefix \"$PREFIX\"",
+            "*:*:cp -a $STAGING_DIR$PREFIX/include/onnxruntime/. $STAGING_DIR$PREFIX/include/"
+        ]
+    }
+}

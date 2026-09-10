@@ -1,0 +1,10 @@
+--- a/onnxruntime/core/optimizer/transpose_optimization/optimizer_api.h
++++ b/onnxruntime/core/optimizer/transpose_optimization/optimizer_api.h
+@@ -3,6 +3,7 @@
+
+ #pragma once
+
++#include <cstdint>
+ #include <functional>
+ #include <memory>
+ #include <optional>

@@ -1,0 +1,30 @@
+{
+    "package": "native/coreutils",
+    "version": "9.9",
+    "type": "native",
+    "download": [
+        {
+            "kind": "tar.xz",
+            "sha256": "19bcb6ca867183c57d77155eae946c5eced88183143b45ca51ad7d26c628ca75",
+            "url": "https://ftpmirror.gnu.org/gnu/coreutils/coreutils-9.9.tar.xz"
+        }
+    ],
+    "dependencies": [
+        "*:*:native/_/_",
+        "*:*:native/bash",
+        "*:*:native/make"
+    ],
+    "patches": [
+        "clang-pthread-once-atomic.patch"
+    ],
+    "build": {
+        "env": [
+            "*:*:config_opts=--prefix=$NATIVEPREFIX"
+        ],
+        "steps": [
+            "*:*:bash ./configure $config_opts",
+            "*:*:make -j$NUM_CORES",
+            "*:*:DESTDIR=$STAGING_DIR make install"
+        ]
+    }
+}

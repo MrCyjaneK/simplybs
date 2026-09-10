@@ -1,0 +1,45 @@
+{
+    "package": "native/go-bin@1.25",
+    "version": "1.25",
+    "type": "native",
+    "download": [
+        {
+            "kind": "blob",
+            "path": "./go-darwin_arm64.tar.gz",
+            "sha256": "544932844156d8172f7a28f77f2ac9c15a23046698b6243f633b0a0b00c0749c",
+            "url": "https://go.dev/dl/go1.25.0.darwin-arm64.tar.gz"
+        },
+        {
+            "kind": "blob",
+            "path": "./go-linux_amd64.tar.gz",
+            "sha256": "2852af0cb20a13139b3448992e69b868e50ed0f8a1e5940ee1de9e19a123b613",
+            "url": "https://go.dev/dl/go1.25.0.linux-amd64.tar.gz"
+        },
+        {
+            "kind": "blob",
+            "path": "./go-linux_arm64.tar.gz",
+            "sha256": "05de75d6994a2783699815ee553bd5a9327d8b79991de36e38b66862782f54ae",
+            "url": "https://go.dev/dl/go1.25.0.linux-arm64.tar.gz"
+        }
+    ],
+    "dependencies": [
+        "*:*:native/7zip",
+        "*:*:native/_/_",
+        "*:*:native/sed"
+    ],
+    "build": {
+        "env": [
+            "*:*:GO_VERSION=1.25"
+        ],
+        "steps": [
+            "*:*:7zz x ./go-${BUILDER_GOOS}_${BUILDER_GOARCH}.tar.gz",
+            "*:*:mkdir build",
+            "*:*:cd build && 7zz x ../go-${BUILDER_GOOS}_${BUILDER_GOARCH}.tar",
+            "*:*:mkdir -p $STAGING_DIR$NATIVEPREFIX/bin",
+            "*:*:mv build/go $STAGING_DIR$NATIVEPREFIX/go$GO_VERSION",
+            "*:*:cat $PATCH_DIR/go_wrapper.sh | sed \"s/@GO_VERSION@/$GO_VERSION/g\" > $STAGING_DIR$NATIVEPREFIX/bin/go$GO_VERSION",
+            "*:*:chmod +x $STAGING_DIR$NATIVEPREFIX/bin/go$GO_VERSION",
+            "*:*:cp $STAGING_DIR$NATIVEPREFIX/bin/go$GO_VERSION $STAGING_DIR$NATIVEPREFIX/bin/go"
+        ]
+    }
+}

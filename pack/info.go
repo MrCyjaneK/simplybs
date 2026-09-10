@@ -15,24 +15,54 @@ import (
 	"github.com/mrcyjanek/simplybs/crash"
 	"github.com/mrcyjanek/simplybs/host"
 	"github.com/mrcyjanek/simplybs/utils"
+	"github.com/mrcyjanek/simplybs/utils/ifstring"
 )
+
+func (p *Package) prefixPath(h *host.Host) string {
+	if p.Type == "native" {
+		return h.GetNativeEnvPath()
+	}
+	return h.GetEnvPath()
+}
+
+func (p *Package) homePath(h *host.Host) string {
+	return filepath.Join(p.prefixPath(h), "home", "user")
+}
+
+func (p *Package) FilterForHost(h *host.Host) *Package {
+	filtered := &Package{
+		Package:      p.Package,
+		Version:      p.Version,
+		Type:         p.Type,
+		Download:     p.Download,
+		Dependencies: []string{},
+	}
+	builderName := builder.GetName()
+	filtered.Dependencies = ifstring.FilterContent(p.Dependencies, h.Triplet, builderName)
+	filtered.ExportEnv = ifstring.FilterContent(p.ExportEnv, h.Triplet, builderName)
+	filtered.Build.Env = ifstring.FilterContent(p.Build.Env, h.Triplet, builderName)
+	filtered.Build.Steps = ifstring.FilterContent(p.Build.Steps, h.Triplet, builderName)
+
+	return filtered
+}
 
 func (p *Package) GeneratePackageInfo(h *host.Host) string {
 	pkgs := map[string]interface{}{}
-	pkgs["_target"] = p
+	pkgs["_target"] = p.FilterForHost(h)
 	for _, dep := range p.Dependencies {
-		if strings.Contains(dep, ":") {
-			dep = dep[strings.Index(dep, ":")+1:]
-		}
+		is := ifstring.ParseIfString(dep)
+		dep := is.Content
 		pkg, err := FindPackage(dep)
 		if err != nil {
 			log.Fatalf("Package %s not found in info", dep)
 		}
-		pkgs[dep] = pkg
+		pkgs[dep] = pkg.FilterForHost(h)
 	}
 	env := p.GetEnvForLogs(h)
 	delete(env, "PATH")
+	delete(env, "PREFIX")
 	pkgs["_env"] = env
+	pkgs["_prefix"] = p.prefixPath(h)
 	info, err := json.MarshalIndent(pkgs, "", "  ")
 	crash.Handle(err)
 	return string(info)
@@ -53,17 +83,30 @@ func (p *Package) ShortName(h *host.Host) string {
 	return p.Package + "-" + p.Version + "-" + p.GeneratePackageInfoShortHash(h)
 }
 
+func (p *Package) GenerateSourceBuildPath(download *Download) string {
+	if download.Kind == "git" {
+		return utils.SourcePathForGitURL(download.URL)
+	}
+	return utils.SourcePathForFileURL(download.URL)
+}
+
+func (p *Package) baseBuildPath(h *host.Host, kind string) string {
+	safeName := strings.ReplaceAll(p.Package+"-"+p.Version, "/", "_")
+	if p.Type == "native" {
+		return filepath.Join(host.DataDir(), kind, safeName)
+	}
+	return filepath.Join(host.DataDir(), kind, h.Triplet, safeName)
+}
+
 func (p *Package) GenerateBuildPath(h *host.Host, kind string) string {
 	if kind == "source" {
-		var name string
-		if p.Download.Kind == "git" {
-			name = filepath.Base(p.Download.URL) + "-" + p.Download.Sha256[0:8] + ".git"
-		} else {
-			name = filepath.Base(p.Download.URL)
-		}
-		return filepath.Join(host.DataDir(), "..", kind, name)
+		log.Fatalf("Source build path is not supported")
 	}
-	return filepath.Join(host.DataDir(), kind, h.Triplet, p.ShortName(h))
+	safeName := strings.ReplaceAll(p.ShortName(h), "/", "_")
+	if p.Type == "native" {
+		return filepath.Join(host.DataDir(), kind, safeName)
+	}
+	return filepath.Join(host.DataDir(), kind, h.Triplet, safeName)
 }
 
 func getNumCores() int {
@@ -74,50 +117,49 @@ func getNumCores() int {
 	return cores
 }
 
-func (p *Package) GetEnv(h *host.Host) map[string]string {
+func (p *Package) minimalEnvWithStaging(h *host.Host, stagingPath string) map[string]string {
 	getwd, err := os.Getwd()
 	crash.Handle(err)
-	env := map[string]string{
-		"PATH":        h.GetEnvPath() + "/native/bin:" + utils.GetHostPath(),
-		"HOST":        h.Triplet,
-		"PREFIX":      h.GetEnvPath(),
-		"HOME":        h.GetEnvPath() + "/home/user",
-		"HOST_PREFIX": h.GetEnvPath(),
-		"NUM_CORES":   strconv.Itoa(runtime.NumCPU()),
-		"PATCH_DIR":   filepath.Join(getwd, "patches"),
-	}
-
-	env = utils.AppendEnv(env, builder.HostBuilder.GlobalEnv, h)
+	hostTriplet := h.Triplet
+	targetTriplet := h.Triplet
 	if p.Type == "native" {
-		env = utils.AppendEnv(env, []string{
-			"all:CFLAGS=$CFLAGS -I" + h.GetEnvPath() + "/native/include",
-			"all:LDFLAGS=$LDFLAGS -L" + h.GetEnvPath() + "/native/lib",
-			"all:LD_LIBRARY_PATH=$LD_LIBRARY_PATH:" + h.GetEnvPath() + "/native/lib",
-			"all:PKG_CONFIG_PATH=$PKG_CONFIG_PATH:" + h.GetEnvPath() + "/native/lib/pkgconfig",
-			"all:LIBRARY_PATH=$LIBRARY_PATH:" + h.GetEnvPath() + "/native/lib",
-		}, h)
-	} else {
-		env = utils.AppendEnv(env, []string{
-			"all:CFLAGS=-I" + h.GetEnvPath() + "/include",
-			"all:LDFLAGS=-L" + h.GetEnvPath() + "/lib",
-			"all:LD_LIBRARY_PATH=" + h.GetEnvPath() + "/lib",
-			"all:PKG_CONFIG_PATH=" + h.GetEnvPath() + "/lib/pkgconfig",
-			"all:LIBRARY_PATH=" + h.GetEnvPath() + "/lib",
-		}, h)
+		hostTriplet = builder.NativeTriplet()
+		targetTriplet = builder.NativeTriplet()
 	}
-	if p.Type != "native" {
-		env = utils.AppendEnv(env, h.Env, h)
+	return map[string]string{
+		"PATH":                   utils.BuildStepPATH(h.GetNativeEnvPath(), h.GetEnvPath(), "", utils.GetHostPath()),
+		"HOST":                   hostTriplet,
+		"TARGET":                 targetTriplet,
+		"PREFIX":                 utils.ToShellPath(h.GetEnvPath()),
+		"NATIVEPREFIX":           utils.ToShellPath(h.GetNativeEnvPath()),
+		"HOME":                   utils.ToShellPath(p.homePath(h)),
+		"HOST_PREFIX":            utils.ToShellPath(h.GetEnvPath()),
+		"NUM_CORES":              strconv.Itoa(getNumCores()),
+		"PATCH_DIR":              utils.ToShellPath(filepath.Join(getwd, "patches")),
+		"STAGING_DIR":            utils.ToShellPath(stagingPath),
+		"PKG_CONFIG_ALLOW_CROSS": "1",
+		"PKG_CONFIG_SYSROOT_DIR": utils.ToShellPath(h.GetEnvPath()),
+		"BUILDER_GOOS":           runtime.GOOS,
+		"BUILDER_GOARCH":         runtime.GOARCH,
 	}
+}
+
+func (p *Package) minimalEnv(h *host.Host) map[string]string {
+	return p.minimalEnvWithStaging(h, p.GenerateBuildPath(h, "staging"))
+}
+
+func (p *Package) GetEnv(h *host.Host) map[string]string {
+	ctx := newExportEnvContext()
+	env := p.minimalEnv(h)
+	mergeResolvedExportEnv(env, ctx, filteredDependencyPackages(p.Dependencies, h), h)
 	env = utils.AppendEnv(env, p.Build.Env, h)
 	return env
 }
 
 func (p *Package) GetEnvForLogs(h *host.Host) map[string]string {
+	ctx := newExportEnvContext()
 	env := map[string]string{}
-	env = utils.AppendEnv(env, builder.HostBuilder.GlobalEnv, h)
+	mergeResolvedExportEnv(env, ctx, filteredDependencyPackages(p.Dependencies, h), h)
 	env = utils.AppendEnv(env, p.Build.Env, h)
-	if p.Type != "native" {
-		env = utils.AppendEnv(env, h.Env, h)
-	}
 	return env
 }

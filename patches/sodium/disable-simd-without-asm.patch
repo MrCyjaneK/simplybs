@@ -1,0 +1,20 @@
+diff --git a/configure.ac b/configure.ac
+index 1111111..2222222 100644
+--- a/configure.ac
++++ b/configure.ac
+@@ -493,6 +493,7 @@ AC_LINK_IFELSE(
+       AS_IF([test "$have_armcrypto" = "yes"],[AC_DEFINE([HAVE_ARMCRYPTO], [1], [ARM crypto extensions are available])])
+   ])
+ 
++  AS_IF([test "$enable_asm" != "no"], [
+   oldcflags="$CFLAGS"
+   AX_CHECK_COMPILE_FLAG([-mmmx], [CFLAGS="$CFLAGS -mmmx"])
+   AC_MSG_CHECKING(for MMX instructions set)
+@@ -666,6 +667,7 @@ __m512i y = _mm512_permutexvar_epi64(_mm512_setr_epi64(0, 1, 4, 5, 2, 3, 6, 7
+      ],
+     [AC_MSG_RESULT(no)])
+   CFLAGS="$oldcflags"
++  ])
+ 
+ ])
+ 

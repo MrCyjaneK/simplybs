@@ -1,0 +1,31 @@
+{
+    "package": "native/libc++",
+    "version": "21.1.3",
+    "type": "native",
+    "download": [
+        {
+            "kind": "git",
+            "sha256": "450f52eec88f728c89a9efd667dbeaf2dad93826",
+            "url": "https://github.com/llvm/llvm-project"
+        }
+    ],
+    "dependencies": [
+        "*:*:native/_/_",
+        "*:*:native/bash",
+        "*:*:native/cmake",
+        "*:*:native/cmake",
+        "*:*:native/coreutils",
+        "*:*:native/ninja"
+    ],
+    "build": {
+        "env": [],
+        "steps": [
+            "*:*:mkdir build && cd build",
+            "*:*:cd build && cmake -G Ninja ../runtimes -DLLVM_ENABLE_RUNTIMES='libunwind;libcxx;libcxxabi' -DCMAKE_BUILD_TYPE=Release -DLIBCXX_ENABLE_SHARED=OFF -DLIBCXX_ENABLE_STATIC=ON -DLIBCXX_INCLUDE_TESTS=OFF -DCMAKE_INSTALL_PREFIX=$NATIVEPREFIX",
+            "*:*:cd build && ninja unwind cxx cxxabi",
+            "*:*:cd build && DESTDIR=$STAGING_DIR ninja install-unwind",
+            "*:*:cd build && DESTDIR=$STAGING_DIR ninja install-cxx",
+            "*:*:cd build && DESTDIR=$STAGING_DIR ninja install-cxxabi"
+        ]
+    }
+}

@@ -6,29 +6,31 @@ import (
 	"log"
 	"os"
 	"path/filepath"
-	"sort"
 	"strings"
 
+	"github.com/mrcyjanek/simplybs/builder"
 	"github.com/mrcyjanek/simplybs/crash"
 	"github.com/mrcyjanek/simplybs/host"
 	"github.com/mrcyjanek/simplybs/pack"
-	"github.com/ryanuber/go-glob"
+	"github.com/mrcyjanek/simplybs/utils"
+	"github.com/mrcyjanek/simplybs/utils/ifstring"
 )
 
 type OrderedPackage struct {
-	Package      string                 `json:"package"`
-	Version      string                 `json:"version"`
-	Type         string                 `json:"type"`
-	Download     map[string]interface{} `json:"download,omitempty"`
-	Dependencies []string               `json:"dependencies,omitempty"`
-	Patches      []string               `json:"patches,omitempty"`
-	Build        map[string]interface{} `json:"build,omitempty"`
+	Package      string                   `json:"package"`
+	Version      string                   `json:"version"`
+	Type         string                   `json:"type"`
+	Download     []map[string]interface{} `json:"download,omitempty"`
+	Dependencies []string                 `json:"dependencies,omitempty"`
+	Patches      []string                 `json:"patches,omitempty"`
+	ExportEnv    *[]string                `json:"export-env,omitempty"`
+	Build        map[string]interface{}   `json:"build,omitempty"`
 }
 
 func Lint() {
 	fixFormatting()
 	ensureSaneDependencies()
-
+	createSourcesFile()
 }
 
 func fixFormatting() {
@@ -61,28 +63,21 @@ func fixFormatting() {
 		if v, ok := data["type"].(string); ok {
 			ordered.Type = v
 		}
-		if v, ok := data["download"].(map[string]interface{}); ok {
-			ordered.Download = v
-		}
-		if v, ok := data["dependencies"].([]interface{}); ok {
-			nativeDeps := []string{}
-			otherDeps := []string{}
-
-			for _, dep := range v {
-				if s, ok := dep.(string); ok {
-					parts := strings.Split(s, ":")
-					depName := parts[len(parts)-1]
-					if strings.HasPrefix(depName, "native") {
-						nativeDeps = append(nativeDeps, s)
-					} else {
-						otherDeps = append(otherDeps, s)
-					}
+		if v, ok := data["download"].([]interface{}); ok {
+			ordered.Download = make([]map[string]interface{}, len(v))
+			for i, download := range v {
+				if m, ok := download.(map[string]interface{}); ok {
+					ordered.Download[i] = m
 				}
 			}
-
-			sort.Strings(nativeDeps)
-			sort.Strings(otherDeps)
-			ordered.Dependencies = append(nativeDeps, otherDeps...)
+		}
+		if v, ok := data["dependencies"].([]interface{}); ok {
+			ordered.Dependencies = make([]string, 0, len(v))
+			for _, dep := range v {
+				if s, ok := dep.(string); ok {
+					ordered.Dependencies = append(ordered.Dependencies, s)
+				}
+			}
 		}
 		if v, ok := data["patches"].([]interface{}); ok {
 			patches := make([]string, len(v))
@@ -93,15 +88,23 @@ func fixFormatting() {
 			}
 			ordered.Patches = patches
 		}
+		if _, exists := data["export-env"]; exists {
+			exportEnv := []string{}
+			if v, ok := data["export-env"].([]interface{}); ok {
+				for _, env := range v {
+					if s, ok := env.(string); ok {
+						exportEnv = append(exportEnv, s)
+					}
+				}
+			}
+			ordered.ExportEnv = &exportEnv
+		}
 		if v, ok := data["build"].(map[string]interface{}); ok {
 			ordered.Build = v
 		}
 
 		var buf bytes.Buffer
-		encoder := json.NewEncoder(&buf)
-		encoder.SetEscapeHTML(false)
-		encoder.SetIndent("", "    ")
-		err = encoder.Encode(ordered)
+		err = utils.NewIndentedEncoder(&buf).Encode(ordered)
 		crash.Handle(err)
 
 		contentNew := bytes.TrimSuffix(buf.Bytes(), []byte("\n"))
@@ -137,24 +140,28 @@ func ensureValidName(pkg *pack.Package) {
 
 func ensureValidDependencies(pkg *pack.Package) {
 	for _, dep := range pkg.Dependencies {
-		split := strings.Split(dep, ":")
-		if len(split) <= 1 {
-			log.Printf("Package %s has invalid dependency %s", pkg.Package, dep)
-			continue
-		}
-		prefix := split[0]
+		is := ifstring.ParseIfString(dep)
 
 		usedIn := 0
 		for _, host := range host.SupportedHosts {
-			if glob.Glob(prefix, host.Triplet) {
+			if is.HostGlob().Match(host.Triplet) {
 				usedIn++
 			}
 		}
-		if usedIn == 0 && prefix != "all" && prefix != "none" {
-			log.Printf("Package %s is not used in any of host.SupportedHosts %s", pkg.Package, prefix)
+		usedInBuilder := 0
+		for _, b := range builder.Builders {
+			if is.BuilderGlob().Match(b) {
+				usedInBuilder++
+			}
+		}
+		if usedIn == 0 && is.Host != "none" {
+			log.Printf("Package %s is not used in any of host.SupportedHosts %s", pkg.Package, is.Host)
+		}
+		if usedInBuilder == 0 && is.Builder != "none" {
+			log.Printf("Package %s is not used in any of builder.Builders %s", pkg.Package, is.Builder)
 		}
 
-		_, err := pack.FindPackage(split[1])
+		_, err := pack.FindPackage(is.Content)
 		if err != nil {
 			log.Printf("Package %s has invalid dependency %s: %v", pkg.Package, dep, err)
 		}
@@ -178,15 +185,11 @@ func checkCyclesForHost(pkgs []*pack.Package, hostTriplet string) {
 
 		for _, dep := range pkg.Dependencies {
 			var actualDep string
-			if strings.Contains(dep, ":") {
-				prefix := strings.Split(dep, ":")[0]
-				if !glob.Glob(prefix, hostTriplet) && prefix != "all" {
-					continue
-				}
-				actualDep = dep[strings.Index(dep, ":")+1:]
-			} else {
-				actualDep = dep
+			is := ifstring.ParseIfString(dep)
+			if is.HostGlob().Match(hostTriplet) {
+				continue
 			}
+			actualDep = is.Content
 			graph[pkg.Package] = append(graph[pkg.Package], actualDep)
 		}
 	}
@@ -234,4 +237,66 @@ func dfsCycleDetection(packageName string, graph map[string][]string, color map[
 
 	color[packageName] = 2
 	return false
+}
+
+func createSourcesFile() {
+	log.Println("Creating sources.json file...")
+	sources, err := utils.LoadSourcesFile()
+	if err != nil {
+		if os.IsNotExist(err) {
+			sources = utils.NewSourcesFile()
+		} else {
+			log.Fatalf("Failed to load sources.json: %v", err)
+		}
+	} else if sources.Repositories == nil {
+		sources.Repositories = make(map[string]utils.RepositoryInfo)
+	}
+
+	currentRefs := 0
+	currentDownloads := 0
+
+	pkgs := pack.GetAllPackages()
+	for _, pkg := range pkgs {
+		content, err := os.ReadFile(filepath.Join(host.GetPackagesDir(), pkg.Package+".json"))
+		if err != nil {
+			log.Printf("Failed to read package %s: %v", pkg.Package, err)
+			continue
+		}
+
+		beforeRefs := utils.CountGitRefs(sources)
+		beforeDownloads := len(sources.Downloads)
+		utils.MergeDownloadsFromJSON(sources, content)
+		currentRefs += utils.CountGitRefs(sources) - beforeRefs
+		currentDownloads += len(sources.Downloads) - beforeDownloads
+	}
+
+	beforeHistoricRefs := utils.CountGitRefs(sources)
+	beforeHistoricDownloads := len(sources.Downloads)
+
+	if err := utils.CollectHistoricDownloads(sources); err != nil {
+		log.Printf("Warning: historic source collection skipped: %v", err)
+	}
+
+	historicRefs := utils.CountGitRefs(sources) - beforeHistoricRefs
+	historicDownloads := len(sources.Downloads) - beforeHistoricDownloads
+
+	sourcesJSON, err := utils.MarshalSourcesFile(sources)
+	if err != nil {
+		log.Fatalf("Failed to marshal sources.json: %v", err)
+	}
+
+	if err := os.WriteFile("sources.json", sourcesJSON, 0644); err != nil {
+		log.Fatalf("Failed to write sources.json: %v", err)
+	}
+
+	log.Printf(
+		"Created sources.json with %d repositories (%d git refs, %d downloads); current packages added %d refs and %d downloads, history added %d refs and %d downloads",
+		len(sources.Repositories),
+		utils.CountGitRefs(sources),
+		len(sources.Downloads),
+		currentRefs,
+		currentDownloads,
+		historicRefs,
+		historicDownloads,
+	)
 }

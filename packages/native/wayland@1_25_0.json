@@ -1,0 +1,29 @@
+{
+    "package": "native/wayland@1_25_0",
+    "version": "1_25_0",
+    "type": "native",
+    "download": [
+        {
+            "kind": "tar.gz",
+            "sha256": "95413723f6cd0462770eda207a1c78d142d0a1bba9b0572a4ed1da6a9b27059c",
+            "url": "https://gitlab.freedesktop.org/wayland/wayland/-/archive/1.25.0/wayland-1.25.0.tar.gz"
+        }
+    ],
+    "dependencies": [
+        "*:*:native/_/_",
+        "*:*:native/expat",
+        "*:*:native/libffi@3_5_2",
+        "*:*:native/meson",
+        "*:*:native/ninja",
+        "*:*:native/pkgconf",
+        "*:*:native/python@3.11"
+    ],
+    "build": {
+        "env": [],
+        "steps": [
+            "*:*:$NATIVEPREFIX/bin/meson setup build --prefix=$NATIVEPREFIX -Ddtd_validation=false -Ddocumentation=false -Dtests=false",
+            "*:*:ninja -C build",
+            "*:*:DESTDIR=$STAGING_DIR ninja -C build install"
+        ]
+    }
+}

@@ -1,0 +1,30 @@
+{
+    "package": "sqlite3@3510100",
+    "version": "3510100",
+    "type": "host",
+    "download": [
+        {
+            "kind": "tar.gz",
+            "sha256": "4f2445cd70479724d32ad015ec7fd37fbb6f6130013bd4bfbc80c32beb42b7e0",
+            "url": "https://www.sqlite.org/2025/sqlite-autoconf-3510100.tar.gz"
+        }
+    ],
+    "dependencies": [
+        "*:*:native/_",
+        "*:*:native/make"
+    ],
+    "build": {
+        "env": [
+            "*:*:CFLAGS=$CFLAGS -O2 -DSQLITE_ENABLE_COLUMN_METADATA -DSQLITE_ENABLE_FTS5 -DSQLITE_ENABLE_JSON1 -DSQLITE_ENABLE_RTREE -DSQLITE_THREADSAFE=1",
+            "*:*:CPPFLAGS=$CPPFLAGS -I$PREFIX/include",
+            "*:*:LDFLAGS=$LDFLAGS -L$PREFIX/lib",
+            "*:*:config_opts=--disable-shared --enable-static --enable-threadsafe --prefix=$PREFIX --host=$HOST",
+            "*:*android*:CXXFLAGS=$CXXFLAGS -D_GNU_SOURCE"
+        ],
+        "steps": [
+            "*:*:./configure $config_opts",
+            "*:*:make -j$NUM_CORES libsqlite3.a",
+            "*:*:make DESTDIR=$STAGING_DIR install-lib install-pc install-headers"
+        ]
+    }
+}

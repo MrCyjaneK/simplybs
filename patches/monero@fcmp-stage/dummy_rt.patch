@@ -1,0 +1,19 @@
+--- a/CMakeLists.txt	2026-07-30 00:43:00
++++ b/CMakeLists.txt	2026-07-30 00:43:00
+@@ -1005,6 +1005,16 @@
+   set(EXTRA_LIBRARIES socket nsl resolv)
+ elseif(NOT DEPENDS)
+   find_library(RT rt)
++  if(NOT RT)
++    set(DUMMY_RT_SRC "${CMAKE_CURRENT_BINARY_DIR}/dummy_rt.c")
++    file(WRITE "${DUMMY_RT_SRC}" "/* dummy librt for targets without librt */\n")
++    add_library(dummy_rt STATIC "${DUMMY_RT_SRC}")
++    set_target_properties(dummy_rt PROPERTIES
++      OUTPUT_NAME "rt"
++      ARCHIVE_OUTPUT_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}"
++    )
++    set(RT dummy_rt)
++  endif()
+   find_library(Z z)
+   set(EXTRA_LIBRARIES ${RT} ${Z})
+ endif()

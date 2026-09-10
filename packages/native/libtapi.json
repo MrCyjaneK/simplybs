@@ -1,0 +1,58 @@
+{
+    "package": "native/libtapi",
+    "version": "1300.6.5",
+    "type": "native",
+    "download": [
+        {
+            "kind": "git",
+            "sha256": "640b4623929c923c0468143ff2a363a48665fa54",
+            "url": "https://github.com/tpoechtrager/apple-libtapi.git"
+        }
+    ],
+    "dependencies": [
+        "*:*:native/_/_",
+        "*:*:native/bash",
+        "*:*:native/cmake",
+        "*:*:native/ninja",
+        "{linux_*,windows_*}:*:native/libc++"
+    ],
+    "build": {
+        "env": [
+            "*:*:config_opts=-G Ninja -S src/llvm -B build",
+            "*:*:config_opts=$config_opts -DCMAKE_BUILD_TYPE=Release",
+            "*:*:config_opts=$config_opts -DLLVM_ENABLE_PROJECTS='clang;tapi'",
+            "*:*:config_opts=$config_opts -DLLVM_INCLUDE_TESTS=OFF",
+            "*:*:config_opts=$config_opts -DLLVM_INCLUDE_BENCHMARKS=OFF",
+            "*:*:config_opts=$config_opts -DLLVM_ENABLE_TERMINFO=OFF",
+            "*:*:config_opts=$config_opts -DLLVM_ENABLE_WARNINGS=OFF",
+            "*:*:config_opts=$config_opts -DCMAKE_INSTALL_PREFIX=$NATIVEPREFIX",
+            "*:*:config_opts=$config_opts -DTAPI_REPOSITORY_STRING=1300.6.5",
+            "*:*:config_opts=$config_opts -DTAPI_FULL_VERSION=1300.6.5",
+            "darwin_arm64:*:config_opts=$config_opts -DLLVM_HOST_TRIPLE=aarch64-apple-darwin",
+            "darwin_arm64:*:config_opts=$config_opts -DCMAKE_OSX_SYSROOT=$NATIVEPREFIX/_/SDK/MacOSX26.1.sdk",
+            "darwin_arm64:*:config_opts=$config_opts -DCMAKE_OSX_DEPLOYMENT_TARGET=$OSX_MIN_VERSION",
+            "darwin_arm64:*:config_opts=$config_opts -DCMAKE_INSTALL_NAME_DIR=$NATIVEPREFIX/lib",
+            "darwin_arm64:*:config_opts=$config_opts -DCMAKE_CXX_FLAGS=-stdlib=libc++",
+            "darwin_arm64:*:CMAKE_EXE_LINKER_FLAGS=-stdlib=libc++ -lc++ -lc++abi",
+            "darwin_arm64:*:CMAKE_SHARED_LINKER_FLAGS=-stdlib=libc++ -lc++ -lc++abi",
+            "{linux_*,windows_*}:*:CC=$NATIVEPREFIX/_/bin/clang",
+            "{linux_*,windows_*}:*:CXX=$NATIVEPREFIX/_/bin/clang++",
+            "linux_arm64:*:config_opts=$config_opts -DLLVM_HOST_TRIPLE=aarch64-linux-gnu",
+            "linux_amd64:*:config_opts=$config_opts -DLLVM_HOST_TRIPLE=x86_64-linux-gnu",
+            "windows_amd64:*:config_opts=$config_opts -DLLVM_HOST_TRIPLE=x86_64-pc-cygwin",
+            "{linux_*,windows_*}:*:config_opts=$config_opts -DLLVM_ENABLE_LIBCXX=ON",
+            "{linux_*,windows_*}:*:config_opts=$config_opts -DCMAKE_C_COMPILER=$NATIVEPREFIX/_/bin/clang",
+            "{linux_*,windows_*}:*:config_opts=$config_opts -DCMAKE_CXX_COMPILER=$NATIVEPREFIX/_/bin/clang++",
+            "{linux_*,windows_*}:*:CMAKE_CXX_FLAGS=-stdlib=libc++ -I$NATIVEPREFIX/include/c++/v1",
+            "{linux_*,windows_*}:*:CMAKE_EXE_LINKER_FLAGS=-L$NATIVEPREFIX/lib -stdlib=libc++ -lc++ -lc++abi -lunwind -latomic",
+            "{linux_*,windows_*}:*:CMAKE_SHARED_LINKER_FLAGS=-L$NATIVEPREFIX/lib -stdlib=libc++ -lc++ -lc++abi -lunwind"
+        ],
+        "steps": [
+            "*:*:sed -i.bak '/add_clang_subdirectory(IndexStore)/d; /add_clang_subdirectory(libclang)/d' src/clang/tools/CMakeLists.txt",
+            "darwin_arm64:*:cmake $config_opts -DCMAKE_EXE_LINKER_FLAGS=\"$CMAKE_EXE_LINKER_FLAGS\" -DCMAKE_SHARED_LINKER_FLAGS=\"$CMAKE_SHARED_LINKER_FLAGS\"",
+            "{linux_*,windows_*}:*:cmake $config_opts -DCMAKE_CXX_FLAGS=\"$CMAKE_CXX_FLAGS\" -DCMAKE_EXE_LINKER_FLAGS=\"$CMAKE_EXE_LINKER_FLAGS\" -DCMAKE_SHARED_LINKER_FLAGS=\"$CMAKE_SHARED_LINKER_FLAGS\"",
+            "*:*:cmake --build build --target clangBasic libtapi -j$NUM_CORES",
+            "*:*:DESTDIR=$STAGING_DIR ninja -C build install-libtapi install-tapi-headers"
+        ]
+    }
+}

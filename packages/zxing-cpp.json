@@ -1,0 +1,41 @@
+{
+    "package": "zxing-cpp",
+    "version": "2.3.0",
+    "type": "host",
+    "download": [
+        {
+            "kind": "tar.gz",
+            "sha256": "64e4139103fdbc57752698ee15b5f0b0f7af9a0331ecbdc492047e0772c417ba",
+            "url": "https://github.com/zxing-cpp/zxing-cpp/archive/refs/tags/v2.3.0.tar.gz"
+        }
+    ],
+    "dependencies": [
+        "*:*:native/_",
+        "*:*:native/cmake",
+        "*:*:native/cmake-toolchain",
+        "*:*:native/make",
+        "*:*:native/coreutils",
+        "*:*:native/sed"
+    ],
+    "build": {
+        "env": [
+            "*:*:config_opts=-DCMAKE_TOOLCHAIN_FILE=$CMAKE_TOOLCHAIN_FILE",
+            "*:*:config_opts=$config_opts -DCMAKE_INSTALL_PREFIX=$PREFIX",
+            "*:*:config_opts=$config_opts -DCMAKE_BUILD_TYPE=Release",
+            "*:*:config_opts=$config_opts -DBUILD_SHARED_LIBS=OFF",
+            "*:*:config_opts=$config_opts -DZXING_EXAMPLES=OFF",
+            "*:*:config_opts=$config_opts -DZXING_C_API=OFF",
+            "*:*:config_opts=$config_opts -DZXING_WRITERS=OFF",
+            "*:*:config_opts=$config_opts -DZXING_READERS=ON",
+            "*:*:config_opts=$config_opts -DZXING_UNIT_TESTS=OFF",
+            "*:*:config_opts=$config_opts -DZXING_BLACKBOX_TESTS=OFF",
+            "*:*:config_opts=$config_opts -DZXING_DEPENDENCIES=LOCAL"
+        ],
+        "steps": [
+            "*:*:sed -i 's/-Werror=undef/-Wno-error=undef/g' core/CMakeLists.txt",
+            "*:*:cmake -S . -B build $config_opts",
+            "*:*:cmake --build build -j$NUM_CORES",
+            "*:*:cd build && make DESTDIR=$STAGING_DIR install"
+        ]
+    }
+}

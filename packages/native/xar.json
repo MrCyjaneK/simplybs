@@ -1,0 +1,35 @@
+{
+    "package": "native/xar",
+    "version": "1.6.1-patch",
+    "type": "native",
+    "download": [
+        {
+            "kind": "git",
+            "sha256": "5fa4675419cfec60ac19a9c7f7c2d0e7c831a497",
+            "url": "https://github.com/tpoechtrager/xar.git"
+        }
+    ],
+    "dependencies": [
+        "*:*:native/_/_",
+        "*:*:native/bash",
+        "*:*:native/bzip2",
+        "*:*:native/libxml2",
+        "*:*:native/make",
+        "*:*:native/openssl",
+        "*:*:native/xz",
+        "*:*:native/zlib"
+    ],
+    "build": {
+        "env": [
+            "*:*:CFLAGS=$CFLAGS -w",
+            "*:*:config_opts=--with-bzip2",
+            "*:*:config_opts=$config_opts --with-lzma=$NATIVEPREFIX"
+        ],
+        "steps": [
+            "*:*:cd xar && bash ./configure --prefix=$NATIVEPREFIX",
+            "*:*:cd xar && make V=1 -j$NUM_CORES",
+            "*:*:sed -i.bak 's|.././install-sh|./install-sh|g' xar/lib/Makefile.inc xar/src/Makefile.inc",
+            "*:*:cd xar && make V=1 DESTDIR=$STAGING_DIR install"
+        ]
+    }
+}

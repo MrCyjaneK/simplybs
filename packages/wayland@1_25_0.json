@@ -1,0 +1,41 @@
+{
+    "package": "wayland@1_25_0",
+    "version": "1_25_0",
+    "type": "host",
+    "download": [
+        {
+            "kind": "tar.gz",
+            "sha256": "95413723f6cd0462770eda207a1c78d142d0a1bba9b0572a4ed1da6a9b27059c",
+            "url": "https://gitlab.freedesktop.org/wayland/wayland/-/archive/1.25.0/wayland-1.25.0.tar.gz"
+        }
+    ],
+    "dependencies": [
+        "*:*-linux-gnu:native/_",
+        "*:*-linux-gnu:native/bash",
+        "*:*-linux-gnu:native/coreutils",
+        "*:*-linux-gnu:native/grep",
+        "*:*-linux-gnu:native/gawk",
+        "*:*-linux-gnu:native/findutils",
+        "*:*-linux-gnu:native/meson",
+        "*:*-linux-gnu:native/ninja",
+        "*:*-linux-gnu:native/pkgconf",
+        "*:*-linux-gnu:native/python@3.11",
+        "*:*-linux-gnu:native/wayland@1_25_0",
+        "*:*-linux-gnu:expat",
+        "*:*-linux-gnu:libffi@3_5_2",
+        "*:*-linux-gnu:native/sed"
+    ],
+    "patches": [
+        "toolchain.txt"
+    ],
+    "build": {
+        "env": [],
+        "steps": [
+            "*:*-linux-gnu:cp $PATCH_DIR/wayland/toolchain.txt toolchain.txt",
+            "*:*-linux-gnu:sed -i -e \"s|@host_prefix@|$PREFIX|\" -e \"s|@cc@|$CC|\" -e \"s|@cxx@|$CXX|\" -e \"s|@ar@|$AR|\" -e \"s|@strip@|$STRIP|\" -e \"s|@arch@|$ARCH|\" toolchain.txt",
+            "*:*-linux-gnu:$NATIVEPREFIX/bin/meson setup --cross-file toolchain.txt build -Ddtd_validation=false -Ddocumentation=false -Dprefer_static=true -Ddefault_library=static -Dtests=false -Dscanner=false",
+            "*:*-linux-gnu:ninja -C build",
+            "*:*-linux-gnu:DESTDIR=$STAGING_DIR ninja -C build install"
+        ]
+    }
+}

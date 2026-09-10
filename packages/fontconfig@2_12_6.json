@@ -1,0 +1,41 @@
+{
+    "package": "fontconfig@2_12_6",
+    "version": "2_12_6",
+    "type": "host",
+    "download": [
+        {
+            "kind": "tar.gz",
+            "sha256": "064b9ebf060c9e77011733ac9dc0e2ce92870b574cca2405e11f5353a683c334",
+            "url": "https://www.freedesktop.org/software/fontconfig/release/fontconfig-2.12.6.tar.gz"
+        }
+    ],
+    "dependencies": [
+        "*:*-linux-gnu:native/_",
+        "*:*-linux-gnu:native/bash",
+        "*:*-linux-gnu:native/coreutils",
+        "*:*-linux-gnu:native/grep",
+        "*:*-linux-gnu:native/pkgconf",
+        "*:*-linux-gnu:native/gawk",
+        "*:*-linux-gnu:native/findutils",
+        "*:*-linux-gnu:native/make",
+        "*:*-linux-gnu:native/patch",
+        "*:*-linux-gnu:native/sed",
+        "*:*-linux-gnu:freetype@2_14_1",
+        "*:*-linux-gnu:expat"
+    ],
+    "patches": [
+        "gperf_header_regen.patch"
+    ],
+    "build": {
+        "env": [
+            "*:*-linux-gnu:config_opts=--host=$HOST --prefix=$PREFIX --disable-shared --enable-static --disable-docs --disable-libxml2 --disable-iconv --disable-dependency-tracking --enable-option-checking"
+        ],
+        "steps": [
+            "*:*-linux-gnu:patch -p1 < $PATCH_DIR/fontconfig/gperf_header_regen.patch",
+            "*:*-linux-gnu:bash ./configure $config_opts",
+            "*:*-linux-gnu:make -j$NUM_CORES",
+            "*:*-linux-gnu:make DESTDIR=$STAGING_DIR install",
+            "*:*-linux-gnu:rm -rf $STAGING_DIR$PREFIX/var $STAGING_DIR$PREFIX/lib/*.la"
+        ]
+    }
+}

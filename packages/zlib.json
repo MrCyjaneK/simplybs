@@ -2,28 +2,38 @@
     "package": "zlib",
     "version": "1.3.1",
     "type": "host",
-    "download": {
-        "kind": "tar.gz",
-        "sha256": "9a93b2b7dfdac77ceba5a558a580e74667dd6fede4585b91eefb60f03b72df23",
-        "url": "http://www.zlib.net/zlib-1.3.1.tar.gz"
-    },
+    "download": [
+        {
+            "kind": "tar.gz",
+            "sha256": "9a93b2b7dfdac77ceba5a558a580e74667dd6fede4585b91eefb60f03b72df23",
+            "url": "https://github.com/madler/zlib/releases/download/v1.3.1/zlib-1.3.1.tar.gz"
+        }
+    ],
     "dependencies": [
-        "*-android*:native/android_ndk",
-        "all:native/libtool",
-        "all:native/make"
+        "*:*:native/_",
+        "*:*:native/bash",
+        "*:*:native/coreutils",
+        "*:*:native/grep",
+        "*:*:native/libtool",
+        "*:*:native/make",
+        "*:*:native/sed"
     ],
     "build": {
         "env": [
-            "all:CFLAGS=$CFLAGS -fPIC",
-            "all:config_opts=--prefix=$PREFIX --static",
-            "all:CROSS_PREFIX=$HOST-"
+            "*:*:CFLAGS=$CFLAGS -fPIC",
+            "*:*:config_opts=--prefix=$PREFIX --static",
+            "*:*:CROSS_PREFIX=$HOST-"
         ],
         "steps": [
-            "all:./configure $config_opts",
-            "*-android*:sed -i.bak s/^AR=.\\*$/AR=\"llvm-ar\"/ Makefile",
-            "*-android*:sed -i.bak s/^ARFLAGS=.\\*$/ARFLAGS=\"rcs\"/ Makefile",
-            "all:make -j$NUM_CORES",
-            "all:make DESTDIR=$STAGING_DIR install"
+            "*:*:bash ./configure $config_opts",
+            "*:*-android*:sed -i.bak s\\|^AR=.\\*$\\|AR=\"llvm-ar\"\\| Makefile",
+            "*:*-android*:sed -i.bak s\\|^ARFLAGS=.\\*$\\|ARFLAGS=\"rcs\"\\| Makefile",
+            "*:*-linux-gnu:sed -i.bak s\\|^AR=.\\*$\\|AR=\"$AR\"\\| Makefile",
+            "*:*-linux-gnu:sed -i.bak s\\|^ARFLAGS=.\\*$\\|ARFLAGS=\"rcs\"\\| Makefile",
+            "*:*-w64-*:sed -i.bak s\\|^AR=.\\*$\\|AR=\"$AR\"\\| Makefile",
+            "*:*-w64-*:sed -i.bak s\\|^ARFLAGS=.\\*$\\|ARFLAGS=\"rcs\"\\| Makefile",
+            "*:*:make -j$NUM_CORES",
+            "*:*:make DESTDIR=$STAGING_DIR install"
         ]
     }
 }

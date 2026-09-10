@@ -1,0 +1,72 @@
+{
+    "package": "filament",
+    "version": "v1.75.0",
+    "type": "host",
+    "download": [
+        {
+            "kind": "git",
+            "sha256": "0e58877c09afb1aacd09ff640f74d2adcd2a7e80",
+            "url": "https://github.com/google/filament.git"
+        }
+    ],
+    "dependencies": [
+        "*:*:native/_/_",
+        "*:*:native/_",
+        "*:*:native/bash",
+        "*:*:native/cmake",
+        "*:*:native/cmake-toolchain",
+        "*:*:native/coreutils",
+        "*:*:native/filament-tools",
+        "*:*:native/findutils",
+        "*:*:native/ninja",
+        "*:*:native/sed"
+    ],
+    "build": {
+        "env": [
+            "*:x86_64-*:dist_arch=x86_64",
+            "*:aarch64-apple-*:dist_arch=arm64",
+            "*:aarch64-linux-*:dist_arch=aarch64",
+            "*:armv7a-*:dist_arch=arm",
+            "*:x86_64-linux-gnu:CXXFLAGS=$CXXFLAGS -Wno-error=shadow -Wno-shadow -Wno-error=undef",
+            "*:aarch64-linux-gnu:CXXFLAGS=$CXXFLAGS -Wno-error=shadow -Wno-shadow -Wno-error=undef -U__ARM_NEON",
+            "*:*-apple-*:RANLIB=$NATIVEPREFIX/bin/ranlib",
+            "*:*-apple-*:AR=$NATIVEPREFIX/bin/ar",
+            "*:*-apple-*:CXXFLAGS=$CXXFLAGS -Wno-deprecated -Wno-deprecated-declarations -Wno-error=deprecated -Wno-error=deprecated-declarations",
+            "*:*-apple-*:OBJCXXFLAGS=$CXXFLAGS -Wno-deprecated -Wno-deprecated-declarations -Wno-error=deprecated -Wno-error=deprecated-declarations",
+            "*:*-apple-ios*:config_opts_ios=-DIOS=1",
+            "*:*-apple-ios*:CFLAGS=$CFLAGS -DFILAMENT_IOS",
+            "*:*-apple-ios*:CXXFLAGS=$CXXFLAGS -DFILAMENT_IOS",
+            "*:*-apple-ios*:OBJCXXFLAGS=$OBJCXXFLAGS -DFILAMENT_IOS",
+            "*:*-apple-ios-simulator:CFLAGS=$CFLAGS -DFILAMENT_IOS_SIMULATOR -mios-version-min=13.0",
+            "*:*-apple-ios-simulator:CXXFLAGS=$CXXFLAGS -DFILAMENT_IOS_SIMULATOR -mios-version-min=13.0",
+            "*:*-apple-ios-simulator:OBJCXXFLAGS=$OBJCXXFLAGS -DFILAMENT_IOS_SIMULATOR -mios-version-min=13.0",
+            "*:*-apple-ios-simulator:LDFLAGS=$LDFLAGS -mios-version-min=13.0",
+            "*:*-apple-ios-simulator:config_opts_ios=$config_opts_ios -DCMAKE_OSX_DEPLOYMENT_TARGET=13.0",
+            "*:*:config_opts=-G Ninja",
+            "*:*:config_opts=$config_opts -DCMAKE_TOOLCHAIN_FILE=$CMAKE_TOOLCHAIN_FILE",
+            "*:*:config_opts=$config_opts -DCMAKE_INSTALL_PREFIX=$PREFIX",
+            "*:*:config_opts=$config_opts -DCMAKE_BUILD_TYPE=Release",
+            "*:*:config_opts=$config_opts -DDIST_ARCH=$dist_arch",
+            "*:*:config_opts=$config_opts -DFILAMENT_IMPORT_PREBUILT_EXECUTABLES_DIR=out",
+            "*:*:config_opts=$config_opts -DFILAMENT_SKIP_SAMPLES=ON",
+            "*:*:config_opts=$config_opts -DFILAMENT_SKIP_SDL2=ON",
+            "*:*:config_opts=$config_opts -DFILAMENT_BUILD_TESTING=OFF",
+            "*:*:config_opts=$config_opts -DFILAMENT_SUPPORTS_XCB=OFF",
+            "*:*:config_opts=$config_opts -DFILAMENT_SUPPORTS_XLIB=OFF",
+            "*:*:config_opts=$config_opts -DUSE_STATIC_LIBCXX=OFF",
+            "*:*-apple-ios*:config_opts=$config_opts $config_opts_ios",
+            "*:*-linux-gnu:config_opts=$config_opts -DFILAMENT_ENABLE_EXPERIMENTAL_GCC_SUPPORT=ON",
+            "*:*-linux-gnu:config_opts=$config_opts -DFILAMENT_SUPPORTS_OPENGL=OFF"
+        ],
+        "steps": [
+            "*:*:mkdir -p out",
+            "*:*:printf '%s\\n' 'foreach(_filament_tool IN ITEMS matc cmgen filamesh mipgen resgen uberz glslminifier)' '  if(NOT TARGET ${_filament_tool})' '    add_executable(${_filament_tool} IMPORTED)' '    set_property(TARGET ${_filament_tool} APPEND PROPERTY IMPORTED_CONFIGURATIONS RELEASE)' '    set_target_properties(${_filament_tool} PROPERTIES IMPORTED_LOCATION_RELEASE \"'$NATIVEPREFIX'/bin/${_filament_tool}\")' '  endif()' 'endforeach()' > out/ImportExecutables-Prebuilt.cmake",
+            "*:*:sed -i '/add_subdirectory(\\${TOOLS}\\/cmgen)/i\\if (NOT FILAMENT_IMPORT_PREBUILT_EXECUTABLES)' CMakeLists.txt",
+            "*:*:sed -i '/add_subdirectory(\\${TOOLS}\\/specgen)/a\\endif()' CMakeLists.txt",
+            "*:*-linux-gnu:find . -name CMakeLists.txt -print0 | xargs -0 sed -i '/fstrict-vtable-pointers/d'",
+            "*:*:cmake -S . -B build $config_opts",
+            "*:*:cmake --build build -j$NUM_CORES",
+            "*:*:DESTDIR=$STAGING_DIR cmake --install build"
+        ]
+    }
+}

@@ -1,0 +1,26 @@
+{
+    "package": "native/libxml2",
+    "version": "2.14.5",
+    "type": "native",
+    "download": [
+        {
+            "kind": "tar.xz",
+            "sha256": "03d006f3537616833c16c53addcdc32a0eb20e55443cba4038307e3fa7d8d44b",
+            "url": "https://download.gnome.org/sources/libxml2/2.14/libxml2-2.14.5.tar.xz"
+        }
+    ],
+    "dependencies": [
+        "*:*:native/_/_",
+        "*:*:native/bash",
+        "*:*:native/make",
+        "*:*:native/pkgconf"
+    ],
+    "build": {
+        "env": [],
+        "steps": [
+            "*:*:bash ./configure --prefix=$NATIVEPREFIX --without-python",
+            "*:*:make -j$NUM_CORES",
+            "*:*:make DESTDIR=$STAGING_DIR install"
+        ]
+    }
+}

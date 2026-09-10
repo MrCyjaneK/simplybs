@@ -2,25 +2,36 @@
     "package": "zstd",
     "version": "1.5.7",
     "type": "host",
-    "download": {
-        "kind": "tar.gz",
-        "sha256": "eb33e51f49a15e023950cd7825ca74a4a2b43db8354825ac24fc1b7ee09e6fa3",
-        "url": "http://github.com/facebook/zstd/releases/download/v1.5.7/zstd-1.5.7.tar.gz"
-    },
+    "download": [
+        {
+            "kind": "tar.gz",
+            "sha256": "eb33e51f49a15e023950cd7825ca74a4a2b43db8354825ac24fc1b7ee09e6fa3",
+            "url": "http://github.com/facebook/zstd/releases/download/v1.5.7/zstd-1.5.7.tar.gz"
+        }
+    ],
     "dependencies": [
-        "*-android*:native/android_ndk",
-        "all:native/make"
+        "*:*:native/_",
+        "*:*:native/bash",
+        "*:*:native/coreutils",
+        "*:*:native/grep",
+        "*:*:native/make",
+        "*:*:native/sed"
     ],
     "build": {
         "env": [
-            "all:LIBTOOL=$PREFIX/native/bin/libtool",
-            "armv7a-linux-androideabi:CFLAGS=$CFLAGS -DLIBC_NO_FSEEKO",
-            "armv7a-linux-androideabi:CXXFLAGS=$CXXFLAGS -DLIBC_NO_FSEEKO"
+            "*:*:LIBTOOL=$NATIVEPREFIX/bin/libtool",
+            "*:armv7a-linux-androideabi:CFLAGS=$CFLAGS -DLIBC_NO_FSEEKO",
+            "*:armv7a-linux-androideabi:CXXFLAGS=$CXXFLAGS -DLIBC_NO_FSEEKO",
+            "*:*-linux-*:TARGET_SYSTEM=Linux",
+            "*:*-apple-*:TARGET_SYSTEM=Darwin",
+            "*:*-mingw32:TARGET_SYSTEM=Windows",
+            "*:*:UNAME_TARGET_SYSTEM=$TARGET_SYSTEM",
+            "*:*:OS=$TARGET_SYSTEM"
         ],
         "steps": [
-            "all:make -j$NUM_CORES",
-            "all:mkdir -p $STAGING_DIR$PREFIX/lib",
-            "all:cp ./lib/libzstd.a $STAGING_DIR$PREFIX/lib/libzstd.a"
+            "*:*:make -j$NUM_CORES",
+            "*:*:mkdir -p $STAGING_DIR$PREFIX/lib",
+            "*:*:cp ./lib/libzstd.a $STAGING_DIR$PREFIX/lib/libzstd.a"
         ]
     }
 }

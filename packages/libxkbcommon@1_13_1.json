@@ -1,0 +1,45 @@
+{
+    "package": "libxkbcommon@1_13_1",
+    "version": "1_13_1",
+    "type": "host",
+    "download": [
+        {
+            "kind": "tar.gz",
+            "sha256": "aeb951964c2f7ecc08174cb5517962d157595e9e3f38fc4a130b91dc2f9fec18",
+            "url": "https://github.com/xkbcommon/libxkbcommon/archive/refs/tags/xkbcommon-1.13.1.tar.gz"
+        }
+    ],
+    "dependencies": [
+        "*:*-linux-gnu:native/_",
+        "*:*-linux-gnu:native/bash",
+        "*:*-linux-gnu:native/bison",
+        "*:*-linux-gnu:native/coreutils",
+        "*:*-linux-gnu:native/grep",
+        "*:*-linux-gnu:native/gawk",
+        "*:*-linux-gnu:native/findutils",
+        "*:*-linux-gnu:native/m4",
+        "*:*-linux-gnu:native/meson",
+        "*:*-linux-gnu:native/ninja",
+        "*:*-linux-gnu:native/patch",
+        "*:*-linux-gnu:native/pkgconf",
+        "*:*-linux-gnu:native/python@3.11",
+        "*:*-linux-gnu:libxcb@1_17_0",
+        "*:*-linux-gnu:libXau@1_0_12",
+        "*:*-linux-gnu:native/sed"
+    ],
+    "patches": [
+        "no-test-x11.patch",
+        "toolchain.txt"
+    ],
+    "build": {
+        "env": [],
+        "steps": [
+            "*:*-linux-gnu:patch -p1 < $PATCH_DIR/libxkbcommon/no-test-x11.patch",
+            "*:*-linux-gnu:cp $PATCH_DIR/libxkbcommon/toolchain.txt toolchain.txt",
+            "*:*-linux-gnu:sed -i -e \"s|@host_prefix@|$PREFIX|\" -e \"s|@cc@|$CC|\" -e \"s|@cxx@|$CXX|\" -e \"s|@ar@|$AR|\" -e \"s|@strip@|$STRIP|\" -e \"s|@arch@|$ARCH|\" toolchain.txt",
+            "*:*-linux-gnu:$NATIVEPREFIX/bin/meson setup --cross-file toolchain.txt build -Dxkb-config-root=/usr/share/X11/xkb -Dxkb-config-extra-path=/app/share/X11/xkb",
+            "*:*-linux-gnu:ninja -C build",
+            "*:*-linux-gnu:DESTDIR=$STAGING_DIR ninja -C build install"
+        ]
+    }
+}

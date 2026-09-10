@@ -1,0 +1,54 @@
+{
+    "package": "ffmpeg",
+    "version": "n9.0",
+    "type": "host",
+    "download": [
+        {
+            "kind": "git",
+            "sha256": "d32b387f2b0a484599d4587d651891f0c63c4238",
+            "url": "https://github.com/FFmpeg/FFmpeg.git"
+        }
+    ],
+    "dependencies": [
+        "*:*:native/_/_",
+        "*:*:native/_",
+        "*:*:native/bash",
+        "*:*:native/coreutils",
+        "*:*:native/grep",
+        "*:*:native/make",
+        "*:*:native/sed"
+    ],
+    "build": {
+        "env": [
+            "*:*-linux-gnu:ffmpeg_os=linux",
+            "*:*-linux-android*:ffmpeg_os=android",
+            "*:*-apple-*:ffmpeg_os=darwin",
+            "*:*-w64-mingw32:ffmpeg_os=mingw32",
+            "*:armv7a-*:ffmpeg_arch=arm",
+            "*:aarch64-*:ffmpeg_arch=aarch64",
+            "*:x86_64-*:ffmpeg_arch=x86_64",
+            "*:*:config_opts=--prefix=$PREFIX",
+            "*:*:config_opts=$config_opts --enable-cross-compile",
+            "*:*:config_opts=$config_opts --arch=$ffmpeg_arch",
+            "*:*:config_opts=$config_opts --target-os=$ffmpeg_os",
+            "*:*:config_opts=$config_opts --host-cc=$NATIVEPREFIX/_/bin/clang",
+            "*:*:config_opts=$config_opts --enable-static",
+            "*:*:config_opts=$config_opts --disable-shared",
+            "*:*:config_opts=$config_opts --disable-doc",
+            "*:*:config_opts=$config_opts --disable-autodetect",
+            "*:*:config_opts=$config_opts --disable-asm",
+            "*:*:config_opts=$config_opts --disable-programs",
+            "*:*-linux-gnu:config_opts=$config_opts --sysroot=$PREFIX/sysroot",
+            "*:*-w64-mingw32:config_opts=$config_opts --sysroot=$PREFIX/sysroot",
+            "*:*-apple-*:config_opts=$config_opts --sysroot=$SDK_PATH"
+        ],
+        "steps": [
+            "*:*:bash ./configure $config_opts --cc=\"$CC\" --ar=\"$AR\" --ranlib=\"$RANLIB\" --strip=\"$STRIP\" --nm=\"$NM\" --extra-cflags=\"$CFLAGS\" --extra-ldflags=\"$LDFLAGS\"",
+            "*:*:grep -E '#define CONFIG_GPL 0' config.h",
+            "*:*:grep -E '#define CONFIG_NONFREE 0' config.h",
+            "*:*:grep -E '#define CONFIG_VERSION3 0' config.h",
+            "*:*:make -j$NUM_CORES",
+            "*:*:make DESTDIR=$STAGING_DIR install"
+        ]
+    }
+}

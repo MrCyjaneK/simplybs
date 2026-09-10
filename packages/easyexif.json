@@ -1,0 +1,26 @@
+{
+    "package": "easyexif",
+    "version": "cd994a3b6009",
+    "type": "host",
+    "download": [
+        {
+            "kind": "git",
+            "sha256": "cd994a3b6009bc3c1f84062e96bd7f5ad16e85f6",
+            "url": "https://github.com/mayanklahiri/easyexif.git"
+        }
+    ],
+    "dependencies": [
+        "*:*:native/_",
+        "*:*:native/coreutils",
+        "*:*:native/bash"
+    ],
+    "build": {
+        "env": [],
+        "steps": [
+            "*:*:mkdir -p $STAGING_DIR$PREFIX/include $STAGING_DIR$PREFIX/lib",
+            "*:*:cp exif.h $STAGING_DIR$PREFIX/include/easyexif.h",
+            "*:*:$CXX $CXXFLAGS -fPIC -I. -c exif.cpp -o easyexif.o",
+            "*:*:$AR rcs $STAGING_DIR$PREFIX/lib/libeasyexif.a easyexif.o"
+        ]
+    }
+}

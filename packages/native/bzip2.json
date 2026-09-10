@@ -1,0 +1,27 @@
+{
+    "package": "native/bzip2",
+    "version": "1.0.8",
+    "type": "native",
+    "download": [
+        {
+            "kind": "tar.gz",
+            "sha256": "ab5a03176ee106d3f0fa90e381da478ddae405918153cca248e682cd0c4a2269",
+            "url": "https://sourceware.org/pub/bzip2/bzip2-1.0.8.tar.gz"
+        }
+    ],
+    "dependencies": [
+        "*:*:native/_/_",
+        "*:*:native/diffutils",
+        "*:*:native/make",
+        "*:*:native/openssl",
+        "*:*:native/sed"
+    ],
+    "build": {
+        "env": [],
+        "steps": [
+            "*:*:sed -i.bak 's/-Wall/-Wall -fPIC/' Makefile",
+            "*:*:make -j$NUM_CORES CC=\"$CC\"",
+            "*:*:make install PREFIX=$STAGING_DIR$NATIVEPREFIX"
+        ]
+    }
+}

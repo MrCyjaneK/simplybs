@@ -1,0 +1,43 @@
+{
+    "package": "native/llvm@google@18.0.0git",
+    "version": "18.0.0git",
+    "type": "native",
+    "download": [
+        {
+            "kind": "git",
+            "sha256": "c58bc24fcf678c55b0bf522be89eff070507a005",
+            "url": "https://android.googlesource.com/toolchain/llvm-project"
+        }
+    ],
+    "dependencies": [
+        "*:*:native/_/_",
+        "*:*:native/cmake",
+        "*:*:native/ninja",
+        "*:*:native/python@3.11",
+        "*:*:native/sed"
+    ],
+    "build": {
+        "env": [
+            "*:*:config_opts=-DCMAKE_BUILD_TYPE=Release",
+            "*:*:config_opts=$config_opts -DCMAKE_INSTALL_PREFIX=$PREFIX",
+            "*:*:config_opts=$config_opts -DLLVM_ENABLE_PROJECTS='clang;lld;libc;openmp;pstl'",
+            "*:*:config_opts=$config_opts -DLLVM_ENABLE_RUNTIMES='compiler-rt'",
+            "*:*:config_opts=$config_opts -DLLVM_ENABLE_BINDINGS=OFF",
+            "*:*:config_opts=$config_opts -DCOMPILER_RT_BAREMETAL_BUILD=ON",
+            "*:*:config_opts=$config_opts -DCOMPILER_RT_DEFAULT_TARGET_ONLY=ON",
+            "*:*:config_opts=$config_opts -DCOMPILER_RT_BUILD_SANITIZERS=OFF",
+            "*:*:config_opts=$config_opts -DCOMPILER_RT_BUILD_XRAY=OFF",
+            "*:*:config_opts=$config_opts -DCOMPILER_RT_BUILD_LIBFUZZER=OFF",
+            "*:*:config_opts=$config_opts -DCOMPILER_RT_BUILD_PROFILE=OFF",
+            "*:*:config_opts=$config_opts -DCOMPILER_RT_BUILD_BUILTINS=ON",
+            "*:*:config_opts=$config_opts -DCLANG_ENABLE_BOOTSTRAP=ON"
+        ],
+        "steps": [
+            "*:*:cmake -S llvm -B build -G Ninja $config_opts",
+            "*:*:sed -i.bak 's/(state->ControlWord)/(state->ControlWord \\& 0xFFFFFFFF)/g' ./libc/src/__support/FPUtil/aarch64/fenv_darwin_impl.h",
+            "*:*:sed -i.bak 's/(state->StatusWord)/(state->StatusWord \\& 0xFFFFFFFF)/g' ./libc/src/__support/FPUtil/aarch64/fenv_darwin_impl.h",
+            "*:*:cd build && ninja -j $NUM_CORES",
+            "*:*:cd build && DESTDIR=$STAGING_DIR ninja install"
+        ]
+    }
+}

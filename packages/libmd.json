@@ -1,0 +1,34 @@
+{
+    "package": "libmd",
+    "version": "1.1.0",
+    "type": "host",
+    "download": [
+        {
+            "kind": "git",
+            "sha256": "d5b8e853989a73f8fff9dc4e00dccd0b691b84f9",
+            "url": "https://github.com/guillemj/libmd.git"
+        }
+    ],
+    "dependencies": [
+        "*:*:native/_",
+        "*:*:native/autoconf",
+        "*:*:native/automake",
+        "*:*:native/gettext",
+        "*:*:native/libtool",
+        "*:*:native/m4",
+        "*:*:native/make",
+        "*:*:native/perl"
+    ],
+    "build": {
+        "env": [
+            "*:*:config_opts=--host=$HOST --prefix=$PREFIX",
+            "*:*:config_opts=$config_opts --disable-shared"
+        ],
+        "steps": [
+            "*:*:autoreconf --force --install",
+            "*:*:./configure $config_opts",
+            "*:*:make -j$NUM_CORES",
+            "*:*:make install DESTDIR=$STAGING_DIR"
+        ]
+    }
+}
